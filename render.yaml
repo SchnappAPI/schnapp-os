@@ -1,0 +1,31 @@
+# Render Blueprint — deploys the off-Mac 1Password connector (connectors/op-mcp/)
+# to a free Render web service. One-click: Render dashboard > New > Blueprint,
+# point at this repo, it reads this file. Then set the two secrets when prompted.
+# Full runbook (host + Cloudflare OAuth front + claude.ai registration):
+#   connectors/op-mcp/DEPLOY.md   (canonical; PLAN.md Part 4.2; decisions/0004)
+#
+# Why Render: free tier, no CLI, no Docker knowledge needed (Render builds the
+# Dockerfile straight from the repo). Caveat: the free tier sleeps after ~15 min
+# idle, so the first call after idle cold-starts in ~30-60s. Acceptable for an
+# occasional secret resolver. Confirm current free-tier terms at signup.
+services:
+  - name: op-mcp
+    type: web
+    runtime: docker
+    plan: free
+    # rootDir scopes which repo changes trigger a rebuild to the connector dir.
+    rootDir: connectors/op-mcp
+    # dockerfilePath / dockerContext are repo-root-relative per the Render spec.
+    dockerfilePath: connectors/op-mcp/Dockerfile
+    dockerContext: connectors/op-mcp
+    healthCheckPath: /health
+    autoDeployTrigger: off
+    envVars:
+      # Set both in the Render dashboard at Blueprint creation (sync:false = prompt,
+      # never stored in the repo). OP_SERVICE_ACCOUNT_TOKEN = the 1Password Service
+      # Account token; CONNECTOR_AUTH_TOKEN = a random bearer, e.g. `openssl rand -hex 32`
+      # (save it into 1Password after). The server refuses to start if either is missing.
+      - key: OP_SERVICE_ACCOUNT_TOKEN
+        sync: false
+      - key: CONNECTOR_AUTH_TOKEN
+        sync: false

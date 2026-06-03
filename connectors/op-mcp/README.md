@@ -60,28 +60,14 @@ curl -s localhost:3000/mcp -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | head
 ```
 
-## Deploy (owner step — needs your host account)
+## Deploy + register (owner step)
 
-See `fly.toml` header for the exact Fly.io commands. In short:
-1. `fly launch --no-deploy --copy-config`
-2. Set `OP_SERVICE_ACCOUNT_TOKEN` and `CONNECTOR_AUTH_TOKEN` as `fly secrets`.
-3. `fly deploy`; confirm `GET /health` returns `{"status":"ok"}`.
+Full turnkey runbook: **[DEPLOY.md](DEPLOY.md)** (canonical). Chosen path —
+**Render** (free, no CLI; root `render.yaml` Blueprint builds the `Dockerfile`) +
+**Cloudflare MCP portal** (OAuth front, because claude.ai's custom-connector UI
+accepts only OAuth 2.1, not a static bearer). Claude Code + Cowork need only the
+bearer header and work the moment the host is up. Fly.io stays a drop-in
+alternative (`fly.toml`) if you ever want a no-cold-start host.
 
-## Register in claude.ai / Cowork / Code (owner step)
-
-The endpoint is `https://<app>.fly.dev/mcp`.
-
-- **Claude Code / Cowork**: add to mcp config as an HTTP server with an
-  `Authorization: Bearer <token>` header.
-- **claude.ai (custom connector)**: the Add-custom-connector UI expects OAuth.
-  Two options:
-  1. Front the server with **Cloudflare Access** (you already run Cloudflare for
-     the Mac) or an OAuth proxy, which handles the claude.ai auth handshake; or
-  2. Add an OAuth wrapper to this server.
-  This is the one remaining design choice for full claude.ai registration; the
-  server + bearer auth + deploy are done.
-
-## Verify the goal (PLAN.md check 7)
-
-With the **Mac powered off**, call `op_read` from claude.ai and confirm a secret
-resolves. That closes Part 4.
+The goal (PLAN.md check 7): with the **Mac off**, call `op_read` from claude.ai
+and confirm a secret resolves — see DEPLOY.md Step 6.

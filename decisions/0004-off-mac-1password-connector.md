@@ -45,18 +45,38 @@ authenticates, 1 vault visible); full HTTP path green — `tools/list`, `tools/c
 for all four tools, 401 without bearer, clean input-validation + resolve errors,
 `op_read` resolve path exercised end-to-end.
 
-### Auth choice for claude.ai (still owner-gated)
-claude.ai's "Add custom connector" expects OAuth. Two paths: (1) front the Node
-host with **Cloudflare Access** / an OAuth proxy (recommended — owner already runs
-Cloudflare), or (2) add an OAuth wrapper to the server. Bearer header works as-is
-for Claude Code / Cowork mcp config.
+### Host + auth-front: RESOLVED 2026-06-03 (owner-chosen)
+Priorities: free, simple, cross-surface.
+
+- **Host = Render free tier** (over Fly.io). No CLI, no Docker knowledge: the root
+  `render.yaml` Blueprint builds `connectors/op-mcp/Dockerfile` straight from the
+  repo; owner sets the two secrets in the dashboard. $0. Caveat: free tier sleeps
+  after ~15 min idle (~30–60s cold start) — fine for an occasional resolver. Fly.io
+  kept as a drop-in alternative (`fly.toml`) for a no-cold-start host (needs CLI + card).
+- **Auth front = Cloudflare MCP server portal** (Cloudflare One). Verified the portal
+  fronts an *external* HTTPS MCP origin (not Workers-only) and provides the OAuth flow
+  claude.ai requires — no OAuth code to write/maintain. Free Zero Trust tier; owner
+  already runs Cloudflare. Chosen over hand-writing an OAuth 2.1+PKCE wrapper (option 2
+  — more code to maintain, against "simple").
+- **Verified constraint:** claude.ai custom connectors accept **only OAuth 2.1 + PKCE**;
+  the web UI has no static-bearer/custom-header field (anthropics/claude-ai-mcp#112). So
+  the bearer connector serves Claude Code + Cowork directly; claude.ai web + iPhone need
+  the portal.
+- **One detail to confirm at setup:** how the portal authenticates to the Render origin
+  (forward a static `Authorization` header, or switch the origin to trust a Cloudflare
+  Access JWT — ~30-line `src/auth.ts` change). Documented in DEPLOY.md Step 4.
+
+Full turnkey steps: `connectors/op-mcp/DEPLOY.md` (canonical).
 
 ## Status
 **RESOLVED 2026-06-03** — host = **Node host**; Cloudflare Worker **ruled out** (the SDK wasm
 loads via `fs.readFileSync` + synchronous `new WebAssembly.Module`, impossible on the Workers
-edge). Connector BUILT + locally verified (`npm run verify` PASS). Deploy + claude.ai
-registration still **pending owner**:
-1. Pick Node host (default Fly.io) and deploy (`fly deploy`); set the two host secrets.
-2. Decide claude.ai auth front (Cloudflare Access vs OAuth wrapper); register the URL.
-3. Verify PLAN check 7: resolve a secret from claude.ai with the Mac OFF.
+edge). Connector BUILT + locally verified (`npm run verify` PASS). Host + auth-front now
+chosen (Render + Cloudflare MCP portal, above). Deploy + claude.ai registration are
+**owner-gated** (need owner's Render/Cloudflare/claude.ai logins). Turnkey runbook
+prepared: root `render.yaml` Blueprint + `connectors/op-mcp/DEPLOY.md`. Remaining owner steps:
+1. Render: New → Blueprint → set the two secrets (DEPLOY.md Step 1).
+2. Cloudflare MCP portal in front of the Render origin; register the portal URL in
+   claude.ai (DEPLOY.md Steps 4–5).
+3. Verify PLAN check 7: resolve a secret from claude.ai with the Mac OFF (closes 4.2 + 4.4).
 Until deployed, claude.ai/iPhone secret access still routes through the Mac connector.

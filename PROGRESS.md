@@ -108,3 +108,11 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   so the connector cannot be deployed off-Mac autonomously — cloud deploy needs the owner's host
   account (interactive login) and claude.ai registration needs the owner's UI + auth-front choice.
   Owner-gated. Connector itself is built + verified (4.2 [~]).
+- Part 4.2 path CHOSEN (owner): Render free tier (no CLI; root render.yaml Blueprint builds the
+  Dockerfile from the repo) + Cloudflare MCP portal as the OAuth front. Verified: claude.ai custom
+  connectors accept ONLY OAuth 2.1+PKCE (no static-bearer field), so bearer serves Code+Cowork
+  directly while claude.ai web+iPhone need the portal; the Cloudflare portal fronts an external
+  HTTPS origin (not Workers-only). No general official 1Password remote MCP exists (only the May-2026
+  Codex one) — self-host stays the path. Prepped turnkey: root render.yaml + connectors/op-mcp/
+  DEPLOY.md (canonical runbook); README deploy/register sections + decisions/0004 + PLAN 4.2 updated
+  to match. 4.2 stays [~] (deploy + portal + register + check-7 are owner-gated; need owner logins).

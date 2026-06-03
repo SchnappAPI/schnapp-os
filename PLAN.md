@@ -229,8 +229,10 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       PARTIAL: BUILT + locally verified — `connectors/op-mcp/` Node streamable-HTTP MCP,
       read-only tools (op_read/op_list_vaults/op_list_items/op_health), bearer auth, `tsc`
       clean, `npm run verify` PASS (SDK runs in Node, SA authenticates, vault visible).
-      Worker ruled out → Node host (decisions/0004). PENDING (owner-gated): deploy to a Node
-      host + register in claude.ai + verify PLAN check 7 (resolve from claude.ai, Mac off).
+      Worker ruled out → Node host (decisions/0004). Path chosen: Render (free, no CLI) +
+      Cloudflare MCP portal (OAuth front; claude.ai accepts only OAuth, not bearer). Turnkey
+      config prepped: root `render.yaml` + `connectors/op-mcp/DEPLOY.md`. PENDING (owner-gated,
+      needs owner logins): deploy + Cloudflare portal + register in claude.ai + verify check 7.
 - [x] 4.3 Put credential references (the `op://` map) in `.env.template` / `credentials-map.md`;
       never values. (Created `credentials-map.md` [resolution-by-surface + `web-variables` system
       items + bootstrap/connector secrets] and root `.env.template` [op:// URIs, no values;
@@ -351,4 +353,6 @@ Added after the core works, so it never blocks the foundation.
 
 - Final keep-set in Part 1 (proposed, you approve).
 - Whether Cowork executes hooks (treat as no until verified in 7.2).
-- Official vs community 1Password MCP connector in 4.2.
+- Official vs community 1Password MCP connector in 4.2. RESOLVED: no general official
+  1Password remote MCP exists (the only official one, May 2026, is purpose-built for OpenAI
+  Codex). Self-hosted `connectors/op-mcp/` stays the path. See decisions/0004.
