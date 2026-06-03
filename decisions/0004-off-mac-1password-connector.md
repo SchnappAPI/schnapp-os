@@ -52,7 +52,10 @@ Cloudflare), or (2) add an OAuth wrapper to the server. Bearer header works as-i
 for Claude Code / Cowork mcp config.
 
 ## Status
-Connector BUILT + locally verified. Remaining = owner-gated deploy:
+**RESOLVED 2026-06-03** — host = **Node host**; Cloudflare Worker **ruled out** (the SDK wasm
+loads via `fs.readFileSync` + synchronous `new WebAssembly.Module`, impossible on the Workers
+edge). Connector BUILT + locally verified (`npm run verify` PASS). Deploy + claude.ai
+registration still **pending owner**:
 1. Pick Node host (default Fly.io) and deploy (`fly deploy`); set the two host secrets.
 2. Decide claude.ai auth front (Cloudflare Access vs OAuth wrapper); register the URL.
 3. Verify PLAN check 7: resolve a secret from claude.ai with the Mac OFF.

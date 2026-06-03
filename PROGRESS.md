@@ -54,3 +54,15 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Part 4.2 remaining (owner-gated): deploy to a Node host (default Fly.io) + set the two host
   secrets; choose claude.ai auth front (Cloudflare Access vs OAuth wrapper) + register URL; verify
   PLAN check 7 (resolve from claude.ai with Mac OFF). See handoffs/004-connector-built.md.
+- De-staled PLAN.md (boxes had never been flipped): checked 0.1/0.2/0.4/1.1-1.4/2.1/2.3/3.1-3.3/4.1;
+  4.2 -> [~] partial (built + locally verified; deploy/register owner-gated). 0.3/1.5/2.2/2.4/3.4/
+  4.3/4.4 remain unchecked.
+- Re-ran `npm run verify` in connectors/op-mcp/ as the recorded gate: PASS — SDK runs in Node, SA
+  authenticates, vault `web-variables` visible (16 active items). 4.2 deliverable = built + verified.
+- Adopted rule keep-tracker-current (memory + anti-stale rule): every commit that changes state also
+  flips the PLAN.md box and appends a PROGRESS.md line in the SAME commit; mark partial as [~]; never
+  claim done/verified before the verify command has run. Applied from now on without being asked.
+- Part 5 IN PROGRESS (not done): memory/ global lane scaffolded — README.md (two-lane conventions +
+  freshness-gate/end-of-session procedures + dual-altitude promotion), MEMORY.md index,
+  credentials-state seed fact. autoMemoryDirectory wiring (5.1) was interrupted; NOT set. All 5.x
+  boxes remain unchecked until each step's deliverable lands + verifies.

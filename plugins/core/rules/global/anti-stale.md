@@ -12,3 +12,7 @@ updated: 2026-06-03
   "generated, do not edit". The source is canonical; the doc is a projection.
 - Memory: supersede, do not append. When a fact changes, replace it; do not leave a
   contradicting copy. Every memory carries `source:` and `updated:`.
+- Tracker currency: every commit that changes state also flips the matching PLAN.md box and
+  appends a PROGRESS.md line in the SAME commit, and is **pushed immediately** so GitHub always
+  mirrors local — never let the remote go stale. Partial work is `[~]`, not `[x]`. Never mark a
+  step done/verified before its verify command has run. See [[keep-tracker-current]] in memory.

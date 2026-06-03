@@ -167,53 +167,58 @@ personal); `policy-procedure` (global + activity/policy-procedure + context/work
 After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 
 ## Part 0: Tracker, repo, and sync routine (start here, ~20 min)
-- [ ] 0.1 Create empty GitHub repo `claude-kit`; clone locally.
-- [ ] 0.2 Add `PLAN.md` (this file), empty `PROGRESS.md`, `decisions/`, `handoffs/`.
+- [x] 0.1 Create empty GitHub repo `claude-kit`; clone locally.
+- [x] 0.2 Add `PLAN.md` (this file), empty `PROGRESS.md`, `decisions/`, `handoffs/`.
 - [ ] 0.3 Set up sync: SessionStart hook does `git pull --ff-only` (surface divergence before
       work); commits auto-push. Commit and push.
-- [ ] 0.4 `git pull` on your other machines; confirm `PLAN.md` opens everywhere.
+- [x] 0.4 `git pull` on your other machines; confirm `PLAN.md` opens everywhere.
 - Done when: the plan opens on any machine and edits sync without manual steps.
 - Handoff: write `handoffs/000-setup.md`; next prompt: "Start Part 1 of claude-kit PLAN.md."
 
 ## Part 1: Inventory existing, freeze old kit, quiet the fleet (~45 min)
-- [ ] 1.1 Inventory what already exists (1Password SA and vault, Mac op_* tools, github/
+- [x] 1.1 Inventory what already exists (1Password SA and vault, Mac op_* tools, github/
       cloudflare/context7 connectors, op-wrap, gh biometric, existing repos). Record in
       `decisions/`. Only gaps get built later.
-- [ ] 1.2 Tag schnapp-kit `main` as `record-2026-06-03`; push the tag.
-- [ ] 1.3 Disable schnapp-kit in `~/.claude/settings.json`; neutralize the auto-enable guard.
-- [ ] 1.4 Cut 19 plugins to a small keep-set; disable the rest (reversible); log keep-set.
+- [x] 1.2 Tag schnapp-kit `main` as `record-2026-06-03`; push the tag.
+- [x] 1.3 Disable schnapp-kit in `~/.claude/settings.json`; neutralize the auto-enable guard.
+- [x] 1.4 Cut 19 plugins to a small keep-set; disable the rest (reversible); log keep-set.
 - [ ] 1.5 Fresh session: confirm no double hooks, no auto-PR, no auto-merge.
 - Done when: runtime is quiet and you recognize what exists and what is kept.
 - Handoff after this Part.
 
 ## Part 2: Global lane + surface profiles
-- [ ] 2.1 Write `rules/global/` (seed from your notes: knowledge-capture, naming-discipline,
+- [x] 2.1 Write `rules/global/` (seed from your notes: knowledge-capture, naming-discipline,
       plus verify-before-assert, secrets-as-references, anti-stale, speed-by-default).
 - [ ] 2.2 Create `~/.claude/CLAUDE.md` that `@imports` the small global files; symlink
       `~/.claude/rules/global` to the repo (one source, no drift, syncs via Part 0).
-- [ ] 2.3 Write `surfaces/` profiles (Code-Mac, Code-worklaptop, Code-workdesktop, Cowork,
+- [x] 2.3 Write `surfaces/` profiles (Code-Mac, Code-worklaptop, Code-workdesktop, Cowork,
       claude.ai, iPhone): where credentials come from, which tools and connectors exist, the
       routine procedures to run.
 - [ ] 2.4 Verify the global lane loads from another repo.
 - Handoff after this Part.
 
 ## Part 3: Rule module gallery, presets, and composer
-- [ ] 3.1 Build `rules/modules/{lang,tool,activity,context}` and seed from your notes per the
+- [x] 3.1 Build `rules/modules/{lang,tool,activity,context}` and seed from your notes per the
       mapping table above; add `paths:` frontmatter to every lang module.
-- [ ] 3.2 Write `rules/presets/` lists (work-etl-sql, personal-sports-etl, policy-procedure,
+- [x] 3.2 Write `rules/presets/` lists (work-etl-sql, personal-sports-etl, policy-procedure,
       web-tool, quickbase).
-- [ ] 3.3 Build the `/new-project` composer: apply a preset, allow add/remove, symlink chosen
+- [x] 3.3 Build the `/new-project` composer: apply a preset, allow add/remove, symlink chosen
       modules into the project `.claude/rules/`, write a thin project `CLAUDE.md`.
 - [ ] 3.4 Verify: Python rules do not load when editing a `.sql` file, and vice versa.
 - Done when: a new project rule set is composed in one choice and never leaks across languages.
 - Handoff after this Part.
 
 ## Part 4: Credentials everywhere (no Mac dependency)
-- [ ] 4.1 RECREATE the 1Password Service Account: the prior one was DELETED (see
+- [x] 4.1 RECREATE the 1Password Service Account: the prior one was DELETED (see
       decisions/0001), so `op`/`gh` are down. Create a new SA, grant the vaults, and put the
       new token on every surface (`~/.zshrc`, `~/.zshenv`, GitHub Actions secret, others).
-- [ ] 4.2 Add a hosted 1Password MCP connector (service-account-backed); enable on every
+- [~] 4.2 Add a hosted 1Password MCP connector (service-account-backed); enable on every
       surface as the primary secret path. Keep the Mac op_* tools as backup.
+      PARTIAL: BUILT + locally verified — `connectors/op-mcp/` Node streamable-HTTP MCP,
+      read-only tools (op_read/op_list_vaults/op_list_items/op_health), bearer auth, `tsc`
+      clean, `npm run verify` PASS (SDK runs in Node, SA authenticates, vault visible).
+      Worker ruled out → Node host (decisions/0004). PENDING (owner-gated): deploy to a Node
+      host + register in claude.ai + verify PLAN check 7 (resolve from claude.ai, Mac off).
 - [ ] 4.3 Put credential references (the `op://` map) in `.env.template` / `credentials-map.md`;
       never values.
 - [ ] 4.4 Verify with the Mac powered off: resolve a secret from claude.ai via the connector.
