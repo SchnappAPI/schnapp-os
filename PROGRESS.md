@@ -29,3 +29,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Part 2.3: wrote surfaces/ profiles (README + code-mac, code-work-machines, cowork,
   claude-ai-web, iphone) with the always-complete fallback model.
 - Pushed. Parts 2 and 3 substantively done (2.2 ~/.claude wiring + 3.4 verify still pending).
+- Part 4 (decisions): recorded cross-surface credential options (decisions/0002): all-repos
+  token needs an org or per-repo script; off-Mac 1Password = host connector on Cloudflare.
+- Part 1 DONE: tagged schnapp-kit record-2026-06-03; disabled schnapp-kit + 12 redundant
+  plugins; kept 6 (caveman, github, superpowers, plugin-dev, pyright-lsp, frontend-design).
+  schnapp-kit is now a source repo to dissect (decisions/0003). settings.json backed up.
+  Verify quiet runtime next session.
