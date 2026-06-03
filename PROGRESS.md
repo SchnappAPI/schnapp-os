@@ -19,5 +19,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Owner created PRIVATE repo SchnappAPI/claude-kit. Pushed main (3 commits). Verified private.
 - Part 0 DONE (repo + tracker + remote live). Sync-hook automation (0.3) deferred to Part 7
   (needs hooks wired); manual push works now.
-- Pending owner: Part 4 SA rotation (decisions/0001); Part 1 keep-set approval before
-  disabling plugins.
+- Pending owner: Part 1 keep-set approval before disabling plugins.
+- Part 4 (partial): owner ROTATED the 1Password SA. `op whoami` OK, `gh` works again.
+  Note: SchnappAPI is a USER not an org, so GitHub Actions token is a per-repo secret.
+- Part 3.1/3.2: built rule module gallery under plugins/core/rules/modules/ (coding x3,
+  lang x8 incl. path-scoped python/ts/sql/pq + env/git/gha + naming-differences reference,
+  tool x2 stubs, activity x4 [etl seeded, rest stubs], context x2) + presets/presets.md.
