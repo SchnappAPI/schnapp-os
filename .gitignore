@@ -1,0 +1,14 @@
+# Local-only and secrets — never commit
+*.local
+*.local.md
+CLAUDE.local.md
+.env
+.env.*
+!.env.template
+**/secret*
+**/*secret*
+*.key
+*.pem
+.DS_Store
+scratch/
+tmp/
