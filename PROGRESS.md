@@ -35,3 +35,7 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   plugins; kept 6 (caveman, github, superpowers, plugin-dev, pyright-lsp, frontend-design).
   schnapp-kit is now a source repo to dissect (decisions/0003). settings.json backed up.
   Verify quiet runtime next session.
+- Part 4 decisions: off-Mac 1Password connector design verified (decisions/0004) — 1P SDK is
+  Node-only, so plain Worker is unverified; build as Node (Worker+nodejs_compat else Node host).
+  All-repos token: owner chose user-account + per-repo script. op/gh confirmed working in-session
+  post-rotation. Connector build = Part 4.2, handoff 002.
