@@ -83,3 +83,10 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Part 1.5 DONE: config verified quiet — no user-settings hooks; enabled plugins = keep-set only;
   schnapp-kit + compound-engineering autopilot disabled; no auto-PR/auto-merge; the only SessionStart
   hooks are the intentional 0.3 sync + benign caveman/superpowers. Live fresh-session confirm next start.
+- Part 2.2 DONE (owner-approved, DIRECT @import): ~/.claude/CLAUDE.md @imports the 7 global rules
+  straight from ~/code/claude-kit/plugins/core/rules/global/ — loads in every project, syncs via the
+  0.3 pull, no symlink. Symlink skipped on purpose (~/.claude/rules/ is an auto-load level; symlink +
+  @import would double-load). Verified all 7 import targets exist; @import supports ~/ + follows
+  symlinks + no globs (per docs). ~/.claude/CLAUDE.md lives outside the repo; its content goes in the
+  README install checklist (Part 9.5). 2.4 (loads from another repo) + 3.4 (path-scoped non-leak) are
+  next-session/install verifications — left unchecked.

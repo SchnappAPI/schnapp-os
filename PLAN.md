@@ -195,8 +195,14 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 ## Part 2: Global lane + surface profiles
 - [x] 2.1 Write `rules/global/` (seed from your notes: knowledge-capture, naming-discipline,
       plus verify-before-assert, secrets-as-references, anti-stale, speed-by-default).
-- [ ] 2.2 Create `~/.claude/CLAUDE.md` that `@imports` the small global files; symlink
+- [x] 2.2 Create `~/.claude/CLAUDE.md` that `@imports` the small global files; symlink
       `~/.claude/rules/global` to the repo (one source, no drift, syncs via Part 0).
+      (Owner-approved DIRECT @import approach: `~/.claude/CLAUDE.md` @imports the 7 global rules
+      straight from `~/code/claude-kit/plugins/core/rules/global/` — single source, syncs via the
+      0.3 pull, no symlink. Symlink intentionally skipped: `~/.claude/rules/` is itself an
+      auto-load level, so symlink + @import would double-load. All 7 import targets verified to
+      exist. The `~/.claude/CLAUDE.md` content will be captured in the README install checklist
+      (Part 9.5). Live cross-repo load is 2.4.)
 - [x] 2.3 Write `surfaces/` profiles (Code-Mac, Code-worklaptop, Code-workdesktop, Cowork,
       claude.ai, iPhone): where credentials come from, which tools and connectors exist, the
       routine procedures to run.
