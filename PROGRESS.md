@@ -39,3 +39,6 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Node-only, so plain Worker is unverified; build as Node (Worker+nodejs_compat else Node host).
   All-repos token: owner chose user-account + per-repo script. op/gh confirmed working in-session
   post-rotation. Connector build = Part 4.2, handoff 002.
+- Set OP_SERVICE_ACCOUNT_TOKEN Actions secret on 8/10 SchnappAPI repos. 2 failed (af-invoice-parser,
+  af-query-api): PAT 403, fine-grained token scope excludes them. Owner to widen PAT to All repos.
+- Session handed off (context large). See handoffs/003-session-resume.md to resume in a fresh session.
