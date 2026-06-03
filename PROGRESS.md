@@ -75,3 +75,11 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   project-lane instance pending real perf work. 5.3/5.4 (freshness-gate + end-of-session hooks)
   authored as procedures in memory/README.md, hook wiring deferred to Part 7. 5.6 verify needs the
   install/symlink (2.2) + a second repo (Part 10).
+- Back to strict in-order completion (owner direction). Part 0.3 DONE (owner-approved): SessionStart
+  `startup` hook in tracked .claude/settings.json runs `git pull --ff-only` (non-fatal, surfaces
+  divergence); commit-time auto-push stays a keep-tracker-current rule (no agent post-commit hook in
+  Claude Code). Verified valid JSON; fires next fresh session. Prior Part-7 deferral of 0.3 was
+  wrong — a sync hook needs nothing from Part 7.
+- Part 1.5 DONE: config verified quiet — no user-settings hooks; enabled plugins = keep-set only;
+  schnapp-kit + compound-engineering autopilot disabled; no auto-PR/auto-merge; the only SessionStart
+  hooks are the intentional 0.3 sync + benign caveman/superpowers. Live fresh-session confirm next start.

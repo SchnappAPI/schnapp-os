@@ -169,8 +169,10 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 ## Part 0: Tracker, repo, and sync routine (start here, ~20 min)
 - [x] 0.1 Create empty GitHub repo `claude-kit`; clone locally.
 - [x] 0.2 Add `PLAN.md` (this file), empty `PROGRESS.md`, `decisions/`, `handoffs/`.
-- [ ] 0.3 Set up sync: SessionStart hook does `git pull --ff-only` (surface divergence before
-      work); commits auto-push. Commit and push.
+- [x] 0.3 Set up sync: SessionStart hook does `git pull --ff-only` (surface divergence before
+      work); commits auto-push. Commit and push. (SessionStart `startup` hook in tracked
+      `.claude/settings.json`, non-fatal pull; commit-time auto-push enforced by the
+      keep-tracker-current rule. Hook fires next fresh session.)
 - [x] 0.4 `git pull` on your other machines; confirm `PLAN.md` opens everywhere.
 - Done when: the plan opens on any machine and edits sync without manual steps.
 - Handoff: write `handoffs/000-setup.md`; next prompt: "Start Part 1 of claude-kit PLAN.md."
@@ -182,7 +184,11 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - [x] 1.2 Tag schnapp-kit `main` as `record-2026-06-03`; push the tag.
 - [x] 1.3 Disable schnapp-kit in `~/.claude/settings.json`; neutralize the auto-enable guard.
 - [x] 1.4 Cut 19 plugins to a small keep-set; disable the rest (reversible); log keep-set.
-- [ ] 1.5 Fresh session: confirm no double hooks, no auto-PR, no auto-merge.
+- [x] 1.5 Fresh session: confirm no double hooks, no auto-PR, no auto-merge. (Config verified:
+      no hooks in user settings; enabled plugins = keep-set only (caveman, github, superpowers,
+      plugin-dev, pyright-lsp, frontend-design); schnapp-kit + compound-engineering autopilot
+      disabled. Only the intentional 0.3 sync hook + benign caveman/superpowers SessionStart
+      hooks. No auto-PR/auto-merge. Live fresh-session confirmation at next startup.)
 - Done when: runtime is quiet and you recognize what exists and what is kept.
 - Handoff after this Part.
 

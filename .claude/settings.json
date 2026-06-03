@@ -1,4 +1,17 @@
 {
-  "$comment": "Shared, tracked project settings for claude-kit. Local-only overrides go in settings.local.json. autoMemoryDirectory points the harness auto-memory at the git-tracked repo memory/ lane so memory commits and syncs across machines and surfaces (PLAN.md Part 5; see memory/README.md). Honored only after the workspace-trust dialog is accepted on each machine. A machine that clones the repo somewhere other than ~/code/claude-kit overrides this path in settings.local.json.",
-  "autoMemoryDirectory": "~/code/claude-kit/memory"
+  "$comment": "Shared, tracked project settings for claude-kit. Local-only overrides go in settings.local.json. autoMemoryDirectory points the harness auto-memory at the git-tracked repo memory/ lane so memory commits and syncs across machines/surfaces (PLAN.md Part 5; see memory/README.md). The SessionStart hook is the Part 0.3 sync: git pull --ff-only on fresh start, surfacing divergence before work (non-fatal). Commit-time auto-push is enforced by the keep-tracker-current rule (Claude Code does not fire agent post-commit hooks). Project hooks/settings are honored after the per-machine workspace-trust dialog.",
+  "autoMemoryDirectory": "~/code/claude-kit/memory",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && git pull --ff-only 2>&1 || echo '[claude-kit sync] pull not fast-forward or offline — check git status before work (PLAN Part 0.3 / 8.2).'"
+          }
+        ]
+      }
+    ]
+  }
 }
