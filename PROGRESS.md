@@ -25,3 +25,7 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Part 3.1/3.2: built rule module gallery under plugins/core/rules/modules/ (coding x3,
   lang x8 incl. path-scoped python/ts/sql/pq + env/git/gha + naming-differences reference,
   tool x2 stubs, activity x4 [etl seeded, rest stubs], context x2) + presets/presets.md.
+- Part 3.3: wrote /new-project composer command (preset + free pick, symlink modules).
+- Part 2.3: wrote surfaces/ profiles (README + code-mac, code-work-machines, cowork,
+  claude-ai-web, iphone) with the always-complete fallback model.
+- Pushed. Parts 2 and 3 substantively done (2.2 ~/.claude wiring + 3.4 verify still pending).
