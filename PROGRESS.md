@@ -90,3 +90,8 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   symlinks + no globs (per docs). ~/.claude/CLAUDE.md lives outside the repo; its content goes in the
   README install checklist (Part 9.5). 2.4 (loads from another repo) + 3.4 (path-scoped non-leak) are
   next-session/install verifications — left unchecked.
+- Part 4.3 DONE: credentials-map.md (resolution-by-surface table, web-variables system items with
+  op:// reference skeletons, bootstrap OP_SERVICE_ACCOUNT_TOKEN + connector CONNECTOR_AUTH_TOKEN) +
+  root .env.template (op:// URIs, no values). Verified .env.template is tracked and .env is ignored.
+  Field labels deliberately not guessed (verified they don't follow the category default here, e.g.
+  GITHUB_PAT/credential does not resolve). References only — no secret values committed.

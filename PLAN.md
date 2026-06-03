@@ -231,8 +231,11 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       clean, `npm run verify` PASS (SDK runs in Node, SA authenticates, vault visible).
       Worker ruled out → Node host (decisions/0004). PENDING (owner-gated): deploy to a Node
       host + register in claude.ai + verify PLAN check 7 (resolve from claude.ai, Mac off).
-- [ ] 4.3 Put credential references (the `op://` map) in `.env.template` / `credentials-map.md`;
-      never values.
+- [x] 4.3 Put credential references (the `op://` map) in `.env.template` / `credentials-map.md`;
+      never values. (Created `credentials-map.md` [resolution-by-surface + `web-variables` system
+      items + bootstrap/connector secrets] and root `.env.template` [op:// URIs, no values;
+      verified `.env.template` tracked, `.env` ignored]. Field labels noted-not-guessed since they
+      don't follow the category default in this vault.)
 - [ ] 4.4 Verify with the Mac powered off: resolve a secret from claude.ai via the connector.
 - Done when: no surface returns unauthorized, Mac on or off.
 - Handoff after this Part.
