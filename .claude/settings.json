@@ -1,0 +1,4 @@
+{
+  "$comment": "Shared, tracked project settings for claude-kit. Local-only overrides go in settings.local.json. autoMemoryDirectory points the harness auto-memory at the git-tracked repo memory/ lane so memory commits and syncs across machines and surfaces (PLAN.md Part 5; see memory/README.md). Honored only after the workspace-trust dialog is accepted on each machine. A machine that clones the repo somewhere other than ~/code/claude-kit overrides this path in settings.local.json.",
+  "autoMemoryDirectory": "~/code/claude-kit/memory"
+}

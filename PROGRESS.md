@@ -66,3 +66,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   freshness-gate/end-of-session procedures + dual-altitude promotion), MEMORY.md index,
   credentials-state seed fact. autoMemoryDirectory wiring (5.1) was interrupted; NOT set. All 5.x
   boxes remain unchecked until each step's deliverable lands + verifies.
+- Part 5.1 DONE (owner-approved): set `autoMemoryDirectory` -> `~/code/claude-kit/memory` in tracked
+  .claude/settings.json so harness auto-memory is git-tracked + syncs; scratch gitignored
+  (`scratch/`, `*.local.md`). Effective after per-machine trust dialog; cross-session proof = 5.6.
+- Part 5.2 DONE: memory conventions adopted (one-fact-one-file, supersede-not-append, source+updated)
+  in memory/README.md + global/anti-stale.md, demonstrated by seed per-fact files.
+- Part 5.5 PARTIAL [~]: global perf principle seeded + promotion mechanic documented; live
+  project-lane instance pending real perf work. 5.3/5.4 (freshness-gate + end-of-session hooks)
+  authored as procedures in memory/README.md, hook wiring deferred to Part 7. 5.6 verify needs the
+  install/symlink (2.2) + a second repo (Part 10).

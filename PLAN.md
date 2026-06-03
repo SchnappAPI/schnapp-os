@@ -226,17 +226,22 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - Handoff after this Part.
 
 ## Part 5: Memory: both lanes, cross-surface, never stale
-- [ ] 5.1 Set `autoMemoryDirectory` to a repo-tracked path so project memory commits and syncs;
-      gitignore local scratch.
-- [ ] 5.2 Adopt: one fact one file; supersede not append; every memory carries `source:` and
-      `updated:`.
+- [x] 5.1 Set `autoMemoryDirectory` to a repo-tracked path so project memory commits and syncs;
+      gitignore local scratch. (Set in tracked `.claude/settings.json` -> `~/code/claude-kit/memory`;
+      scratch covered by `scratch/` + `*.local.md` in .gitignore. Harness picks it up after the
+      per-machine trust dialog; cross-session sync proof is 5.6.)
+- [x] 5.2 Adopt: one fact one file; supersede not append; every memory carries `source:` and
+      `updated:`. (Documented in memory/README.md + global/anti-stale.md; demonstrated by the
+      seed per-fact files.)
 - [ ] 5.3 SessionStart freshness gate: skip or quarantine superseded or out-of-date memories;
       surface unmerged or unpushed work first.
 - [ ] 5.4 Stop/SessionEnd hook writes fresh memory and a handoff deterministically.
-- [ ] 5.5 Dual-altitude promotion: write the project-specific instance in the project lane AND
+- [~] 5.5 Dual-altitude promotion: write the project-specific instance in the project lane AND
       extract the reusable principle to `global/speed-by-default.md`, linked both ways (nothing
       moved, nothing lost). Seed with your perf examples (read-once, module-level cache,
       ThreadPoolExecutor, set-based SQL/CTE, bulk insert, `fast_executemany=True`).
+      PARTIAL: global principle seeded (global/speed-by-default.md) + promotion mechanic
+      documented (memory/README.md). A live project-lane instance lands with real perf work.
 - [ ] 5.6 Verify: lesson in repo A appears in a fresh session in repo B; a changed fact
       supersedes the old one, not duplicated.
 - Handoff after this Part.
