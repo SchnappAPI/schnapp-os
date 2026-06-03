@@ -265,10 +265,17 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 
 ## Part 6: Cloud backup + Obsidian mirror
 - [x] 6.1 OneDrive folder `claude-archive/` already created. Point session, chat, handoff,
-      and memory-snapshot backups at it.
-- [ ] 6.2 Point the local Obsidian vault at the synced OneDrive folder; fix the Obsidian
-      connection.
-- [ ] 6.3 Verify a non-Mac session's backup appears in OneDrive and then Obsidian.
+      and memory-snapshot backups at it. DONE: `plugins/core/scripts/backup-archive.sh` mirrors
+      repo markdown (memory/handoffs/decisions/PLAN/PROGRESS) + archives Claude Code session
+      transcripts into `claude-archive/` (chosen layout: claude-archive is its own Obsidian vault).
+      Run + verified — 18 md + 5 transcripts + generated home note. Auto-run via Stop hook = Part 7/5.4.
+- [~] 6.2 Point the local Obsidian vault at the synced OneDrive folder; fix the Obsidian
+      connection. VAULT READY (folder + structure + home note). Owner GUI on MacBook (parked,
+      iPhone now): open `claude-archive` as a vault in Obsidian, install the Local REST API
+      community plugin (the missing piece — obsidian MCP has no backend, so it disconnects),
+      generate its API key, wire it into the obsidian MCP config.
+- [ ] 6.3 Verify a non-Mac session's backup appears in OneDrive and then Obsidian. Parked: needs
+      the MacBook (Obsidian) + a second surface/machine running the backup; check OneDrive cloud sync.
 - Handoff after this Part.
 
 ## Part 7: Cross-surface "must happen" enforcement

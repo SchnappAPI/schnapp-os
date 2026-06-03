@@ -116,3 +116,10 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Codex one) — self-host stays the path. Prepped turnkey: root render.yaml + connectors/op-mcp/
   DEPLOY.md (canonical runbook); README deploy/register sections + decisions/0004 + PLAN 4.2 updated
   to match. 4.2 stays [~] (deploy + portal + register + check-7 are owner-gated; need owner logins).
+- Part 6.1 DONE: built plugins/core/scripts/backup-archive.sh (parameterized, idempotent; mirrors
+  repo md with --delete = current truth, archives session .jsonl additively, writes a generated vault
+  home note). Ran it: claude-archive/ populated (18 md + 5 transcripts). Layout chosen: claude-archive
+  IS its own Obsidian vault (owner-approved). Auto-run via Stop hook deferred to Part 7/5.4.
+- Part 6.2 [~]: vault folder ready; opening it in Obsidian + installing the Local REST API plugin
+  (the missing obsidian-MCP backend → why it disconnects) is owner GUI on the MacBook. Parked while
+  owner is on iPhone. 6.3 verify parked (needs MacBook + a second surface; OneDrive cloud-sync check).
