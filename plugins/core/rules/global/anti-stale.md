@@ -16,3 +16,8 @@ updated: 2026-06-03
   appends a PROGRESS.md line in the SAME commit, and is **pushed immediately** so GitHub always
   mirrors local — never let the remote go stale. Partial work is `[~]`, not `[x]`. Never mark a
   step done/verified before its verify command has run. See [[keep-tracker-current]] in memory.
+- Doc currency (applies to ALL docs, not just the tracker): a doc never hardcodes a mutable fact
+  it does not own — it references the canonical source (PLAN.md / PROGRESS.md for status,
+  decisions/ for choices, the code/config for behavior). A commit that changes state updates every
+  doc whose claim changed, in that same commit. README carries no status string; it points to the
+  live trackers. CI freshness enforcement is wired in Part 9.3.

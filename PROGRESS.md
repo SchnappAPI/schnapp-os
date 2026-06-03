@@ -95,3 +95,16 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   root .env.template (op:// URIs, no values). Verified .env.template is tracked and .env is ignored.
   Field labels deliberately not guessed (verified they don't follow the category default here, e.g.
   GITHUB_PAT/credential does not resolve). References only — no secret values committed.
+- Owner widened GitHub PAT to all repos. Set OP_SERVICE_ACCOUNT_TOKEN Actions secret on the two
+  authorized repos (af-invoice-parser, af-query-api). DB_Storage + appfolio-marketing-project also
+  lack it but were never scoped — NOT auto-distributed (classifier-flagged master-token spread);
+  awaiting owner decision. credentials-state memory superseded to match.
+- Anti-stale: README de-staled — removed the hardcoded "Status: bootstrapping (Part 0)" string;
+  README now points to PLAN.md/PROGRESS.md as the single live-status source + a Map. Added a
+  "Doc currency" rule to global/anti-stale.md covering ALL docs (no hardcoded mutable facts;
+  reference canonical sources; update affected docs in the same state-changing commit). CI
+  freshness enforcement remains Part 9.3.
+- Part 4.2 holdup determined: NO host CLI installed (flyctl/wrangler/railway/render/doctl absent),
+  so the connector cannot be deployed off-Mac autonomously — cloud deploy needs the owner's host
+  account (interactive login) and claude.ai registration needs the owner's UI + auth-front choice.
+  Owner-gated. Connector itself is built + verified (4.2 [~]).

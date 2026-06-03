@@ -12,8 +12,10 @@ Cross-surface plan: off-Mac surfaces (claude.ai, iPhone) get secrets via the **o
 connector** (`connectors/op-mcp/`, built + verified; deploy owner-gated — see
 [[connector-state]] / handoffs/004). The Mac `op_*` MCP tools remain the backup path.
 
-GitHub Actions: `OP_SERVICE_ACCOUNT_TOKEN` secret is set on 8/10 SchnappAPI repos; 2
-(`af-invoice-parser`, `af-query-api`) pending a wider fine-grained PAT.
+GitHub Actions: PAT widened to all repos 2026-06-03; `OP_SERVICE_ACCOUNT_TOKEN` secret now set
+on all previously-tracked repos incl. `af-invoice-parser` + `af-query-api`. Two repos
+(`DB_Storage`, `appfolio-marketing-project`) still lack it — never explicitly scoped; awaiting
+owner decision before distributing the master token there.
 
 References only — no token values live in any tracked file
 ([secrets-as-references](../plugins/core/rules/global/secrets-as-references.md)).
