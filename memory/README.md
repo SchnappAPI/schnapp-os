@@ -85,6 +85,24 @@ On stop / session end, deterministically:
 
 Implemented as a Stop/SessionEnd hook in Part 7.
 
+## On-correction update (any surface) — procedure, wired in Part 7
+
+When the owner corrects a mistake, or a wrong assumption surfaces, capture the fix
+immediately so it is never repeated. Route by what kind of thing was corrected:
+1. **Behavioral preference / how-to-work** → a rule, not memory. Update the matching
+   file in [`rules/global/`](../plugins/core/rules/global/) (e.g. working-style). Rules
+   are loaded every session; memory is recall. See
+   [knowledge-capture](../plugins/core/rules/global/knowledge-capture.md).
+2. **Durable fact** (a value, a name, who/what/where) → memory, **supersede** the old
+   fact (don't append a contradiction); set `source: correction` + today's `updated:`.
+   Global lane if cross-everything, project lane if repo-specific; link with `[[slug]]`.
+3. **Doc-relevant** (a doc stated the wrong thing) → fix the doc in the same change;
+   never leave the stale claim (see [anti-stale](../plugins/core/rules/global/anti-stale.md)
+   "Doc currency").
+Goal: the correction changes the always-loaded layer (rule) or the recall layer (memory)
+so the same mistake cannot recur on any surface. Implemented as a hook (Code) + a skill
+(chat/Cowork) in Part 7.5, both pointing here — this is the single authored procedure.
+
 ## Verification (5.6)
 - Cross-repo: a global-lane fact written here appears in a fresh session in another
   repo — verifiable once the global lane is installed/symlinked (Part 2.2 + Part 10).

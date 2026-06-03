@@ -123,3 +123,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Part 6.2 [~]: vault folder ready; opening it in Obsidian + installing the Local REST API plugin
   (the missing obsidian-MCP backend → why it disconnects) is owner GUI on the MacBook. Parked while
   owner is on iPhone. 6.3 verify parked (needs MacBook + a second surface; OneDrive cloud-sync check).
+- Part 7.1/7.5 [~] (authoring): added the "On-correction update" procedure to memory/README.md (its
+  canonical home, alongside the already-authored freshness-gate + end-of-session procedures) — routes
+  a correction to rule (preference) / memory-supersede (fact) / doc-fix (stale claim) so it can't
+  recur on any surface. All three core procedures now authored ONCE, no duplication. Hook (Code) +
+  skill (chat/Cowork) wiring + surface-check skill (7.4) are the next Part-7 increments.
+- 4.2 auth front clarified for owner (sprawl-averse): NOT the only way. Phase 1 = deploy + bearer →
+  Code/Cowork/all machines, ZERO new apps. Phase 2 (secrets inside claude.ai-web/iPhone) needs OAuth,
+  which can be BAKED INTO the connector (no new app) rather than a Cloudflare portal — deferred until
+  owner wants it. DEPLOY.md/decisions/0004 to be updated to phasing once owner confirms direction.

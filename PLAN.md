@@ -279,15 +279,19 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - Handoff after this Part.
 
 ## Part 7: Cross-surface "must happen" enforcement
-- [ ] 7.1 Author the core procedures once (session-start state check, on-correction doc/memory
-      update, end-of-session log).
+- [~] 7.1 Author the core procedures once (session-start state check, on-correction doc/memory
+      update, end-of-session log). AUTHORED (canonical, single home = memory/README.md):
+      freshness-gate (session-start) + end-of-session-write existed; on-correction-update now added.
+      The git/unmerged half of the session-start state check lands with Part 8. Hook/skill wiring = 7.2/7.3.
 - [ ] 7.2 Implement as hooks for Code on all machines; use `http`/`mcp_tool` hook types for
       remote action. Verify whether Cowork runs them.
 - [ ] 7.3 Implement the same procedures as skills plus always-loaded instructions for chat and
       Cowork.
 - [ ] 7.4 Add `surface-check` skill: reports loaded vs missing on the current surface.
-- [ ] 7.5 On-correction auto-update: correcting a mistake triggers the doc/memory update so it
-      is not repeated, on any surface.
+- [~] 7.5 On-correction auto-update: correcting a mistake triggers the doc/memory update so it
+      is not repeated, on any surface. PROCEDURE AUTHORED (memory/README.md "On-correction update":
+      routes preference→rule, fact→memory-supersede, doc→fix-in-same-change). Hook (Code) + skill
+      (chat/Cowork) wiring pending with 7.2/7.3.
 - Handoff after this Part.
 
 ## Part 8: Git hygiene (simple by default)
