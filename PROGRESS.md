@@ -13,3 +13,6 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Local commits are ready.
 - Corrected PLAN.md Part 4.1 (recreate SA, not verify). Wrote handoffs/000-setup.md.
 - Saved memory: secrets-sa-deleted-20260603, claude-kit-rebuild (+ MEMORY.md index).
+- Part 2.1: wrote global rules under plugins/core/rules/global/ (working-style,
+  knowledge-capture, naming-discipline, secrets-as-references, verify-before-asserting,
+  anti-stale, speed-by-default), seeded from the owner's engineering notes.
