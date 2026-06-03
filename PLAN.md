@@ -287,7 +287,10 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       remote action. Verify whether Cowork runs them.
 - [ ] 7.3 Implement the same procedures as skills plus always-loaded instructions for chat and
       Cowork.
-- [ ] 7.4 Add `surface-check` skill: reports loaded vs missing on the current surface.
+- [~] 7.4 Add `surface-check` skill: reports loaded vs missing on the current surface. AUTHORED:
+      `plugins/core/skills/surface-check/SKILL.md` — identifies the surface, probes each capability
+      (rules/memory/creds/connectors/hooks/skills/git) instead of assuming, reports a loaded-vs-missing
+      table + the always-complete fallback per gap. Enable-per-surface (claude.ai/Cowork) is Part 10.
 - [~] 7.5 On-correction auto-update: correcting a mistake triggers the doc/memory update so it
       is not repeated, on any surface. PROCEDURE AUTHORED (memory/README.md "On-correction update":
       routes preference→rule, fact→memory-supersede, doc→fix-in-same-change). Hook (Code) + skill

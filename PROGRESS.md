@@ -132,3 +132,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Code/Cowork/all machines, ZERO new apps. Phase 2 (secrets inside claude.ai-web/iPhone) needs OAuth,
   which can be BAKED INTO the connector (no new app) rather than a Cloudflare portal — deferred until
   owner wants it. DEPLOY.md/decisions/0004 to be updated to phasing once owner confirms direction.
+- Part 7.4 [~]: authored surface-check skill (plugins/core/skills/surface-check/SKILL.md) — probes
+  rules/memory/creds/connectors/hooks/skills/git on the current surface (never assumes), reports
+  loaded-vs-missing + the Native→RemoteMCP→generated-prompt fallback per gap; references surfaces/
+  profiles by path (no restatement). Enable-per-surface = Part 10. Next: 7.2 hook scripts + hooks.json
+  (Stop hook runs backup-archive.sh + end-of-session write; SessionStart freshness gate) — authored
+  in-repo, then activation diff for owner approval (no self-wiring of settings.json/~/.claude).
