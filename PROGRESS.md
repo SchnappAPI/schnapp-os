@@ -42,3 +42,15 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Set OP_SERVICE_ACCOUNT_TOKEN Actions secret on 8/10 SchnappAPI repos. 2 failed (af-invoice-parser,
   af-query-api): PAT 403, fine-grained token scope excludes them. Owner to widen PAT to All repos.
 - Session handed off (context large). See handoffs/003-session-resume.md to resume in a fresh session.
+- Part 4.2: built connectors/op-mcp/ (Node streamable-HTTP MCP, @1password/sdk). Tools op_read,
+  op_list_vaults, op_list_items, op_health (read-only; no op_run/op_inject). Bearer auth, refuses
+  to start without both env tokens. Dockerfile + fly.toml (Fly.io recommended Node host).
+- Part 4.2: resolved decisions/0004 host fork. Verified @1password/sdk-core ships only the
+  wasm-bindgen Node target (fs.readFileSync + sync WebAssembly.Module) -> Workers ruled out, Node
+  host required. Recorded in decisions/0004.
+- Part 4.2 VERIFIED locally: npm run verify (SDK runs in Node, SA authenticates, vault visible);
+  full HTTP path green (tools/list, tools/call x4, 401 w/o bearer, clean validation+resolve errors,
+  op_read resolved end-to-end). Build clean under strict TS.
+- Part 4.2 remaining (owner-gated): deploy to a Node host (default Fly.io) + set the two host
+  secrets; choose claude.ai auth front (Cloudflare Access vs OAuth wrapper) + register URL; verify
+  PLAN check 7 (resolve from claude.ai with Mac OFF). See handoffs/004-connector-built.md.

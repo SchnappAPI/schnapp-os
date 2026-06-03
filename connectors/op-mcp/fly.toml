@@ -1,0 +1,29 @@
+# Fly.io deploy config (recommended Node host: simplest persistent HTTPS URL,
+# off-Mac, free-tier friendly). Alternatives: Render, Railway, Cloudflare
+# Containers, Cloud Run — all work from the Dockerfile.
+#
+# Deploy (owner step — needs your Fly account):
+#   fly launch --no-deploy --copy-config --name op-mcp-<suffix>
+#   fly secrets set OP_SERVICE_ACCOUNT_TOKEN="$(op read op://<vault>/claude-kit-op-mcp/service-account-token)"
+#   fly secrets set CONNECTOR_AUTH_TOKEN="$(openssl rand -hex 32)"   # then save it to 1Password
+#   fly deploy
+#   curl https://<app>.fly.dev/health   # -> {"status":"ok",...}
+
+app = "op-mcp"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[http_service.checks]]
+  method = "GET"
+  path = "/health"
+  interval = "30s"
+  timeout = "5s"
