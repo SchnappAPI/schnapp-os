@@ -16,3 +16,8 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Part 2.1: wrote global rules under plugins/core/rules/global/ (working-style,
   knowledge-capture, naming-discipline, secrets-as-references, verify-before-asserting,
   anti-stale, speed-by-default), seeded from the owner's engineering notes.
+- Owner created PRIVATE repo SchnappAPI/claude-kit. Pushed main (3 commits). Verified private.
+- Part 0 DONE (repo + tracker + remote live). Sync-hook automation (0.3) deferred to Part 7
+  (needs hooks wired); manual push works now.
+- Pending owner: Part 4 SA rotation (decisions/0001); Part 1 keep-set approval before
+  disabling plugins.

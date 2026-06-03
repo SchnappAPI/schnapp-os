@@ -3,19 +3,15 @@
 Date: 2026-06-03
 
 ## State
-- Local repo `~/code/claude-kit` created, branch `main`, remote set to
-  `git@github.com:SchnappAPI/claude-kit.git` (SSH).
-- Committed: PLAN.md (canonical), PROGRESS.md, README.md, .gitignore, decisions/0001.
-- NOT pushed: the remote repo does not exist yet.
+- Repo `SchnappAPI/claude-kit` is LIVE and PRIVATE. `main` pushed over SSH (3 commits).
+- Committed + pushed: PLAN.md (canonical), PROGRESS.md, README.md, .gitignore, decisions/0001,
+  handoffs/000, and Part 2.1 global rules under plugins/core/rules/global/.
+- Part 0 done. Sync-hook automation (auto pull/push) deferred to Part 7.
 
-## Blocker (owner action)
+## Remaining owner action (not blocking local authoring)
 1Password Service Account is DELETED (decisions/0001). `op`/`gh`/launchd secret resolution
-return 403. **Healthy:** git over SSH, GitHub MCP OAuth connector.
-
-Repo creation needs one of:
-- Owner creates an empty PRIVATE `SchnappAPI/claude-kit` on github.com, then push over SSH:
-  `git -C ~/code/claude-kit push -u origin main`
-- Owner rotates the SA, then `gh repo create SchnappAPI/claude-kit --private --source=. --push`
+return 403. **Healthy:** git over SSH, GitHub MCP OAuth connector. Fix in Part 4 (recreate
+SA, rotate token everywhere). Part 1 (disable plugins) waits on keep-set approval.
 
 ## What works without the blocker
 Authoring all kit content locally (Parts 2, 3 rules/surfaces/presets) and committing.
