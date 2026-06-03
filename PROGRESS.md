@@ -11,3 +11,5 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Part 0.1 (remote): repo creation pending. Needs owner to create empty private
   `SchnappAPI/claude-kit` (then I push over SSH), OR SA rotation so `gh repo create` works.
   Local commits are ready.
+- Corrected PLAN.md Part 4.1 (recreate SA, not verify). Wrote handoffs/000-setup.md.
+- Saved memory: secrets-sa-deleted-20260603, claude-kit-rebuild (+ MEMORY.md index).

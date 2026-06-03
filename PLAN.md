@@ -208,9 +208,10 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - Done when: a new project rule set is composed in one choice and never leaks across languages.
 - Handoff after this Part.
 
-## Part 4: Credentials everywhere (verify and extend, no Mac dependency)
-- [ ] 4.1 Verify your existing 1Password Service Account token is present on every surface's
-      secret store (do not create a new one).
+## Part 4: Credentials everywhere (no Mac dependency)
+- [ ] 4.1 RECREATE the 1Password Service Account: the prior one was DELETED (see
+      decisions/0001), so `op`/`gh` are down. Create a new SA, grant the vaults, and put the
+      new token on every surface (`~/.zshrc`, `~/.zshenv`, GitHub Actions secret, others).
 - [ ] 4.2 Add a hosted 1Password MCP connector (service-account-backed); enable on every
       surface as the primary secret path. Keep the Mac op_* tools as backup.
 - [ ] 4.3 Put credential references (the `op://` map) in `.env.template` / `credentials-map.md`;
@@ -314,7 +315,10 @@ Added after the core works, so it never blocks the foundation.
 
 ## Owner-only steps (need you)
 
-- 4.1 Confirm the existing 1Password SA token is on each surface.
+- 4.1 BLOCKER: recreate the deleted 1Password SA and rotate the token on every surface
+  (see decisions/0001). Until then `op`/`gh` stay down (git SSH + GitHub MCP still work).
+- 0.1 Create an empty PRIVATE repo `SchnappAPI/claude-kit` so the local commits can push
+  (I cannot create the repo: `gh` is down). Or rotate the SA first and I create it via `gh`.
 - 6.1 Done: OneDrive `claude-archive/` exists.
 - Approve any future branch before it is created.
 
