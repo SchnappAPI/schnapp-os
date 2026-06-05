@@ -1,11 +1,15 @@
 ---
 scope: global
-updated: 2026-06-03
+updated: 2026-06-05
 ---
 # Anti-staleness (single source of truth)
 
 - One fact lives in one canonical file. Elsewhere `@import` it or reference it by path;
   never paraphrase. Duplication is what goes stale.
+- Fix the class, not the instance. When something stale, wrong, or duplicated is found or
+  pointed out, it is one case of a kind: sweep the whole repo for every sibling of that kind
+  and fix them in the same pass. Patching only the flagged example leaves the rest stale and
+  repeats the problem. (How-to-work corollary in working-style.md "Generalize corrections".)
 - `@import` live files instead of describing them. Import only small, always-needed files;
   large or occasional content loads on demand (skills, path-scoped rules).
 - Generate anything derivable (catalogs, command lists, env docs); mark output

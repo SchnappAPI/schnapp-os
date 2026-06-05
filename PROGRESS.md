@@ -247,3 +247,14 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   session): expect the SESSION-START GATE block, test the Stop push-gate (commit-without-push → block), and
   the SESSION-END backup; flip 5.3/5.4 → [x] once seen. All of Part 7 authored ([~]); remaining = live-verify
   + remote http/mcp_tool hooks + Cowork-runs-hooks check + per-surface enablement (Part 10). Next: Part 8.
+- Owner feedback (how-to-work correction): I act too narrowly — fix only the flagged example, skip
+  ripple effects, don't think from the overall purpose. Routed per on-correction (preference→RULE):
+  added to working-style.md ("Think in systems, not instances"; "Work from the objective, not the
+  literal ask"; "Generalize corrections to their class") and anti-stale.md ("Fix the class, not the
+  instance"); bumped both updated:2026-06-05. Then ran the holistic pass I'd been skipping and caught a
+  real SCOPE GAP in 7.2: the .claude/settings.json hook wiring is claude-kit-REPO-ONLY, so "hooks on
+  all machines/every project" is NOT met — the project-agnostic gate+push-gate need plugin delivery
+  (${CLAUDE_PLUGIN_ROOT}, Part 10) split from the claude-kit-specific backup, or they double-fire +
+  back up claude-kit in every repo. Flagged in PLAN 7.2; decisions/0005 (delivery split) + global-vs-
+  Part-10 timing pending owner. Also queued smaller class-fixes: surface profiles should name the
+  concrete Part-7 hooks; trust-dialog is an unverified prerequisite that silently nullifies hooks+5.1.

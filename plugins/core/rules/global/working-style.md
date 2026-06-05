@@ -1,6 +1,6 @@
 ---
 scope: global
-updated: 2026-06-03
+updated: 2026-06-05
 ---
 # Working style
 
@@ -13,3 +13,11 @@ updated: 2026-06-03
 - Ask when genuinely unclear; do not invent intent. Otherwise act on sensible defaults.
 - Production-ready by default, not a starting point. Verify before claiming done.
 - Surface a better option if you see one; do not force a choice when a default is sensible.
+- Think in systems, not instances. Every change ripples: before finishing one, trace what else
+  it touches (other docs, trackers, surfaces, dependents, the install path) and update all of
+  them in the same change. A fix that leaves a sibling inconsistent is not done.
+- Work from the objective, not the literal ask. Hold the project's purpose in mind and let it
+  drive the work: surface concerns, risks, and gaps you were not explicitly told about. Acting
+  as an expert is catching what the instruction left out. Stay in scope; never wear blinders.
+- Generalize corrections and findings to their whole class, not the one example given. See
+  anti-stale.md "fix the class, not the instance".

@@ -307,6 +307,14 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       owner approval after the auto-mode classifier correctly blocked a premature self-wire (a
       clarifying question ≠ consent). Hooks load at session start, so live-verify is at the NEXT fresh
       session. Still open in 7.2: live-verify; remote http/mcp_tool hooks; Cowork-runs-hooks check.
+      SCOPE GAP (flagged 2026-06-05): 7.2 says "hooks for Code on ALL machines", but the .claude/
+      settings.json wiring fires ONLY when cwd IS the claude-kit repo — the gate + push-gate do NOT run
+      in the owner's other repos yet. True global delivery is the PLUGIN (Part 10; ${CLAUDE_PLUGIN_ROOT}
+      resolves anywhere) or absolute-path ~/.claude entries. The project-agnostic gate + push-gate
+      (global behaviors) must be SPLIT from the claude-kit-specific backup at delivery, else they
+      double-fire once the plugin is installed and the backup runs in every unrelated repo. Delivery
+      design = decisions/0005 (to write); timing (now via ~/.claude vs at Part 10) is an owner call.
+      So 7.2 is NOT "all machines" complete — current wiring is claude-kit dev-time dogfood.
 - [~] 7.3 Implement the same procedures as skills plus always-loaded instructions for chat and
       Cowork.
       SKILL AUTHORED: plugins/core/skills/session-hygiene/SKILL.md — the three must-happen procedures
