@@ -132,6 +132,16 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Code/Cowork/all machines, ZERO new apps. Phase 2 (secrets inside claude.ai-web/iPhone) needs OAuth,
   which can be BAKED INTO the connector (no new app) rather than a Cloudflare portal — deferred until
   owner wants it. DEPLOY.md/decisions/0004 to be updated to phasing once owner confirms direction.
+- 4.2 DEPLOY IN PROGRESS (owner chose to do claude.ai/iPhone OAuth now): connector LIVE on Render free
+  tier at https://op-mcp.onrender.com (Blueprint deploy from render.yaml; /health verified ok from
+  two sides). Fixed a render.yaml path bug (deb882c): with rootDir set, dockerfilePath/dockerContext
+  are rootDir-relative, not repo-root — the repo-root values doubled the path and failed the first
+  build. Bake-in OAuth reconsidered + REJECTED: real MCP OAuth (2.1+PKCE+DCR) realistically needs
+  Auth0/Stytch (a NEW account) or heavy security code → MORE sprawl than the Cloudflare portal, which
+  uses the owner's EXISTING Cloudflare. Cloudflare MCP portal confirmed to forward a static bearer
+  upstream (Auth type: bearer + auth_credentials) — no connector code change. Remaining owner steps:
+  build the Cloudflare portal (DEPLOY.md Step 4) + register the portal URL in claude.ai + verify
+  check-7. Render free cold-start (~50s) optional-fixable with a free UptimeRobot/cron ping to /health.
 - Part 7.4 [~]: authored surface-check skill (plugins/core/skills/surface-check/SKILL.md) — probes
   rules/memory/creds/connectors/hooks/skills/git on the current surface (never assumes), reports
   loaded-vs-missing + the Native→RemoteMCP→generated-prompt fallback per gap; references surfaces/

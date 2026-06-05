@@ -68,22 +68,29 @@ claude.ai only accepts OAuth, so put a Cloudflare One **MCP server portal** in
 front of the Render origin. The portal handles the OAuth handshake claude.ai
 expects — no OAuth code to write. (Free Zero Trust tier; you already run Cloudflare.)
 
-1. Cloudflare **Zero Trust** dashboard → **Access** → **MCP server portals**.
-2. **Add an MCP server**: name `op-mcp`, server URL `https://op-mcp.onrender.com/mcp`.
-3. **Origin auth (the one detail to confirm live):** the portal must present the
-   bearer to the Render origin. Use whichever the portal UI offers, in order of
-   preference:
-   - a configured static request header `Authorization: Bearer <CONNECTOR_AUTH_TOKEN>`
-     forwarded to the upstream; **or**
-   - switch the origin to trust a **Cloudflare Access service token / JWT** instead
-     of the bearer (a small change to `src/auth.ts`) so only the portal can reach it.
-   If neither is available in your portal version, tell me and I'll add Access-JWT
-   verification to the server — a ~30-line change, still no recurring cost.
-4. **Create the portal** with a custom hostname, e.g. `https://mcp.<yourdomain>`.
-5. **Access policy:** restrict to your own identity (email/Google login). This is
-   what actually gates who can reach the secrets, so keep it tight.
-6. Allowlist the claude.ai OAuth callback on the portal/Access app:
-   `https://claude.ai/api/mcp/auth_callback` (and the `claude.com` equivalent).
+Verified: the MCP portal natively forwards a STATIC bearer to the upstream — add
+the server with `Auth type: bearer` and the token; no connector code change.
+
+2a. Add the MCP server (upstream):
+   1. Cloudflare dashboard → **Zero Trust** → **Access controls** → **AI controls**
+      (first time: pick a team name + the **Free** plan).
+   2. **MCP servers** tab → **Add an MCP server**.
+   3. Name `op-mcp`; URL `https://op-mcp.onrender.com/mcp`.
+   4. **Auth type: bearer** → paste the `CONNECTOR_AUTH_TOKEN` value (exact match to
+      Render, or the origin returns 401). Add an Access policy → your email.
+      **Save and connect server.**
+   - If the dashboard lacks a bearer field (API-only in some versions):
+     ```
+     curl "https://api.cloudflare.com/client/v4/accounts/{account_id}/access/ai-controls/mcp/servers" \
+       --request POST --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+       --json '{"name":"op-mcp","hostname":"https://op-mcp.onrender.com/mcp","auth_type":"bearer","auth_credentials":"<CONNECTOR_AUTH_TOKEN>"}'
+     ```
+2b. Create the portal:
+   1. **AI controls** main → **Add MCP server portal**.
+   2. Name it; **Custom domain** = a zone you own + subdomain, e.g. `mcp.schnapp.bet`.
+   3. Add the `op-mcp` server; Access policy → your email. **Add MCP server portal.**
+   The end-client (claude.ai) URL becomes `https://<subdomain>.<domain>/mcp`. Users
+   authenticate to Cloudflare Access; the portal forwards the bearer to Render.
 
 ## Step 5 — Register in claude.ai (and iPhone)
 
