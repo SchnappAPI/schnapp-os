@@ -122,7 +122,7 @@ Sorted within each cluster: 🔴 first, then 🟢, then ⚪. `(s)`=skill `(a)`=a
 - [ ] aside (c) — answer a side question, then resume — ⚪ SKIP
 
 ### 4 · Code review, quality, verification & debugging
-- [ ] **sql-etl-reviewer** — *(see GAP list — the only build candidate here)* — 🔴 GAP
+- [x] **sql-etl-reviewer** — *(see GAP list — the only build candidate here)* — 🔴 GAP
 - [ ] code-review (c) — review diff or PR — 🟢 HAVE (`/code-review` skill + superpowers review)
 - [ ] review-pr (c) — multi-agent PR review — 🟢 HAVE (`/code-review`)
 - [ ] code-reviewer (a) — quality/security review — 🟢 HAVE (superpowers + caveman reviewer)
@@ -165,23 +165,23 @@ Sorted within each cluster: 🔴 first, then 🟢, then ⚪. `(s)`=skill `(a)`=a
 - [ ] bun-runtime / nextjs-turbopack / nuxt4-patterns / vite-patterns (s) — runtimes/build tools — ⚪ SKIP
 - [ ] pytorch-patterns / mle-workflow (s) + agent-sdk-verifier-py / agent-sdk-verifier-ts (a) — ML / SDK verify — ⚪ SKIP
 - [x] regex-vs-llm-structured-text (s) — regex-vs-LLM parsing choice — ⚪ SKIP *(handy for ETL parsing; pull if wanted)*
-- [ ] *Power Query M* — your reporting stack — 🟢 HAVE (pq-flat-map-type skill) — [ ] name it in a preset
+- [ ] *Power Query M* — your reporting stack — 🟢 HAVE (pq-flat-map-type skill) — [x] name it in a preset
 
 ### 6 · Data, ETL & performance — your core domain
 - [x] **etl-pipeline-build** — *(see GAP list)* — 🔴 GAP
 - [x] data-throughput-accelerator (s) — speed up big ingestion/backfill/ETL — ⚪ SKIP *(the best archive ref to pull for ETL speed)*
-- [ ] latency-critical-systems (s) — low-latency systems — ⚪ SKIP
-- [ ] benchmark (s) / benchmark-optimization-loop (s) + performance-optimizer (a) — measure/optimize perf — ⚪ SKIP
-- [ ] content-hash-cache-pattern (s) — hash-keyed caching — ⚪ SKIP
-- [ ] cost-aware-llm-pipeline (s) — LLM cost routing — ⚪ SKIP
-- [ ] *data analysis / dashboards / SQL authoring* — 🟢 HAVE (data:* skills: analyze, write-query, explore-data, build-dashboard) — [ ] name in the ETL preset
-- [ ] *spreadsheet / data audit* — 🟢 HAVE (sports-data-auditor, xlsx, fish-compare skills) — [ ] name in your preset
+- [x] latency-critical-systems (s) — low-latency systems — ⚪ SKIP
+- [x] benchmark (s) / benchmark-optimization-loop (s) + performance-optimizer (a) — measure/optimize perf — ⚪ SKIP
+- [x] content-hash-cache-pattern (s) — hash-keyed caching — ⚪ SKIP
+- [x] cost-aware-llm-pipeline (s) — LLM cost routing — ⚪ SKIP
+- [ ] *data analysis / dashboards / SQL authoring* — 🟢 HAVE (data:* skills: analyze, write-query, explore-data, build-dashboard) — [x] name in the ETL preset
+- [ ] *spreadsheet / data audit* — 🟢 HAVE (sports-data-auditor, xlsx, fish-compare skills) — [x] name in your preset
 
 ### 7 · Research, docs & codebase comprehension
 - [x] **/update-docs** + **/update-codemaps** — *(see GAP list)* — 🔴 GAP
 - [x] doc-updater (a) / comment-analyzer (a) — doc/codemap agent — 🔴 part of the GAP build above
-- [ ] deep-research (s) / exa-search (s) — multi-source research — 🟢 HAVE (deep-research skill) — [ ] name in preset
-- [ ] documentation-lookup (s) + docs-lookup (a) — current library docs — 🟢 HAVE (context7 MCP) — [ ] name in preset
+- [ ] deep-research (s) / exa-search (s) — multi-source research — 🟢 HAVE (deep-research skill) — [x] name in preset
+- [ ] documentation-lookup (s) + docs-lookup (a) — current library docs — 🟢 HAVE (context7 MCP) — [x] name in preset 
 - [ ] codebase-onboarding (s) / code-tour (s) + code-explorer (a) — understand a codebase — 🟢 HAVE (Explore agent)
 - [ ] zoom-out (s) — broader context — ⚪ SKIP
 
@@ -204,7 +204,7 @@ Sorted within each cluster: 🔴 first, then 🟢, then ⚪. `(s)`=skill `(a)`=a
 - [ ] git-guardrails-claude-code (s) — block dangerous git — 🟢 HAVE (claude-kit push-gate hook)
 - [ ] setup-pre-commit (s) — Husky/lint-staged hooks — ⚪ SKIP
 - [ ] no-commit-to-main / auto-pr-after-commit / auto-merge-on-stop (h) — git automation — 🟢 HAVE (claude-kit deliberately rejects auto-pr/merge; works on main — decisions/0005)
-- [ ] clean-gone (c) — prune [gone] branches — ⚪ SKIP *(handy; pull if wanted)*
+- [x] clean-gone (c) — prune [gone] branches — ⚪ SKIP *(handy; pull if wanted)*
 - [ ] github-ops (s) — issues/PR/CI via gh — 🟢 HAVE (GitHub MCP) — [ ] name in preset
 - [ ] pr / prp-pr (c) — create a PR — 🟢 HAVE (GitHub MCP)
 - [ ] opensource-pipeline (s) + opensource-forker / sanitizer / packager (a) — public-release chain — ⚪ SKIP
@@ -219,7 +219,7 @@ Sorted within each cluster: 🔴 first, then 🟢, then ⚪. `(s)`=skill `(a)`=a
 
 ### 11 · Communication & token economy
 - [ ] caveman (s) — terse output mode — 🟢 HAVE (caveman plugin, already on)
-- [ ] token-budget-advisor / context-budget / cost-aware-llm-pipeline / strategic-compact (s) — token/depth budgeting — ⚪ SKIP
+- [x] token-budget-advisor / context-budget / cost-aware-llm-pipeline / strategic-compact (s) — token/depth budgeting — ⚪ SKIP
 
 ---
 
