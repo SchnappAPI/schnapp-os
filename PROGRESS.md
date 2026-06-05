@@ -380,3 +380,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   step 2; corrected README step 3's now-stale "trust gates the memory lane" claim). claude-kit's
   project-scope entry left as a benign bootstrap fallback. Throwaway fact + /tmp fixture cleaned up; lane +
   repo clean. Phase boundary: pause before the Capability layer (C.0 gap-inventory) per the locked order.
+- Capability layer C.0 (inventory half) → PLAN C.0 `[~]`. Owner asked for a full, deduplicated, thematically
+  clustered inventory of ALL schnapp-kit (referencing its skill-scout / search-first / skill-stocktake /
+  agent-sort skills for method). Extracted frontmatter for all 253 components (134 skills / 39 agents / 59
+  commands / 21 hooks), deduped overlaps, clustered into ~11 intent groups (nested where large), and tagged
+  each cluster compose(keep-set/available/connector/claude-kit) vs gap vs archive. Recorded in
+  decisions/0007-capability-inventory.md. C.0 conclusion: genuine owner-domain gaps reduce to
+  `etl-pipeline-build`, `sql-server-patterns`, `/update-docs`(+`/update-codemaps`), a `sql-etl-reviewer`
+  agent, and conditionally `tool/quickbase`+`tool/appfolio`; everything else composes or archives (notably the
+  ~25-component session/memory cluster = the sprawl the owner left → port nothing). Awaiting owner confirm of
+  the C.1 build set before building; C.0 stays [~] until then.

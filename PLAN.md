@@ -466,7 +466,13 @@ first approved branch).
 The productive teeth (the gap the owner flagged). Owner chose DOMAIN-FIRST LEAN: build ONLY what serves
 the owner's actual platform AND is not already provided elsewhere (rebuilding what exists = the sprawl we
 are escaping). Steps labeled C.x to keep Part numbers stable. Method:
-- [ ] C.0 Gap inventory FIRST (never build blind). For each candidate, check whether it already exists in
+- [~] C.0 Gap inventory FIRST (never build blind). For each candidate, check whether it already exists in
+      INVENTORY RECORDED 2026-06-05 → decisions/0007-capability-inventory.md: all 253 schnapp-kit components
+      (134 skills / 39 agents / 59 commands / 21 hooks) deduplicated into ~11 intent clusters with
+      compose-vs-archive-vs-gap coverage tags. C.0 conclusion: the only genuine owner-domain gaps are
+      `etl-pipeline-build`, `sql-server-patterns`, `/update-docs`(+`/update-codemaps`), a `sql-etl-reviewer`
+      agent, and (conditionally) `tool/quickbase`+`tool/appfolio`. Everything else composes (keep-set /
+      available skills / connectors / claude-kit) or archives. Stays [~] until the owner confirms the C.1 build set.
       (a) keep-set plugins (superpowers = TDD/debug/brainstorm/code-review/worktrees; caveman; plugin-dev;
       frontend-design), (b) available skills (anthropic-skills: pq-flat-map-type / fish-compare /
       sports-data-auditor / xlsx / pdf / docx; the `data:*` suite; `design:*`; deep-research), (c) MCP
