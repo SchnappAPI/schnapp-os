@@ -13,11 +13,12 @@ services:
     type: web
     runtime: docker
     plan: free
-    # rootDir scopes which repo changes trigger a rebuild to the connector dir.
+    # rootDir scopes the build to the connector dir; with it set, dockerfilePath
+    # and dockerContext are relative to rootDir (NOT the repo root — a doubled
+    # path like connectors/op-mcp/connectors/op-mcp fails the build).
     rootDir: connectors/op-mcp
-    # dockerfilePath / dockerContext are repo-root-relative per the Render spec.
-    dockerfilePath: connectors/op-mcp/Dockerfile
-    dockerContext: connectors/op-mcp
+    dockerfilePath: Dockerfile
+    dockerContext: .
     healthCheckPath: /health
     autoDeployTrigger: off
     envVars:
