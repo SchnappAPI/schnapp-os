@@ -307,8 +307,14 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       owner approval after the auto-mode classifier correctly blocked a premature self-wire (a
       clarifying question ≠ consent). Hooks load at session start, so live-verify is at the NEXT fresh
       session. Still open in 7.2: live-verify; remote http/mcp_tool hooks; Cowork-runs-hooks check.
-- [ ] 7.3 Implement the same procedures as skills plus always-loaded instructions for chat and
+- [~] 7.3 Implement the same procedures as skills plus always-loaded instructions for chat and
       Cowork.
+      SKILL AUTHORED: plugins/core/skills/session-hygiene/SKILL.md — the three must-happen procedures
+      (freshness gate / end-of-session write / on-correction update) for hookless surfaces, pointing to
+      the canonical memory/README.md (no restatement) + the hookless execution notes (read git via the
+      GitHub connector; persist via create_or_update_file or a generated Code prompt; backup caveat).
+      Surface profiles (claude-ai-web, cowork, iphone) wired to name the skill. Always-loaded-instruction
+      ENABLEMENT per surface (claude.ai project instructions / Cowork) + live test = Part 10 (like 7.4).
 - [~] 7.4 Add `surface-check` skill: reports loaded vs missing on the current surface. AUTHORED:
       `plugins/core/skills/surface-check/SKILL.md` — identifies the surface, probes each capability
       (rules/memory/creds/connectors/hooks/skills/git) instead of assuming, reports a loaded-vs-missing

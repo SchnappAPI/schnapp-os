@@ -231,3 +231,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   0.3 pull (now absorbed by the gate). Hooks load at session start, so this session is unaffected —
   live-verify (gate output, Stop block on unpushed, SessionEnd backup) is the NEXT fresh session.
   PLAN 5.3/5.4/7.2 stay [~] until that live-verify. Committed + pushed.
+- Part 7.3 [~]: authored plugins/core/skills/session-hygiene/SKILL.md — the three must-happen
+  procedures (freshness gate / end-of-session write / on-correction update) for hookless surfaces
+  (claude.ai web/iPhone, Cowork-until-verified). Single source = memory/README.md (the skill points to
+  each section, no restatement) + adds the hookless execution notes that differ from the Code hooks:
+  read git via the GitHub connector (no git status), persist memory/handoff via create_or_update_file
+  (commit+push in one) or a generated Code prompt (always-complete, never skip the write), and the
+  backup caveat (backup-archive.sh needs a shell → don't claim the OneDrive mirror ran from chat).
+  Wired the three surface profiles (claude-ai-web, cowork, iphone) to name the skill in the same change
+  (anti-stale). Always-loaded-instruction enablement per surface = Part 10 (mirrors 7.4 surface-check).
