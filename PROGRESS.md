@@ -268,3 +268,14 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   "owner call"). Class-fix done: code-mac + code-work-machines profiles now name the concrete hooks +
   reference 0005/memory-README + the trust-dialog prerequisite (folded out the duplicated "Routines"
   paraphrase = anti-stale). Current claude-kit wiring = dev-time dogfood; 7.2 closes at Part 10.
+- Part 8 (git hygiene), in-order, building only the real gap: 8.1 [x] — encoded the git WORKFLOW in
+  plugins/core/rules/modules/lang/git.md "Workflow" (work on main; commit+push every change; branches
+  only with explicit approval; address unmerged/unpushed first; log decisions/progress), which also
+  resolves git.md's prior dangling "see the project's git workflow" reference; enforcement was already
+  live (keep-tracker-current + anti-stale + Part-7 hooks) and is demonstrably followed. 8.2 [~] —
+  already IMPLEMENTED by session-start-gate.sh (=5.3) + Stop push-gate; pending the same next-session
+  live-verify (did not rebuild). 8.3 [~] — authored plugins/core/skills/merge-with-discretion/SKILL.md
+  (precondition a non-main approval-gated branch exists → readiness by evidence → timing discretion →
+  merge + explain; defers mechanics to git.md + superpowers finishing-a-development-branch, no
+  duplication); unverifiable until a branch exists, so [~]. Part 8 buildable work done; 8.2 closes with
+  the 5.3/7.2 live-verify, 8.3 when a branch is first merged.

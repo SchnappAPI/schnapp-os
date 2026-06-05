@@ -340,10 +340,23 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - Handoff after this Part.
 
 ## Part 8: Git hygiene (simple by default)
-- [ ] 8.1 Default: work on `main`, commit and push every change, log decisions and learnings.
-- [ ] 8.2 SessionStart gate addresses unmerged or unpushed work before new work.
-- [ ] 8.3 Merge-with-discretion skill: only when a branch exists (created with your explicit
+- [x] 8.1 Default: work on `main`, commit and push every change, log decisions and learnings.
+      ENCODED in plugins/core/rules/modules/lang/git.md "Workflow" (work on main; commit+push every
+      change; branches only with explicit owner approval; address unmerged/unpushed first; log
+      decisions/progress). Resolves git.md's prior dangling "see the project's git workflow" pointer.
+      Enforcement already live (keep-tracker-current memory + anti-stale "pushed immediately" + the
+      Part-7 gate/push-gate); demonstrably followed (every commit this build is push-immediately).
+- [~] 8.2 SessionStart gate addresses unmerged or unpushed work before new work.
+      IMPLEMENTED by session-start-gate.sh (=5.3): surfaces unmerged/unpushed/dirty git at start;
+      the Stop push-gate adds turn-by-turn push enforcement. Pending the SAME next-session live-verify
+      as 5.3 — flip to [x] when the gate is seen running at a real session start.
+- [~] 8.3 Merge-with-discretion skill: only when a branch exists (created with your explicit
       approval), it judges the right time, merges for you, explains why.
+      SKILL AUTHORED: plugins/core/skills/merge-with-discretion/SKILL.md — precondition (a non-main
+      branch exists + was approval-gated), readiness (tests/build/review/CI, evidence not vibes),
+      timing discretion, then merge + explain; defers merge mechanics to git.md + the superpowers
+      finishing-a-development-branch skill (no duplication). Unverifiable until a branch actually
+      exists (default is work-on-main), so [~] not [x].
 - Handoff after this Part.
 
 ## Part 9: Anti-staleness wiring + project template
