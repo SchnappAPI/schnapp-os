@@ -85,7 +85,7 @@ Do earlier-listed FIRST (avoids rework). Part numbers kept STABLE (no renumber r
   `~/.claude/settings.json.bak-20260603-144320`.
 
 ## Resume prompt
-"Resume claude-kit. Working dir ~/code/claude-kit. Read PLAN.md (esp. the 'Finish sequence' + 'Capability
+"Resume claude-kit. Working dir `~/code/claude-kit`. Read PLAN.md (esp. the 'Finish sequence' + 'Capability
 layer' sections), PROGRESS.md, decisions/0006, and handoffs/012-evaluation-and-finish-plan.md FIRST —
 tracker + docs are current. Parts 0–9 done; Part-7 hooks live-verified; foundation verified native-sound;
 the finish order is LOCKED. Work strictly in this order, handing off at each boundary: (1) FOUNDATION
@@ -97,7 +97,7 @@ candidate capability check whether it already exists in the keep-set plugins / a
 (anthropic-skills, data:*, design:*, deep-research) / MCP connectors, and COMPOSE-not-rebuild what exists;
 only build the genuine gap (domain-first lean, owner-confirmed). Record the inventory in decisions/. C.1
 build the gap lean into the gallery; C.2 extend presets + regenerate CATALOG (gen-catalog.sh, CI enforces);
-C.3 leave schnapp-kit (~/code/schnapp-kit) as the on-demand archive. (3) Part 10 package + wire surfaces
+C.3 leave schnapp-kit (`~/code/schnapp-kit`) as the on-demand archive. (3) Part 10 package + wire surfaces
 (plugin delivers global hooks per decisions/0005; then REMOVE the gate+push-gate from project
 .claude/settings.json — needs explicit owner approval). (4) Part 11 agentic OS. (5) final 14-point sweep.
 Binding rules: think in systems and trace each change's ripple (check blast radius before renaming/
@@ -105,5 +105,5 @@ renumbering; prefer stable identifiers); work from the objective not the literal
 compose what exists, never recreate sprawl; verify load-bearing assumptions before building on them; fix
 the class not the instance; do NOT escalate decisions the locked plan already settles. keep-tracker-current
 (flip box + PROGRESS line + push every state change; after any rule/skill/command/hook change run
-gen-catalog.sh and commit CATALOG.md). Explicit owner approval before any ~/.claude / settings.json hook
+gen-catalog.sh and commit CATALOG.md). Explicit owner approval before any `~/.claude` / settings.json hook
 change or secret distribution. Act autonomously; pause at Part boundaries to check for input."
