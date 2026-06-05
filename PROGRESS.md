@@ -291,4 +291,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   claude-archive vault; the SessionEnd event fires by the same settings.json wiring as the observed
   SessionStart gate (its output can't be seen mid-session, no turn follows it). (3) Stop push-gate
   (7.2): live-exercised by THIS box-flip commit — held unpushed across a turn boundary to trigger the
-  gate; observed result noted with the push. 7.2 stays [~] (closes at Part 10 plugin delivery, 0005).
+  gate; CONFIRMED it blocked with "1 unpushed commit(s) on origin/main. Run: git push", allowed once
+  pushed. 7.2 stays [~] (closes at Part 10 plugin delivery, 0005).
+- Part 9 START (in-order, after live-verify). 9.2 DONE: built plugins/core/scripts/gen-catalog.sh →
+  generates plugins/core/CATALOG.md (inventory of global rules / modules-by-dimension with paths +
+  reference-only split / presets-linked-not-duplicated / skills / commands / hooks). Marked "generated
+  — do not edit"; deterministic (C-locale sort, no timestamps) → CI-diffable. "update-codemaps" N/A
+  (no code graph in a docs/config repo); "update-docs" = this generator, extensible. Verified green +
+  byte-identical on re-run. Built in dependency order (9.2 before 9.3 CI which runs it); 9.1/9.4
+  (template + @import dedup) and 9.5 (README install checklist) next.

@@ -371,7 +371,13 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 
 ## Part 9: Anti-staleness wiring + project template
 - [ ] 9.1 `@import` canonical files in core CLAUDE.md and the template; remove duplicated facts.
-- [ ] 9.2 Adopt generators (gen-catalog, update-codemaps, update-docs); mark outputs generated.
+- [x] 9.2 Adopt generators (gen-catalog, update-codemaps, update-docs); mark outputs generated.
+      DONE: plugins/core/scripts/gen-catalog.sh generates plugins/core/CATALOG.md — an inventory of
+      global rules, modules (by dimension, with paths/scope + reference-only split), presets (linked,
+      not duplicated), skills, commands, hooks. Header marked "generated — do not edit"; output is
+      deterministic (C-locale sort, no timestamps) so CI can diff it (9.3). "update-codemaps" does not
+      apply (docs/config repo, no code graph; the only code is the self-contained op-mcp connector);
+      "update-docs" = this generator today, extensible. Verified: runs green, byte-identical on re-run.
 - [ ] 9.3 CI freshness check: fail a push if a generated doc is out of date; flag docs whose
       source changed after `last-verified`.
 - [ ] 9.4 Finalize `templates/project-CLAUDE.md` and the `/new-project` composer output.
