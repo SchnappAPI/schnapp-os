@@ -9,6 +9,8 @@ Most capable. No work restrictions. Run the full automation here.
 - **Tools/connectors:** local MCP (Mac ops `op_*`, `shell_exec`, SQL), GitHub MCP (OAuth),
   context7, cloudflare. Hosts SQL Server (Docker/Colima), Next.js site, Flask runner,
   self-hosted Actions runner.
-- **Hooks:** run here. This is where "must happen every time" actually happens.
-- **Routines:** session-start sync (`git pull --ff-only`) + unmerged-work check; commit and
-  push every change; write memory/handoff at session end.
+- **Hooks:** run here, after the workspace-trust dialog is accepted (the same gate enables the
+  memory lane). This is where "must happen every time" happens — the Part-7 hooks in
+  [`plugins/core/hooks/`](../plugins/core/hooks/hooks.json) (SessionStart freshness/git gate, Stop
+  push-gate, SessionEnd backup). Procedures: [memory/README.md](../memory/README.md). Delivery
+  (plugin-wide vs project): [decisions/0005](../decisions/0005-hook-delivery-split.md).

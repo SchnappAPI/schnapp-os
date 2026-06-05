@@ -21,3 +21,6 @@ updated: 2026-06-05
   as an expert is catching what the instruction left out. Stay in scope; never wear blinders.
 - Generalize corrections and findings to their whole class, not the one example given. See
   anti-stale.md "fix the class, not the instance".
+- Do not escalate decisions the objective or the locked plan already settles. Asking the owner to
+  re-pick a mechanism the architecture dictates is abdication, not collaboration. Resolve from the
+  plan, act, and record the decision; ask only when the objective genuinely underdetermines it.

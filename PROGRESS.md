@@ -258,3 +258,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   back up claude-kit in every repo. Flagged in PLAN 7.2; decisions/0005 (delivery split) + global-vs-
   Part-10 timing pending owner. Also queued smaller class-fixes: surface profiles should name the
   concrete Part-7 hooks; trust-dialog is an unverified prerequisite that silently nullifies hooks+5.1.
+- Owner pushback #2: I wrongly escalated the hook-delivery mechanism as an owner choice when the locked
+  decisions already dictate it (claude-kit IS the marketplace plugin = single-source, no siloing). Added
+  a third working-style bullet ("Do not escalate decisions the objective/locked plan already settles").
+  RESOLVED, not asked: wrote decisions/0005 — PLUGIN delivers the global gate+push-gate
+  (${CLAUDE_PLUGIN_ROOT}, fires everywhere at Part-10 install); claude-kit project settings keep ONLY the
+  backup; at Part 10 the gate+push-gate are removed from project settings (no double-fire); ~/.claude
+  absolute-path hooks rejected (machine-bound, violates single-source). Updated PLAN 7.2 (resolved, not
+  "owner call"). Class-fix done: code-mac + code-work-machines profiles now name the concrete hooks +
+  reference 0005/memory-README + the trust-dialog prerequisite (folded out the duplicated "Routines"
+  paraphrase = anti-stale). Current claude-kit wiring = dev-time dogfood; 7.2 closes at Part 10.

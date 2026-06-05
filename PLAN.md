@@ -312,9 +312,12 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       in the owner's other repos yet. True global delivery is the PLUGIN (Part 10; ${CLAUDE_PLUGIN_ROOT}
       resolves anywhere) or absolute-path ~/.claude entries. The project-agnostic gate + push-gate
       (global behaviors) must be SPLIT from the claude-kit-specific backup at delivery, else they
-      double-fire once the plugin is installed and the backup runs in every unrelated repo. Delivery
-      design = decisions/0005 (to write); timing (now via ~/.claude vs at Part 10) is an owner call.
-      So 7.2 is NOT "all machines" complete — current wiring is claude-kit dev-time dogfood.
+      double-fire once the plugin is installed and the backup runs in every unrelated repo. RESOLVED in
+      decisions/0005 (dictated by the locked single-source/no-siloing decisions, not an owner choice):
+      the PLUGIN delivers the global gate+push-gate (${CLAUDE_PLUGIN_ROOT}, fires everywhere on Part-10
+      install); claude-kit project settings keep ONLY the backup; at Part 10 the gate+push-gate are
+      removed from project settings to avoid double-fire; ~/.claude absolute-path hooks rejected
+      (machine-bound). Current claude-kit wiring = dev-time dogfood; 7.2 closes when Part 10 goes global.
 - [~] 7.3 Implement the same procedures as skills plus always-loaded instructions for chat and
       Cowork.
       SKILL AUTHORED: plugins/core/skills/session-hygiene/SKILL.md — the three must-happen procedures
