@@ -225,3 +225,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   classifier BLOCKED it correctly: the owner's "would that mean option 2?" was a clarifying question,
   not explicit consent. Settings.json apply held for explicit owner approval (hooks load next fresh
   session anyway; no rush). Scripts + hooks.json committed; settings.json untouched.
+- Part 7.2 ACTIVATION APPLIED: owner gave explicit "Yes, apply now" → wrote the 3-hook wiring to
+  .claude/settings.json (SessionStart startup→session-start-gate.sh; Stop→session-stop-push-gate.sh;
+  SessionEnd→session-end-backup.sh; all ${CLAUDE_PROJECT_DIR} paths, valid JSON). Replaced the inline
+  0.3 pull (now absorbed by the gate). Hooks load at session start, so this session is unaffected —
+  live-verify (gate output, Stop block on unpushed, SessionEnd backup) is the NEXT fresh session.
+  PLAN 5.3/5.4/7.2 stay [~] until that live-verify. Committed + pushed.

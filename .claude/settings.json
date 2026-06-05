@@ -1,5 +1,5 @@
 {
-  "$comment": "Shared, tracked project settings for claude-kit. Local-only overrides go in settings.local.json. autoMemoryDirectory points the harness auto-memory at the git-tracked repo memory/ lane so memory commits and syncs across machines/surfaces (PLAN.md Part 5; see memory/README.md). The SessionStart hook is the Part 0.3 sync: git pull --ff-only on fresh start, surfacing divergence before work (non-fatal). Commit-time auto-push is enforced by the keep-tracker-current rule (Claude Code does not fire agent post-commit hooks). Project hooks/settings are honored after the per-machine workspace-trust dialog.",
+  "$comment": "Shared, tracked project settings for claude-kit. Local-only overrides go in settings.local.json. autoMemoryDirectory points the harness auto-memory at the git-tracked repo memory/ lane so memory commits and syncs across machines/surfaces (PLAN.md Part 5; see memory/README.md). Hooks (PLAN.md Part 7.2; scripts in plugins/core/hooks/, canonical procedures in memory/README.md): SessionStart 'startup' runs session-start-gate.sh = the freshness/git gate (absorbs the Part 0.3 git pull --ff-only, then surfaces unmerged/unpushed/dirty git + memory supersede-orphans before work; PLAN 5.3); Stop runs session-stop-push-gate.sh = blocks stopping while commits are unpushed, with anti-loop (stop_hook_active) + offline allowance (keep-tracker-current 'push immediately'); SessionEnd runs session-end-backup.sh = backup-archive.sh to the OneDrive vault + an unpushed/uncommitted reminder (PLAN 5.4). Project hooks/settings honored after the per-machine workspace-trust dialog; hooks load at session start (restart to pick up changes). A machine cloning the repo elsewhere overrides paths/CLAUDE_KIT_REPO in settings.local.json. Until Part 10 installs claude-kit as a plugin, this is the activation; the plugin's hooks/hooks.json then supersedes it (dedupe there to avoid double-fire).",
   "autoMemoryDirectory": "~/code/claude-kit/memory",
   "hooks": {
     "SessionStart": [
@@ -8,7 +8,32 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && git pull --ff-only 2>&1 || echo '[claude-kit sync] pull not fast-forward or offline — check git status before work (PLAN Part 0.3 / 8.2).'"
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/plugins/core/hooks/session-start-gate.sh\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/plugins/core/hooks/session-stop-push-gate.sh\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/plugins/core/hooks/session-end-backup.sh\"",
+            "timeout": 120
           }
         ]
       }

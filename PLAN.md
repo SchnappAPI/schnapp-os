@@ -259,12 +259,12 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       HOOK AUTHORED (plugins/core/hooks/session-start-gate.sh): absorbs the 0.3 pull, surfaces
       unpushed/unmerged/dirty git + a memory supersede-orphan scan; standalone-tested green
       (exit 0, non-blocking). The memory *reasoning* stays the agent procedure (memory/README.md).
-      Activation (.claude/settings.json) is owner-gated (Part 7.2 diff); live-verify pending.
+      WIRED into .claude/settings.json (owner-approved explicitly); live-verify at next fresh session.
 - [~] 5.4 Stop/SessionEnd hook writes fresh memory and a handoff deterministically.
       HOOK AUTHORED (plugins/core/hooks/session-end-backup.sh): runs backup-archive.sh + surfaces
       unpushed/uncommitted state so the agent's memory/handoff write + push is not skipped (the
       deterministic half; prose authoring stays the agent procedure). Tested green (mirrored
-      18 md + 6 transcripts). Activation owner-gated (Part 7.2 diff); live-verify pending.
+      18 md + 6 transcripts). WIRED into .claude/settings.json (owner-approved); live-verify next session.
 - [~] 5.5 Dual-altitude promotion: write the project-specific instance in the project lane AND
       extract the reusable principle to `global/speed-by-default.md`, linked both ways (nothing
       moved, nothing lost). Seed with your perf examples (read-once, module-level cache,
@@ -303,9 +303,10 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       (Option 2: "never want pending changes"). All wired in plugins/core/hooks/hooks.json (portable
       plugin deployment, ${CLAUDE_PLUGIN_ROOT}; activates at Part-10 install). All tested standalone
       (gate/backup exit 0 non-blocking; stop-gate: clean→allow, unpushed→block JSON, retry→warn+allow).
-      .claude/settings.json activation (all 3 hooks) PENDING explicit owner approval — auto-mode
-      classifier correctly blocked a premature self-wire (a clarifying question ≠ consent). Also
-      pending: live-verify; remote http/mcp_tool hooks; Cowork-runs-hooks check.
+      .claude/settings.json activation (all 3 hooks, ${CLAUDE_PROJECT_DIR} paths) APPLIED — explicit
+      owner approval after the auto-mode classifier correctly blocked a premature self-wire (a
+      clarifying question ≠ consent). Hooks load at session start, so live-verify is at the NEXT fresh
+      session. Still open in 7.2: live-verify; remote http/mcp_tool hooks; Cowork-runs-hooks check.
 - [ ] 7.3 Implement the same procedures as skills plus always-loaded instructions for chat and
       Cowork.
 - [~] 7.4 Add `surface-check` skill: reports loaded vs missing on the current surface. AUTHORED:
