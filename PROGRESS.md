@@ -317,3 +317,10 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   fixture→FAIL with precise message; restored→OK. 9.3 stays [~] until the first GitHub CI run is
   confirmed green (proves the mac-generated CATALOG matches a Linux re-generation — generator
   determinism across platforms). Checking the run right after this push.
+- Part 9.3 cross-platform FIX: first CI run (a5db33e) FAILED — Linux runner's awk (mawk) regenerated a
+  CATALOG differing from the mac (BSD awk) committed copy. Root cause: gen-catalog.sh trunc() emitted the
+  `…` via an awk `\xe2\x80\xa6` hex escape, which mawk does NOT interpret like BSD awk → the 3 truncated
+  skill lines differed. Fixed: pass the ellipsis as a literal UTF-8 byte string via `awk -v ell='…'`
+  (no awk escape → identical bytes on mawk/gawk/BSD awk). CATALOG.md bytes unchanged on mac (both paths
+  produce `…` there), so only the generator logic changed. Also made check-freshness.sh PRINT the diff on
+  staleness so a CI failure is self-explanatory. Re-checking CI after this push to confirm green.

@@ -42,6 +42,8 @@ if bash plugins/core/scripts/gen-catalog.sh "$tmp" >/dev/null 2>&1; then
   else
     echo "STALE generated doc: plugins/core/CATALOG.md" >&2
     echo "  fix: bash plugins/core/scripts/gen-catalog.sh  (then commit plugins/core/CATALOG.md)" >&2
+    echo "  --- committed (<) vs regenerated (>): ---" >&2
+    diff plugins/core/CATALOG.md "$tmp" | sed 's/^/    /' >&2 || true
     fail=1
   fi
 else

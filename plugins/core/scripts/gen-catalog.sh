@@ -48,7 +48,9 @@ fm_paths() { # file -> comma-joined glob list under a `paths:` key (empty if non
   ' "$1"
 }
 
-trunc() { awk -v n=160 '{ if (length($0)<=n) print; else { s=substr($0,1,n); sub(/[^ ]*$/,"",s); print s"\xe2\x80\xa6" } }'; }
+# Ellipsis is passed as a literal UTF-8 byte string via -v (NOT an awk \x escape: mawk on the
+# Linux CI runner does not interpret \xHH the way BSD awk does, which would diverge the output).
+trunc() { awk -v n=160 -v ell='…' '{ if (length($0)<=n) print; else { s=substr($0,1,n); sub(/[^ ]*$/,"",s); print s ell } }'; }
 
 # --- build the catalog into a temp file, then move into place ---
 TMP="$(mktemp)"
