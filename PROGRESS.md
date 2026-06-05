@@ -364,3 +364,19 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Rationale recorded in decisions/0006. Order: foundation-verify → capability layer → Part 10 package+wire
   → Part 11 agentic OS → final 14-point sweep (capabilities BEFORE packaging = no re-package rework).
   Handoff 012 next (session large).
+- FOUNDATION VERIFY COMPLETE (2026-06-05) → flipped PLAN 2.4 / 3.4 / 5.6 → [x]. Method: faithful live
+  `claude -p` sessions in a real second repo (`/tmp/ck-verify/repo-b`, composed with python+sql-server
+  module symlinks) — confirmed via Claude Code docs that headless (without `--bare`) loads the SAME
+  context as interactive (user CLAUDE.md + @imports, project rules, auto-memory). 2.4: repo-b quoted the
+  owner's unique global rule `galPerUnitPerDay not gpud` verbatim with no file read → global lane loads in
+  another (untrusted) repo via `~/.claude/CLAUDE.md`. 3.4: read `.py` → python.md loads + `SQL-ABSENT`;
+  read `.sql` → sql-server.md loads + `PYTHON-ABSENT` → native `paths:` scoping, zero leak both ways. 5.6:
+  repo-b loaded the real lane (quoted `keep-tracker-current` + throwaway `VERIFY-ALPHA`), then after an
+  in-place supersede to `VERIFY-BETA` a fresh repo-b session saw BETA / `OLD: NO`, one file + one index
+  line → supersede-not-duplicate, cross-repo. LOAD-BEARING FINDING + FIX: cross-repo memory needs
+  `autoMemoryDirectory` at USER scope — plugins can't set it (only `agent`/`subagentStatusLine`), project
+  scope reaches only that project (repo-b project-scope attempt → `LANE-ABSENT`). Owner-approved adding it
+  to `~/.claude/settings.json` (the memory sibling of the user-global rules delivery; now README install
+  step 2; corrected README step 3's now-stale "trust gates the memory lane" claim). claude-kit's
+  project-scope entry left as a benign bootstrap fallback. Throwaway fact + /tmp fixture cleaned up; lane +
+  repo clean. Phase boundary: pause before the Capability layer (C.0 gap-inventory) per the locked order.

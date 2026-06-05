@@ -206,7 +206,11 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - [x] 2.3 Write `surfaces/` profiles (Code-Mac, Code-worklaptop, Code-workdesktop, Cowork,
       claude.ai, iPhone): where credentials come from, which tools and connectors exist, the
       routine procedures to run.
-- [ ] 2.4 Verify the global lane loads from another repo.
+- [x] 2.4 Verify the global lane loads from another repo.
+      VERIFIED 2026-06-05 (live `claude -p` in a second repo `/tmp/ck-verify/repo-b`): the session quoted
+      the owner's unique global rule verbatim — `` `galPerUnitPerDay` not `gpud` `` (naming-discipline.md) —
+      with no file read, proving `~/.claude/CLAUDE.md`'s `@import`ed global lane loads in an unrelated
+      (and untrusted) repo. User-scope config loads regardless of CWD/trust.
 - Handoff after this Part.
 
 ## Part 3: Rule module gallery, presets, and composer
@@ -216,7 +220,11 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       web-tool, quickbase).
 - [x] 3.3 Build the `/new-project` composer: apply a preset, allow add/remove, symlink chosen
       modules into the project `.claude/rules/`, write a thin project `CLAUDE.md`.
-- [ ] 3.4 Verify: Python rules do not load when editing a `.sql` file, and vice versa.
+- [x] 3.4 Verify: Python rules do not load when editing a `.sql` file, and vice versa.
+      VERIFIED 2026-06-05 (live `claude -p` in composed repo-b, both directions): after reading `loader.py`,
+      the session quoted python.md examples (`fetch_player_props()`) and reported `SQL-ABSENT`; after reading
+      `query.sql`, it quoted sql-server.md's `_archive` vs `_backup` rule and reported `PYTHON-ABSENT`.
+      Native `paths:` frontmatter scoping loads a module only for matching files — zero cross-language leak.
 - Done when: a new project rule set is composed in one choice and never leaks across languages.
 - Handoff after this Part.
 
@@ -279,8 +287,18 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       ThreadPoolExecutor, set-based SQL/CTE, bulk insert, `fast_executemany=True`).
       PARTIAL: global principle seeded (global/speed-by-default.md) + promotion mechanic
       documented (memory/README.md). A live project-lane instance lands with real perf work.
-- [ ] 5.6 Verify: lesson in repo A appears in a fresh session in repo B; a changed fact
+- [x] 5.6 Verify: lesson in repo A appears in a fresh session in repo B; a changed fact
       supersedes the old one, not duplicated.
+      VERIFIED 2026-06-05 (live `claude -p` in second repo `/tmp/ck-verify/repo-b`): a fresh repo-b session
+      loaded the real global memory lane (quoted the `keep-tracker-current` fact + a throwaway `VERIFY-ALPHA`
+      token); after superseding the fact IN PLACE to `VERIFY-BETA`, a fresh repo-b session saw `VERIFY-BETA`
+      and `OLD: NO` (no `ALPHA`), with exactly one fact file + one index line — supersede, not duplicate.
+      DELIVERY (load-bearing, discovered here): cross-repo memory requires `autoMemoryDirectory` at USER
+      scope. Plugins cannot set it (only `agent`/`subagentStatusLine`); project scope reaches only that
+      project (a project-scope attempt in repo-b returned `LANE-ABSENT`). So `autoMemoryDirectory` was added
+      to `~/.claude/settings.json` (owner-approved 2026-06-05) — the sibling of the user-global `~/.claude/
+      CLAUDE.md` rules delivery. This is now a per-machine install step (README "Code — primary Mac" step 2).
+      claude-kit's project-scoped entry remains a benign self-contained bootstrap fallback.
 - Handoff after this Part.
 
 ## Part 6: Cloud backup + Obsidian mirror
@@ -427,9 +445,10 @@ package, Part 11 = agentic OS) so other docs (decisions/0005, surfaces, settings
 cite them stay valid — no renumber ripple. The Capability layer is inserted as its own phase BEFORE
 Part 10. Remaining work, in dependency order — do earlier-listed first to avoid rework:
 
-1. **Foundation verify (cheap confirmations):** 2.4 (global lane loads in another repo), 3.4 (path-scoped
-   non-leak — now native-confirmed, live-confirm), 5.6 (cross-repo memory + supersede). Needs a 2nd repo
-   + 1-2 live sessions. FIRST: locks the base before more is built on it.
+1. **Foundation verify (cheap confirmations) — DONE 2026-06-05.** 2.4 (global lane loads in another repo),
+   3.4 (path-scoped non-leak), 5.6 (cross-repo memory + supersede) all live-confirmed via `claude -p` in a
+   real second repo. 5.6 surfaced + closed the only delivery gap: `autoMemoryDirectory` must be user-scope
+   (`~/.claude/settings.json`, owner-approved) — plugins cannot deliver it. Base is locked. Next: Capability layer.
 2. **Capability layer (NEW phase, below):** select + build the domain-first gap set. BEFORE packaging, so
    the plugin ships the complete set and the final verify runs against it (no re-package/re-verify rework).
 3. **Part 10 — Wire surfaces + package:** marketplace + plugin.json delivering the COMPLETE set; plugin

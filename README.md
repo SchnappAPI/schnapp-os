@@ -43,12 +43,18 @@ Part 10 is tracked in [PLAN.md](PLAN.md). Per-surface operating detail lives in
 
 ### Code — primary Mac
 1. Clone to `~/code/claude-kit` (the path the hooks, `~/.claude/CLAUDE.md`, and the backup all assume).
-2. Create `~/.claude/CLAUDE.md` by copying the body of
-   [templates/user-global-CLAUDE.md](templates/user-global-CLAUDE.md) (that file lives outside the
-   repo, so the template is its canonical copy). It `@import`s the 7 global rules from the repo.
+2. **User-global setup in `~/.claude/`** (these load in *every* repo on the machine, not just this one —
+   they are the global lane's delivery):
+   - Create `~/.claude/CLAUDE.md` by copying the body of
+     [templates/user-global-CLAUDE.md](templates/user-global-CLAUDE.md) (that file lives outside the repo,
+     so the template is its canonical copy). It `@import`s the 7 global rules from the repo.
+   - In `~/.claude/settings.json` set `"autoMemoryDirectory": "~/code/claude-kit/memory"` so the global
+     **memory** lane loads in every repo (the sibling of the `@import`ed rules). A plugin cannot deliver
+     this key (only `agent`/`subagentStatusLine` are plugin-settable), and a project-scoped setting reaches
+     only that project — so user scope is the only global delivery. Verified by 5.6.
 3. **Accept the workspace-trust dialog** on first open of the repo. Until accepted, the project hooks
-   AND the `autoMemoryDirectory` memory lane silently do nothing — this is the first thing to check if
-   the SessionStart gate does not print.
+   silently do nothing — this is the first thing to check if the SessionStart gate does not print. (The
+   user-scope memory lane from step 2 loads regardless of trust; trust gates the *project* hooks/settings.)
 4. Hooks: the repo's `.claude/settings.json` wires the SessionStart freshness gate, the Stop push-gate,
    and the SessionEnd backup (dev-time dogfood). At Part 10 the marketplace **plugin** delivers the
    global gate + push-gate everywhere via `${CLAUDE_PLUGIN_ROOT}`, and the project keeps **only** the
