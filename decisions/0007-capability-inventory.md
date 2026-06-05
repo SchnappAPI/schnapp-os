@@ -33,9 +33,9 @@ checkbox, so you can keep a single item out of any group.
 - [x] **sql-server-patterns** (skill) — T-SQL / SQL Server 2022 idioms (your DB; the archive only has Postgres/MySQL, wrong dialect).
 - [x] **/update-docs** (command) — regenerate docs from schemas/routes/scripts in your *other* ETL repos.
 - [x] **/update-codemaps** (command) — token-lean architecture maps for those repos.
-- [ ] **sql-etl-reviewer** (agent) — a reviewer specialized in T-SQL + ETL correctness. *(Only if the generic reviewers feel too generic — otherwise skip.)*
-- [ ] **tool/quickbase** (skill) — Quickbase patterns. *(Build only when a real Quickbase task needs it; nothing else covers Quickbase.)*
-- [ ] **tool/appfolio** (skill) — AppFolio patterns. *(Probably skip: `fish-compare` already does AppFolio reconciliation.)*
+- [x] **sql-etl-reviewer** (agent) — a reviewer specialized in T-SQL + ETL correctness. *(Only if the generic reviewers feel too generic — otherwise skip.)*
+- [x] **tool/quickbase** (skill) — Quickbase patterns. *(Build only when a real Quickbase task needs it; nothing else covers Quickbase.)*
+- [x] **tool/appfolio** (skill) — AppFolio patterns. *(Probably skip: `fish-compare` already does AppFolio reconciliation.)*
 
 Everything below is reference. You only HAVE to act on the seven lines above.
 
@@ -67,7 +67,7 @@ Sorted within each cluster: 🔴 first, then 🟢, then ⚪. `(s)`=skill `(a)`=a
 - [ ] skill-health (c) — skill portfolio dashboard — ⚪ SKIP
 - [ ] harness-audit (c) — repo harness scorecard — ⚪ SKIP
 - [ ] context-budget (s) — find context-window bloat — ⚪ SKIP
-- [ ] rules-distill (s) — extract rules from skills — ⚪ SKIP
+- [x] rules-distill (s) — extract rules from skills — ⚪ SKIP
 - [ ] setup-matt-pocock-skills (s) — wire AGENTS.md skill block — ⚪ SKIP
 - [ ] check-marketplace-drift (h) — warn on marketplace drift — ⚪ SKIP
 - [ ] install-plugin (h) — plugin bootstrap — ⚪ SKIP
@@ -114,9 +114,9 @@ Sorted within each cluster: 🔴 first, then 🟢, then ⚪. `(s)`=skill `(a)`=a
 - [ ] product-lens (s) — validate the "why" first — ⚪ SKIP
 - [ ] to-issues (s) — plan → tracker issues — 🟢 HAVE (GitHub MCP)
 - [ ] triage (s) — issue triage state machine — 🟢 HAVE (GitHub MCP)
-- [ ] grill-me (s) — stress-test your plan by interrogation — ⚪ SKIP *(pull if you want it)*
-- [ ] grill-with-docs (s) — grill + update docs inline — ⚪ SKIP *(pull if you want it)*
-- [ ] council (s) — four-voice decision council — ⚪ SKIP *(pull if you want it)*
+- [x] grill-me (s) — stress-test your plan by interrogation — ⚪ SKIP *(pull if you want it)*
+- [x] grill-with-docs (s) — grill + update docs inline — ⚪ SKIP *(pull if you want it)*
+- [x] council (s) — four-voice decision council — ⚪ SKIP *(pull if you want it)*
 - [ ] recursive-decision-ledger (s) — visible decision trail — ⚪ SKIP
 - [ ] zoom-out (s) — higher-level perspective — ⚪ SKIP
 - [ ] aside (c) — answer a side question, then resume — ⚪ SKIP
@@ -157,19 +157,19 @@ Sorted within each cluster: 🔴 first, then 🟢, then ⚪. `(s)`=skill `(a)`=a
 - [ ] coding-standards (s) — baseline conventions — 🟢 HAVE (claude-kit rules)
 
 ### 5 · Language & framework patterns
-- [ ] **sql-server-patterns** — *(see GAP list)* — 🔴 GAP
+- [x] **sql-server-patterns** — *(see GAP list)* — 🔴 GAP
 - [ ] python-patterns (s) / python-testing (s) — Python idioms — 🟢 HAVE (claude-kit python rule)
 - [ ] postgres-patterns / mysql-patterns / prisma-patterns / redis-patterns / clickhouse-io / database-migrations (s) — other DB/ORM — ⚪ SKIP (wrong DB)
 - [ ] django-patterns / django-celery / django-security / fastapi-patterns / nestjs-patterns / backend-patterns / hexagonal-architecture / api-design / api-connector-builder / error-handling (s) — backend frameworks — ⚪ SKIP (not your stack)
 - [ ] frontend-patterns / frontend-a11y / accessibility / design-system / make-interfaces-feel-better / motion-foundations / motion-patterns / motion-advanced / motion-ui / ui-to-vue / frontend-design-direction (s) + a11y-architect (a) — frontend/UI/motion — 🟢 HAVE (frontend-design plugin + design:* skills)
 - [ ] bun-runtime / nextjs-turbopack / nuxt4-patterns / vite-patterns (s) — runtimes/build tools — ⚪ SKIP
 - [ ] pytorch-patterns / mle-workflow (s) + agent-sdk-verifier-py / agent-sdk-verifier-ts (a) — ML / SDK verify — ⚪ SKIP
-- [ ] regex-vs-llm-structured-text (s) — regex-vs-LLM parsing choice — ⚪ SKIP *(handy for ETL parsing; pull if wanted)*
+- [x] regex-vs-llm-structured-text (s) — regex-vs-LLM parsing choice — ⚪ SKIP *(handy for ETL parsing; pull if wanted)*
 - [ ] *Power Query M* — your reporting stack — 🟢 HAVE (pq-flat-map-type skill) — [ ] name it in a preset
 
 ### 6 · Data, ETL & performance — your core domain
-- [ ] **etl-pipeline-build** — *(see GAP list)* — 🔴 GAP
-- [ ] data-throughput-accelerator (s) — speed up big ingestion/backfill/ETL — ⚪ SKIP *(the best archive ref to pull for ETL speed)*
+- [x] **etl-pipeline-build** — *(see GAP list)* — 🔴 GAP
+- [x] data-throughput-accelerator (s) — speed up big ingestion/backfill/ETL — ⚪ SKIP *(the best archive ref to pull for ETL speed)*
 - [ ] latency-critical-systems (s) — low-latency systems — ⚪ SKIP
 - [ ] benchmark (s) / benchmark-optimization-loop (s) + performance-optimizer (a) — measure/optimize perf — ⚪ SKIP
 - [ ] content-hash-cache-pattern (s) — hash-keyed caching — ⚪ SKIP
@@ -178,8 +178,8 @@ Sorted within each cluster: 🔴 first, then 🟢, then ⚪. `(s)`=skill `(a)`=a
 - [ ] *spreadsheet / data audit* — 🟢 HAVE (sports-data-auditor, xlsx, fish-compare skills) — [ ] name in your preset
 
 ### 7 · Research, docs & codebase comprehension
-- [ ] **/update-docs** + **/update-codemaps** — *(see GAP list)* — 🔴 GAP
-- [ ] doc-updater (a) / comment-analyzer (a) — doc/codemap agent — 🔴 part of the GAP build above
+- [x] **/update-docs** + **/update-codemaps** — *(see GAP list)* — 🔴 GAP
+- [x] doc-updater (a) / comment-analyzer (a) — doc/codemap agent — 🔴 part of the GAP build above
 - [ ] deep-research (s) / exa-search (s) — multi-source research — 🟢 HAVE (deep-research skill) — [ ] name in preset
 - [ ] documentation-lookup (s) + docs-lookup (a) — current library docs — 🟢 HAVE (context7 MCP) — [ ] name in preset
 - [ ] codebase-onboarding (s) / code-tour (s) + code-explorer (a) — understand a codebase — 🟢 HAVE (Explore agent)
