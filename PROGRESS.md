@@ -279,3 +279,7 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   merge + explain; defers mechanics to git.md + superpowers finishing-a-development-branch, no
   duplication); unverifiable until a branch exists, so [~]. Part 8 buildable work done; 8.2 closes with
   the 5.3/7.2 live-verify, 8.3 when a branch is first merged.
+- Wrote handoffs/010-part8-and-7-resolved.md (supersedes 009, which predated the 0005 resolution +
+  Part 8). Leads with the IMMEDIATE next-session hook live-verify (closes 5.3/5.4/8.2 + confirms the
+  trust-dialog prereq), records the encoded behavioral rules + the 0005 delivery split, and the in-order
+  next step (Part 9). Includes a copy-paste resume prompt.
