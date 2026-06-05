@@ -324,3 +324,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   (no awk escape → identical bytes on mawk/gawk/BSD awk). CATALOG.md bytes unchanged on mac (both paths
   produce `…` there), so only the generator logic changed. Also made check-freshness.sh PRINT the diff on
   staleness so a CI failure is self-explanatory. Re-checking CI after this push to confirm green.
+- Part 9.3 CAUGHT A REAL BUG (run b53ca3a, diff now printed): the CI regeneration was missing the
+  "Secrets are references, never values" global-rule line. Root cause: `.gitignore` glob `**/*secret*`
+  matched `plugins/core/rules/global/secrets-as-references.md`, so one of the 7 ALWAYS-LOADED global rules
+  was NEVER committed — present locally (on disk, @imported by ~/.claude/CLAUDE.md, in every session's
+  loaded context) but ABSENT from GitHub/CI/any cloned machine, where that rule would silently fail to
+  load. The freshness gate surfaced it on its first real run (exactly its purpose). Fix: added a targeted
+  `.gitignore` negation `!**/secrets-as-references.md` (keeps the secret safety-net; re-includes the
+  no-secrets policy DOC) + committed the rescued file. Audited all ignored files — it was the only false
+  positive (rest are node_modules/dist/settings.local). CATALOG.md unchanged (already listed all 7). 9.3
+  stays [~] until the post-fix CI run is confirmed green.
