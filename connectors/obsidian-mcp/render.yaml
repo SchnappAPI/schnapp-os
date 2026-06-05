@@ -1,0 +1,25 @@
+# Render Blueprint for the obsidian-mcp connector. Deploy: New → Blueprint, point at
+# this repo; Render builds the Dockerfile and runs the server. Set the two `sync:false`
+# secrets in the dashboard (or from 1Password) after the first deploy.
+#
+# NOTE: with rootDir set, dockerfilePath/dockerContext are rootDir-relative (this
+# bit the op-mcp deploy once — see connectors/op-mcp/DEPLOY.md).
+services:
+  - type: web
+    name: obsidian-mcp
+    runtime: docker
+    rootDir: connectors/obsidian-mcp
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: CONNECTOR_AUTH_TOKEN   # bearer gate; openssl rand -hex 32
+        sync: false
+      - key: GITHUB_TOKEN           # fine-grained PAT, Contents:read on the vault repo only
+        sync: false
+      - key: VAULT_REPO
+        value: SchnappAPI/obsidian-vault
+      - key: VAULT_BRANCH
+        value: main

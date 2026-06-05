@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.log
+.env
+# Local vault checkout (when VAULT_DIR points inside the connector dir for testing).
+vault/
+data/

@@ -1,0 +1,27 @@
+{
+  "name": "obsidian-mcp-server",
+  "version": "1.0.0",
+  "description": "Remote MCP server that serves the owner's Obsidian vault (search/read/list) from a git copy, so claude.ai / iPhone / any surface can query the vault without the Mac or the Obsidian app running.",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "clean": "rm -rf dist"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "express": "^5.1.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

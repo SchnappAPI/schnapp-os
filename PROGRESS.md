@@ -396,6 +396,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   sessions stay OneDrive-only to avoid bloating the git-synced vault). Ran it: vault now holds
   claude-archive/repo (memory/handoffs/decisions/PLAN/PROGRESS). (e) PENDING: build the remote Obsidian MCP
   (op-mcp-style, serves the vault from GitHub for off-Mac) — owner-approved scope, owner-gated deploy.
+- PART B DONE (build + local verify): built connectors/obsidian-mcp/ — a read-only remote MCP that serves
+  the Obsidian vault from a git copy (clones VAULT_REPO or uses a mounted VAULT_DIR), so claude.ai/iPhone
+  query the vault with the Mac + Obsidian app OFF (no Local REST API dependency). Modeled on op-mcp: Node
+  streamable-HTTP, bearer-gated /mcp + open /health, refuses to start without CONNECTOR_AUTH_TOKEN. Tools
+  (read-only): vault_search (content/filename + snippet), vault_read, vault_list, vault_health; path-escape
+  rejected, only .md served, payloads capped. GITHUB_TOKEN woven into the clone URL at runtime (op://, never
+  committed/logged); .env.template uses op:// refs only. LOCAL-VERIFIED: tsc strict clean; vault logic vs an
+  isolated /tmp fixture (health/list/search-content/search-filename/read all correct); md path-escape +
+  non-md both blocked; server boots ("vault ready — N notes"), /health ok, /mcp 401 without bearer, full MCP
+  initialize handshake with bearer. Ships Dockerfile (installs git), render.yaml Blueprint, README, DEPLOY
+  (Render origin → Cloudflare portal → claude.ai, same path as op-mcp). DEPLOY is owner-gated (Render +
+  Cloudflare logins + the two op:// secrets). Freshness green; node_modules/dist gitignored; no token literals.
 - Capability layer C.0 (inventory half) → PLAN C.0 `[~]`. Owner asked for a full, deduplicated, thematically
   clustered inventory of ALL schnapp-kit (referencing its skill-scout / search-first / skill-stocktake /
   agent-sort skills for method). Extracted frontmatter for all 253 components (134 skills / 39 agents / 59
