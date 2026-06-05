@@ -167,6 +167,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   likely a transient Cloudflare glitch or a stale card, not an account lock. Portal custom-domain
   requirement (mcp.schnapp.bet) is satisfiable. Next try: Billing → confirm a current card → retry ZT
   activation. Optional identity hygiene: change CF login email off the work domain (My Profile → Email).
+- Part 4.2 DONE + Part 4 effectively complete (2026-06-05): off-Mac 1Password connector LIVE end-to-end.
+  Path that worked: Render free Blueprint deploy (https://op-mcp.onrender.com) → Cloudflare MCP server
+  portal (https://mcp.schnapp.bet/mcp) with Managed OAuth + static-bearer "Custom headers" to origin →
+  registered as a claude.ai custom connector. VERIFIED: op_health authenticates from claude.ai
+  (Integration claude-kit-op-mcp, vault visible), Mac uninvolved. Gotchas (now in DEPLOY.md): ZT
+  onboarding requires plan+payment even for Free (the "payment processing" error was TRANSIENT, cleared
+  on retry — account is fine: sole super admin, owns schnapp.bet zone); the MCP server needs its OWN
+  Allow policy or you get "No allowed servers available"; the live UI's "Custom headers" IS the static
+  bearer the docs omitted (my mid-session "no static bearer" correction was itself wrong — verified by
+  doing). Updated PLAN 4.2→[x] / 4.4→[~] (op_read value-resolve pending to close), DEPLOY.md (working
+  runbook), decisions/0004 (DEPLOYED+WORKING), credentials-state memory (off-Mac access LIVE). Render
+  free cold-start ~50s; optional free UptimeRobot/cron ping to /health to keep warm.
 - Part 7.4 [~]: authored surface-check skill (plugins/core/skills/surface-check/SKILL.md) — probes
   rules/memory/creds/connectors/hooks/skills/git on the current surface (never assumes), reports
   loaded-vs-missing + the Native→RemoteMCP→generated-prompt fallback per gap; references surfaces/

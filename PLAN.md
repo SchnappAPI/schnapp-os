@@ -224,21 +224,24 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - [x] 4.1 RECREATE the 1Password Service Account: the prior one was DELETED (see
       decisions/0001), so `op`/`gh` are down. Create a new SA, grant the vaults, and put the
       new token on every surface (`~/.zshrc`, `~/.zshenv`, GitHub Actions secret, others).
-- [~] 4.2 Add a hosted 1Password MCP connector (service-account-backed); enable on every
+- [x] 4.2 Add a hosted 1Password MCP connector (service-account-backed); enable on every
       surface as the primary secret path. Keep the Mac op_* tools as backup.
-      PARTIAL: BUILT + locally verified — `connectors/op-mcp/` Node streamable-HTTP MCP,
-      read-only tools (op_read/op_list_vaults/op_list_items/op_health), bearer auth, `tsc`
-      clean, `npm run verify` PASS (SDK runs in Node, SA authenticates, vault visible).
-      Worker ruled out → Node host (decisions/0004). Path chosen: Render (free, no CLI) +
-      Cloudflare MCP portal (OAuth front; claude.ai accepts only OAuth, not bearer). Turnkey
-      config prepped: root `render.yaml` + `connectors/op-mcp/DEPLOY.md`. PENDING (owner-gated,
-      needs owner logins): deploy + Cloudflare portal + register in claude.ai + verify check 7.
+      DONE (2026-06-05): `connectors/op-mcp/` Node streamable-HTTP MCP (read-only op_read/
+      op_list_vaults/op_list_items/op_health, bearer auth) DEPLOYED on Render free tier at
+      `https://op-mcp.onrender.com`. Fronted for claude.ai/iPhone by a Cloudflare MCP server
+      portal (`https://mcp.schnapp.bet/mcp`, Managed OAuth + static-bearer "Custom headers" to
+      origin) and registered as a claude.ai custom connector — `op_health` authenticates from
+      claude.ai. Code/Cowork use the Render URL + bearer directly. Mac op_* tools = backup.
+      Runbook: connectors/op-mcp/DEPLOY.md. (Render free cold-start ~50s; optional uptime ping.)
 - [x] 4.3 Put credential references (the `op://` map) in `.env.template` / `credentials-map.md`;
       never values. (Created `credentials-map.md` [resolution-by-surface + `web-variables` system
       items + bootstrap/connector secrets] and root `.env.template` [op:// URIs, no values;
       verified `.env.template` tracked, `.env` ignored]. Field labels noted-not-guessed since they
       don't follow the category default in this vault.)
-- [ ] 4.4 Verify with the Mac powered off: resolve a secret from claude.ai via the connector.
+- [~] 4.4 Verify with the Mac powered off: resolve a secret from claude.ai via the connector.
+      NEAR-DONE: `op_health` authenticated from claude.ai through the portal (Render-hosted, so the
+      Mac is structurally uninvolved — no Mac in the resolution path). To make it airtight, one
+      `op_read` of a real `op://` value from claude.ai (returns the secret value) closes it fully.
 - Done when: no surface returns unauthorized, Mac on or off.
 - Handoff after this Part.
 

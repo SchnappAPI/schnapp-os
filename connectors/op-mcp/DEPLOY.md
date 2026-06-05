@@ -62,46 +62,45 @@ reference, never a literal (see `credentials-map.md`). Example Claude Code confi
 
 That already satisfies off-Mac secret access for Code and Cowork.
 
-## Step 4 — Cloudflare MCP portal (OAuth front for claude.ai web + iPhone) — NEEDS REWORK
+## Step 4 — Cloudflare MCP portal (OAuth front for claude.ai web + iPhone) — DONE, WORKING
 
-claude.ai only accepts OAuth, so the plan was a Cloudflare One **MCP server portal**
-in front of the Render origin. Two hard realities surfaced (verified against
-Cloudflare docs 2026-06-05) that this step still has to solve:
+claude.ai only accepts OAuth, so a Cloudflare One **MCP server portal** fronts the Render
+origin: it does the OAuth handshake claude.ai needs and forwards a **static bearer** to the
+connector (the live UI's "Custom headers" auth type — which the docs did not surface). Verified
+working 2026-06-05 on the owner's account (`schnapp.bet` is a zone in it). Exact steps that worked:
 
-1. **Zero Trust onboarding is a hard gate.** It REQUIRES team name + plan + payment
-   details even for the Free plan; the dashboard stays locked until that completes.
-   On the owner's `austinschnapp@1st-lake.com` (company) account, activation failed on
-   two cards with "unexpected error processing payment" — likely org-locked billing.
-   Confirm: is this a work-managed account? Is `schnapp.bet` a zone IN this account?
-2. **No static-bearer upstream.** The earlier "Auth type: bearer / auth_credentials"
-   claim was WRONG (not in authoritative docs). The portal's supported upstream auth is
-   **unauthenticated** or **OAuth**; the recommended self-hosted path fronts the origin
-   with a **Cloudflare Access app** and has the connector validate the
-   `Cf-Access-Jwt-Assertion` header (a `src/auth.ts` change), then forward
-   `Cf-Access-Token` downstream. So this is NOT no-code, and the Render origin must sit
-   behind an Access app on a Cloudflare zone hostname.
+1. **Activate Zero Trust (hard gate).** Zero Trust → Get started → set a **team name** → choose
+   **Free** plan → enter payment details (required even for Free; $0). NOTE: activation may throw
+   "An unexpected error occurred while processing your payment" — it was **transient** here
+   (succeeded on retry; the audit log showed "Create Zero Trust account — success"). After
+   activating, reach the real dashboard at `one.dash.cloudflare.com` (the `dash.cloudflare.com`
+   "Zero Trust" nav item is just a splash).
+2. **Add the MCP server** (Access controls → AI controls → **MCP servers** → Add an MCP server):
+   name `op-mcp`, Server ID `op-mcp`, HTTP URL `https://op-mcp.onrender.com/mcp`,
+   **Authentication type = Custom headers** → header `Authorization: Bearer <CONNECTOR_AUTH_TOKEN>`
+   (exact match to Render). **Attach an Allow policy to the SERVER** (Emails = your login email) —
+   skipping this causes "No allowed servers available" after login. Save → status goes **Ready**,
+   4 tools synced.
+3. **Create the portal** (MCP server portals → Add): name `op-mcp-portal`; **Custom domain** =
+   subdomain `mcp` on `schnapp.bet` → `mcp.schnapp.bet`; add the `op-mcp` server (leave its **User
+   auth required = OFF** so the portal uses the bearer); attach the same Allow policy; **Managed
+   OAuth = ON**, and under **Allowed redirect URIs** add `https://claude.ai/api/mcp/auth_callback`
+   and `https://claude.com/api/mcp/auth_callback`. Create → portal URL `https://mcp.schnapp.bet/mcp`.
 
-Until both are solved, this step is parked. Re-entry options:
-- **Personal Cloudflare account** (billing not org-locked) → complete ZT onboarding →
-  front the origin with an Access self-hosted app → add Access-JWT validation to the
-  connector → portal + claude.ai registration.
-- **Stytch** (free MCP-OAuth) baked into the connector — no Cloudflare, but a new account
-  + OAuth glue in the server.
-Refs: cloudflare-one/access-controls/ai-controls/{mcp-portals,linked-apps,secure-mcp-servers}.
+## Step 5 — Register in claude.ai (and iPhone) — DONE
 
-## Step 5 — Register in claude.ai (and iPhone)
+1. claude.ai → **Settings → Connectors → Add custom connector** (needs Pro/Max).
+2. URL = the **portal** URL `https://mcp.schnapp.bet/mcp`. Leave **OAuth Client ID/Secret BLANK**
+   (Managed OAuth does dynamic client registration; claude.ai self-registers).
+3. Add → redirected to **Cloudflare Access** → enter the policy email → one-time PIN to that inbox
+   → approve. Connector connects, 4 `op_*` tools appear (plus Cloudflare `portal_*` tools — ignore).
+4. iPhone uses the same connector automatically.
 
-1. claude.ai → **Settings → Connectors → Add custom connector**.
-2. Paste the **portal URL** from Step 4 (`https://mcp.<yourdomain>`), not the raw
-   Render URL.
-3. It launches the OAuth login (Cloudflare Access) → approve once.
-4. The iPhone app uses the same connector automatically — nothing extra to do.
+## Step 6 — Verify the goal (PLAN.md check 7) — op_health PASS
 
-## Step 6 — Verify the goal (PLAN.md check 7)
-
-**Power the Mac off.** From claude.ai, call `op_read` on a known reference and
-confirm the secret resolves. That closes Part 4 (flip 4.2 → done and 4.4 → done,
-add PROGRESS lines, push).
+From claude.ai, `op_health` returned **authenticated** (Integration `claude-kit-op-mcp`, vault
+visible) — the full path resolves with no Mac involvement (connector is on Render). To make 4.4
+airtight, run one `op_read` of a real `op://` value from claude.ai and confirm the value returns.
 
 ---
 

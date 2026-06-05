@@ -62,28 +62,27 @@ Priorities: free, simple, cross-surface.
   the web UI has no static-bearer/custom-header field (anthropics/claude-ai-mcp#112). So
   the bearer connector serves Claude Code + Cowork directly; claude.ai web + iPhone need
   the portal.
-- **Origin auth: CORRECTION (2026-06-05).** Earlier note ("portal forwards a static bearer,
-  no code change") was WRONG — not in Cloudflare's authoritative docs. Verified: the portal's
-  upstream auth is **unauthenticated** or **OAuth**; the recommended self-hosted path fronts the
-  origin with a **Cloudflare Access app** and the connector validates `Cf-Access-Jwt-Assertion`
-  (a `src/auth.ts` change). So NOT no-code. Plus Zero Trust onboarding is a hard gate (plan +
-  payment even for Free), which blocked the owner's company account. See DEPLOY.md Step 4.
-- **Deploy status (2026-06-05):** connector LIVE on Render free tier at
-  `https://op-mcp.onrender.com` (Blueprint deploy; `/health` returns ok). Render free spins
-  down after ~15 min idle (~50s cold start) — optional free fix: an UptimeRobot/cron-job.org
-  ping to `/health` every ~10 min. Cloudflare portal + claude.ai registration in progress.
+- **Origin auth: FINAL (2026-06-05, verified by doing).** The portal DOES forward a static bearer —
+  via the live "Add an MCP server" **Authentication type = Custom headers** option
+  (`Authorization: Bearer <CONNECTOR_AUTH_TOKEN>`). NO connector code change. (Intermediate notes
+  flip-flopped: the docs I read omitted this; the live dashboard has it. Lesson: verify in the UI,
+  not just docs.) claude.ai OAuth is handled by the portal's **Managed OAuth** (dynamic client
+  registration; add claude.ai/claude.com redirect URIs). Two gotchas hit: ZT onboarding requires
+  plan+payment even for Free (a transient "payment processing" error cleared on retry), and the
+  **server needs its own Allow policy** or login yields "No allowed servers available".
+- **Deploy status: LIVE + WORKING (2026-06-05).** Connector on Render free tier
+  (`https://op-mcp.onrender.com`); Cloudflare MCP portal `https://mcp.schnapp.bet/mcp`; registered
+  in claude.ai; `op_health` authenticates from claude.ai. Render free cold-start ~50s (optional
+  UptimeRobot/cron ping to `/health` to keep warm). Runbook: DEPLOY.md.
 
 Full turnkey steps: `connectors/op-mcp/DEPLOY.md` (canonical).
 
 ## Status
 **RESOLVED 2026-06-03** — host = **Node host**; Cloudflare Worker **ruled out** (the SDK wasm
 loads via `fs.readFileSync` + synchronous `new WebAssembly.Module`, impossible on the Workers
-edge). Connector BUILT + locally verified (`npm run verify` PASS). Host + auth-front now
-chosen (Render + Cloudflare MCP portal, above). Deploy + claude.ai registration are
-**owner-gated** (need owner's Render/Cloudflare/claude.ai logins). Turnkey runbook
-prepared: root `render.yaml` Blueprint + `connectors/op-mcp/DEPLOY.md`. Remaining owner steps:
-1. Render: New → Blueprint → set the two secrets (DEPLOY.md Step 1).
-2. Cloudflare MCP portal in front of the Render origin; register the portal URL in
-   claude.ai (DEPLOY.md Steps 4–5).
-3. Verify PLAN check 7: resolve a secret from claude.ai with the Mac OFF (closes 4.2 + 4.4).
-Until deployed, claude.ai/iPhone secret access still routes through the Mac connector.
+edge). **DEPLOYED + WORKING 2026-06-05.** Connector live on Render (`https://op-mcp.onrender.com`);
+Cloudflare MCP portal (`https://mcp.schnapp.bet/mcp`, Managed OAuth + static-bearer Custom
+headers) registered as a claude.ai custom connector; `op_health` authenticates from claude.ai
+(Integration `claude-kit-op-mcp`, vault visible) with no Mac in the path. Code/Cowork use the
+Render URL + bearer directly; Mac op_* tools = backup. 4.2 done; 4.4 needs one `op_read` value
+resolve from claude.ai to be airtight. Full runbook: `connectors/op-mcp/DEPLOY.md`.
