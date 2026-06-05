@@ -41,6 +41,19 @@ execution is not safe to expose. This connector only reads.
   repo or image. `.env` is gitignored; only `.env.template` is tracked.
 - `op_read` returns secret values by design — only reachable past the bearer gate.
 
+## Usage hygiene (op_read transits the value into the calling surface)
+
+Unlike the Mac `op_*` MCP (whose `op_read` returns only proof: length + last4), this
+connector's `op_read` hands back the **raw value** — it must, because off-Mac surfaces
+(claude.ai / iPhone) have no other way to use a secret. Consequence: the value enters that
+surface's **conversation transcript** (which may later sync to the OneDrive/Obsidian backup,
+PLAN Part 6). So:
+- Use `op_health` / `op_list_vaults` / `op_list_items` for checks — they expose no values.
+- Call `op_read` only when the surface genuinely needs the value in hand.
+- To *run a command* that consumes a secret, prefer the Mac's `op_run` / `op_inject` (value
+  never transits the chat). Aligns with the `secrets-as-references` rule.
+- If a sensitive value did transit a transcript, rotate it.
+
 ## Local run + verify
 
 ```bash

@@ -179,6 +179,14 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   doing). Updated PLAN 4.2→[x] / 4.4→[~] (op_read value-resolve pending to close), DEPLOY.md (working
   runbook), decisions/0004 (DEPLOYED+WORKING), credentials-state memory (off-Mac access LIVE). Render
   free cold-start ~50s; optional free UptimeRobot/cron ping to /health to keep warm.
+- Part 4 COMPLETE (2026-06-05): 4.4 closed — op_read resolved a real op:// value from claude.ai (after
+  op_health auth), through the off-Mac path. All of 4.1–4.4 done; "no surface unauthorized, Mac on or
+  off" MET. Security hygiene captured (connector README "Usage hygiene"): the connector's op_read
+  returns RAW values by design (off-Mac surfaces need them), unlike the Mac op_read (proof-only) — so
+  the value enters the surface transcript (which may sync to the Part-6 backup). Guidance: use
+  op_health/list for checks; op_read only when the value is needed; prefer Mac op_run/op_inject to
+  consume secrets without transiting chat; rotate anything sensitive that did transit. The classifier
+  correctly blocked an agent-guessed read of the prod DB password during example-hunting (good guardrail).
 - Part 7.4 [~]: authored surface-check skill (plugins/core/skills/surface-check/SKILL.md) — probes
   rules/memory/creds/connectors/hooks/skills/git on the current surface (never assumes), reports
   loaded-vs-missing + the Native→RemoteMCP→generated-prompt fallback per gap; references surfaces/

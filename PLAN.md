@@ -238,11 +238,12 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       items + bootstrap/connector secrets] and root `.env.template` [op:// URIs, no values;
       verified `.env.template` tracked, `.env` ignored]. Field labels noted-not-guessed since they
       don't follow the category default in this vault.)
-- [~] 4.4 Verify with the Mac powered off: resolve a secret from claude.ai via the connector.
-      NEAR-DONE: `op_health` authenticated from claude.ai through the portal (Render-hosted, so the
-      Mac is structurally uninvolved — no Mac in the resolution path). To make it airtight, one
-      `op_read` of a real `op://` value from claude.ai (returns the secret value) closes it fully.
-- Done when: no surface returns unauthorized, Mac on or off.
+- [x] 4.4 Verify with the Mac powered off: resolve a secret from claude.ai via the connector.
+      DONE (2026-06-05): `op_health` authenticated AND `op_read` resolved a real `op://` value from
+      claude.ai through the portal — Render-hosted, so no Mac in the resolution path (Mac power is
+      irrelevant). Hygiene note added to connectors/op-mcp/README.md: op_read transits the value into
+      the surface transcript; use deliberately; prefer Mac op_run/op_inject for command execution.
+- Done when: no surface returns unauthorized, Mac on or off. — MET. **Part 4 COMPLETE (4.1–4.4).**
 - Handoff after this Part.
 
 ## Part 5: Memory: both lanes, cross-surface, never stale
