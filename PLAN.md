@@ -307,13 +307,18 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       repo markdown (memory/handoffs/decisions/PLAN/PROGRESS) + archives Claude Code session
       transcripts into `claude-archive/` (chosen layout: claude-archive is its own Obsidian vault).
       Run + verified — 18 md + 5 transcripts + generated home note. Auto-run via Stop hook = Part 7/5.4.
-- [~] 6.2 Point the local Obsidian vault at the synced OneDrive folder; fix the Obsidian
-      connection. VAULT READY (folder + structure + home note). Owner GUI on MacBook (parked,
-      iPhone now): open `claude-archive` as a vault in Obsidian, install the Local REST API
-      community plugin (the missing piece — obsidian MCP has no backend, so it disconnects),
-      generate its API key, wire it into the obsidian MCP config.
-- [ ] 6.3 Verify a non-Mac session's backup appears in OneDrive and then Obsidian. Parked: needs
-      the MacBook (Obsidian) + a second surface/machine running the backup; check OneDrive cloud sync.
+- [~] 6.2 Make the Obsidian vault hold + serve the claude-archive across surfaces.
+      DONE 2026-06-05: backup-archive.sh now DUAL-mirrors the knowledge md into the canonical vault
+      (`$OBSIDIAN_VAULT_DIR/claude-archive/`, default `~/Documents/Obsidian`) in addition to OneDrive;
+      obsidian-git pushes it to `SchnappAPI/obsidian-vault`. CORRECTION (earlier plan text was wrong): the
+      obsidian MCP is the FILESYSTEM `obsidian-mcp` npm package (reads `~/Documents/Obsidian` directly) — NOT
+      the Local REST API kind, so there is NO plugin to install/repair; it works on the Mac as-is. Off-Mac
+      access = the new `connectors/obsidian-mcp/` remote MCP (built + locally verified; serves the vault from
+      GitHub, no app dependency). Canonical vault = `~/Documents/Obsidian` (owner choice; `~/code/obsidian-vault`
+      is a redundant clone to retire). PENDING (owner): rotate the leaked vault PAT + re-set obsidian-git auth
+      in-GUI; deploy the remote MCP (owner-gated, connectors/obsidian-mcp/DEPLOY.md).
+- [~] 6.3 Verify a non-Mac session's backup reaches OneDrive + the vault and is searchable off-Mac. Mechanism
+      in place (dual-mirror + remote MCP built); full verify pends the remote-MCP deploy + a non-Mac run.
 - Handoff after this Part.
 
 ## Part 7: Cross-surface "must happen" enforcement
