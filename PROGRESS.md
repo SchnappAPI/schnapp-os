@@ -300,3 +300,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   (no code graph in a docs/config repo); "update-docs" = this generator, extensible. Verified green +
   byte-identical on re-run. Built in dependency order (9.2 before 9.3 CI which runs it); 9.1/9.4
   (template + @import dedup) and 9.5 (README install checklist) next.
+- Part 9.4 + 9.1 DONE: created templates/project-CLAUDE.md (thin composed project CLAUDE.md — name/
+  purpose; globals load via ~/.claude/CLAUDE.md [NOT re-imported: double-load, the 2.2 trap]; composed
+  modules load from .claude/rules/ symlinks, path-scoped; project-lane for purpose/schema/endpoints/
+  perf [dual-altitude link to speed-by-default]/gotchas; secrets as op:// refs). Updated /new-project
+  step 4 to WRITE the CLAUDE.md from this template (single source for its shape) and resolved its old
+  "@import globals or note them" ambiguity → note, don't re-import. 9.1: core CLAUDE.md @import done in
+  2.2; template references-not-copies; dedup sweep found NO rule-body paraphrase in living docs (only
+  inventory = generated CATALOG.md; surface/template module-names are intentional pointers). Path-scoped
+  non-leak verify stays 3.4 (Part 10). Next: 9.3 CI freshness check (runs gen-catalog + diff-fails on stale).

@@ -18,10 +18,12 @@ Steps Claude follows:
    `plugins/core/rules/modules/...` into it. Symlinks keep one source of truth and let
    path-scoped modules load only for matching files. Never symlink modules marked
    `composed: false`.
-4. Write a thin `<target>/CLAUDE.md` that:
-   - `@import`s the always-on global rules (or notes they load via `~/.claude/rules/global`),
-   - lists the composed modules,
-   - leaves a project-lane section for project-specific facts (schema, endpoints, purpose).
+4. Write `<target>/CLAUDE.md` from `templates/project-CLAUDE.md` (the single source for its
+   shape): fill the project name/purpose and replace the composed-module list with the chosen
+   preset's modules. Do NOT `@import` the global rules — they already load in every project via
+   `~/.claude/CLAUDE.md`, so re-importing double-loads. The template references the gallery and
+   the generated `CATALOG.md` (no rule content is copied) and leaves a project-lane section for
+   project-specific facts (purpose, schema, endpoints, perf notes, gotchas).
 5. Print the composed set and how to change it later (re-run `/new-project`, or add/remove a
    symlink in `.claude/rules/`).
 

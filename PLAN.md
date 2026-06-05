@@ -370,7 +370,15 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - Handoff after this Part.
 
 ## Part 9: Anti-staleness wiring + project template
-- [ ] 9.1 `@import` canonical files in core CLAUDE.md and the template; remove duplicated facts.
+- [x] 9.1 `@import` canonical files in core CLAUDE.md and the template; remove duplicated facts.
+      DONE: (a) "core CLAUDE.md" = `~/.claude/CLAUDE.md` already `@import`s the 7 global rules straight
+      from the repo (Part 2.2). (b) The template (`templates/project-CLAUDE.md`, 9.4) REFERENCES the
+      canonical sources (global lane, gallery, generated CATALOG) and copies no rule content; it does
+      NOT re-`@import` globals because they already load via `~/.claude/CLAUDE.md` (re-import =
+      double-load, the same trap 2.2 settled). (c) Dedup sweep: no living doc paraphrases a rule body
+      (distinctive global-rule lines appear only in their canonical rule); the only inventory is the
+      generated CATALOG.md (nothing hand-listed elsewhere). Module/skill name-references in surfaces/
+      template are intentional pointers, not duplicated facts.
 - [x] 9.2 Adopt generators (gen-catalog, update-codemaps, update-docs); mark outputs generated.
       DONE: plugins/core/scripts/gen-catalog.sh generates plugins/core/CATALOG.md — an inventory of
       global rules, modules (by dimension, with paths/scope + reference-only split), presets (linked,
@@ -380,7 +388,14 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       "update-docs" = this generator today, extensible. Verified: runs green, byte-identical on re-run.
 - [ ] 9.3 CI freshness check: fail a push if a generated doc is out of date; flag docs whose
       source changed after `last-verified`.
-- [ ] 9.4 Finalize `templates/project-CLAUDE.md` and the `/new-project` composer output.
+- [x] 9.4 Finalize `templates/project-CLAUDE.md` and the `/new-project` composer output.
+      DONE: created `templates/project-CLAUDE.md` — a thin, composed project CLAUDE.md (project
+      name/purpose; "Rules in effect" = globals load via `~/.claude/CLAUDE.md` + composed modules load
+      from `.claude/rules/` symlinks, path-scoped; project-lane section for purpose/schema/endpoints/
+      perf/gotchas with dual-altitude link to speed-by-default; secrets as `op://` refs). `/new-project`
+      step 4 now writes the CLAUDE.md FROM this template (single source for its shape) and the old
+      "@import globals or note them" ambiguity is resolved to "note — do not re-import (double-load)".
+      Path-scoped non-leak itself is verified in 3.4 (Part 10).
 - [ ] 9.5 Write the per-surface install checklist in `README.md`.
 - Handoff after this Part.
 
