@@ -334,3 +334,7 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   no-secrets policy DOC) + committed the rescued file. Audited all ignored files — it was the only false
   positive (rest are node_modules/dist/settings.local). CATALOG.md unchanged (already listed all 7). 9.3
   stays [~] until the post-fix CI run is confirmed green.
+- Part 9.3 DONE → [x]: live CI run 27034142430 (commit 62cc695) GREEN on GitHub-hosted ubuntu. The
+  freshness gate is verified end-to-end and already earned its keep across its first three runs (1 →
+  cross-platform mawk ellipsis non-determinism; 2 → with diff-print, surfaced the untracked global rule;
+  3 → green). 9.1/9.2/9.3/9.4 all [x]. Remaining in Part 9: 9.5 (per-surface README install checklist).
