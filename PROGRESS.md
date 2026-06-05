@@ -142,6 +142,14 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   upstream (Auth type: bearer + auth_credentials) — no connector code change. Remaining owner steps:
   build the Cloudflare portal (DEPLOY.md Step 4) + register the portal URL in claude.ai + verify
   check-7. Render free cold-start (~50s) optional-fixable with a free UptimeRobot/cron ping to /health.
+- 4.2 STATE (2026-06-05, session pause): connector LIVE + /health verified. Claude Code + Cowork can
+  use it NOW via bearer (DEPLOY.md Step 3 config snippet). claude.ai-web + iPhone OAuth front BLOCKED:
+  Cloudflare Zero Trust Free activation fails with "An unexpected error occurred while processing your
+  payment" on TWO different cards → Cloudflare-side billing glitch (not the connector, not the cards;
+  Free is $0 but requires a card auth). Owner parked web/iPhone. Re-entry options: (a) retry Cloudflare
+  Zero Trust activation in ~1 day (transient billing errors usually clear) → then DEPLOY.md Step 4;
+  (b) Stytch free-tier MCP OAuth (no card, but a new account + connector OAuth glue I'd build). 4.2
+  stays [~]: deployed + Code/Cowork-usable; claude.ai/iPhone registration + check-7 pending.
 - Part 7.4 [~]: authored surface-check skill (plugins/core/skills/surface-check/SKILL.md) — probes
   rules/memory/creds/connectors/hooks/skills/git on the current surface (never assumes), reports
   loaded-vs-missing + the Native→RemoteMCP→generated-prompt fallback per gap; references surfaces/
