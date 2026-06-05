@@ -321,8 +321,11 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       table + the always-complete fallback per gap. Enable-per-surface (claude.ai/Cowork) is Part 10.
 - [~] 7.5 On-correction auto-update: correcting a mistake triggers the doc/memory update so it
       is not repeated, on any surface. PROCEDURE AUTHORED (memory/README.md "On-correction update":
-      routes preference→rule, fact→memory-supersede, doc→fix-in-same-change). Hook (Code) + skill
-      (chat/Cowork) wiring pending with 7.2/7.3.
+      routes preference→rule, fact→memory-supersede, doc→fix-in-same-change). COVERED: hookless
+      surfaces via the session-hygiene skill (7.3); on Code it is the always-loaded procedure + global
+      rules — "the owner corrected me" is semantic, so no deterministic command hook is the right
+      mechanism (the Stop push-gate enforces only the push half). Live demo is organic on the next
+      real correction.
 - Handoff after this Part.
 
 ## Part 8: Git hygiene (simple by default)

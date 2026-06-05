@@ -240,3 +240,10 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   backup caveat (backup-archive.sh needs a shell → don't claim the OneDrive mirror ran from chat).
   Wired the three surface profiles (claude-ai-web, cowork, iphone) to name the skill in the same change
   (anti-stale). Always-loaded-instruction enablement per surface = Part 10 (mirrors 7.4 surface-check).
+- Part 7 boundary handoff: refined 7.5 note (on-correction on Code = the always-loaded procedure + global
+  rules, NOT a command hook — "owner corrected me" is semantic; the Stop push-gate enforces only the push
+  half; hookless surfaces covered by session-hygiene). Wrote handoffs/009-part7-hooks-skills.md (supersedes
+  008) — flags the IMMEDIATE next-session live-verify (hooks load at session start, so they did not run this
+  session): expect the SESSION-START GATE block, test the Stop push-gate (commit-without-push → block), and
+  the SESSION-END backup; flip 5.3/5.4 → [x] once seen. All of Part 7 authored ([~]); remaining = live-verify
+  + remote http/mcp_tool hooks + Cowork-runs-hooks check + per-surface enablement (Part 10). Next: Part 8.
