@@ -380,6 +380,22 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   step 2; corrected README step 3's now-stale "trust gates the memory lane" claim). claude-kit's
   project-scope entry left as a benign bootstrap fallback. Throwaway fact + /tmp fixture cleaned up; lane +
   repo clean. Phase boundary: pause before the Capability layer (C.0 gap-inventory) per the locked order.
+- Owner-gated parallel track (Part 6 / Obsidian), taken mid-Capability-layer at owner request. (a) SECURITY:
+  found a GitHub PAT hardcoded in `~/Documents/Obsidian/.git/config` (the active vault) AND a plaintext
+  token in `~/.git-credentials` (global `credential.helper=store`). Flagged per secrets-as-references; owner
+  is rotating the PAT. Fixed the vault leak: switched its remote to SSH (token removed from .git/config,
+  verified 0 tokens + SSH fetch works), switched global helper toward osxkeychain. PENDING owner OK:
+  delete `~/.git-credentials`; obsidian-git plugin needs its auth re-set in-GUI post-rotation; 11 unpushed
+  vault commits left for obsidian-git to sync. (b) DIAGNOSIS CORRECTION: the obsidian MCP is the filesystem
+  `obsidian-mcp` npm pkg pointed at `~/Documents/Obsidian` (exists, cached) — NOT the Local REST API kind;
+  nothing to "repair", it was just mid-startup when it looked stuck (earlier Local-REST-API diagnosis was
+  wrong — failed to check the MCP type first). (c) SPRAWL: two diverged clones of SchnappAPI/obsidian-vault
+  (`~/Documents/Obsidian` = active, 11 ahead of origin; `~/code/obsidian-vault` = equals origin, redundant).
+  Owner chose `~/Documents/Obsidian` canonical. (d) PART A DONE: extended backup-archive.sh to dual-mirror —
+  also writes the knowledge md into `$OBSIDIAN_VAULT_DIR/claude-archive/` (default ~/Documents/Obsidian;
+  sessions stay OneDrive-only to avoid bloating the git-synced vault). Ran it: vault now holds
+  claude-archive/repo (memory/handoffs/decisions/PLAN/PROGRESS). (e) PENDING: build the remote Obsidian MCP
+  (op-mcp-style, serves the vault from GitHub for off-Mac) — owner-approved scope, owner-gated deploy.
 - Capability layer C.0 (inventory half) → PLAN C.0 `[~]`. Owner asked for a full, deduplicated, thematically
   clustered inventory of ALL schnapp-kit (referencing its skill-scout / search-first / skill-stocktake /
   agent-sort skills for method). Extracted frontmatter for all 253 components (134 skills / 39 agents / 59

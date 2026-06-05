@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 # backup-archive.sh — mirror claude-kit knowledge + Claude Code session
-# transcripts into the OneDrive `claude-archive/` folder, which is opened as its
-# own Obsidian vault (PLAN.md Part 6; decisions/0004 is unrelated).
+# transcripts into two destinations (PLAN.md Part 6; decisions/0004 is unrelated):
+#   1. OneDrive `claude-archive/` — cloud-durable backup (repo md + raw .jsonl sessions).
+#   2. The canonical Obsidian vault `claude-archive/` subfolder — the browsable, searchable
+#      copy Obsidian + the obsidian MCP read; md only (raw transcripts would bloat the
+#      git-synced vault). The vault auto-syncs to GitHub via the obsidian-git plugin.
 #
-# OneDrive syncs the folder to the cloud; Obsidian reads it directly on the Mac.
-# Markdown is mirrored (current truth; git holds history). Transcripts accumulate
-# (each session is a distinct artifact). The repo is never modified — read-only source.
+# Markdown is mirrored (current truth; git holds history). Transcripts accumulate in
+# OneDrive (each session is a distinct artifact). The repo is never modified — read-only source.
 #
 # Config (env overrides, machine-portable):
 #   CLAUDE_KIT_REPO     default ~/code/claude-kit
 #   CLAUDE_ARCHIVE_DIR  default ~/Library/CloudStorage/OneDrive-Schnapp/claude-archive
+#   OBSIDIAN_VAULT_DIR  default ~/Documents/Obsidian  (vault mirror skipped if absent)
 #
 # Run manually now; Part 7 wires it to the Stop/SessionEnd hook (PLAN 5.4).
 set -euo pipefail
@@ -61,3 +64,16 @@ chats are not on the Mac filesystem; back those up via export / live-session-cac
 EOF
 
 echo "backup-archive: mirrored repo md + $SESSION_COUNT transcript(s) -> $ARCHIVE"
+
+# 4. Mirror the browsable knowledge md into the canonical Obsidian vault (optional).
+#    Reuses the just-built OneDrive copy. Sessions (.jsonl) stay OneDrive-only so the
+#    git-synced vault does not bloat. obsidian-git pushes this to GitHub on next sync.
+VAULT="${OBSIDIAN_VAULT_DIR:-$HOME/Documents/Obsidian}"
+if [ -d "$VAULT" ]; then
+  mkdir -p "$VAULT/claude-archive"
+  rsync -a --delete "$ARCHIVE/repo/" "$VAULT/claude-archive/repo/"
+  cp -f "$ARCHIVE/README.md" "$VAULT/claude-archive/README.md"
+  echo "backup-archive: mirrored knowledge md -> $VAULT/claude-archive"
+else
+  echo "backup-archive: OBSIDIAN_VAULT_DIR not found ($VAULT) — vault mirror skipped"
+fi
