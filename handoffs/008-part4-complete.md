@@ -35,12 +35,20 @@ Date: 2026-06-05.
 - **Next-session verifies:** 2.4 (global lane loads in another repo), 3.4 (path-scoped non-leak),
   5.6 (cross-repo lesson + supersede), live 0.3/1.5/2.2/5.1.
 
-## Next buildable, in order
-**Part 7** (hooks + skills): 7.2 — author hook scripts + `hooks.json` in-repo (Stop hook runs
-backup-archive.sh + end-of-session write; SessionStart freshness/git gate), then present the
-`settings.json` activation diff for owner approval (no self-wiring). 7.3 — chat/Cowork skill versions
-of the three procedures. Then Parts 8, 9 (incl. 9.3 CI freshness, 9.5 install checklist), 10
-(closes 2.4/3.4/5.6), 11.
+## Next buildable, in order — and why Part 7 (not "more Part 5")
+Part 5's leftovers are NOT separately buildable now: **5.3 (freshness gate) + 5.4 (end-of-session
+write)** are HOOKS whose implementation the PLAN parks in Part 7 (procedures already authored in
+memory/README.md); **5.5** needs a live perf instance that lands organically with real perf work;
+**5.6** needs a second repo (Part 10) + the freshness gate (Part 7). So Part 7 IS the next actionable,
+and it CLOSES 5.3/5.4.
+
+**Part 7 (hooks + skills) — start with the hooks so 5.3/5.4 finish first:**
+- **7.2** — author hook scripts + `hooks.json` in-repo: a **Stop/SessionEnd hook** = 5.4 (runs
+  `plugins/core/scripts/backup-archive.sh` + the end-of-session memory/handoff write) and a
+  **SessionStart freshness/git gate** = 5.3. Then present the `settings.json` activation diff for
+  owner approval (NO self-wiring of ~/.claude or settings.json).
+- **7.3** — chat/Cowork skill versions of the three procedures (memory/README.md is the single source).
+- Then Parts 8, 9 (incl. 9.3 CI freshness, 9.5 install checklist), 10 (closes 2.4/3.4/5.6), 11.
 
 ## Gotchas
 - `connectors/op-mcp/` `node_modules` + `dist` gitignored; `npm install` before build/verify.
