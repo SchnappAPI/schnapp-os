@@ -160,6 +160,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   billing. Corrected DEPLOY.md Step 4 + decisions/0004 (on-correction rule: fix the stale claim in the
   same change). Web/iPhone parked. Re-entry: personal Cloudflare acct + Access-JWT in connector, OR
   Stytch OAuth in connector. Code/Cowork bearer path unaffected + live.
+- 4.2 diagnosis REFINED (evidence, supersedes the "likely org-locked billing" guess above): the
+  Cloudflare account (austinschnapp@1st-lake.com) has the owner as SOLE Super Admin, and schnapp.bet
+  is a zone IN this account (Account ID b7d6038f..., registered via Cloudflare Registrar = a paid txn
+  that succeeded). So billing is NOT org-locked and DOES work here → the ZT Free activation failure is
+  likely a transient Cloudflare glitch or a stale card, not an account lock. Portal custom-domain
+  requirement (mcp.schnapp.bet) is satisfiable. Next try: Billing → confirm a current card → retry ZT
+  activation. Optional identity hygiene: change CF login email off the work domain (My Profile → Email).
 - Part 7.4 [~]: authored surface-check skill (plugins/core/skills/surface-check/SKILL.md) — probes
   rules/memory/creds/connectors/hooks/skills/git on the current surface (never assumes), reports
   loaded-vs-missing + the Native→RemoteMCP→generated-prompt fallback per gap; references surfaces/
