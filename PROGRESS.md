@@ -187,6 +187,16 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   op_health/list for checks; op_read only when the value is needed; prefer Mac op_run/op_inject to
   consume secrets without transiting chat; rotate anything sensitive that did transit. The classifier
   correctly blocked an agent-guessed read of the prod DB password during example-hunting (good guardrail).
+- Connector hygiene (option a, owner-chosen): connector stays READ-ONLY (no op_run on the public host —
+  avoids RCE-with-SA). Baked cold-start tolerance (~50s first call, retry-not-fail) + "prefer Mac
+  op_run/op_inject over op_read" into the op-mcp tool descriptions (src/tools.ts, tsc clean, commit
+  15e197d). Needs a Render Manual Deploy + Cloudflare server re-sync to reach claude.ai.
+- Full doc-freshness sweep (owner asked: nothing stale up to this point). Updated living docs to current
+  state: surfaces/README + claude-ai-web + iphone (connector LIVE, op_run-over-op_read), credentials-map
+  (connector live, PAT widened/Actions-secret status), memory/MEMORY.md index line, decisions/0002 (both
+  DECISIONs marked RESOLVED), DEPLOY.md intro (DONE+WORKING). Wrote handoffs/008-part4-complete.md as the
+  current resume pointer (supersedes 007). Historical docs (old handoffs, PROGRESS log, dated decision
+  sections) intentionally left as-is. PLAN boxes already current.
 - Part 7.4 [~]: authored surface-check skill (plugins/core/skills/surface-check/SKILL.md) — probes
   rules/memory/creds/connectors/hooks/skills/git on the current surface (never assumes), reports
   loaded-vs-missing + the Native→RemoteMCP→generated-prompt fallback per gap; references surfaces/

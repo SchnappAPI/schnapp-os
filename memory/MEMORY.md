@@ -9,4 +9,4 @@ holds durable cross-surface facts and context.
 
 ## Index
 - [Keep tracker current](keep-tracker-current.md) — flip PLAN box + PROGRESS line in the same commit as the deliverable; never claim verified before the verify ran.
-- [Credentials state](credentials-state.md) — 1Password SA rotated; op/gh live; off-Mac via op-mcp connector.
+- [Credentials state](credentials-state.md) — 1Password SA rotated; op/gh live; off-Mac access LIVE via op-mcp connector (Render + Cloudflare portal + claude.ai/iPhone).

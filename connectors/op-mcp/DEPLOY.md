@@ -1,11 +1,10 @@
 # Deploy + register the off-Mac 1Password connector (Part 4.2)
 
-Canonical runbook. The server is built and locally verified; these are the
-owner-gated steps (they need your Render + Cloudflare + claude.ai accounts).
-Chosen path: **Render** (free host) + **Cloudflare MCP portal** (OAuth front).
+Canonical runbook — **DONE + WORKING (2026-06-05)**, kept as the reproducible record / re-deploy
+reference. Path: **Render** (free host) + **Cloudflare MCP portal** (OAuth front).
 Rationale + alternatives: `decisions/0004-off-mac-1password-connector.md`.
 
-Result when done: every surface resolves `op://` references with the Mac off.
+Result (achieved): every surface resolves `op://` references with the Mac off.
 - **Claude Code + Cowork** work with just the bearer token (Step 3) — no portal.
 - **claude.ai web + iPhone** need the Cloudflare OAuth front (Steps 4–5), because
   claude.ai's custom-connector UI only accepts OAuth 2.1, not a static bearer.

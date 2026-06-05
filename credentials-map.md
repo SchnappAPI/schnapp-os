@@ -10,8 +10,8 @@ off-Mac (claude.ai / iPhone); a GitHub Actions secret in CI.
 |---|---|
 | Code (Mac) | `op` CLI + Mac `op_*` MCP, Service Account token in the shell env |
 | Code (work machines) | `op` CLI with the SA token in that machine's env |
-| claude.ai / iPhone | op-mcp connector (`op_read`) once deployed — see decisions/0004 |
-| GitHub Actions | repo secret `OP_SERVICE_ACCOUNT_TOKEN` (set on 8/10 SchnappAPI repos) |
+| claude.ai / iPhone | op-mcp connector LIVE — portal `https://mcp.schnapp.bet/mcp` (decisions/0004). `op_read` returns values; prefer the Mac `op_run`/`op_inject` to *use* a secret |
+| GitHub Actions | repo secret `OP_SERVICE_ACCOUNT_TOKEN` (set on the tracked repos; 2 unscoped repos pending — see Status) |
 
 ## Reference syntax
 `op://<vault>/<item>/<field>` (sections: `op://<vault>/<item>/<section>/<field>`).
@@ -51,4 +51,9 @@ System-relevant items (titles from `op_list_items`; categories in brackets). Bui
 
 ## Status
 - 1Password SA rotated 2026-06-03; `op`/`gh` work (memory/credentials-state.md).
-- Actions secret `OP_SERVICE_ACCOUNT_TOKEN` set on 8/10 repos; 2 pending a wider PAT.
+- **op-mcp connector LIVE (2026-06-05):** Render `https://op-mcp.onrender.com` + Cloudflare portal
+  `https://mcp.schnapp.bet/mcp`, registered in claude.ai. `op_health`/`op_read` verified from
+  claude.ai (decisions/0004, connectors/op-mcp/DEPLOY.md).
+- PAT widened to all repos; Actions secret set on the authorized repos incl. `af-invoice-parser` +
+  `af-query-api`. `DB_Storage` + `appfolio-marketing-project` still lack it (never scoped — awaiting
+  owner decision; classifier-flagged master-token spread).

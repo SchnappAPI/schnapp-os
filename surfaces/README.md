@@ -15,7 +15,9 @@ Never silently fail because the surface lacks a capability. State which path is 
 ## Credentials (all surfaces)
 Secrets resolve through 1Password, referenced by `op://`, never stored as values. The
 bootstrap is a 1Password Service Account token (rotate per `decisions/0001` if it breaks).
-Part 4 adds a hosted 1Password MCP connector so this works without the Mac being on.
+The hosted **op-mcp connector** (Part 4, LIVE) resolves secrets off-Mac on every surface —
+see `connectors/op-mcp/DEPLOY.md`. To *use* a secret in a command, prefer the Mac's
+`op_run`/`op_inject` (value stays out of the transcript); `op_read` only when the Mac is off.
 
 ## Profiles
 - `code-mac.md` — primary, most capable.
