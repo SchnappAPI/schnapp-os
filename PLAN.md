@@ -386,8 +386,15 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       deterministic (C-locale sort, no timestamps) so CI can diff it (9.3). "update-codemaps" does not
       apply (docs/config repo, no code graph; the only code is the self-contained op-mcp connector);
       "update-docs" = this generator today, extensible. Verified: runs green, byte-identical on re-run.
-- [ ] 9.3 CI freshness check: fail a push if a generated doc is out of date; flag docs whose
+- [~] 9.3 CI freshness check: fail a push if a generated doc is out of date; flag docs whose
       source changed after `last-verified`.
+      BUILT: .github/workflows/freshness.yml (GitHub-hosted ubuntu, Mac-independent; fetch-depth 0)
+      runs plugins/core/scripts/check-freshness.sh, which does BOTH clauses: (1) regenerates
+      CATALOG.md and fails if the committed copy is stale; (2) flags any doc whose `last-verified:`
+      frontmatter predates a git change to a listed `sources:` path (no-op until adopted). Locally
+      verified all 4 cases (clean→OK; dirty CATALOG→FAIL; stale last-verified fixture→FAIL; restored
+      →OK). [~] until the first live CI run on GitHub is confirmed green (cross-platform generator
+      determinism: mac-generated CATALOG vs Linux-CI-regenerated).
 - [x] 9.4 Finalize `templates/project-CLAUDE.md` and the `/new-project` composer output.
       DONE: created `templates/project-CLAUDE.md` — a thin, composed project CLAUDE.md (project
       name/purpose; "Rules in effect" = globals load via `~/.claude/CLAUDE.md` + composed modules load

@@ -13,11 +13,12 @@
 # code graph to map (the only code, connectors/op-mcp/, is self-contained); the catalog IS
 # the relevant generator. "update-docs" = this script today; add generators here as needed.
 #
-# Config: CLAUDE_KIT_REPO (default ~/code/claude-kit).
+# Config: CLAUDE_KIT_REPO (default: derived from this script's location, so it runs anywhere —
+# locally and in CI where the checkout is not at ~/code/claude-kit).
 set -euo pipefail
 export LC_ALL=C
 
-REPO="${CLAUDE_KIT_REPO:-$HOME/code/claude-kit}"
+REPO="${CLAUDE_KIT_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}"
 CORE="$REPO/plugins/core"
 OUT="${1:-$CORE/CATALOG.md}"
 

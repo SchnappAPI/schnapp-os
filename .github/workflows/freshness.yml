@@ -1,0 +1,24 @@
+name: freshness
+
+# Doc-freshness gate (PLAN.md Part 9.3). Fails the push/PR if a generated doc is out of date
+# (someone changed a source under plugins/core/ but did not re-run the generator), or if a
+# `last-verified:` doc points at a source that changed after its verification date.
+# Runs on GitHub-hosted ubuntu (Mac-independent, the whole point of claude-kit).
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so last-verified source-date checks can read git log
+
+      - name: Documentation freshness gate
+        run: bash plugins/core/scripts/check-freshness.sh

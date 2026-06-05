@@ -309,3 +309,11 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   2.2; template references-not-copies; dedup sweep found NO rule-body paraphrase in living docs (only
   inventory = generated CATALOG.md; surface/template module-names are intentional pointers). Path-scoped
   non-leak verify stays 3.4 (Part 10). Next: 9.3 CI freshness check (runs gen-catalog + diff-fails on stale).
+- Part 9.3 [~] BUILT: plugins/core/scripts/check-freshness.sh (both 9.3 clauses — regenerate CATALOG +
+  diff-fail if stale; flag any `last-verified:` doc whose `sources:` changed later per git log) +
+  .github/workflows/freshness.yml (GitHub-hosted ubuntu, Mac-independent, fetch-depth 0). Made
+  gen-catalog.sh location-independent (derive repo root from script path, not $HOME) so it runs in CI.
+  Locally verified 4 cases: clean→OK exit0; dirty CATALOG→FAIL exit1 with fix hint; stale last-verified
+  fixture→FAIL with precise message; restored→OK. 9.3 stays [~] until the first GitHub CI run is
+  confirmed green (proves the mac-generated CATALOG matches a Linux re-generation — generator
+  determinism across platforms). Checking the run right after this push.
