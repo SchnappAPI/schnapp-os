@@ -347,3 +347,20 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   the now-live freshness gate. Freshness gate still green locally (CATALOG untouched by README/template).
   Part 9 (9.1–9.5) all [x]. Next: handoff at the Part-9 boundary, then Part 10 (wire surfaces; plugin
   install delivers global hooks per 0005; closes 2.4/3.4/5.6/7.x enablement).
+- MID-BUILD EVALUATION + RE-SEQUENCE (owner asked: step back, consider the ultimate objective, plan the
+  rest with precision, no rework, address "I don't see the skills/agents I want"). Ran 3 parallel
+  read-only evaluations: (1) FOUNDATION VERIFIED SOUND — `.claude/rules/` auto-discovery + `paths:`
+  frontmatter scoping is NATIVE in current Claude Code (the make-or-break assumption holds; no
+  architectural rework; 2.4/3.4/5.6 are now confirmations). (2) claude-kit COHESIVE through Part 9 (no
+  orphans/dead/stale; only Part-10 manifests + agents/ absent, expected). (3) schnapp-kit located at
+  ~/code/schnapp-kit (tag record-2026-06-03): 134 skills / 39 agents / 59 commands / 21 hooks — the
+  source of the GAP. Root finding: the plan had NO phase for the PRODUCTIVE capability layer (claude-kit
+  = 3 skills/1 cmd/0 agents, all infra). Owner decisions: DOMAIN-FIRST LEAN capabilities (build only the
+  owner's-platform gap NOT already covered by keep-set/available-skills/connectors; compose what exists;
+  schnapp-kit = on-demand archive, no bulk migration → anti-sprawl) + FINISH agentic OS as capstone.
+  Encoded in PLAN.md "Finish sequence" + a new "Capability layer" phase (C.0–C.3) inserted BEFORE Part 10;
+  Part numbers KEPT STABLE (caught + reverted a renumber that would have rippled Part-10/11 refs across
+  decisions/0005, surfaces, settings, hooks, memory — the blast-radius/stable-identifier discipline).
+  Rationale recorded in decisions/0006. Order: foundation-verify → capability layer → Part 10 package+wire
+  → Part 11 agentic OS → final 14-point sweep (capabilities BEFORE packaging = no re-package rework).
+  Handoff 012 next (session large).

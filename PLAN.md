@@ -405,7 +405,8 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       perf/gotchas with dual-altitude link to speed-by-default; secrets as `op://` refs). `/new-project`
       step 4 now writes the CLAUDE.md FROM this template (single source for its shape) and the old
       "@import globals or note them" ambiguity is resolved to "note — do not re-import (double-load)".
-      Path-scoped non-leak itself is verified in 3.4 (Part 10).
+      Path-scoped non-leak itself is verified in 3.4 (foundation-verify phase; mechanism now confirmed
+      native — see the Finish sequence).
 - [x] 9.5 Write the per-surface install checklist in `README.md`.
       DONE: README "Install (per surface)" section — Code (primary Mac + other machines), Cowork,
       claude.ai web, iPhone — with the four required items: (1) the `~/.claude/CLAUDE.md` content,
@@ -416,16 +417,81 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       Map (CATALOG + templates rows) and the "Staying current" CI line (now the live freshness gate).
 - Handoff after this Part.
 
+## Finish sequence (re-sequenced 2026-06-05; authoritative order for what is LEFT)
+Foundation evaluated + verified sound: `.claude/rules/` auto-discovery + `paths:` frontmatter scoping is
+NATIVE in current Claude Code (confirmed 2026-06-05; handoff 012), so the composition design holds — no
+architectural rework. Gap found: the plan had NO phase for the PRODUCTIVE capability layer (owner's
+flag: 0 domain skills/agents vs schnapp-kit's 134/39). Owner decisions (2026-06-05): DOMAIN-FIRST LEAN
+capabilities; FINISH the agentic OS as the capstone. Part numbers are KEPT STABLE (Part 10 = wire/
+package, Part 11 = agentic OS) so other docs (decisions/0005, surfaces, settings, hooks, memory) that
+cite them stay valid — no renumber ripple. The Capability layer is inserted as its own phase BEFORE
+Part 10. Remaining work, in dependency order — do earlier-listed first to avoid rework:
+
+1. **Foundation verify (cheap confirmations):** 2.4 (global lane loads in another repo), 3.4 (path-scoped
+   non-leak — now native-confirmed, live-confirm), 5.6 (cross-repo memory + supersede). Needs a 2nd repo
+   + 1-2 live sessions. FIRST: locks the base before more is built on it.
+2. **Capability layer (NEW phase, below):** select + build the domain-first gap set. BEFORE packaging, so
+   the plugin ships the complete set and the final verify runs against it (no re-package/re-verify rework).
+3. **Part 10 — Wire surfaces + package:** marketplace + plugin.json delivering the COMPLETE set; plugin
+   delivers the global gate+push-gate, strip the dup from settings.json (0005); wire Cowork/claude.ai/
+   iPhone + per-surface skill enablement (closes 7.3/7.4/7.5 enablement).
+4. **Part 11 — Agentic OS capstone:** scheduler, `/do` orchestrator, `status` control plane.
+5. **Final verification sweep:** the 14-point list against the complete system → production-ready sign-off.
+
+Owner-gated parallel tracks (any time, non-blocking): 6.2/6.3 Obsidian (MacBook GUI), 4.2 connector
+redeploy (Render Manual Deploy + Cloudflare re-sync), the DB_Storage / appfolio-marketing-project
+Actions-secret decision. 5.5 dual-altitude + 8.3 merge-skill close opportunistically (real perf work /
+first approved branch).
+
+## Capability layer (domain-first, lean, non-duplicative) — DO BEFORE Part 10
+The productive teeth (the gap the owner flagged). Owner chose DOMAIN-FIRST LEAN: build ONLY what serves
+the owner's actual platform AND is not already provided elsewhere (rebuilding what exists = the sprawl we
+are escaping). Steps labeled C.x to keep Part numbers stable. Method:
+- [ ] C.0 Gap inventory FIRST (never build blind). For each candidate, check whether it already exists in
+      (a) keep-set plugins (superpowers = TDD/debug/brainstorm/code-review/worktrees; caveman; plugin-dev;
+      frontend-design), (b) available skills (anthropic-skills: pq-flat-map-type / fish-compare /
+      sports-data-auditor / xlsx / pdf / docx; the `data:*` suite; `design:*`; deep-research), (c) MCP
+      connectors (op-mcp; Mac ops MCP; GitHub; Cloudflare). EXISTS → COMPOSE/reference it (name it in the
+      right preset + surface profile), do NOT rebuild. Only the genuine GAP is built. Record in decisions/.
+- [ ] C.1 Build the GAP capabilities (lean, into the gallery, each cataloged + preset-slotted). Owner's
+      platform = Python ETL → SQL Server 2022 (scheduled via GitHub Actions/LaunchAgents); Power Query M
+      prototyping; sports data (personal); web tools; Quickbase; AppFolio; policy/procedure docs. Candidate
+      gap set (confirm against C.0 — build only what's missing):
+        • skill `etl-pipeline-build` — Python ETL → SQL Server (idempotent, fast_executemany, op:// env,
+          Actions schedule); composes etl-pipeline + sql-server + speed-by-default rules.
+        • skill `sql-server-patterns` — T-SQL / SQL Server 2022 (owner uses SQL Server, NOT postgres/mysql;
+          schnapp-kit's DB skills do not fit); composes the sql-server lang rule.
+        • `tool/quickbase` + `tool/appfolio`: grow the rule stubs into skills ONLY if no env skill covers
+          them (fish-compare already does AppFolio reconciliation → compose, don't rebuild).
+        • command `/update-docs` (+ `/update-codemaps`): port lean from schnapp-kit for the owner's OTHER
+          (ETL) repos, not claude-kit itself.
+        • agents: build domain agents ONLY where the gap is real (Explore/Plan/general-purpose + caveman +
+          superpowers cover generic reviewer/architect roles). Likely 0-2 (e.g. a SQL-ETL reviewer).
+- [ ] C.2 Presets: extend the domain bundles (e.g. work-etl-sql) to name the new skills so `/new-project`
+      composes a real working set. Regenerate CATALOG (CI enforces freshness).
+- [ ] C.3 schnapp-kit (`~/code/schnapp-kit`, frozen record) stays the ON-DEMAND archive — pull a
+      capability only when a real task needs it; nothing bulk-migrated (anti-sprawl).
+- Done when: a real ETL/SQL/Quickbase/AppFolio/policy task is served end-to-end by claude-kit's own
+  composed set + referenced existing skills, nothing duplicated, gallery still understood.
+- Handoff after this phase.
+
 ## Part 10: Wire surfaces + final verification
-- [ ] 10.1 Make `claude-kit` a marketplace; install in Code; connect the repo in Cowork; add
-      core skills in claude.ai.
-- [ ] 10.2 Run the full verification list.
-- Done when: the same core works on Code, Cowork, and claude.ai.
+- [ ] 10.1 Package: `.claude-plugin/marketplace.json` + `plugins/core/.claude-plugin/plugin.json`
+      (components auto-discover by directory — skills/commands/agents auto; hooks via hooks.json). Install
+      in Code as a marketplace plugin so the PLUGIN delivers the global gate+push-gate everywhere
+      (`${CLAUDE_PLUGIN_ROOT}`); then REMOVE those two from the project `.claude/settings.json` to avoid
+      double-fire, keeping ONLY the backup (decisions/0005). Packages the COMPLETE Capability-layer set.
+- [ ] 10.2 Wire the other surfaces: connect the repo in Cowork; add the core + domain skills and the
+      op-mcp connector in claude.ai + iPhone; enable session-hygiene / surface-check per surface (closes
+      the 7.3/7.4/7.5 per-surface enablement).
+- [ ] 10.3 Run the full verification list (below) against the complete system.
+- Done when: the same core + capabilities work on Code, Cowork, and claude.ai/iPhone.
+- Handoff after this Part.
 
 ---
 
 ## Part 11: Agentic OS layer (the self-running top)
-Added after the core works, so it never blocks the foundation.
+The capstone (owner: finish it now). Reuses schnapp-kit pieces on-demand (model-route, autonomous-loops).
 - [ ] 11.1 Scheduler / daemons via scheduled-tasks/cron: nightly memory consolidation,
       doc-freshness sweep, sync-and-unmerged check, infra/pipeline health. Safe routines run
       and notify; anything mutating data, money, or production asks first. Results to the repo.
