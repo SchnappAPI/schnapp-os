@@ -254,9 +254,17 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - [x] 5.2 Adopt: one fact one file; supersede not append; every memory carries `source:` and
       `updated:`. (Documented in memory/README.md + global/anti-stale.md; demonstrated by the
       seed per-fact files.)
-- [ ] 5.3 SessionStart freshness gate: skip or quarantine superseded or out-of-date memories;
+- [~] 5.3 SessionStart freshness gate: skip or quarantine superseded or out-of-date memories;
       surface unmerged or unpushed work first.
-- [ ] 5.4 Stop/SessionEnd hook writes fresh memory and a handoff deterministically.
+      HOOK AUTHORED (plugins/core/hooks/session-start-gate.sh): absorbs the 0.3 pull, surfaces
+      unpushed/unmerged/dirty git + a memory supersede-orphan scan; standalone-tested green
+      (exit 0, non-blocking). The memory *reasoning* stays the agent procedure (memory/README.md).
+      Activation (.claude/settings.json) is owner-gated (Part 7.2 diff); live-verify pending.
+- [~] 5.4 Stop/SessionEnd hook writes fresh memory and a handoff deterministically.
+      HOOK AUTHORED (plugins/core/hooks/session-end-backup.sh): runs backup-archive.sh + surfaces
+      unpushed/uncommitted state so the agent's memory/handoff write + push is not skipped (the
+      deterministic half; prose authoring stays the agent procedure). Tested green (mirrored
+      18 md + 6 transcripts). Activation owner-gated (Part 7.2 diff); live-verify pending.
 - [~] 5.5 Dual-altitude promotion: write the project-specific instance in the project lane AND
       extract the reusable principle to `global/speed-by-default.md`, linked both ways (nothing
       moved, nothing lost). Seed with your perf examples (read-once, module-level cache,
@@ -287,8 +295,13 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       update, end-of-session log). AUTHORED (canonical, single home = memory/README.md):
       freshness-gate (session-start) + end-of-session-write existed; on-correction-update now added.
       The git/unmerged half of the session-start state check lands with Part 8. Hook/skill wiring = 7.2/7.3.
-- [ ] 7.2 Implement as hooks for Code on all machines; use `http`/`mcp_tool` hook types for
+- [~] 7.2 Implement as hooks for Code on all machines; use `http`/`mcp_tool` hook types for
       remote action. Verify whether Cowork runs them.
+      AUTHORED in-repo: session-start-gate.sh (=5.3) + session-end-backup.sh (=5.4) command hooks
+      + plugins/core/hooks/hooks.json (portable plugin deployment, ${CLAUDE_PLUGIN_ROOT}; activates
+      at Part-10 install). Both tested standalone (exit 0, non-blocking). Activation diff for the
+      claude-kit repo's .claude/settings.json presented for owner approval (no self-wiring).
+      Pending: owner approval + live-verify; remote http/mcp_tool hooks; Cowork-runs-hooks check.
 - [ ] 7.3 Implement the same procedures as skills plus always-loaded instructions for chat and
       Cowork.
 - [~] 7.4 Add `surface-check` skill: reports loaded vs missing on the current surface. AUTHORED:

@@ -203,3 +203,15 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   profiles by path (no restatement). Enable-per-surface = Part 10. Next: 7.2 hook scripts + hooks.json
   (Stop hook runs backup-archive.sh + end-of-session write; SessionStart freshness gate) — authored
   in-repo, then activation diff for owner approval (no self-wiring of settings.json/~/.claude).
+- Part 7.2 [~] (authored, activation owner-gated) → also moves 5.3/5.4 to [~]: wrote two command hooks
+  in plugins/core/hooks/. session-start-gate.sh (=5.3): absorbs the 0.3 git pull, then surfaces
+  unmerged/unpushed/dirty git + a memory supersede-orphan scan to stdout (context) so stale state is
+  addressed before new work; reasoning over memory stays the agent procedure (memory/README.md).
+  session-end-backup.sh (=5.4): runs backup-archive.sh (mirror to OneDrive vault) + reminds of
+  unpushed/uncommitted state so the agent's memory/handoff write+push isn't skipped (deterministic
+  half only; prose authoring stays agent). Both non-blocking, always exit 0; standalone-tested green
+  (gate: pull+state+orphan scan; backup: mirrored 18 md + 6 transcripts). Also wrote the portable
+  plugin deployment plugins/core/hooks/hooks.json (${CLAUDE_PLUGIN_ROOT}, SessionStart startup +
+  SessionEnd; activates at Part-10 install). NO self-wiring: the .claude/settings.json activation diff
+  (replace the inline 0.3 pull with the gate script + add the SessionEnd backup hook) is presented for
+  owner approval. Remote http/mcp_tool hooks + Cowork-runs-hooks check remain open in 7.2.
