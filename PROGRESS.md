@@ -408,6 +408,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   initialize handshake with bearer. Ships Dockerfile (installs git), render.yaml Blueprint, README, DEPLOY
   (Render origin → Cloudflare portal → claude.ai, same path as op-mcp). DEPLOY is owner-gated (Render +
   Cloudflare logins + the two op:// secrets). Freshness green; node_modules/dist gitignored; no token literals.
+- Corrected stale PLAN 6.2/6.3 (Local REST API path was wrong — filesystem MCP on Mac + the new remote
+  connector off-Mac; canonical vault = ~/Documents/Obsidian). Owner ROTATED the leaked PAT (vault leak
+  neutralized). Session WRAP → handoff 014 (supersedes 013). Remaining hygiene (owner OK pending):
+  ~/.git-credentials still holds a plaintext token + global helper=store (recommend rm + osxkeychain).
+  Owner-gated leftovers: obsidian-git reauth post-rotation, deploy connectors/obsidian-mcp, retire the
+  redundant ~/code/obsidian-vault clone, the broader vault-consolidation workstream. NEXT SESSION: build the
+  locked C.1 capability set (decisions/0007) — nothing in it built yet.
 - Capability layer C.0 (inventory half) → PLAN C.0 `[~]`. Owner asked for a full, deduplicated, thematically
   clustered inventory of ALL schnapp-kit (referencing its skill-scout / search-first / skill-stocktake /
   agent-sort skills for method). Extracted frontmatter for all 253 components (134 skills / 39 agents / 59
