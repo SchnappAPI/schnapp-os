@@ -406,7 +406,14 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       step 4 now writes the CLAUDE.md FROM this template (single source for its shape) and the old
       "@import globals or note them" ambiguity is resolved to "note — do not re-import (double-load)".
       Path-scoped non-leak itself is verified in 3.4 (Part 10).
-- [ ] 9.5 Write the per-surface install checklist in `README.md`.
+- [x] 9.5 Write the per-surface install checklist in `README.md`.
+      DONE: README "Install (per surface)" section — Code (primary Mac + other machines), Cowork,
+      claude.ai web, iPhone — with the four required items: (1) the `~/.claude/CLAUDE.md` content,
+      single-sourced as tracked `templates/user-global-CLAUDE.md` and referenced (not duplicated as
+      stale-prone prose); (2) the workspace-trust dialog step (gates hooks + the memory lane); (3) the
+      OneDrive backup path; (4) the decisions/0005 plugin-vs-project hook-delivery split. Each surface
+      references its surfaces/ profile + DEPLOY.md rather than restating them. Also updated the README
+      Map (CATALOG + templates rows) and the "Staying current" CI line (now the live freshness gate).
 - Handoff after this Part.
 
 ## Part 10: Wire surfaces + final verification

@@ -338,3 +338,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   freshness gate is verified end-to-end and already earned its keep across its first three runs (1 →
   cross-platform mawk ellipsis non-determinism; 2 → with diff-print, surfaced the untracked global rule;
   3 → green). 9.1/9.2/9.3/9.4 all [x]. Remaining in Part 9: 9.5 (per-surface README install checklist).
+- Part 9.5 DONE → Part 9 COMPLETE. Rewrote the README "Install (per surface)" section (Code primary +
+  other machines, Cowork, claude.ai web, iPhone) covering the four required items: ~/.claude/CLAUDE.md
+  content (single-sourced as tracked templates/user-global-CLAUDE.md, referenced not duplicated), the
+  workspace-trust dialog step (gates hooks + memory lane), the OneDrive backup path, and the 0005
+  plugin-vs-project hook-delivery split. Each surface points to its surfaces/ profile + DEPLOY.md (no
+  restatement). Updated the README Map (CATALOG + templates rows) and the "Staying current" CI line to
+  the now-live freshness gate. Freshness gate still green locally (CATALOG untouched by README/template).
+  Part 9 (9.1–9.5) all [x]. Next: handoff at the Part-9 boundary, then Part 10 (wire surfaces; plugin
+  install delivers global hooks per 0005; closes 2.4/3.4/5.6/7.x enablement).
