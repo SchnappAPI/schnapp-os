@@ -215,3 +215,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   SessionEnd; activates at Part-10 install). NO self-wiring: the .claude/settings.json activation diff
   (replace the inline 0.3 pull with the gate script + add the SessionEnd backup hook) is presented for
   owner approval. Remote http/mcp_tool hooks + Cowork-runs-hooks check remain open in 7.2.
+- Part 7.2 cont. — owner chose Option 2 ("never want pending changes") → authored a third hook
+  session-stop-push-gate.sh (Stop): blocks the agent from stopping while commits are unpushed (forces
+  git push), with anti-loop (respects stop_hook_active → warns+allows on a 2nd unpushed stop, e.g.
+  offline) and uncommitted-edits warned-not-blocked (blocking those would trap mid-work; inline
+  keep-tracker-current covers them). Tested all 3 cases green (clean→allow silently; unpushed+first→
+  valid block JSON; unpushed+retry→stderr warning+allow). Added the Stop entry to hooks.json. Attempted
+  to apply the .claude/settings.json wiring (all 3 hooks, ${CLAUDE_PROJECT_DIR} paths) — auto-mode
+  classifier BLOCKED it correctly: the owner's "would that mean option 2?" was a clarifying question,
+  not explicit consent. Settings.json apply held for explicit owner approval (hooks load next fresh
+  session anyway; no rush). Scripts + hooks.json committed; settings.json untouched.

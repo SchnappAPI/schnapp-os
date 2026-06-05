@@ -297,11 +297,15 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       The git/unmerged half of the session-start state check lands with Part 8. Hook/skill wiring = 7.2/7.3.
 - [~] 7.2 Implement as hooks for Code on all machines; use `http`/`mcp_tool` hook types for
       remote action. Verify whether Cowork runs them.
-      AUTHORED in-repo: session-start-gate.sh (=5.3) + session-end-backup.sh (=5.4) command hooks
-      + plugins/core/hooks/hooks.json (portable plugin deployment, ${CLAUDE_PLUGIN_ROOT}; activates
-      at Part-10 install). Both tested standalone (exit 0, non-blocking). Activation diff for the
-      claude-kit repo's .claude/settings.json presented for owner approval (no self-wiring).
-      Pending: owner approval + live-verify; remote http/mcp_tool hooks; Cowork-runs-hooks check.
+      AUTHORED in-repo (3 command hooks): session-start-gate.sh (=5.3), session-end-backup.sh (=5.4),
+      and session-stop-push-gate.sh (Stop: blocks stopping while commits are unpushed; anti-loop via
+      stop_hook_active + offline allowance; warns-not-blocks on uncommitted) — owner chose enforcement
+      (Option 2: "never want pending changes"). All wired in plugins/core/hooks/hooks.json (portable
+      plugin deployment, ${CLAUDE_PLUGIN_ROOT}; activates at Part-10 install). All tested standalone
+      (gate/backup exit 0 non-blocking; stop-gate: clean→allow, unpushed→block JSON, retry→warn+allow).
+      .claude/settings.json activation (all 3 hooks) PENDING explicit owner approval — auto-mode
+      classifier correctly blocked a premature self-wire (a clarifying question ≠ consent). Also
+      pending: live-verify; remote http/mcp_tool hooks; Cowork-runs-hooks check.
 - [ ] 7.3 Implement the same procedures as skills plus always-loaded instructions for chat and
       Cowork.
 - [~] 7.4 Add `surface-check` skill: reports loaded vs missing on the current surface. AUTHORED:
