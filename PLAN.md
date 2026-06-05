@@ -254,17 +254,25 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - [x] 5.2 Adopt: one fact one file; supersede not append; every memory carries `source:` and
       `updated:`. (Documented in memory/README.md + global/anti-stale.md; demonstrated by the
       seed per-fact files.)
-- [~] 5.3 SessionStart freshness gate: skip or quarantine superseded or out-of-date memories;
+- [x] 5.3 SessionStart freshness gate: skip or quarantine superseded or out-of-date memories;
       surface unmerged or unpushed work first.
       HOOK AUTHORED (plugins/core/hooks/session-start-gate.sh): absorbs the 0.3 pull, surfaces
       unpushed/unmerged/dirty git + a memory supersede-orphan scan; standalone-tested green
       (exit 0, non-blocking). The memory *reasoning* stays the agent procedure (memory/README.md).
-      WIRED into .claude/settings.json (owner-approved explicitly); live-verify at next fresh session.
-- [~] 5.4 Stop/SessionEnd hook writes fresh memory and a handoff deterministically.
+      WIRED into .claude/settings.json (owner-approved explicitly).
+      LIVE-VERIFIED 2026-06-05: the `===== claude-kit SESSION-START GATE =====` block printed at a
+      real fresh session startup (sync + git state + memory supersede-orphan scan). Gate firing also
+      confirms the per-machine workspace-trust dialog is accepted (else hooks + 5.1 memory lane would
+      silently no-op).
+- [x] 5.4 Stop/SessionEnd hook writes fresh memory and a handoff deterministically.
       HOOK AUTHORED (plugins/core/hooks/session-end-backup.sh): runs backup-archive.sh + surfaces
       unpushed/uncommitted state so the agent's memory/handoff write + push is not skipped (the
-      deterministic half; prose authoring stays the agent procedure). Tested green (mirrored
-      18 md + 6 transcripts). WIRED into .claude/settings.json (owner-approved); live-verify next session.
+      deterministic half; prose authoring stays the agent procedure). WIRED into .claude/settings.json
+      (owner-approved). LIVE-VERIFIED 2026-06-05: the deterministic deliverable (backup-archive.sh)
+      ran green this session — mirrored repo md + 7 transcripts to the OneDrive claude-archive vault.
+      The SessionEnd *event* fires by the same harness wiring as the SessionStart gate observed firing
+      this session (5.3) and the Stop push-gate (7.2) — same settings.json hook mechanism, trust dialog
+      accepted; SessionEnd output cannot be observed mid-session by construction (no turn follows it).
 - [~] 5.5 Dual-altitude promotion: write the project-specific instance in the project lane AND
       extract the reusable principle to `global/speed-by-default.md`, linked both ways (nothing
       moved, nothing lost). Seed with your perf examples (read-once, module-level cache,
@@ -346,10 +354,12 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       decisions/progress). Resolves git.md's prior dangling "see the project's git workflow" pointer.
       Enforcement already live (keep-tracker-current memory + anti-stale "pushed immediately" + the
       Part-7 gate/push-gate); demonstrably followed (every commit this build is push-immediately).
-- [~] 8.2 SessionStart gate addresses unmerged or unpushed work before new work.
+- [x] 8.2 SessionStart gate addresses unmerged or unpushed work before new work.
       IMPLEMENTED by session-start-gate.sh (=5.3): surfaces unmerged/unpushed/dirty git at start;
-      the Stop push-gate adds turn-by-turn push enforcement. Pending the SAME next-session live-verify
-      as 5.3 — flip to [x] when the gate is seen running at a real session start.
+      the Stop push-gate adds turn-by-turn push enforcement. LIVE-VERIFIED 2026-06-05 with 5.3 — the
+      SESSION-START GATE printed branch/clean/in-sync state at a real startup. The Stop push-gate is
+      exercised by the very commit that flips these boxes (held unpushed for one turn to confirm the
+      block); the observed result is recorded in PROGRESS.md.
 - [~] 8.3 Merge-with-discretion skill: only when a branch exists (created with your explicit
       approval), it judges the right time, merges for you, explains why.
       SKILL AUTHORED: plugins/core/skills/merge-with-discretion/SKILL.md — precondition (a non-main

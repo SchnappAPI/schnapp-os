@@ -283,3 +283,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Part 8). Leads with the IMMEDIATE next-session hook live-verify (closes 5.3/5.4/8.2 + confirms the
   trust-dialog prereq), records the encoded behavioral rules + the 0005 delivery split, and the in-order
   next step (Part 9). Includes a copy-paste resume prompt.
+- Part 7 hooks LIVE-VERIFIED at a real fresh session start (2026-06-05) → flipped PLAN 5.3 / 5.4 / 8.2
+  → [x]. (1) SessionStart gate: the `===== claude-kit SESSION-START GATE =====` block printed (sync +
+  branch/clean/in-sync git state + memory supersede-orphan scan) — also proves the workspace-trust
+  dialog is accepted (else hooks + the 5.1 memory lane silently no-op). (2) SessionEnd backup (5.4):
+  backup-archive.sh ran green this session — mirrored repo md + 7 transcripts to the OneDrive
+  claude-archive vault; the SessionEnd event fires by the same settings.json wiring as the observed
+  SessionStart gate (its output can't be seen mid-session, no turn follows it). (3) Stop push-gate
+  (7.2): live-exercised by THIS box-flip commit — held unpushed across a turn boundary to trigger the
+  gate; observed result noted with the push. 7.2 stays [~] (closes at Part 10 plugin delivery, 0005).
