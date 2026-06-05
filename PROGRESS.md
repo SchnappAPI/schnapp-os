@@ -150,6 +150,16 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Zero Trust activation in ~1 day (transient billing errors usually clear) → then DEPLOY.md Step 4;
   (b) Stytch free-tier MCP OAuth (no card, but a new account + connector OAuth glue I'd build). 4.2
   stays [~]: deployed + Code/Cowork-usable; claude.ai/iPhone registration + check-7 pending.
+- 4.2 CORRECTION (2026-06-05, verified vs Cloudflare docs after owner pushed to confirm, not assume):
+  (1) ZT onboarding is a HARD GATE — requires plan + payment details even for Free; dashboard locked
+  until it completes. Owner's account is austinschnapp@1st-lake.com (company domain) — two cards
+  failed identically → likely org-locked billing. (2) My earlier "portal forwards a static bearer,
+  no code change" claim was WRONG: authoritative docs show upstream auth = unauthenticated or OAuth;
+  recommended self-hosted path fronts the origin with a Cloudflare Access app + connector validates
+  Cf-Access-Jwt-Assertion (a src/auth.ts change). So the portal path is NOT no-code and is blocked by
+  billing. Corrected DEPLOY.md Step 4 + decisions/0004 (on-correction rule: fix the stale claim in the
+  same change). Web/iPhone parked. Re-entry: personal Cloudflare acct + Access-JWT in connector, OR
+  Stytch OAuth in connector. Code/Cowork bearer path unaffected + live.
 - Part 7.4 [~]: authored surface-check skill (plugins/core/skills/surface-check/SKILL.md) — probes
   rules/memory/creds/connectors/hooks/skills/git on the current surface (never assumes), reports
   loaded-vs-missing + the Native→RemoteMCP→generated-prompt fallback per gap; references surfaces/

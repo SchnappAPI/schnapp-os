@@ -62,9 +62,12 @@ Priorities: free, simple, cross-surface.
   the web UI has no static-bearer/custom-header field (anthropics/claude-ai-mcp#112). So
   the bearer connector serves Claude Code + Cowork directly; claude.ai web + iPhone need
   the portal.
-- **Origin auth: RESOLVED.** The MCP portal natively forwards a static bearer to the
-  upstream — add the server with `Auth type: bearer` + the token (`auth_credentials`). No
-  connector code change. Verified against the Cloudflare MCP-portals doc. DEPLOY.md Step 4.
+- **Origin auth: CORRECTION (2026-06-05).** Earlier note ("portal forwards a static bearer,
+  no code change") was WRONG — not in Cloudflare's authoritative docs. Verified: the portal's
+  upstream auth is **unauthenticated** or **OAuth**; the recommended self-hosted path fronts the
+  origin with a **Cloudflare Access app** and the connector validates `Cf-Access-Jwt-Assertion`
+  (a `src/auth.ts` change). So NOT no-code. Plus Zero Trust onboarding is a hard gate (plan +
+  payment even for Free), which blocked the owner's company account. See DEPLOY.md Step 4.
 - **Deploy status (2026-06-05):** connector LIVE on Render free tier at
   `https://op-mcp.onrender.com` (Blueprint deploy; `/health` returns ok). Render free spins
   down after ~15 min idle (~50s cold start) — optional free fix: an UptimeRobot/cron-job.org
