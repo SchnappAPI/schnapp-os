@@ -425,3 +425,15 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   agent, and conditionally `tool/quickbase`+`tool/appfolio`; everything else composes or archives (notably the
   ~25-component session/memory cluster = the sprawl the owner left → port nothing). Awaiting owner confirm of
   the C.1 build set before building; C.0 stays [~] until then.
+- C.0 → [x] (owner locked the build/keep set in handoff 014). C.1 BUILD STARTED — group 1: the 7 new GAP
+  components, authored lean in house style. Skills: etl-pipeline-build (Python ETL → SQL Server: idempotent
+  staged MERGE + fast_executemany + op:// env + Actions cron, composes the etl/python/sql/speed rules),
+  sql-server-patterns (T-SQL 2022 dialect guardrails vs Postgres/MySQL + idempotent schema + set-based +
+  TRY/CATCH + 2022 features), quickbase (JSON API v1 query/paginate/rate-limit/FID-map → SQL Server),
+  appfolio (Reporting API custom-report pull + column-drift guard; scoped to GENERAL integration, defers
+  reconciliation to fish-compare). Commands: /update-docs + /update-codemaps (generic derived-doc + codemap
+  generators for the owner's OTHER ETL repos, not claude-kit). Agent: sql-etl-reviewer (read-only; reviews
+  idempotency/partial-write/set-based/fast_executemany/injection/boundary-validation/secrets/naming/dialect;
+  caveman-reviewer finding format). Created plugins/core/agents/. Rewired tool/quickbase + tool/appfolio rule
+  stubs to point at the new skills (anti-stale ripple). Regenerated CATALOG (all 7 listed); freshness green.
+  C.1 stays [~] (ports + docs-lookup remain).
