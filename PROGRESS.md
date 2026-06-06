@@ -437,3 +437,19 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   caveman-reviewer finding format). Created plugins/core/agents/. Rewired tool/quickbase + tool/appfolio rule
   stubs to point at the new skills (anti-stale ripple). Regenerated CATALOG (all 7 listed); freshness green.
   C.1 stays [~] (ports + docs-lookup remain).
+- C.1 group 2 + docs-lookup → C.1 [x]. Built docs-lookup myself (Obsidian-pointed per owner: filesystem
+  `obsidian` MCP on the Mac [search-vault/read-note], the remote connectors/obsidian-mcp [vault_search/read]
+  off-Mac; explicitly NOT context7, which stays for external libs). Then dispatched 6 parallel subagents to
+  port the ~14 checked archive components LEAN, with a shared house-style + ECC-strip brief (frontmatter =
+  name+description only; description "Use when…"; strip origin:/tools:/Prompt-Defense/~/.claude-notes;
+  rewrite schnapp-kit-only refs to claude-kit equivalents: santa-method to superpowers verify, planner/
+  architect to Plan agent, code-reviewer to /code-review, knowledge-ops//save-session to memory lane+handoffs).
+  Ported: grill-me, grill-with-docs, council (interrogation/decision); rules-distill (its 2 archive scripts
+  dropped, folded to ls-glob prose; distill targets rewired to rules/+memory/+decisions/); data-throughput-
+  accelerator, latency-critical-systems, content-hash-cache-pattern (data perf, compose speed-by-default);
+  benchmark, benchmark-optimization-loop, cost-aware-llm-pipeline + performance-optimizer AGENT (refocused
+  from 455 lines of React/bundle to Python-ETL/SQL-Server throughput, 62 lines); regex-vs-llm-structured-text;
+  token-budget-advisor, context-budget, strategic-compact + clean-gone COMMAND. Verification sweep: every skill
+  frontmatter = name+description only, 0 ECC-isms repo-wide, all relative md links resolve, agent frontmatter
+  correct. Spot-read council + perf-optimizer + rules-distill = quality. Regenerated CATALOG (22 skills /
+  2 agents / 4 commands); freshness green. NEXT: C.2 presets.

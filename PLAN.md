@@ -483,7 +483,9 @@ are escaping). Steps labeled C.x to keep Part numbers stable. Method:
       sports-data-auditor / xlsx / pdf / docx; the `data:*` suite; `design:*`; deep-research), (c) MCP
       connectors (op-mcp; Mac ops MCP; GitHub; Cloudflare). EXISTS → COMPOSE/reference it (name it in the
       right preset + surface profile), do NOT rebuild. Only the genuine GAP is built. Record in decisions/.
-- [ ] C.1 Build the GAP capabilities (lean, into the gallery, each cataloged + preset-slotted). Owner's
+- [x] C.1 Build the GAP capabilities (lean, into the gallery, each cataloged + preset-slotted). Owner's
+      BUILT 2026-06-05: the 7 new GAP components (group 1) + the ~14 lean archive ports + docs-lookup (group 2),
+      all cataloged (22 skills / 2 agents / 4 commands; freshness green). Preset-slotting = C.2.
       platform = Python ETL → SQL Server 2022 (scheduled via GitHub Actions/LaunchAgents); Power Query M
       prototyping; sports data (personal); web tools; Quickbase; AppFolio; policy/procedure docs. Candidate
       gap set (confirm against C.0 — build only what's missing):
