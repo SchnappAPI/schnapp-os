@@ -19,11 +19,14 @@ Steps Claude follows:
    path-scoped modules load only for matching files. Never symlink modules marked
    `composed: false`.
 4. Write `<target>/CLAUDE.md` from `templates/project-CLAUDE.md` (the single source for its
-   shape): fill the project name/purpose and replace the composed-module list with the chosen
-   preset's modules. Do NOT `@import` the global rules — they already load in every project via
-   `~/.claude/CLAUDE.md`, so re-importing double-loads. The template references the gallery and
-   the generated `CATALOG.md` (no rule content is copied) and leaves a project-lane section for
-   project-specific facts (purpose, schema, endpoints, perf notes, gotchas).
+   shape): fill the project name/purpose, replace the composed-module list with the chosen
+   preset's modules, and fill the "Skills in reach" list from that preset's `skills:` entry in
+   `plugins/core/rules/presets/presets.md` (skills are plugin-global, not symlinked — they are
+   named for relevance, not installed per project). Do NOT `@import` the global rules — they
+   already load in every project via `~/.claude/CLAUDE.md`, so re-importing double-loads. The
+   template references the gallery and the generated `CATALOG.md` (no rule content is copied) and
+   leaves a project-lane section for project-specific facts (purpose, schema, endpoints, perf
+   notes, gotchas).
 5. Print the composed set and how to change it later (re-run `/new-project`, or add/remove a
    symlink in `.claude/rules/`).
 

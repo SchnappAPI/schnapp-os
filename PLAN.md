@@ -499,10 +499,20 @@ are escaping). Steps labeled C.x to keep Part numbers stable. Method:
           (ETL) repos, not claude-kit itself.
         • agents: build domain agents ONLY where the gap is real (Explore/Plan/general-purpose + caveman +
           superpowers cover generic reviewer/architect roles). Likely 0-2 (e.g. a SQL-ETL reviewer).
-- [ ] C.2 Presets: extend the domain bundles (e.g. work-etl-sql) to name the new skills so `/new-project`
+- [x] C.2 Presets: extend the domain bundles (e.g. work-etl-sql) to name the new skills so `/new-project`
       composes a real working set. Regenerate CATALOG (CI enforces freshness).
-- [ ] C.3 schnapp-kit (`~/code/schnapp-kit`, frozen record) stays the ON-DEMAND archive — pull a
+      DONE 2026-06-05: presets.md gained a "Recommended skills per preset" section (human + a machine-readable
+      `skills:` map) naming the C.1 domain skills/agents AND the already-HAVE skills (pq-flat-map-type, data:*,
+      sports-data-auditor/fish-compare/xlsx, deep-research, docs-lookup) + a cross-cutting list. Skills are
+      plugin-global (not symlinked), so they are NAMED for relevance. Template gained a "Skills in reach" slot
+      and /new-project step 4 now fills it from the preset's `skills:` list. CATALOG unchanged (presets/template
+      aren't catalog content); freshness green.
+- [x] C.3 schnapp-kit (`~/code/schnapp-kit`, frozen record) stays the ON-DEMAND archive — pull a
       capability only when a real task needs it; nothing bulk-migrated (anti-sprawl).
+      DONE 2026-06-05 (standing policy, already recorded in decisions/0003): the C.1 build pulled ONLY the
+      owner-locked checked set (decisions/0007) — ~14 lean ports of 253 archive components — and the whole
+      session/memory cluster (~25 components) was deliberately NOT ported (claude-kit replaces it). schnapp-kit
+      (tag record-2026-06-03) remains the recoverable archive; future pulls are task-driven, not bulk.
 - Done when: a real ETL/SQL/Quickbase/AppFolio/policy task is served end-to-end by claude-kit's own
   composed set + referenced existing skills, nothing duplicated, gallery still understood.
 - Handoff after this phase.

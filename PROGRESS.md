@@ -453,3 +453,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   frontmatter = name+description only, 0 ECC-isms repo-wide, all relative md links resolve, agent frontmatter
   correct. Spot-read council + perf-optimizer + rules-distill = quality. Regenerated CATALOG (22 skills /
   2 agents / 4 commands); freshness green. NEXT: C.2 presets.
+- C.2 + C.3 → [x]; CAPABILITY LAYER (C.0–C.3) COMPLETE. C.2: presets.md now has a "Recommended skills per
+  preset" section (human list + machine-readable `skills:` map) naming the C.1 domain skills/agents and the
+  HAVE skills (pq-flat-map-type, data:* suite, sports-data-auditor/fish-compare/xlsx, deep-research,
+  docs-lookup) + a cross-cutting list; skills are plugin-global so they are NAMED not symlinked. Added a
+  "Skills in reach" slot to templates/project-CLAUDE.md and wired /new-project step 4 to fill it from the
+  preset's `skills:` list (systemic: preset → command → project CLAUDE.md, no stale hand-list). C.3:
+  standing anti-sprawl policy confirmed (decisions/0003) — the build pulled ONLY the owner-locked checked set,
+  the ~25-component session/memory cluster deliberately not ported; schnapp-kit stays the on-demand archive.
+  CATALOG unchanged (presets/template not catalog content); freshness green. PHASE BOUNDARY → handoff 015;
+  pause for owner input before Part 10 (package + wire surfaces).

@@ -31,6 +31,13 @@ symlinks into the claude-kit gallery (one source of truth; language modules are 
 Full gallery + scopes: `~/code/claude-kit/plugins/core/CATALOG.md` (generated). Change the set
 anytime: re-run `/new-project`, or add/remove a symlink in `./.claude/rules/`.
 
+**Skills in reach** — plugin-global skills/agents (available everywhere claude-kit is installed,
+not symlinked) most relevant to this project. `/new-project` fills these from the preset's
+`skills:` list in `presets/presets.md`; reach for them by name.
+
+<!-- /new-project replaces the line below with the preset's recommended skills. -->
+- <skill-1>, <skill-2>, ... (see `presets/presets.md` "Recommended skills per preset")
+
 ## Project lane (project-specific facts — the one place they live)
 
 <!-- Durable context the rules don't carry. Terse and current. Anti-stale: point at the
