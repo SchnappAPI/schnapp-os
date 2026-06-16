@@ -1,0 +1,26 @@
+name: scheduled-routines
+
+# Self-running layer (PLAN Part 11.1): the SAFE, Mac-independent routines run unattended on cron
+# and report. Logic lives in scheduled-tasks/run-ci-routines.sh (single source); this workflow
+# only schedules it and surfaces the report. Read-only: it never commits. A hard gate (doc
+# freshness) failing makes the run red; informational drift (unmerged branches) does not.
+# Mac/judgment routines run from a LaunchAgent instead (see scheduled-tasks/README.md).
+
+on:
+  schedule:
+    - cron: "17 8 * * *"   # nightly ~08:17 UTC
+  workflow_dispatch:        # allow a manual run
+
+permissions:
+  contents: read
+
+jobs:
+  routines:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history + branch refs for the sync/unmerged check
+
+      - name: Run safe scheduled routines
+        run: bash scheduled-tasks/run-ci-routines.sh | tee -a "$GITHUB_STEP_SUMMARY"
