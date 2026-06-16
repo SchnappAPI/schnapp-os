@@ -491,3 +491,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   verified live 2026-06-16 (op whoami SA identity resolves, gh authenticated). updated:->2026-06-16.
 - Note 2: new memory/mac-connector-tooling.md (+index) — durable fact: Schnapp Mac write_file OVERWRITES
   (no append; use shell_exec cat>> or python read-modify-write); shell_exec strips op identity (use op_run).
+
+## 2026-06-16 (cont. 2) — executed Option A: single-sourced the Obsidian MCP
+- Divergence rationale: NOT recoverable from here. Newest Mac Code transcript is Jun 8 (the Jun 16 infra
+  work was a claude.ai chat in another project); vault Claude Export stops at May 22; this project's chat
+  history is empty (new project). Gap + decision recorded in decisions/0008.
+- Option A executed: live server (~/obsidian-mcp/server.py) imported to connectors/obsidian-mcp/ as
+  canonical source; Mac runs it via symlink (~/obsidian-mcp/server.py -> repo), launchd plist untouched;
+  Render/TS implementation removed (recoverable in git history). Service restarted + verified live
+  (running, 401 OAuth, functional search ok, clean startup on :8767).
+- decisions/0008 logged. docs-lookup + memory/obsidian-state + PLAN 6.2 (->[x]) + owner-gated line updated.
+- Prevention: session-start-gate.sh now surfaces UNPUSHED commits in satellite repos (schnapp-bet,
+  obsidian-vault) — unpushed-only (dirty is expected noise for the live vault), existence-guarded for
+  other machines. Both currently report pushed.
+- Remaining (owner): retire redundant ~/code/obsidian-vault clone; reload Obsidian to activate the
+  obsidian-git push flip; export the Jun 16 chat if you want the divergence reason on record.

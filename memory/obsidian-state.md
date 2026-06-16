@@ -21,7 +21,8 @@ verified state as of 2026-06-16). Authoritative infra detail lives in `schnapp-b
   `~/obsidian-mcp/server.py` (port 8767, OAuth 2.1 + PKCE + DCR) at
   `https://obsidian-mcp.schnapp.bet/mcp`. Tools (7): `search_notes`, `read_note`, `list_notes`,
   `write_note`, `append_note`, `inbox_drop`, `get_index`. Connected + verified in claude.ai.
-- **NOT the off-Mac path:** the repo's `connectors/obsidian-mcp/` (Render/TS, `vault_*` tools) was
-  never deployed and is **superseded** (banner added). It served the vault from GitHub, so it was
-  Mac-independent; the live Mac-hosted server is **not** — off-Mac obsidian now needs the Mac on.
+- **Canonical source IN REPO:** `connectors/obsidian-mcp/server.py` is the source of truth; the Mac
+  runs it via symlink (`~/obsidian-mcp/server.py` -> repo), plist unchanged (decisions/0008). The old
+  Render/TS implementation was retired. Off-Mac access is Mac-dependent; fallback = GitHub mirror +
+  this repo's `memory/`+`decisions/`.
 - The `docs-lookup` skill is the usage entry point (corrected to these tool names 2026-06-16).

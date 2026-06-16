@@ -307,7 +307,7 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       repo markdown (memory/handoffs/decisions/PLAN/PROGRESS) + archives Claude Code session
       transcripts into `claude-archive/` (chosen layout: claude-archive is its own Obsidian vault).
       Run + verified — 18 md + 5 transcripts + generated home note. Auto-run via Stop hook = Part 7/5.4.
-- [~] 6.2 Make the Obsidian vault hold + serve the claude-archive across surfaces.
+- [x] 6.2 Make the Obsidian vault hold + serve the claude-archive across surfaces.
       DONE 2026-06-05: backup-archive.sh now DUAL-mirrors the knowledge md into the canonical vault
       (`$OBSIDIAN_VAULT_DIR/claude-archive/`, default `~/Documents/Obsidian`) in addition to OneDrive;
       obsidian-git pushes it to `SchnappAPI/obsidian-vault`. CORRECTION (earlier plan text was wrong): the
@@ -326,6 +326,10 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       `docs/CONNECTIONS.md` ("Obsidian MCP"/"Obsidian Brain Agent"). TRADE-OFF FLAGGED: the live server is
       Mac-hosted, so off-Mac access now needs the Mac on — a regression vs the locked "no Mac dependency"
       design that the superseded connector satisfied.
+      UPDATE 2 (2026-06-16, decision A / decisions/0008): RESOLVED + single-sourced. The live server's
+      source now lives in `connectors/obsidian-mcp/server.py`; the Mac runs it via symlink (plist
+      unchanged); the Render/TS implementation was removed; obsidian-git push re-enabled so the
+      GitHub-mirror fallback stays current. 6.2 met.
 - [~] 6.3 Verify a non-Mac session's backup reaches OneDrive + the vault and is searchable off-Mac. Mechanism
       in place (dual-mirror + remote MCP built); full verify pends the remote-MCP deploy + a non-Mac run.
       UPDATE 2026-06-16: off-Mac *searchability* is LIVE (the Mac-hosted obsidian MCP is connected + verified
@@ -474,10 +478,9 @@ Part 10. Remaining work, in dependency order — do earlier-listed first to avoi
 4. **Part 11 — Agentic OS capstone:** scheduler, `/do` orchestrator, `status` control plane.
 5. **Final verification sweep:** the 14-point list against the complete system → production-ready sign-off.
 
-Owner-gated parallel tracks (any time, non-blocking): 6.2/6.3 Obsidian — off-Mac MCP now LIVE (Mac-hosted);
-open = decide whether to retire the superseded Render `connectors/obsidian-mcp` or restore Mac-independent
-serving, and whether the live server's source (`~/obsidian-mcp/server.py`) belongs in this repo
-(single-source-of-truth gap); plus retire the redundant `~/code/obsidian-vault` clone. 4.2 connector
+Owner-gated parallel tracks (any time, non-blocking): 6.2/6.3 Obsidian — RESOLVED (decision A /
+0008): Mac-hosted server single-sourced in `connectors/obsidian-mcp/`, Render retired, mirror push
+re-enabled. Remaining: retire the redundant `~/code/obsidian-vault` clone (owner). 4.2 connector
 redeploy (Render Manual Deploy + Cloudflare re-sync), the DB_Storage / appfolio-marketing-project
 Actions-secret decision. 5.5 dual-altitude + 8.3 merge-skill close opportunistically (real perf work /
 first approved branch).

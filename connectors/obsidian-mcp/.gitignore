@@ -1,7 +1,6 @@
-node_modules/
-dist/
+# runtime / local deployment artifacts — never source
+oauth_state.json
 *.log
+__pycache__/
+venv/
 .env
-# Local vault checkout (when VAULT_DIR points inside the connector dir for testing).
-vault/
-data/

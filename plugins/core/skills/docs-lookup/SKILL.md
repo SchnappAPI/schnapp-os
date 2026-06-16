@@ -42,6 +42,5 @@ if the obsidian tools are not present (or the Mac is off), say so and fall back 
   the memory lane (`memory/README.md`) or a deliberate vault note, not ad-hoc scattering.
 - Decisions live in `decisions/` (this repo) and mirror into the vault — for "why did we
   choose X", search both.
-- The repo's `connectors/obsidian-mcp/` (a Render/GitHub-served TS implementation) is SUPERSEDED
-  and not deployed — the live off-Mac path is the Mac-hosted server above. See that connector's
-  README for the trade-off (Mac-independent serving vs. the current Mac-hosted reality).
+- The live server's canonical **source** is in this repo at `connectors/obsidian-mcp/server.py`
+  (the Mac runs it via symlink; decisions/0008). The former Render/TS implementation was retired.

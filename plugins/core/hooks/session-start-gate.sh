@@ -77,6 +77,18 @@ else
   echo "[memory] no memory/ dir"
 fi
 
+# 4. Satellite repos (owner Mac): surface unpushed/dirty state in related repos so cross-repo
+#    work is not lost (decisions/0008 — both CONNECTIONS.md and the vault once sat unpushed).
+#    Existence-guarded, so this no-ops on machines that lack these checkouts.
+for sat in "$HOME/code/schnapp-bet" "$HOME/Library/CloudStorage/OneDrive-Schnapp/Obsidian"; do
+  [ -d "$sat/.git" ] || continue
+  name="$(basename "$sat")"
+  # unpushed-only: these repos (esp. the vault) are routinely mid-edit, so dirty is expected
+  # noise; the lapse we guard against is committed-but-unpushed work.
+  sa="$(git -C "$sat" rev-list --count '@{u}'..HEAD 2>/dev/null || echo 0)"
+  if [ "$sa" != "0" ]; then echo "[satellite:$name] UNPUSHED: $sa commit(s) not on origin — push (decisions/0008)."; else echo "[satellite:$name] pushed (no unpushed commits)"; fi
+done
+
 echo "[next] Address unpushed/unmerged + stale memory above BEFORE new work (PLAN 5.3 / 8.2)."
 echo "========================================"
 exit 0
