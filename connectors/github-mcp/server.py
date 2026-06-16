@@ -742,11 +742,11 @@ if __name__ == "__main__":
     import socket
     import uvicorn
 
-    # SO_REUSEADDR + SO_REUSEPORT pre-bound socket: rebind :8766 without the
-    # [Errno 48] race on a fast restart. See decision 0010 / handoff 020-021.
+    # SO_REUSEADDR pre-bound socket: rebind :8766 across a graceful restart
+    # without the [Errno 48] race. SO_REUSEPORT intentionally NOT set (it would
+    # let a stray second instance silently share the port). See decision 0010.
     _sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     _sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    _sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
     _sock.bind(("127.0.0.1", 8766))
     _sock.listen()
 

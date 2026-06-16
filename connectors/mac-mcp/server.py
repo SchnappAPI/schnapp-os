@@ -609,34 +609,59 @@ def service_status(label: str) -> dict:
 
 
 @mcp.tool()
-def service_restart(label: str, token: str = "") -> dict:
+def service_restart(label: str, mode: str = "graceful", token: str = "") -> dict:
     """
-    Restart any launchd user agent by label using launchctl kickstart -k.
+    Restart a launchd user agent by label.
+    mode='graceful' (default): SIGTERM via `launchctl kill TERM` so the process shuts
+      down cleanly (closes its listen socket) and KeepAlive relaunches it — avoids the
+      SIGKILL bind race (decision 0010). Use for the MCP socket servers
+      (com.schnapp.macmcp/githubmcp/obsidian-mcp) and any KeepAlive agent. If the agent
+      is NOT KeepAlive and does not return within ~4s, this falls back to a kickstart so
+      it is left running.
+    mode='hard': `launchctl kickstart -k` — immediate kill+restart; use only if graceful
+      will not bring the agent back and an abrupt stop is acceptable.
     Requires MAC_MCP_AUTH_TOKEN.
-    Useful labels: 'bet.schnapp.web-prod', 'bet.schnapp.web', 'bet.schnapp.flask',
-                   'com.schnapp.macmcp', 'actions.runner.SchnappAPI-schnapp-bet.mac-runner-1'
-    Note: restarting 'com.schnapp.macmcp' restarts THIS MCP server — the call will not return a response.
+    Note: restarting 'com.schnapp.macmcp' restarts THIS MCP server — the call will not return.
     """
     if not _check_token(token):
         return {"error": "unauthorized"}
     uid = os.getuid()
+    if mode == "hard":
+        r = subprocess.run(
+            ["launchctl", "kickstart", "-k", f"gui/{uid}/{label}"],
+            capture_output=True, text=True, timeout=15,
+        )
+        if r.returncode != 0:
+            return {"success": False, "label": label, "mode": "hard",
+                    "error": (r.stderr or r.stdout).strip()}
+        return {"success": True, "label": label, "mode": "hard",
+                "message": f"Kickstarted gui/{uid}/{label}."}
+    # graceful
     r = subprocess.run(
-        ["launchctl", "kickstart", "-k", f"gui/{uid}/{label}"],
-        capture_output=True,
-        text=True,
-        timeout=15,
+        ["launchctl", "kill", "TERM", f"gui/{uid}/{label}"],
+        capture_output=True, text=True, timeout=15,
     )
     if r.returncode != 0:
-        return {
-            "success": False,
-            "label": label,
-            "error": (r.stderr or r.stdout).strip(),
-        }
-    return {
-        "success": True,
-        "label": label,
-        "message": f"Kickstarted gui/{uid}/{label}.",
-    }
+        return {"success": False, "label": label, "mode": "graceful",
+                "error": (r.stderr or r.stdout).strip()}
+    if label == "com.schnapp.macmcp":
+        return {"success": True, "label": label, "mode": "graceful",
+                "message": "TERM sent to self; KeepAlive will relaunch (no response expected)."}
+    fell_back = False
+    for _ in range(16):  # ~4s for KeepAlive to relaunch
+        time.sleep(0.25)
+        chk = subprocess.run(["launchctl", "list", label], capture_output=True, text=True)
+        if chk.returncode == 0 and '"PID" =' in chk.stdout:
+            break
+    else:
+        subprocess.run(["launchctl", "kickstart", f"gui/{uid}/{label}"],
+                       capture_output=True, text=True, timeout=15)
+        fell_back = True
+    return {"success": True, "label": label, "mode": "graceful",
+            "fell_back_to_kickstart": fell_back,
+            "message": (f"TERM sent to gui/{uid}/{label}; "
+                        + ("not KeepAlive — kickstarted to ensure running."
+                           if fell_back else "relaunched by KeepAlive."))}
 
 
 @mcp.tool()
@@ -1155,13 +1180,14 @@ class _BearerAuthMiddleware:
 if __name__ == "__main__":
     import socket
 
-    # Pre-bind the listen socket with SO_REUSEADDR + SO_REUSEPORT so a fresh
-    # process can rebind :8765 even if the prior socket still lingers on a fast
-    # restart. Fixes the [Errno 48] bind race that throttled launchd recovery to
-    # ~2 min. See decision 0010 / handoff 020-021.
+    # Pre-bind the listen socket with SO_REUSEADDR so a fresh process can rebind
+    # :8765 across a graceful restart: uvicorn closes the socket on SIGTERM before
+    # launchd KeepAlive relaunches. Fixes the [Errno 48] race that throttled
+    # recovery to ~2 min. SO_REUSEPORT intentionally NOT set -- it would also let a
+    # stray second instance silently share the port (split-brain) instead of
+    # failing loudly with errno 48. See decision 0010 / handoff 021.
     _sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     _sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    _sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
     _sock.bind(("127.0.0.1", 8765))
     _sock.listen()
 

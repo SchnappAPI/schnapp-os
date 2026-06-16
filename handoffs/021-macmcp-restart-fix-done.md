@@ -41,3 +41,11 @@ right. See decision 0010 "Surface correction".
 
 ## Next planned work
 Part 10 — package + wire surfaces. Part 11 — scheduler, orchestrator, control plane. (PLAN.md.)
+
+## Addendum — optimization pass (decision 0010 Refinement)
+Follow-up review tightened the fix:
+- SO_REUSEPORT dropped (SO_REUSEADDR kept) on all three — restores loud-fail on accidental
+  double-run; REUSEADDR + graceful TERM is sufficient for the race.
+- `service_restart` tool now graceful-by-default (`mode='hard'` for kickstart -k); was SIGKILL.
+- CONNECTIONS.md github + obsidian recovery commands switched to graceful TERM.
+Re-verified all three REUSEADDR-only: github 2.64s, obsidian 2.69s, mac-mcp 2.53s, 0 errno-48.

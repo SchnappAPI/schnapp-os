@@ -58,3 +58,23 @@ obsidian-mcp are not the operating channel and were restarted in the foreground.
 - macmcp.plist `ThrottleInterval` left unset; unnecessary now that rebind is ~2.5s.
 - Dead OAuth code in obsidian server.py (AuthCode/StoredRefreshToken/_verify_pkce, noted in 0009)
   still present; out of scope here.
+
+## Refinement (same day, follow-up review)
+- **Dropped SO_REUSEPORT; kept SO_REUSEADDR.** Verified empirically on this Mac: REUSEADDR alone
+  still rejects a second concurrent LISTEN bind (errno 48) — preserving loud failure on an
+  accidental double-run — whereas REUSEADDR+REUSEPORT lets a stray second instance silently share
+  the port (split-brain). REUSEPORT was only needed because `kickstart -k` causes process *overlap*;
+  with graceful TERM standardized (old uvicorn closes its socket before KeepAlive relaunches),
+  REUSEADDR alone fixes the race AND keeps double-run protection — a strictly better failure mode.
+  Residual: an out-of-band `kickstart -k` could overlap-race again (slow restart, self-heals); docs
+  say don't, and `service_restart` no longer does it by default.
+- **`service_restart` tool defaults to graceful.** It was hardcoded `kickstart -k` (SIGKILL),
+  contradicting this decision. Now `mode='graceful'` (default) sends `launchctl kill TERM` and, for a
+  non-KeepAlive agent that doesn't return within ~4s, falls back to `kickstart` so it is left
+  running; `mode='hard'` keeps `kickstart -k`. `flask_restart` left on `kickstart -k` deliberately
+  (Flask's SIGTERM handling unverified; out of scope).
+- **Considered & rejected:** a shared socket-helper module (three standalone services with separate
+  venvs + single-source symlinks — over-coupling for ~10 lines); ThrottleInterval (unnecessary at
+  ~2.5s rebind). Dead obsidian OAuth code (0009 follow-up) already removed.
+- Re-deployed + re-verified REUSEADDR-only: github 2.64s, obsidian 2.69s (/consent 200, /mcp 401),
+  mac-mcp 2.53s — 0 new errno-48 each.

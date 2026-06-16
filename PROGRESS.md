@@ -562,3 +562,15 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Empirically confirmed op-wrap.sh `exec op run -- python` forwards SIGTERM to the child (clean
   uvicorn shutdown in the log). Updated mac-mcp recovery command in schnapp-bet/docs/CONNECTIONS.md.
 - Part 10 (package + wire surfaces) and Part 11 (scheduler/orchestrator/control plane) still NEXT.
+
+## 2026-06-16 (cont. 8) — optimization pass on the restart fix (decision 0010 refinement)
+- Dropped SO_REUSEPORT (kept SO_REUSEADDR) in all 3 connectors: REUSEADDR alone fixes the race under
+  graceful TERM and preserves loud-fail on accidental double-run; REUSEPORT allowed silent
+  split-brain (verified empirically on macOS).
+- service_restart tool: graceful TERM default + self-verify/kickstart-fallback for non-KeepAlive
+  agents + mode='hard' escape hatch (was hardcoded kickstart -k, contradicting decision 0010).
+  flask_restart left on kickstart -k (out of scope).
+- CONNECTIONS.md: mac-mcp note -> REUSEADDR; obsidian + github recovery -> graceful TERM.
+- Re-deployed all 3 REUSEADDR-only: github 2.64s / obsidian 2.69s / mac-mcp 2.53s, 0 errno-48.
+- Considered & rejected: shared socket-helper module, ThrottleInterval; dead obsidian OAuth code
+  already gone.
