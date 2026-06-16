@@ -1,0 +1,15 @@
+# mac-mcp
+
+Self-hosted MCP server for Mac operations (shell_exec, op_run, file ops, SQL queries,
+service control, live sports). Bearer-token auth (`MAC_MCP_AUTH_TOKEN`); secrets resolved
+at launch via `op-wrap.sh` + `~/mac-mcp/.env.template` (op:// refs). Connected in claude.ai
+as "Schnapp Mac". Talks to SQL Server via pyodbc.
+
+- URL: https://mac-mcp.schnapp.bet/mcp  (Mac :8765 via the schnapp-mac tunnel)
+- Service: launchd `com.schnapp.macmcp` (RunAtLoad, KeepAlive). Log rotation:
+  `com.schnapp.macmcp.logrotate` runs `~/mac-mcp/rotate_logs.sh` (mirrored here for the
+  record; the live copy stays on the Mac and is NOT symlinked).
+- **Single source of truth: this repo.** The Mac runs it via symlink
+  `~/mac-mcp/server.py -> connectors/mac-mcp/server.py`. Edit here, then restart:
+  `launchctl kickstart -k gui/$UID/com.schnapp.macmcp`.
+- Deps pinned (requirements.txt) + locked (requirements.lock.txt). Bump only after smoke-testing.

@@ -1,0 +1,6 @@
+# Runtime deps for server.py. PINNED to versions running in production as of
+# 2026-06-16. Do NOT bump without re-smoke-testing. requirements.lock.txt = exact env.
+mcp==1.27.0
+requests==2.33.1
+starlette==1.0.0
+uvicorn==0.46.0
