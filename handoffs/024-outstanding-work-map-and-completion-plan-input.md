@@ -9,8 +9,9 @@ steps can be sequenced efficiently. Read handoff 023 first for the *how-we-got-h
 file is the *what-is-left* and *who/where can do it*. Nothing here is new work — it is the audit of
 remaining work plus a proposed efficient order.
 
-NOTE on numbering: this took the next sequential handoff number (024). The Mac-Code session that
-runs handoff 022 (plugin install + hook de-dup) should now write **025**, not 024.
+NOTE on numbering: this took the next sequential handoff number (024). Handoff **025** is the
+Part 11 build (same session, after this). The Mac-Code session that runs handoff 022 (plugin
+install + hook de-dup) writes the next free number, **026**.
 
 ---
 

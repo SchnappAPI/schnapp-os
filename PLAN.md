@@ -561,15 +561,30 @@ are escaping). Steps labeled C.x to keep Part numbers stable. Method:
 
 ## Part 11: Agentic OS layer (the self-running top)
 The capstone (owner: finish it now). Reuses schnapp-kit pieces on-demand (model-route, autonomous-loops).
-- [ ] 11.1 Scheduler / daemons via scheduled-tasks/cron: nightly memory consolidation,
+- [x] 11.1 Scheduler / daemons via scheduled-tasks/cron: nightly memory consolidation,
       doc-freshness sweep, sync-and-unmerged check, infra/pipeline health. Safe routines run
       and notify; anything mutating data, money, or production asks first. Results to the repo.
-- [ ] 11.2 Orchestrator: a `/do` dispatcher that takes a task, picks the preset/rules, the
+      DONE 2026-06-16: `scheduled-tasks/` (README safety model + 4 routine specs) + the
+      single-source `run-ci-routines.sh` (doc-freshness sweep + sync/unmerged report; tested,
+      exit 0, lists this PR's branch as the 1 unmerged item) wired on cron in
+      `.github/workflows/scheduled-routines.yml`. Safe Mac-independent routines run in Actions;
+      memory-consolidation (asks-first) + infra-health (Mac-needed) specified for a LaunchAgent
+      `claude -p` session. Read-only: never auto-commits/merges/restarts.
+- [x] 11.2 Orchestrator: a `/do` dispatcher that takes a task, picks the preset/rules, the
       agent or skill, and the model tier (reuse model-route and the planner), then runs it.
-- [ ] 11.3 Control plane: a `status` skill/dashboard showing per-surface state, stale items,
+      DONE 2026-06-16: `plugins/core/commands/do.md` — classify → route to preset (presets.md) +
+      skill/agent (CATALOG) + model tier → Plan-if-non-trivial → asks-first safety gate → dispatch
+      → report. Composes existing pieces (presets/skills/agents/Plan); no reimplementation.
+- [x] 11.3 Control plane: a `status` skill/dashboard showing per-surface state, stale items,
       unmerged or unpushed work, last backup, and connector health (builds on `surface-check`).
+      DONE 2026-06-16: `plugins/core/skills/status/SKILL.md` — cross-surface aggregate (git,
+      freshness, scheduled-routines, memory, backup, connectors/services, per-surface enablement)
+      with probe-don't-assume + WARN-vs-unreadable discipline; reuses the nightly routine's findings.
 - Done when: routines run unattended, one command dispatches work correctly, one view shows
   whole-system state.
+      DONE 2026-06-16: routine bundle runs on cron (Actions) + LaunchAgent specs; `/do` dispatches;
+      `status` shows whole-system state. Live-exercise of `/do`/`status` is organic on next real use;
+      the nightly cron's first scheduled fire confirms unattended run (manual `workflow_dispatch` available).
 - Handoff after this Part.
 
 ---

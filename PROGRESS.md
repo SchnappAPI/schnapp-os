@@ -619,3 +619,23 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   kickstart -k; service_restart graceful path deployed but not runtime-tested via the tool.
 - Full session context + audit -> handoffs/023; handoff 022's Code output renumbered 023 -> 024.
 - Freshness gate re-run after all edits: green.
+
+## 2026-06-16 (cont. 12) — Part 11 agentic-OS capstone built (11.1/11.2/11.3); handoff 025
+- Surface: Claude Code web remote container (shell+git+connectors). Freshness gate green at start;
+  branch == origin/main, clean. Built Part 11 (authorable here, blocks nothing).
+- 11.1 Scheduler: scheduled-tasks/ — README (safety model: safe-auto vs asks-first; surface map;
+  results-to-repo) + 4 routine specs (doc-freshness-sweep, sync-unmerged-check, memory-consolidation,
+  infra-health). run-ci-routines.sh = single source for the 2 safe Mac-independent routines (freshness
+  sweep hard-gate + sync/unmerged report); wired on nightly cron in .github/workflows/
+  scheduled-routines.yml (reports to Step Summary, non-zero only on freshness drift, never commits).
+  Tested locally: exit 0, correctly flagged this PR's branch as the 1 unmerged item. memory-consolidation
+  (asks-first) + infra-health (Mac-needed) specified for a LaunchAgent claude -p session.
+- 11.2 Orchestrator: plugins/core/commands/do.md — /do classifies the task, routes to preset(presets.md)
+  + skill/agent(CATALOG) + model tier, plans if non-trivial, asks-first on mutating work, dispatches,
+  reports. Composes existing pieces; no reimplementation.
+- 11.3 Control plane: plugins/core/skills/status/SKILL.md — cross-surface aggregate (git/freshness/
+  scheduled-routines/memory/backup/connectors/per-surface enablement), probe-don't-assume, WARN vs
+  unreadable, reuses the nightly routine's findings. Builds on surface-check (current-surface only).
+- Regenerated CATALOG (now 23 skills / 2 agents / 5 commands); freshness gate green. PLAN 11.1/11.2/11.3
+  -> [x]. Final-verification #14 (agentic OS) now substantially met; live /do+/status exercise is organic.
+- Still surface-gated (unchanged): 10.1 needs a Mac-Code session (handoff 022); 10.2 needs owner UIs.
