@@ -585,8 +585,11 @@ The capstone (owner: finish it now). Reuses schnapp-kit pieces on-demand (model-
 
 ## Owner-only steps (need you)
 
-- 4.1 BLOCKER: recreate the deleted 1Password SA and rotate the token on every surface
-  (see decisions/0001). Until then `op`/`gh` stay down (git SSH + GitHub MCP still work).
+- 4.1 RESOLVED (2026-06-16): the 1Password Service Account works — `op-wrap.sh` resolves the global
+  + per-service `op://` refs and `op_run` resolved 23 refs this session; all three MCP connectors +
+  Flask/web run off it. (A bare `op whoami` through the Mac MCP shell fails by design — that
+  subprocess has its op identity stripped — which is NOT an outage.) The original blocker (deleted SA,
+  decisions/0001) no longer applies. Verify `gh` separately if a workflow needs it.
 - 0.1 Create an empty PRIVATE repo `SchnappAPI/claude-kit` so the local commits can push
   (I cannot create the repo: `gh` is down). Or rotate the SA first and I create it via `gh`.
 - 6.1 Done: OneDrive `claude-archive/` exists.

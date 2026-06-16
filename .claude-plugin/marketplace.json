@@ -1,0 +1,43 @@
+{
+  "name": "claude-kit",
+  "owner": {
+    "name": "SchnappAPI",
+    "email": "apischnapp@gmail.com"
+  },
+  "metadata": {
+    "description": "Personal multi-surface Claude system \u2014 core freshness/push hooks, session-hygiene + surface-check, domain skills, agents, commands, and composable rules. Single source of truth across Code, Cowork, and claude.ai/iPhone."
+  },
+  "plugins": [
+    {
+      "name": "claude-kit-core",
+      "source": "./plugins/core",
+      "description": "Core layer: SessionStart freshness/git gate + Stop push-gate (hooks.json, global via ${CLAUDE_PLUGIN_ROOT}); 22 skills, 4 commands, 2 agents; composable rules. SessionEnd backup is delivered project-scoped, not by this plugin (decision 0005).",
+      "version": "0.1.0",
+      "author": {
+        "name": "SchnappAPI",
+        "email": "apischnapp@gmail.com"
+      },
+      "homepage": "https://github.com/SchnappAPI/claude-kit",
+      "repository": "https://github.com/SchnappAPI/claude-kit",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "agents",
+        "hooks",
+        "rules",
+        "session-hygiene",
+        "memory"
+      ],
+      "category": "workflow",
+      "tags": [
+        "skills",
+        "agents",
+        "workflow",
+        "hooks",
+        "memory"
+      ],
+      "strict": false
+    }
+  ]
+}

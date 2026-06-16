@@ -574,3 +574,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Re-deployed all 3 REUSEADDR-only: github 2.64s / obsidian 2.69s / mac-mcp 2.53s, 0 errno-48.
 - Considered & rejected: shared socket-helper module, ThrottleInterval; dead obsidian OAuth code
   already gone.
+
+## 2026-06-16 (cont. 9) — Part 10.1 authored (plugin manifests + hook-delivery split); install deferred to Code (handoff 022)
+- Wrote .claude-plugin/marketplace.json (marketplace "claude-kit", plugin "claude-kit-core", source
+  ./plugins/core) and plugins/core/.claude-plugin/plugin.json. Schema modeled on the working
+  schnapp-kit manifests + the plugin-structure skill; components auto-discover from the plugin root.
+- Executed decision 0005's hook-delivery split IN the plugin: stripped SessionEnd from
+  plugins/core/hooks/hooks.json so the plugin delivers ONLY the global SessionStart gate + Stop
+  push-gate; the claude-kit-specific SessionEnd backup stays project-scoped (must not fire from
+  unrelated repos). Plugin hooks now: SessionStart, Stop.
+- Install + project-settings de-dup + verify must run on Code (hooks fire only there; ordering is
+  coupled) -> ready-to-run prompt in handoffs/022. claude-kit dogfood (.claude/settings.json keeps all
+  three) unchanged until then; manifests have ZERO runtime effect until the plugin is installed.
+- Corrected stale PLAN.md 4.1 "BLOCKER" -> RESOLVED (op resolution works in production).
+- Next: run handoff 022 on Code (closes 10.1 + PLAN 7.2). Then 10.2 (wire Cowork + claude.ai/iPhone,
+  op-mcp connector) + 10.3 (14-point verification). Part 11 capstone after.

@@ -1,5 +1,5 @@
 {
-  "description": "claude-kit core hooks. SessionStart freshness/git gate (PLAN.md 5.3) + Stop push-gate (never leave unpushed commits, keep-tracker-current) + SessionEnd backup & end-of-session write reminder (PLAN.md 5.4). Canonical procedures live in memory/README.md — these hooks surface the deterministic signals and enforce push; memory/handoff authoring stays the agent's job. This file is the portable plugin deployment (activates when claude-kit is installed as a plugin, Part 10); the claude-kit repo itself activates the same scripts now via .claude/settings.json (Part 7.2 activation diff).",
+  "description": "claude-kit core hooks, delivered GLOBALLY by the plugin via ${CLAUDE_PLUGIN_ROOT}: SessionStart freshness/git gate (PLAN.md 5.3) + Stop push-gate (never leave unpushed commits). Canonical procedures live in memory/README.md — these hooks surface the deterministic signals and enforce push; memory/handoff authoring stays the agent's job. SessionEnd backup is intentionally NOT here: backup-archive.sh mirrors claude-kit's own knowledge base and must stay project-scoped to claude-kit/.claude/settings.json (decision 0005), never firing from unrelated repos.",
   "hooks": {
     "SessionStart": [
       {
@@ -21,18 +21,6 @@
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/session-stop-push-gate.sh\"",
             "timeout": 30
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/session-end-backup.sh\"",
-            "timeout": 120
           }
         ]
       }
