@@ -538,3 +538,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   likely launchd throttle + op-secret resolution on boot. Recovered stable. Watch-item for reboot
   resilience, not fixed. github-mcp restarts fast.
 - op-mcp/1Password still separate (portal stack). Part 10 still NEXT.
+
+## 2026-06-16 (cont. 6) — diagnosed mac-mcp slow restart; queued fix (handoff 020)
+- Root cause CONFIRMED (not hypothesis): kickstart -k SIGKILLs mac-mcp; new process races to bind
+  :8765 before the old socket frees -> [Errno 48] Address already in use -> exit 1 -> ~10s launchd
+  throttle -> repeat (~2 min). Evidence: 11x errno-48 in mcp.err.log + intermediate exit-1.
+- Ruled out op-secret resolution (both servers resolve identical 23 op:// refs; github fast) and any
+  blocking startup probe (all network calls are in tool fns; __main__ is just uvicorn.run(:8765)).
+- Restart hazard only; cold reboot has no lingering socket. Fix: graceful TERM restart + SO_REUSEADDR/
+  SO_REUSEPORT bind; apply to all three MCPs; update CONNECTIONS.md recovery cmd. Scoped in handoff 020.
