@@ -682,3 +682,19 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   notes from 2026-06-16 (2 flagged actionable test-closeouts), zero real notes. Cleanup = remove the 6
   source .md files via the Mac shell (brain connector has no delete tool) + clear the 2 actions. PENDING
   owner confirm ("delete all 6"); to run at wrap via the Mac.
+
+## 2026-06-16 (cont. 15) — surface-checks reconciled: Cowork hooks=NO; 1Password outage (corrected)
+- Owner ran surface-check on claude.ai, Cowork-Mac, Cowork-HP. Results reconciled into the repo.
+- Cowork hooks: RESOLVED = NO. Neither Cowork session saw the SessionStart gate fire; both fell back
+  to manual session-hygiene. surfaces/cowork.md + PLAN 7.2 updated (the long-open "does Cowork run
+  hooks" question is now answered, not guessed).
+- 1Password: CORRECTED a self-overcall. I first read op_run/op_whoami "unauthorized" from THIS Code-web
+  session as proof the SA is broken — but shell_exec also returned unauthorized and mac_info (needs no
+  token) WORKED, proving this session just lacks MAC_MCP_AUTH_TOKEN, so the privileged-tool failures are
+  at the Mac-auth layer, not the SA. My op test was INCONCLUSIVE. Accurate picture: hosted op-mcp is
+  CONFIRMED down (host SA-token error); the owner's authed surface-checks show op_whoami unauthorized
+  (Mac-auth was valid there, so it points at the SA) — so a full SA outage is LIKELY but needs an
+  op_run resolution test from an AUTHED session to confirm. Recorded the testing caveat in
+  credentials-state.md so it isn't repeated. MEMORY index + PLAN FV#7 updated. gh/GitHub unaffected.
+- Brain cleanup: owner chose ARCHIVE (not delete). Can't run it from here (no Mac shell auth); handed
+  the owner a ready-to-run archive command (move the 6 test .md files to _archive/, brain reprocesses).

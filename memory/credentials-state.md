@@ -10,22 +10,31 @@ metadata:
 ---
 
 1Password Service Account was deleted, then **rotated** (2026-06-03) and **rotated again
-(2026-06-15)** — the token now lives in both `~/.zshrc` and `~/.zshenv`. Verified live
-2026-06-16: `op whoami` resolves the SA identity and `gh` is authenticated on the Mac (and
-in-session). The SA token resolves `op://` references.
+(2026-06-15)** — the SA token lives in `~/.zshrc` + `~/.zshenv` on the Mac and as
+`OP_SERVICE_ACCOUNT_TOKEN` on the Render op-mcp host. It worked earlier 2026-06-16 (the brain
+pipeline resolved secrets at 05:12) but **broke after that point** — see the outage below. `gh`
+uses its own token and is unaffected (GitHub connector still pushes).
 
-The hosted **op-mcp connector** (`connectors/op-mcp/`, Render `https://op-mcp.onrender.com`,
-bearer-gated; claude.ai/iPhone via the Cloudflare portal `https://mcp.schnapp.bet/mcp`, Managed
-OAuth; Code/Cowork via `https://op-mcp.onrender.com/mcp` + bearer) was LIVE 2026-06-05 but is
-**DOWN as of 2026-06-16**: `op_health` fails with `authentication error … Check
-OP_SERVICE_ACCOUNT_TOKEN on the host` from two independent surfaces (a Claude Code session +
-Cowork) — a **host-side SA-token / permissions problem**, not a per-surface connector issue.
-- **Working route meanwhile:** the Mac `op_run` / `op_inject` (its local op identity is
-  unaffected). Resolve every secret through the Mac until the host is fixed.
-- **Impact:** Final-verification #7 (creds resolve with the Mac off) currently **FAILS**.
-- **Fix (host-side, owner):** check/rotate `OP_SERVICE_ACCOUNT_TOKEN` on the Render op-mcp service,
-  confirm the SA still has vault-read perms, then re-verify `op_health`. Runbook:
-  `connectors/op-mcp/DEPLOY.md`. Re-supersede this fact once green.
+**1Password outage as of 2026-06-16 (after ~05:12)** — secret resolution is failing on the SA
+token, apparently on BOTH paths:
+- **Hosted op-mcp** (`connectors/op-mcp/`, Render `op-mcp.onrender.com`; claude.ai/iPhone via the
+  Cloudflare portal `mcp.schnapp.bet/mcp`; Code/Cowork via `op-mcp.onrender.com/mcp` + bearer):
+  `op_health` errors `authentication error … Check OP_SERVICE_ACCOUNT_TOKEN on the host`.
+  **CONFIRMED down** (this server doesn't use the Mac token).
+- **Mac op path** (`op_run`/`op_inject`/`op_whoami`): the owner's **authenticated** surface-checks
+  (claude.ai + Cowork, where `mac_info` worked so the Mac-auth layer was valid) returned
+  `op_whoami → unauthorized` — pointing to the SA token itself being revoked/expired, not just the
+  host. **Not yet confirmed by an actual secret-resolution test.**
+- **Testing caveat (do not repeat this mistake):** a session WITHOUT `MAC_MCP_AUTH_TOKEN` (e.g. the
+  Code-web container) gets `unauthorized` from `op_whoami`/`op_run`/`shell_exec` at the **Mac-auth
+  layer** — `mac_info` still works because it needs no token. That `unauthorized` says nothing about
+  the SA. The definitive test is `op_run` resolving a real `op://` ref from an **authed** session
+  (one where `mac_info` works).
+- **Impact:** likely no reliable secret path right now; Final-verification #7 **FAILS**; any
+  secret-bearing action is blocked until the SA is fixed.
+- **Fix (owner):** confirm with `op_run` from an authed session, then rotate/re-provision the SA
+  (decision 0001 procedure) and update BOTH `~/.zshrc`+`~/.zshenv` on the Mac AND the Render
+  `OP_SERVICE_ACCOUNT_TOKEN`; re-verify `op_whoami` + `op_run` + `op_health`. Re-supersede once green.
 
 GitHub Actions: PAT widened to all repos 2026-06-03; `OP_SERVICE_ACCOUNT_TOKEN` secret now set
 on all previously-tracked repos incl. `af-invoice-parser` + `af-query-api`. Two repos

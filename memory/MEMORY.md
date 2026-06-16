@@ -9,6 +9,6 @@ holds durable cross-surface facts and context.
 
 ## Index
 - [Keep tracker current](keep-tracker-current.md) — flip PLAN box + PROGRESS line in the same commit as the deliverable; never claim verified before the verify ran.
-- [Credentials state](credentials-state.md) — Mac op/gh live; **hosted op-mcp DOWN 2026-06-16 (host SA-token error) → use Mac op_run/op_inject; FV#7 fails until the Render token is fixed**.
+- [Credentials state](credentials-state.md) — **1Password SA outage 2026-06-16 (after 05:12): hosted op-mcp DOWN confirmed + Mac op_whoami unauthorized in authed sessions → likely no secret path; FV#7 fails. gh/GitHub unaffected.** Confirm via op_run from an authed session; rotate the SA.
 - [Mac connector tooling](mac-connector-tooling.md) — Schnapp Mac `write_file` OVERWRITES (no append; use `shell_exec` `cat >>` / python rmw); `shell_exec` strips op identity (use `op_run` for secrets).
 - [Obsidian state](obsidian-state.md) — vault canonical at OneDrive (symlink at ~/Documents/Obsidian); off-Mac obsidian = Mac-hosted server obsidian-mcp.schnapp.bet (search_notes/read_note/...), Mac-dependent; the Render connectors/obsidian-mcp is superseded.

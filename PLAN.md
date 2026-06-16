@@ -356,7 +356,10 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       .claude/settings.json activation (all 3 hooks, ${CLAUDE_PROJECT_DIR} paths) APPLIED — explicit
       owner approval after the auto-mode classifier correctly blocked a premature self-wire (a
       clarifying question ≠ consent). Hooks load at session start, so live-verify is at the NEXT fresh
-      session. Still open in 7.2: live-verify; remote http/mcp_tool hooks; Cowork-runs-hooks check.
+      session. Cowork-runs-hooks check RESOLVED 2026-06-16 (surface-check on 2 Cowork sessions: NO —
+      Cowork does not run claude-kit hooks; session-hygiene is the path; surfaces/cowork.md updated).
+      Still open in 7.2: live-verify of the plugin gate on Code (handoff 026 confirmed it); remote
+      http/mcp_tool hooks.
       SCOPE GAP (flagged 2026-06-05): 7.2 says "hooks for Code on ALL machines", but the .claude/
       settings.json wiring fires ONLY when cwd IS the claude-kit repo — the gate + push-gate do NOT run
       in the owner's other repos yet. True global delivery is the PLUGIN (Part 10; ${CLAUDE_PLUGIN_ROOT}
@@ -617,10 +620,10 @@ The capstone (owner: finish it now). Reuses schnapp-kit pieces on-demand (model-
 4. Cross-repo lesson: lesson in A appears in a fresh session in B.
 5. No stale memory: changed fact supersedes; freshness gate skips superseded.
 6. Composed rules: Python rules absent when editing SQL; preset applied in one choice.
-7. Credentials resolve from claude.ai with the Mac off. — FAILING as of 2026-06-16: the hosted
-   op-mcp `op_health` errors with a host SA-token/permissions problem (memory/credentials-state.md);
-   Mac `op_run` is the working route meanwhile. Re-verify after the Render OP_SERVICE_ACCOUNT_TOKEN
-   is fixed.
+7. Credentials resolve from claude.ai with the Mac off. — FAILING as of 2026-06-16: a 1Password SA
+   outage (after ~05:12) — hosted op-mcp `op_health` down (host SA-token error) AND `op_whoami`
+   unauthorized in authed sessions, so likely no secret path at all (memory/credentials-state.md).
+   Confirm via `op_run` from an authed session, rotate the SA, then re-verify.
 8. Backup: a non-Mac session's work reaches OneDrive and Obsidian.
 9. Surface awareness: `surface-check` lists loaded vs missing correctly.
 10. Sync: edit on one machine, it is present on another at next session start.
