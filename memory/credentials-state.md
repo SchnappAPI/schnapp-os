@@ -32,15 +32,23 @@ token, apparently on BOTH paths:
   (one where `mac_info` works).
 - **Impact:** likely no reliable secret path right now; Final-verification #7 **FAILS**; any
   secret-bearing action is blocked until the SA is fixed.
-- **Fix (owner) — diagnose before rotating.** The SA worked in a chat session recently and at 05:12
-  today, so the SA token itself is probably fine; this looks like a **propagation** problem, not a
-  dead SA. Most likely: (a) the **Render op-mcp** env `OP_SERVICE_ACCOUNT_TOKEN` still holds the OLD
-  pre-2026-06-15 token → update it + redeploy; and/or (b) a **long-running Mac process** holds a
-  pre-rotation token — note a **launchd service does NOT source `~/.zshrc`/`~/.zshenv`**, so confirm
-  where the Mac op tooling actually reads `OP_SERVICE_ACCOUNT_TOKEN` and reload/restart that service.
-  Confirm secret resolution with `op_run` on a real `op://` ref from an **authed** session; only
-  rotate (decision 0001) if the token is genuinely revoked. Re-verify `op_whoami`/`op_run`/`op_health`;
-  re-supersede once green.
+- **ROOT CAUSE (confirmed 2026-06-16):** the SA is fine (`op whoami` works in a fresh shell;
+  `~/.zshrc` has the current token). The launchd services start via
+  `~/code/schnapp-bet/services/launchd/op-wrap.sh`, which greps `OP_SERVICE_ACCOUNT_TOKEN` out of
+  `~/.zshrc` **at process start** then `exec op run`. The running `com.schnapp.macmcp` process
+  predates the 06-15 rotation, so it is `op run`-ing with the **old, revoked** token held in-process.
+  No rotation, no file edits needed.
+- **FIX (no rotation):**
+  1. **Mac:** `launchctl kill TERM gui/$(id -u)/com.schnapp.macmcp` — graceful restart (decision
+     0010); KeepAlive relaunches via op-wrap.sh, which re-reads the current `~/.zshrc` token. Then
+     verify `op_run`/`op_whoami` through the connector. (github-mcp/obsidian-mcp resolve their static
+     secrets only at startup and don't re-invoke `op` at runtime, so they're unaffected.)
+  2. **Render op-mcp:** update the `OP_SERVICE_ACCOUNT_TOKEN` env var to the current token + redeploy
+     (`connectors/op-mcp/DEPLOY.md`) — clears the `op_health` host error / the Mac-off path.
+- **ROTATION GOTCHA (capture for decision 0001 runbook):** after ANY SA rotation, the long-running
+  launchd MCP services keep the OLD token in-process — they MUST be restarted, AND the Render env var
+  updated, or `op_*` keeps failing even though `~/.zshrc` is correct. Re-verify
+  `op_whoami`/`op_run`/`op_health` and re-supersede this note once green.
 
 GitHub Actions: PAT widened to all repos 2026-06-03; `OP_SERVICE_ACCOUNT_TOKEN` secret now set
 on all previously-tracked repos incl. `af-invoice-parser` + `af-query-api`. Two repos

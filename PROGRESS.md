@@ -707,3 +707,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Only 2 of 6 were real files (in ~/code/obsidian-vault/Inbox — the redundant clone flagged for
   retirement); the other 4 live only in the brain index. Real cleanup = reset the brain agent's index
   store (owner's custom system). Pending owner.
+- ROOT CAUSE CONFIRMED (1Password): op-wrap.sh (schnapp-bet/services/launchd/) greps
+  OP_SERVICE_ACCOUNT_TOKEN from ~/.zshrc at process start then exec op run. The com.schnapp.macmcp
+  process predates the 06-15 rotation → runs with the old revoked token in-process. SA is fine.
+  FIX (no rotation): graceful-restart com.schnapp.macmcp (re-reads ~/.zshrc) + update the Render
+  op-mcp OP_SERVICE_ACCOUNT_TOKEN env + redeploy. Captured the rotation gotcha for the 0001 runbook.
+  credentials-state.md updated with the confirmed cause + fix; FV#7 reopens to PASS once verified green.
