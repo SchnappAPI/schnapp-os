@@ -12,3 +12,10 @@ Most limited. Use for capture, quick questions, and triggering remote work.
 - **Best use:** dictate context, fire a routine on the Mac via remote MCP, review status.
 - **Fallback:** anything it cannot do natively is routed to the Mac via remote MCP, or
   returned as a prompt to run later on Code.
+
+## Enablement (apply once 10.1 is installed)
+- Same account and Project as claude.ai web, so the connectors and Project custom-instructions carry
+  over. In the iPhone app, confirm the connectors are toggled on; skills follow the account.
+- This surface is for capture and triggering: prefer firing the procedure on the Mac via the Schnapp
+  Mac connector over doing a repo write from the phone.
+- **Verify:** run `surface-check` (most limited surface; hosted connectors only, no hooks).

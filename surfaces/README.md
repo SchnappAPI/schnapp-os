@@ -26,4 +26,6 @@ see `connectors/op-mcp/DEPLOY.md`. To *use* a secret in a command, prefer the Ma
 - `claude-ai-web.md`
 - `iphone.md`
 
+`always-loaded-instructions.md` is the canonical hookless always-loaded block (paste into claude.ai Project instructions, iPhone, and Cowork).
+
 The `surface-check` skill (Part 7) reports what is loaded vs missing on the current surface.

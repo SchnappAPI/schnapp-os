@@ -589,3 +589,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Corrected stale PLAN.md 4.1 "BLOCKER" -> RESOLVED (op resolution works in production).
 - Next: run handoff 022 on Code (closes 10.1 + PLAN 7.2). Then 10.2 (wire Cowork + claude.ai/iPhone,
   op-mcp connector) + 10.3 (14-point verification). Part 11 capstone after.
+
+## 2026-06-16 (cont. 10) — Part 10.2 PREP: surface enablement drafted (ready to apply post-10.1)
+- Authored surfaces/always-loaded-instructions.md: the canonical hookless always-loaded block
+  (operating model native->remote MCP->generated prompt; session-hygiene triggers; surface-check;
+  the 7 global rules condensed faithfully; secrets-as-references; hookless persist path). Self-contained
+  so it works on claude.ai/iPhone without repo file access; points to plugins/core/rules/global for full text.
+- Appended an "Enablement (apply once 10.1 installed)" checklist to claude-ai-web.md, iphone.md, cowork.md:
+  exact connectors to confirm, skills to enable (session-hygiene/surface-check/docs-lookup first, domain
+  on demand), where to paste the always-loaded block, and a surface-check verify step.
+- Verified (not assumed): op-mcp/1Password connector is Render + Cloudflare OAuth portal at
+  mcp.schnapp.bet (NOT Mac-hosted; not in cloudflared config; /health 404 = the OAuth front), matching
+  DEPLOY.md/decision 0004 — profiles were already correct, left unchanged. connectors/op-mcp/fly.toml is
+  an unused alternative (minor cleanup candidate, out of scope).
+- 10.2 application is owner action across client UIs (enable connectors/skills, paste instructions,
+  connect repo in Cowork). Pairs with 10.1 (handoff 022). 10.3 (14-pt verification) after both.

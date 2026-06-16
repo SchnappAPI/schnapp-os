@@ -12,3 +12,16 @@
   correction) plus always-loaded instructions. Persist writes via the GitHub connector or a generated Code prompt.
 - **Fallback:** for filesystem/shell/git actions, call the Mac via remote MCP, or generate a
   ready-to-run prompt/command for a Code session.
+
+## Enablement (apply once 10.1 is installed)
+1. **Connectors** (Settings > Connectors), confirm enabled: 1Password (op-mcp portal,
+   `https://mcp.schnapp.bet/mcp`), Schnapp Mac, Schnapp GitHub, obsidian mcp. (1Password + Schnapp Mac
+   + GitHub are already live on this account.)
+2. **Skills** (Settings > Capabilities): add the must-have core skills first: `session-hygiene`,
+   `surface-check`, `docs-lookup`. They do not auto-sync from the repo, so add the SKILL.md files here.
+   Add domain skills on demand: `etl-pipeline-build`, `sql-server-patterns`, `quickbase`, `appfolio`,
+   plus the available `data:*` / `pq-flat-map-type` / `sports-data-auditor` skills per the preset.
+3. **Always-loaded instructions:** paste [`always-loaded-instructions.md`](always-loaded-instructions.md)
+   into this Project's custom-instructions field.
+4. **Verify:** run `surface-check`. Expect connectors present, global rules + session-hygiene loaded,
+   no hooks (expected here), persist via GitHub connector or a generated Code prompt.
