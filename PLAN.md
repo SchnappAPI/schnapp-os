@@ -620,10 +620,11 @@ The capstone (owner: finish it now). Reuses schnapp-kit pieces on-demand (model-
 4. Cross-repo lesson: lesson in A appears in a fresh session in B.
 5. No stale memory: changed fact supersedes; freshness gate skips superseded.
 6. Composed rules: Python rules absent when editing SQL; preset applied in one choice.
-7. Credentials resolve from claude.ai with the Mac off. — FAILING as of 2026-06-16: a 1Password SA
-   outage (after ~05:12) — hosted op-mcp `op_health` down (host SA-token error) AND `op_whoami`
-   unauthorized in authed sessions, so likely no secret path at all (memory/credentials-state.md).
-   Confirm via `op_run` from an authed session, rotate the SA, then re-verify.
+7. Credentials resolve from claude.ai with the Mac off. — FAILING as of 2026-06-16 (after ~05:12):
+   hosted op-mcp `op_health` down (host SA-token error) AND `op_whoami` unauthorized in authed
+   sessions. Likely a token-propagation issue (Render env / a long-running service holds the old
+   pre-06-15 token), NOT a dead SA — diagnose before rotating (memory/credentials-state.md). Confirm
+   via `op_run` on a real ref from an authed session, reload the current token where stale, re-verify.
 8. Backup: a non-Mac session's work reaches OneDrive and Obsidian.
 9. Surface awareness: `surface-check` lists loaded vs missing correctly.
 10. Sync: edit on one machine, it is present on another at next session start.

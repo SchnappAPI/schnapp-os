@@ -32,9 +32,15 @@ token, apparently on BOTH paths:
   (one where `mac_info` works).
 - **Impact:** likely no reliable secret path right now; Final-verification #7 **FAILS**; any
   secret-bearing action is blocked until the SA is fixed.
-- **Fix (owner):** confirm with `op_run` from an authed session, then rotate/re-provision the SA
-  (decision 0001 procedure) and update BOTH `~/.zshrc`+`~/.zshenv` on the Mac AND the Render
-  `OP_SERVICE_ACCOUNT_TOKEN`; re-verify `op_whoami` + `op_run` + `op_health`. Re-supersede once green.
+- **Fix (owner) — diagnose before rotating.** The SA worked in a chat session recently and at 05:12
+  today, so the SA token itself is probably fine; this looks like a **propagation** problem, not a
+  dead SA. Most likely: (a) the **Render op-mcp** env `OP_SERVICE_ACCOUNT_TOKEN` still holds the OLD
+  pre-2026-06-15 token → update it + redeploy; and/or (b) a **long-running Mac process** holds a
+  pre-rotation token — note a **launchd service does NOT source `~/.zshrc`/`~/.zshenv`**, so confirm
+  where the Mac op tooling actually reads `OP_SERVICE_ACCOUNT_TOKEN` and reload/restart that service.
+  Confirm secret resolution with `op_run` on a real `op://` ref from an **authed** session; only
+  rotate (decision 0001) if the token is genuinely revoked. Re-verify `op_whoami`/`op_run`/`op_health`;
+  re-supersede once green.
 
 GitHub Actions: PAT widened to all repos 2026-06-03; `OP_SERVICE_ACCOUNT_TOKEN` secret now set
 on all previously-tracked repos incl. `af-invoice-parser` + `af-query-api`. Two repos

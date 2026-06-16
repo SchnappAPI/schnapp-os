@@ -698,3 +698,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   credentials-state.md so it isn't repeated. MEMORY index + PLAN FV#7 updated. gh/GitHub unaffected.
 - Brain cleanup: owner chose ARCHIVE (not delete). Can't run it from here (no Mac shell auth); handed
   the owner a ready-to-run archive command (move the 6 test .md files to _archive/, brain reprocesses).
+- CORRECTION (owner steer): do NOT rotate the SA — it worked recently + at 05:12 today. Reframed
+  credentials-state.md/MEMORY/PLAN FV#7 to diagnose-first: likely a token-PROPAGATION issue (Render
+  op-mcp env still on the old pre-06-15 token; and/or a long-running Mac service holding a stale token
+  — launchd does not source ~/.zshrc/~/.zshenv). Confirm via op_run from an authed session; rotate only
+  if truly revoked.
+- Brain archive: moving the vault .md files did NOT clear the brain index (separate store; still 6).
+  Only 2 of 6 were real files (in ~/code/obsidian-vault/Inbox — the redundant clone flagged for
+  retirement); the other 4 live only in the brain index. Real cleanup = reset the brain agent's index
+  store (owner's custom system). Pending owner.
