@@ -8,12 +8,10 @@ Vault:   ~/Library/CloudStorage/OneDrive-Schnapp/Obsidian
 Port:    8767
 """
 
-import hashlib
 import json
 import os
 import secrets
 import time
-import base64
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlencode
@@ -31,7 +29,6 @@ from mcp.server.fastmcp import FastMCP
 from mcp.shared.auth import OAuthClientInformationFull, OAuthToken
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, RedirectResponse
-from starlette.routing import Route
 
 # ---------------------------------------------------------------------------
 # Config
@@ -63,39 +60,8 @@ def _save(state: dict):
 # Token types
 # ---------------------------------------------------------------------------
 
-class AuthCode:
-    def __init__(self, code: str, client_id: str, redirect_uri: str,
-                 code_challenge: str, challenge_method: str, scope: str, expires_at: int):
-        self.code = code
-        self.client_id = client_id
-        self.redirect_uri = redirect_uri
-        self.code_challenge = code_challenge
-        self.challenge_method = challenge_method
-        self.scope = scope
-        self.expires_at = expires_at
-        self.claims = {}  # required by FastMCP bearer auth middleware
-
 class StoredAccessToken(AccessToken):
     pass  # AccessToken is a Pydantic BaseModel with all required fields
-
-class StoredRefreshToken:
-    def __init__(self, token: str, client_id: str, scope: str, access_token: str):
-        self.token = token
-        self.client_id = client_id
-        self.scope = scope
-        self.access_token = access_token
-        self.scopes = scope.split() if scope else []
-
-# ---------------------------------------------------------------------------
-# PKCE
-# ---------------------------------------------------------------------------
-
-def _verify_pkce(verifier: str, challenge: str, method: str) -> bool:
-    if method == "S256":
-        digest = hashlib.sha256(verifier.encode()).digest()
-        computed = base64.urlsafe_b64encode(digest).rstrip(b"=").decode()
-        return computed == challenge
-    return verifier == challenge
 
 # ---------------------------------------------------------------------------
 # OAuth provider implementation
