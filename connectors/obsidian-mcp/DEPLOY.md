@@ -1,3 +1,8 @@
+> **SUPERSEDED (2026-06-16) — do not run these steps.** This Render deploy was never executed;
+> the off-Mac Obsidian MCP is now the Mac-hosted server at `https://obsidian-mcp.schnapp.bet/mcp`
+> (see this connector's `README.md` banner and `schnapp-bet` → `docs/CONNECTIONS.md`). The runbook
+> is retained only in case Mac-independent serving is restored later.
+
 # Deploy runbook — obsidian-mcp
 
 Same shape as `connectors/op-mcp/DEPLOY.md`: Render free Blueprint for the origin, Cloudflare MCP

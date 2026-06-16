@@ -10,3 +10,4 @@ holds durable cross-surface facts and context.
 ## Index
 - [Keep tracker current](keep-tracker-current.md) — flip PLAN box + PROGRESS line in the same commit as the deliverable; never claim verified before the verify ran.
 - [Credentials state](credentials-state.md) — 1Password SA rotated; op/gh live; off-Mac access LIVE via op-mcp connector (Render + Cloudflare portal + claude.ai/iPhone).
+- [Obsidian state](obsidian-state.md) — vault canonical at OneDrive (symlink at ~/Documents/Obsidian); off-Mac obsidian = Mac-hosted server obsidian-mcp.schnapp.bet (search_notes/read_note/...), Mac-dependent; the Render connectors/obsidian-mcp is superseded.

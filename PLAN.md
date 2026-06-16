@@ -317,8 +317,20 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       GitHub, no app dependency). Canonical vault = `~/Documents/Obsidian` (owner choice; `~/code/obsidian-vault`
       is a redundant clone to retire). PENDING (owner): rotate the leaked vault PAT + re-set obsidian-git auth
       in-GUI; deploy the remote MCP (owner-gated, connectors/obsidian-mcp/DEPLOY.md).
+      UPDATE 2026-06-16: SUPERSEDED. Off-Mac obsidian is now served by a **Mac-hosted FastMCP server**
+      (`~/obsidian-mcp/server.py`, port 8767, OAuth 2.1+PKCE+DCR) live at `https://obsidian-mcp.schnapp.bet/mcp`,
+      connected + verified in claude.ai (7 tools). The Render `connectors/obsidian-mcp/` was never deployed and
+      is now superseded (banner added; kept as the Mac-INDEPENDENT option). The vault moved to the canonical
+      `~/Library/CloudStorage/OneDrive-Schnapp/Obsidian` (OneDrive-synced) with a back-compat symlink at
+      `~/Documents/Obsidian`; brain agent + inbox watcher repointed. Authoritative detail: schnapp-bet
+      `docs/CONNECTIONS.md` ("Obsidian MCP"/"Obsidian Brain Agent"). TRADE-OFF FLAGGED: the live server is
+      Mac-hosted, so off-Mac access now needs the Mac on — a regression vs the locked "no Mac dependency"
+      design that the superseded connector satisfied.
 - [~] 6.3 Verify a non-Mac session's backup reaches OneDrive + the vault and is searchable off-Mac. Mechanism
       in place (dual-mirror + remote MCP built); full verify pends the remote-MCP deploy + a non-Mac run.
+      UPDATE 2026-06-16: off-Mac *searchability* is LIVE (the Mac-hosted obsidian MCP is connected + verified
+      in claude.ai). Caveat: Mac-hosted, so it needs the Mac on. The non-Mac *backup-write* half still pends
+      (claude.ai is hookless; backup-archive.sh runs on the Mac).
 - Handoff after this Part.
 
 ## Part 7: Cross-surface "must happen" enforcement
@@ -462,7 +474,10 @@ Part 10. Remaining work, in dependency order — do earlier-listed first to avoi
 4. **Part 11 — Agentic OS capstone:** scheduler, `/do` orchestrator, `status` control plane.
 5. **Final verification sweep:** the 14-point list against the complete system → production-ready sign-off.
 
-Owner-gated parallel tracks (any time, non-blocking): 6.2/6.3 Obsidian (MacBook GUI), 4.2 connector
+Owner-gated parallel tracks (any time, non-blocking): 6.2/6.3 Obsidian — off-Mac MCP now LIVE (Mac-hosted);
+open = decide whether to retire the superseded Render `connectors/obsidian-mcp` or restore Mac-independent
+serving, and whether the live server's source (`~/obsidian-mcp/server.py`) belongs in this repo
+(single-source-of-truth gap); plus retire the redundant `~/code/obsidian-vault` clone. 4.2 connector
 redeploy (Render Manual Deploy + Cloudflare re-sync), the DB_Storage / appfolio-marketing-project
 Actions-secret decision. 5.5 dual-altitude + 8.3 merge-skill close opportunistically (real perf work /
 first approved branch).

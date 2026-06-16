@@ -17,19 +17,19 @@ This is for the owner's OWN knowledge. For external library/framework/API docs, 
 
 | Surface | How to read the vault |
 |---|---|
-| **Code on the Mac** | The filesystem `obsidian` MCP: `mcp__obsidian__search-vault`, `mcp__obsidian__read-note`, `mcp__obsidian__list-available-vaults`. Or read `~/Documents/Obsidian` files directly. |
-| **Off-Mac** (claude.ai, iPhone, Cowork) | The remote **obsidian-mcp** connector ([`connectors/obsidian-mcp`](../../../../connectors/obsidian-mcp/)): `vault_search`, `vault_read`, `vault_list`, `vault_health`. Serves the vault from GitHub — no Mac/app dependency. |
+| **Code on the Mac** | The filesystem `obsidian` (npm) MCP: `mcp__obsidian__search-vault`, `mcp__obsidian__read-note`, `mcp__obsidian__list-available-vaults`. Or read the vault files directly at `~/Documents/Obsidian` (a symlink to the canonical `~/Library/CloudStorage/OneDrive-Schnapp/Obsidian`). |
+| **Off-Mac** (claude.ai, iPhone, Cowork) | The hosted **obsidian** connector at `https://obsidian-mcp.schnapp.bet/mcp` (Mac-hosted FastMCP; full service detail in `schnapp-bet` → `docs/CONNECTIONS.md` → "Obsidian MCP"). Read with `search_notes`, `read_note`, `list_notes` (write tools `write_note`/`append_note`/`inbox_drop` also exist — read-only suffices for lookup). **Mac-dependency caveat:** this connector is hosted on the Mac, so if the Mac is off it is unavailable — fall back to the GitHub copy / this repo's `memory/` + `decisions/`. |
 
 Probe before relying on it (see [`verify-before-asserting`](../../rules/global/verify-before-asserting.md)):
-if neither tool is present on this surface, say so and fall back to the GitHub copy
+if the obsidian tools are not present (or the Mac is off), say so and fall back to the GitHub copy
 (`SchnappAPI/obsidian-vault`, or claude-kit's own `memory/`/`decisions/` in this repo).
 
 ## Workflow
 
-1. **Search** by content/filename for the topic (`search-vault` / `vault_search`). Prefer
-   specific terms (a decision name, a table, a project, an error string).
-2. **Read** the most relevant note(s) (`read-note` / `vault_read`) — do not answer from the
-   search snippet alone.
+1. **Search** by content/filename for the topic (`search-vault` on the Mac / `search_notes` off-Mac).
+   Prefer specific terms (a decision name, a table, a project, an error string).
+2. **Read** the most relevant note(s) (`read-note` on the Mac / `read_note` off-Mac) — do not answer
+   from the search snippet alone.
 3. **Answer** from what the vault actually says; quote the note/path. If the vault has nothing,
    say so plainly rather than guessing (the fact may not be captured yet).
 4. If you discover the fact was missing and is durable, capture it per
@@ -42,3 +42,6 @@ if neither tool is present on this surface, say so and fall back to the GitHub c
   the memory lane (`memory/README.md`) or a deliberate vault note, not ad-hoc scattering.
 - Decisions live in `decisions/` (this repo) and mirror into the vault — for "why did we
   choose X", search both.
+- The repo's `connectors/obsidian-mcp/` (a Render/GitHub-served TS implementation) is SUPERSEDED
+  and not deployed — the live off-Mac path is the Mac-hosted server above. See that connector's
+  README for the trade-off (Mac-independent serving vs. the current Mac-hosted reality).

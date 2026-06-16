@@ -463,3 +463,25 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   the ~25-component session/memory cluster deliberately not ported; schnapp-kit stays the on-demand archive.
   CATALOG unchanged (presets/template not catalog content); freshness green. PHASE BOUNDARY → handoff 015;
   pause for owner input before Part 10 (package + wire surfaces).
+
+## 2026-06-16 — Repo stale-review (claude.ai web session)
+
+- Reviewed the repo against verified Mac/infra ground truth (not the resume summary) and corrected
+  the Obsidian staleness cluster left by the infra session. Root cause: schnapp-bet `docs/CONNECTIONS.md`
+  was updated + committed locally (`b7d318d`) but **never pushed** (`[ahead 1]`) — GitHub served the
+  2026-05-27 version. Pushed it; schnapp-bet now in sync, authoritative infra doc live.
+- Verified live state on the Mac: vault canonical at `~/Library/CloudStorage/OneDrive-Schnapp/Obsidian`
+  (symlink at `~/Documents/Obsidian`); off-Mac obsidian = Mac-hosted FastMCP `~/obsidian-mcp/server.py`
+  (port 8767, OAuth) at `obsidian-mcp.schnapp.bet`, 7 tools `read_note/write_note/append_note/search_notes/
+  list_notes/inbox_drop/get_index`; Mac npm `obsidian` MCP confirmed exposing `search-vault`/`read-note`/
+  `list-available-vaults` (Mac row was correct).
+- Fixes (claude-kit): `docs-lookup` off-Mac row + workflow corrected to the real connector + tool names
+  (was the non-existent `vault_*` on the undeployed Render connector) and the Mac-dependency caveat added;
+  `connectors/obsidian-mcp/{README,DEPLOY}.md` SUPERSEDED banners (kept as the Mac-independent option, not
+  deleted); `backup-archive.sh` vault default -> canonical OneDrive path (symlink-neutral, more robust);
+  PLAN 6.2/6.3 + owner-gated-tracks UPDATE clauses (record preserved); new `memory/obsidian-state.md` + index.
+- CATALOG unchanged; freshness gate green. Handoffs 002-015 / old PROGRESS lines left intact (record).
+- FLAGGED for owner (not actioned): the live obsidian server's source (`~/obsidian-mcp/server.py`) is not in
+  any repo — single-source-of-truth gap; and the Mac-hosted design reintroduces a Mac dependency the locked
+  plan tried to avoid. Decide: import the server into the repo / restore Mac-independent serving / retire the
+  Render connector. Also still open: retire redundant `~/code/obsidian-vault` clone.

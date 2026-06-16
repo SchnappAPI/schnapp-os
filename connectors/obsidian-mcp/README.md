@@ -1,3 +1,16 @@
+> **SUPERSEDED (2026-06-16) — NOT DEPLOYED.** The live off-Mac Obsidian MCP is the
+> **Mac-hosted FastMCP server** at `https://obsidian-mcp.schnapp.bet/mcp` (code
+> `~/obsidian-mcp/server.py`; tools `search_notes`/`read_note`/`list_notes`/`write_note`/
+> `append_note`/`inbox_drop`/`get_index`; authoritative detail in `schnapp-bet` →
+> `docs/CONNECTIONS.md` → "Obsidian MCP"). This Render/TS implementation below was built and
+> locally verified but never deployed.
+>
+> **Architectural note worth keeping:** this connector served the vault from GitHub, so it had
+> **no Mac dependency** — which directly satisfies the locked "don't depend on the Mac being on"
+> principle. The current Mac-hosted server REINTRODUCES that dependency (off-Mac obsidian access
+> now needs the Mac powered on). Keep this implementation as the Mac-independent option; revisit
+> if/when Mac-independent off-Mac vault access is wanted. Do not delete without that decision.
+
 # obsidian-mcp — remote vault MCP
 
 A read-only MCP server that serves the owner's Obsidian vault (`SchnappAPI/obsidian-vault`)

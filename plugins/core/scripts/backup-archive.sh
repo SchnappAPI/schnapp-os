@@ -12,7 +12,9 @@
 # Config (env overrides, machine-portable):
 #   CLAUDE_KIT_REPO     default ~/code/claude-kit
 #   CLAUDE_ARCHIVE_DIR  default ~/Library/CloudStorage/OneDrive-Schnapp/claude-archive
-#   OBSIDIAN_VAULT_DIR  default ~/Documents/Obsidian  (vault mirror skipped if absent)
+#   OBSIDIAN_VAULT_DIR  default ~/Library/CloudStorage/OneDrive-Schnapp/Obsidian
+#                       (canonical vault, OneDrive-synced; ~/Documents/Obsidian is a back-compat
+#                        symlink to it; vault mirror skipped if the dir is absent)
 #
 # Run manually now; Part 7 wires it to the Stop/SessionEnd hook (PLAN 5.4).
 set -euo pipefail
@@ -68,7 +70,7 @@ echo "backup-archive: mirrored repo md + $SESSION_COUNT transcript(s) -> $ARCHIV
 # 4. Mirror the browsable knowledge md into the canonical Obsidian vault (optional).
 #    Reuses the just-built OneDrive copy. Sessions (.jsonl) stay OneDrive-only so the
 #    git-synced vault does not bloat. obsidian-git pushes this to GitHub on next sync.
-VAULT="${OBSIDIAN_VAULT_DIR:-$HOME/Documents/Obsidian}"
+VAULT="${OBSIDIAN_VAULT_DIR:-$HOME/Library/CloudStorage/OneDrive-Schnapp/Obsidian}"
 if [ -d "$VAULT" ]; then
   mkdir -p "$VAULT/claude-archive"
   rsync -a --delete "$ARCHIVE/repo/" "$VAULT/claude-archive/repo/"
