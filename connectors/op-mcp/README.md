@@ -16,8 +16,8 @@ from runtime buffers, so a plain/`nodejs_compat` Worker cannot run the SDK
 without hacking the loader. **Verdict: run on a Node host.** This resolves the
 host fork left open in `decisions/0004`.
 
-Portable: the `Dockerfile` builds on Fly.io (recommended, `fly.toml` included),
-Render, Railway, Cloudflare Containers, or Cloud Run.
+Portable: the `Dockerfile` runs on **Render** (the chosen host — see DEPLOY.md), or
+Fly.io (`fly.toml` included), Railway, Cloudflare Containers, or Cloud Run.
 
 ## Tools (all read-only — no command execution, no writes)
 

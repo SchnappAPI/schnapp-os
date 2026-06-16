@@ -11,7 +11,7 @@
     {
       "name": "claude-kit-core",
       "source": "./plugins/core",
-      "description": "Core layer: SessionStart freshness/git gate + Stop push-gate (hooks.json, global via ${CLAUDE_PLUGIN_ROOT}); 22 skills, 4 commands, 2 agents; composable rules. SessionEnd backup is delivered project-scoped, not by this plugin (decision 0005).",
+      "description": "Core layer: SessionStart freshness/git gate + Stop push-gate (hooks.json, global via ${CLAUDE_PLUGIN_ROOT}); skills, commands, agents, and composable rules. SessionEnd backup is delivered project-scoped, not by this plugin (decision 0005).",
       "version": "0.1.0",
       "author": {
         "name": "SchnappAPI",

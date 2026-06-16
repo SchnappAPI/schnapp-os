@@ -232,6 +232,9 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
 - [x] 4.1 RECREATE the 1Password Service Account: the prior one was DELETED (see
       decisions/0001), so `op`/`gh` are down. Create a new SA, grant the vaults, and put the
       new token on every surface (`~/.zshrc`, `~/.zshenv`, GitHub Actions secret, others).
+      DONE: SA rotated 2026-06-03 + 2026-06-15; token in `~/.zshrc` + `~/.zshenv` + the Actions
+      secret on the authorized repos; `op`/`gh` work (memory/credentials-state.md). The "are
+      down" above is the original blocker state, now resolved.
 - [x] 4.2 Add a hosted 1Password MCP connector (service-account-backed); enable on every
       surface as the primary secret path. Keep the Mac op_* tools as backup.
       DONE (2026-06-05): `connectors/op-mcp/` Node streamable-HTTP MCP (read-only op_read/
@@ -536,14 +539,20 @@ are escaping). Steps labeled C.x to keep Part numbers stable. Method:
 - Handoff after this phase.
 
 ## Part 10: Wire surfaces + final verification
-- [ ] 10.1 Package: `.claude-plugin/marketplace.json` + `plugins/core/.claude-plugin/plugin.json`
+- [~] 10.1 Package: `.claude-plugin/marketplace.json` + `plugins/core/.claude-plugin/plugin.json`
       (components auto-discover by directory — skills/commands/agents auto; hooks via hooks.json). Install
       in Code as a marketplace plugin so the PLUGIN delivers the global gate+push-gate everywhere
       (`${CLAUDE_PLUGIN_ROOT}`); then REMOVE those two from the project `.claude/settings.json` to avoid
       double-fire, keeping ONLY the backup (decisions/0005). Packages the COMPLETE Capability-layer set.
-- [ ] 10.2 Wire the other surfaces: connect the repo in Cowork; add the core + domain skills and the
+      PARTIAL 2026-06-16: manifests authored + pushed (marketplace.json + plugins/core/.claude-plugin/
+      plugin.json; SessionEnd stripped from plugin hooks.json per 0005). Install + project de-dup +
+      verify deferred to a Code session (handoffs/022). Closes when installed + verified.
+- [~] 10.2 Wire the other surfaces: connect the repo in Cowork; add the core + domain skills and the
       op-mcp connector in claude.ai + iPhone; enable session-hygiene / surface-check per surface (closes
       the 7.3/7.4/7.5 per-surface enablement).
+      PARTIAL 2026-06-16: per-surface enablement drafted (surfaces/always-loaded-instructions.md +
+      Enablement checklists in surfaces/{claude-ai-web,iphone,cowork}.md). Applying in each client
+      UI is owner action and depends on 10.1 being installed first.
 - [ ] 10.3 Run the full verification list (below) against the complete system.
 - Done when: the same core + capabilities work on Code, Cowork, and claude.ai/iPhone.
 - Handoff after this Part.

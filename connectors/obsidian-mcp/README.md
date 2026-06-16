@@ -9,7 +9,7 @@ serves the owner's Obsidian vault to every surface (claude.ai, iPhone, Cowork, C
 - **The Mac runs it from here**: `~/obsidian-mcp/server.py` is a **symlink** to this file, launched by
   launchd agent `com.schnapp.obsidian-mcp` via `op-wrap.sh` (secrets injected from `.env.template`).
   Edit `server.py` here, push, then restart the service to deploy:
-  `launchctl kickstart -k gui/$UID/com.schnapp.obsidian-mcp`.
+  `launchctl kill TERM gui/$(id -u)/com.schnapp.obsidian-mcp` (graceful: KeepAlive relaunches; pre-bound SO_REUSEADDR socket — decision 0010). Do not use `kickstart -k`.
 - **Authoritative runtime/infra detail** (port, OAuth, tunnel, recovery): `schnapp-bet`
   `docs/CONNECTIONS.md` → "Obsidian MCP" / "Obsidian Brain Agent". Do not duplicate it here.
 

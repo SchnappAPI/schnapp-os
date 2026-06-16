@@ -604,3 +604,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   an unused alternative (minor cleanup candidate, out of scope).
 - 10.2 application is owner action across client UIs (enable connectors/skills, paste instructions,
   connect repo in Cowork). Pairs with 10.1 (handoff 022). 10.3 (14-pt verification) after both.
+
+## 2026-06-16 (cont. 11) — repo staleness/consistency audit (verified, not assumed); handoff 023
+- Ran the CI freshness gate (check-freshness.sh): CATALOG.md current, no stale last-verified docs.
+- Verified-current as FACT: counts 22 skills/2 agents/4 commands match; no node_modules tracked;
+  SO_REUSEPORT only in code comments/history; op-mcp = Render + Cloudflare portal (not Mac/Fly);
+  root README is status-free; handoffs 000-022 + decisions 0001-0010 continuous.
+- Fixed stale LIVE docs (append-only history left intact): connectors/{mac,github,obsidian}-mcp
+  READMEs recovery kickstart-k -> graceful TERM (decision 0010); op-mcp README "Fly recommended"
+  -> Render chosen; PLAN 4.1 DONE annotation; PLAN 10.1/10.2 [ ]->[~] PARTIAL; marketplace.json
+  dropped the hardcoded "22 skills/4 commands/2 agents" count (CATALOG is the source of truth).
+- Flagged, not changed (current + consistent, owner judgement): credentials-state/credentials-map
+  overlap; DB_Storage + appfolio-marketing-project missing the Actions secret; flask_restart still
+  kickstart -k; service_restart graceful path deployed but not runtime-tested via the tool.
+- Full session context + audit -> handoffs/023; handoff 022's Code output renumbered 023 -> 024.
+- Freshness gate re-run after all edits: green.

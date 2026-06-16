@@ -11,5 +11,5 @@ as "Schnapp Mac". Talks to SQL Server via pyodbc.
   record; the live copy stays on the Mac and is NOT symlinked).
 - **Single source of truth: this repo.** The Mac runs it via symlink
   `~/mac-mcp/server.py -> connectors/mac-mcp/server.py`. Edit here, then restart:
-  `launchctl kickstart -k gui/$UID/com.schnapp.macmcp`.
+  `launchctl kill TERM gui/$(id -u)/com.schnapp.macmcp` (graceful: KeepAlive relaunches; the entrypoint serves a pre-bound SO_REUSEADDR socket so there is no [Errno 48] race — decision 0010). Do not use `kickstart -k` (SIGKILL skips uvicorn's clean socket close).
 - Deps pinned (requirements.txt) + locked (requirements.lock.txt). Bump only after smoke-testing.
