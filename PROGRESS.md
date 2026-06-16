@@ -518,3 +518,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   requirements.lock.txt; removed unused standalone fastmcp from venv.
 - Commits pushed: 0ab4316, eaaec24, + dep-pin commit. decisions/0009 + handoffs/018 logged.
 - Owner action: click Connect to re-establish the session (server side complete). Part 10 still NEXT.
+
+## 2026-06-16 (cont. 4) — recon: other custom MCPs (queued, handoff 019)
+- Audited mac-mcp (:8765) + github-mcp (:8766): both FastMCP/python, Bearer auth (NOT the OAuth
+  provider that broke Obsidian, so lower drift risk), but TWO gaps: (1) source is on-Mac only, NOT
+  symlinked into the repo (violates single-source / decision 0008); (2) deps unpinned (fastmcp 3.2.4,
+  mcp 1.27.0 — drifted independently from obsidian's 1.27.2). Working today.
+- op-mcp/1Password (mcp.schnapp.bet) is a portal/gateway behind CF Access, different stack — separate
+  investigation, not lumped in. 1Password desktop app procs are unrelated.
+- Scoped fix (mirror obsidian-mcp: import->symlink->pin->lock->restart->smoke) in handoffs/019. NOT
+  executed — handoff only. Part 10 still NEXT.
