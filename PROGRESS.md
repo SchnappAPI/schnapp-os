@@ -485,3 +485,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   any repo — single-source-of-truth gap; and the Mac-hosted design reintroduces a Mac dependency the locked
   plan tried to avoid. Decide: import the server into the repo / restore Mac-independent serving / retire the
   Render connector. Also still open: retire redundant `~/code/obsidian-vault` clone.
+
+## 2026-06-16 (cont.) — acted on the two notes
+- Note 1: credentials-state.md superseded — SA re-rotated 2026-06-15 (token in ~/.zshrc + ~/.zshenv),
+  verified live 2026-06-16 (op whoami SA identity resolves, gh authenticated). updated:->2026-06-16.
+- Note 2: new memory/mac-connector-tooling.md (+index) — durable fact: Schnapp Mac write_file OVERWRITES
+  (no append; use shell_exec cat>> or python read-modify-write); shell_exec strips op identity (use op_run).

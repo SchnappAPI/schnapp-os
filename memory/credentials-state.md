@@ -3,14 +3,16 @@ name: credentials-state
 metadata: 
   node_type: memory
   scope: global
-  source: "decisions/0001, decisions/0004, handoffs/004"
-  updated: 2026-06-05
+  source: "decisions/0001, decisions/0004, handoffs/004, handoffs/016"
+  updated: 2026-06-16
   supersedes: ""
   originSessionId: 33c726f1-b86d-4a93-8586-061ec9ca3f3e
 ---
 
-1Password Service Account was deleted, then **rotated** on 2026-06-03; `op whoami` and
-`gh` work again on the Mac (and in-session). The SA token resolves `op://` references.
+1Password Service Account was deleted, then **rotated** (2026-06-03) and **rotated again
+(2026-06-15)** — the token now lives in both `~/.zshrc` and `~/.zshenv`. Verified live
+2026-06-16: `op whoami` resolves the SA identity and `gh` is authenticated on the Mac (and
+in-session). The SA token resolves `op://` references.
 
 Off-Mac secret access is **LIVE (2026-06-05)**. The **op-mcp connector**
 (`connectors/op-mcp/`) is deployed on **Render** at `https://op-mcp.onrender.com` (bearer-gated).
