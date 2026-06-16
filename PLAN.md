@@ -564,12 +564,15 @@ are escaping). Steps labeled C.x to keep Part numbers stable. Method:
       .claude/settings.json de-duped to ONLY SessionEnd backup; smoke-tested in claude-kit itself
       (3 SessionStart hooks total — one is our gate, the others belong to other installed plugins;
       Stop fires once; no double-fire of the gate or push-gate). Handoff 026 records the run.
-- [~] 10.2 Wire the other surfaces: connect the repo in Cowork; add the core + domain skills and the
+- [x] 10.2 Wire the other surfaces: connect the repo in Cowork; add the core + domain skills and the
       op-mcp connector in claude.ai + iPhone; enable session-hygiene / surface-check per surface (closes
       the 7.3/7.4/7.5 per-surface enablement).
-      PARTIAL 2026-06-16: per-surface enablement drafted (surfaces/always-loaded-instructions.md +
-      Enablement checklists in surfaces/{claude-ai-web,iphone,cowork}.md). Applying in each client
-      UI is owner action and depends on 10.1 being installed first.
+      APPLIED 2026-06-16 by owner across claude.ai web / iPhone / Cowork (skills uploaded as zips;
+      always-loaded block placed at Settings>Profile>Preferences = GLOBAL per owner choice, not a
+      Project; connectors enabled; claude-kit-core plugin added in Cowork). Per-surface `surface-check`
+      confirmation + the "does Cowork run hooks" answer roll into 10.3. Enablement drafts:
+      surfaces/always-loaded-instructions.md + the Enablement checklists in
+      surfaces/{claude-ai-web,iphone,cowork}.md.
 - [ ] 10.3 Run the full verification list (below) against the complete system.
 - Done when: the same core + capabilities work on Code, Cowork, and claude.ai/iPhone.
 - Handoff after this Part.
@@ -614,7 +617,10 @@ The capstone (owner: finish it now). Reuses schnapp-kit pieces on-demand (model-
 4. Cross-repo lesson: lesson in A appears in a fresh session in B.
 5. No stale memory: changed fact supersedes; freshness gate skips superseded.
 6. Composed rules: Python rules absent when editing SQL; preset applied in one choice.
-7. Credentials resolve from claude.ai with the Mac off.
+7. Credentials resolve from claude.ai with the Mac off. — FAILING as of 2026-06-16: the hosted
+   op-mcp `op_health` errors with a host SA-token/permissions problem (memory/credentials-state.md);
+   Mac `op_run` is the working route meanwhile. Re-verify after the Render OP_SERVICE_ACCOUNT_TOKEN
+   is fixed.
 8. Backup: a non-Mac session's work reaches OneDrive and Obsidian.
 9. Surface awareness: `surface-check` lists loaded vs missing correctly.
 10. Sync: edit on one machine, it is present on another at next session start.

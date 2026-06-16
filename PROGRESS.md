@@ -664,3 +664,21 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   #3 (global lane in every repo) PASS via user-scope autoMemoryDirectory; #11 (session with
   unmerged/dirty work addresses it first) PASS LIVE. #1/#4-#10/#12-#14 unchanged from prior runs.
 - 10.2 (owner UIs) and 10.3 full sweep remain. Plugin install path is now the proven distribution.
+
+## 2026-06-16 (cont. 14) — 10.2 applied + staleness pass (op-mcp outage, global-instructions); handoff 027
+- Owner applied 10.2 across claude.ai web / iPhone / Cowork (skills uploaded as zips; connectors enabled;
+  claude-kit-core plugin added in Cowork; always-loaded block placed GLOBALLY at Settings>Profile>
+  Preferences, not a Project — owner choice). PLAN 10.2 -> [x]; surface-check verify rolls into 10.3.
+- FINDING (verified, 2 surfaces): hosted op-mcp connector is DOWN — op_health errors "authentication
+  error ... Check OP_SERVICE_ACCOUNT_TOKEN on the host" from this Code session AND Cowork. Host-side
+  SA-token/perms problem, NOT per-surface. Mac op_run/op_inject is the working route. Final-verification
+  #7 currently FAILS. Recorded: memory/credentials-state.md (superseded the "LIVE/verified" claim) +
+  MEMORY.md index; annotated PLAN FV#7. Fix is host-side (Render OP_SERVICE_ACCOUNT_TOKEN), owner action.
+- Staleness pass (anti-stale: transient status lives only in credentials-state.md; surface docs POINT to
+  it instead of carrying their own LIVE/DOWN claim): fixed surfaces/{claude-ai-web,iphone,README}.md +
+  always-loaded-instructions.md — removed absolute "op-mcp LIVE"; switched "paste into Project
+  instructions" -> "Settings>Profile>Preferences (global)" per owner's choice. Freshness gate green.
+- FINDING (verified via brain get_index): the obsidian brain holds ONLY 6 pipeline-verification TEST
+  notes from 2026-06-16 (2 flagged actionable test-closeouts), zero real notes. Cleanup = remove the 6
+  source .md files via the Mac shell (brain connector has no delete tool) + clear the 2 actions. PENDING
+  owner confirm ("delete all 6"); to run at wrap via the Mac.

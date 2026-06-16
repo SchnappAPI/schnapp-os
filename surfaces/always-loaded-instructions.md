@@ -1,9 +1,10 @@
 # claude-kit always-loaded instructions (hookless surfaces)
 
 Canonical text to paste into the always-loaded slot of each hookless surface: claude.ai
-(Project custom instructions), iPhone (same account/Project), and Cowork (until hooks are
-confirmed). On Code these behaviors are delivered by the plugin + global rules; this block is
-the hookless equivalent. Authored once here; the surface profiles point to it.
+(Settings > Profile > Preferences = account-wide/global, owner's choice 2026-06-16 — this also
+covers iPhone on the same account) and Cowork instructions separately (until hooks are confirmed).
+On Code these behaviors are delivered by the plugin + global rules; this block is the hookless
+equivalent. Authored once here; the surface profiles point to it.
 
 ## Operating model: never silently fail
 Resolve any requested action in order: (1) native on this surface; (2) remote MCP (call the Mac

@@ -14,13 +14,18 @@ metadata:
 2026-06-16: `op whoami` resolves the SA identity and `gh` is authenticated on the Mac (and
 in-session). The SA token resolves `op://` references.
 
-Off-Mac secret access is **LIVE (2026-06-05)**. The **op-mcp connector**
-(`connectors/op-mcp/`) is deployed on **Render** at `https://op-mcp.onrender.com` (bearer-gated).
-- **claude.ai + iPhone**: registered as a custom connector via a **Cloudflare MCP server portal**
-  (`https://mcp.schnapp.bet/mcp`, Managed OAuth) — verified: `op_health` authenticates from
-  claude.ai (Integration `claude-kit-op-mcp`, vault visible), Mac uninvolved.
-- **Claude Code + Cowork**: point at `https://op-mcp.onrender.com/mcp` with the bearer header.
-- The Mac `op_*` MCP tools remain the backup path. Full runbook: `connectors/op-mcp/DEPLOY.md`.
+The hosted **op-mcp connector** (`connectors/op-mcp/`, Render `https://op-mcp.onrender.com`,
+bearer-gated; claude.ai/iPhone via the Cloudflare portal `https://mcp.schnapp.bet/mcp`, Managed
+OAuth; Code/Cowork via `https://op-mcp.onrender.com/mcp` + bearer) was LIVE 2026-06-05 but is
+**DOWN as of 2026-06-16**: `op_health` fails with `authentication error … Check
+OP_SERVICE_ACCOUNT_TOKEN on the host` from two independent surfaces (a Claude Code session +
+Cowork) — a **host-side SA-token / permissions problem**, not a per-surface connector issue.
+- **Working route meanwhile:** the Mac `op_run` / `op_inject` (its local op identity is
+  unaffected). Resolve every secret through the Mac until the host is fixed.
+- **Impact:** Final-verification #7 (creds resolve with the Mac off) currently **FAILS**.
+- **Fix (host-side, owner):** check/rotate `OP_SERVICE_ACCOUNT_TOKEN` on the Render op-mcp service,
+  confirm the SA still has vault-read perms, then re-verify `op_health`. Runbook:
+  `connectors/op-mcp/DEPLOY.md`. Re-supersede this fact once green.
 
 GitHub Actions: PAT widened to all repos 2026-06-03; `OP_SERVICE_ACCOUNT_TOKEN` secret now set
 on all previously-tracked repos incl. `af-invoice-parser` + `af-query-api`. Two repos
