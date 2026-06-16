@@ -345,7 +345,7 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       update, end-of-session log). AUTHORED (canonical, single home = memory/README.md):
       freshness-gate (session-start) + end-of-session-write existed; on-correction-update now added.
       The git/unmerged half of the session-start state check lands with Part 8. Hook/skill wiring = 7.2/7.3.
-- [~] 7.2 Implement as hooks for Code on all machines; use `http`/`mcp_tool` hook types for
+- [x] 7.2 Implement as hooks for Code on all machines; use `http`/`mcp_tool` hook types for
       remote action. Verify whether Cowork runs them.
       AUTHORED in-repo (3 command hooks): session-start-gate.sh (=5.3), session-end-backup.sh (=5.4),
       and session-stop-push-gate.sh (Stop: blocks stopping while commits are unpushed; anti-loop via
@@ -368,6 +368,14 @@ After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
       install); claude-kit project settings keep ONLY the backup; at Part 10 the gate+push-gate are
       removed from project settings to avoid double-fire; ~/.claude absolute-path hooks rejected
       (machine-bound). Current claude-kit wiring = dev-time dogfood; 7.2 closes when Part 10 goes global.
+      DONE 2026-06-16: claude-kit-core@claude-kit installed user-scope via `claude plugin marketplace add`
+      + `claude plugin install` (handoff 026); plugin delivers gate + push-gate via ${CLAUDE_PLUGIN_ROOT}
+      everywhere (LIVE-VERIFIED in ~/code/schnapp-bet via `claude -p --include-hook-events`: SESSION-START
+      GATE printed branch/clean/in-sync; Stop push-gate fired with `{}` allow; SessionEnd backup did NOT
+      fire — confirms project-scope). Project .claude/settings.json de-duped to ONLY SessionEnd backup
+      (+ autoMemoryDirectory + permissions), autoMemoryDirectory confirmed at USER scope
+      (~/.claude/settings.json) so the memory lane loads everywhere (plugins can't set it). Remaining open
+      items (remote http/mcp_tool hooks; Cowork-runs-hooks check) stay surface-bound for 7.3/10.2.
 - [~] 7.3 Implement the same procedures as skills plus always-loaded instructions for chat and
       Cowork.
       SKILL AUTHORED: plugins/core/skills/session-hygiene/SKILL.md — the three must-happen procedures
@@ -539,14 +547,23 @@ are escaping). Steps labeled C.x to keep Part numbers stable. Method:
 - Handoff after this phase.
 
 ## Part 10: Wire surfaces + final verification
-- [~] 10.1 Package: `.claude-plugin/marketplace.json` + `plugins/core/.claude-plugin/plugin.json`
+- [x] 10.1 Package: `.claude-plugin/marketplace.json` + `plugins/core/.claude-plugin/plugin.json`
       (components auto-discover by directory — skills/commands/agents auto; hooks via hooks.json). Install
       in Code as a marketplace plugin so the PLUGIN delivers the global gate+push-gate everywhere
       (`${CLAUDE_PLUGIN_ROOT}`); then REMOVE those two from the project `.claude/settings.json` to avoid
       double-fire, keeping ONLY the backup (decisions/0005). Packages the COMPLETE Capability-layer set.
-      PARTIAL 2026-06-16: manifests authored + pushed (marketplace.json + plugins/core/.claude-plugin/
-      plugin.json; SessionEnd stripped from plugin hooks.json per 0005). Install + project de-dup +
-      verify deferred to a Code session (handoffs/022). Closes when installed + verified.
+      DONE 2026-06-16: Manifests authored + pushed earlier in the day (marketplace.json + plugins/core/
+      .claude-plugin/plugin.json; SessionEnd stripped from plugin hooks.json per 0005). Mac Code session
+      this evening: `claude plugin validate ~/code/claude-kit` PASSED; `claude plugin marketplace add`
+      registered claude-kit (directory source) and `claude plugin install claude-kit-core@claude-kit`
+      cached the plugin user-scope + auto-enabled it (installPath cache/claude-kit/claude-kit-core/0.1.0,
+      gitCommitSha 5b1241e). Live-verified plugin delivery in ~/code/schnapp-bet via headless
+      `claude -p --include-hook-events --output-format stream-json` — the claude-kit SESSION-START GATE
+      ran there (sync OK, branch/clean/in-sync, supersede + satellite-push audit) and the Stop push-gate
+      ran with `{}` allow; SessionEnd backup correctly absent (decision 0005 holds). Project
+      .claude/settings.json de-duped to ONLY SessionEnd backup; smoke-tested in claude-kit itself
+      (3 SessionStart hooks total — one is our gate, the others belong to other installed plugins;
+      Stop fires once; no double-fire of the gate or push-gate). Handoff 026 records the run.
 - [~] 10.2 Wire the other surfaces: connect the repo in Cowork; add the core + domain skills and the
       op-mcp connector in claude.ai + iPhone; enable session-hygiene / surface-check per surface (closes
       the 7.3/7.4/7.5 per-surface enablement).

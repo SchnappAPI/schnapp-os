@@ -639,3 +639,28 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Regenerated CATALOG (now 23 skills / 2 agents / 5 commands); freshness gate green. PLAN 11.1/11.2/11.3
   -> [x]. Final-verification #14 (agentic OS) now substantially met; live /do+/status exercise is organic.
 - Still surface-gated (unchanged): 10.1 needs a Mac-Code session (handoff 022); 10.2 needs owner UIs.
+
+## 2026-06-16 (cont. 13) — Part 10.1 installed + hook de-dup live (PLAN 7.2/10.1 -> [x]); handoff 026
+- Surface: Mac Code on Schnapps-MBP (the surface 10.1 required). Freshness gate green at session start.
+- `claude plugin validate ~/code/claude-kit` -> PASS. `claude plugin marketplace add ~/code/claude-kit`
+  registered the directory-source marketplace; `claude plugin install claude-kit-core@claude-kit`
+  cached it user-scope at ~/.claude/plugins/cache/claude-kit/claude-kit-core/0.1.0 (gitCommitSha
+  5b1241e) and auto-enabled. `claude plugin list` confirms enabled.
+- LIVE-VERIFIED plugin delivery in an UNRELATED repo (~/code/schnapp-bet) via headless `claude -p
+  --include-hook-events --output-format stream-json`: claude-kit SESSION-START GATE printed
+  sync/branch/clean/in-sync + supersede + satellite-push audit; Stop push-gate fired with `{}` allow;
+  SessionEnd backup did NOT fire (decision 0005 holds: backup is project-scoped to claude-kit).
+- De-duped ~/code/claude-kit/.claude/settings.json: removed SessionStart gate + Stop push-gate
+  entries; kept ONLY the SessionEnd backup hook + autoMemoryDirectory + the `$comment`. Updated the
+  `$comment` to reflect the new state. autoMemoryDirectory CONFIRMED at USER scope
+  (~/.claude/settings.json) -> the memory lane loads in every repo (Final-verification #4; plugins
+  can't set this key).
+- Single-fire check in claude-kit (claude -p smoke): only one SessionStart entry carries the
+  claude-kit GATE stdout (other SessionStart hooks belong to caveman/superpowers/etc; that is by
+  design, not double-fire of OUR gate); Stop fires once. The smoke also exercised Final-verification
+  #11 LIVE: the gate flagged the in-flight settings.json edit as `UNCOMMITTED changes` BEFORE work
+  proceeded.
+- Final-verification updates from this session: #2 (no double hooks) PASS, structurally + smoke;
+  #3 (global lane in every repo) PASS via user-scope autoMemoryDirectory; #11 (session with
+  unmerged/dirty work addresses it first) PASS LIVE. #1/#4-#10/#12-#14 unchanged from prior runs.
+- 10.2 (owner UIs) and 10.3 full sweep remain. Plugin install path is now the proven distribution.
