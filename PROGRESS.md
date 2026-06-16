@@ -506,3 +506,15 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   other machines. Both currently report pushed.
 - Remaining (owner): retire redundant ~/code/obsidian-vault clone; reload Obsidian to activate the
   obsidian-git push flip; export the Jun 16 chat if you want the divergence reason on record.
+
+## 2026-06-16 (cont. 3) — repaired Obsidian MCP OAuth (provider vs mcp 1.27.2)
+- Connector "won't reconnect" was NOT an outage; the hand-rolled OAuth provider was stale against the
+  installed mcp 1.27.2. Fixed 5 cascading version-drift breakages (consent route on dead private attr;
+  lossy get_client dropping scope/auth-method; no scopes at registration; removed code_challenge_method
+  field; hand-rolled AuthCode/refresh missing framework fields). Each surfaced only after the prior fix.
+- Verified end-to-end (register->authorize->consent->token->/mcp): token 200, initialize 200, tools/list
+  -> all 7 tools. Reset oauth_state.json (cleared 12 orphaned DCR clients).
+- Hardening: added connectors/obsidian-mcp/requirements.txt (mcp==1.27.2 + direct deps pinned) +
+  requirements.lock.txt; removed unused standalone fastmcp from venv.
+- Commits pushed: 0ab4316, eaaec24, + dep-pin commit. decisions/0009 + handoffs/018 logged.
+- Owner action: click Connect to re-establish the session (server side complete). Part 10 still NEXT.
