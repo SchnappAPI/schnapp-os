@@ -547,3 +547,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   blocking startup probe (all network calls are in tool fns; __main__ is just uvicorn.run(:8765)).
 - Restart hazard only; cold reboot has no lingering socket. Fix: graceful TERM restart + SO_REUSEADDR/
   SO_REUSEPORT bind; apply to all three MCPs; update CONNECTIONS.md recovery cmd. Scoped in handoff 020.
+
+## 2026-06-16 (cont. 7) — executed mac-mcp restart fix (handoff 020 → 021); decision 0010
+- Fixed the :8765 restart bind race in all three MCP connectors. Two layers: (1) graceful
+  `launchctl kill TERM` instead of `kickstart -k` SIGKILL; (2) pre-bound SO_REUSEADDR+SO_REUSEPORT
+  socket handed to uvicorn via `Server(Config(...)).run(sockets=[sock])`. Edited repo copies only
+  (symlinked live, decision 0008); deps untouched (0008/0009); diff confined to each `__main__`.
+- obsidian-mcp entrypoint converted from `mcp.run(transport="streamable-http")` to an exact mirror
+  of FastMCP 1.27.2's runner + the reuse socket; verified /consent 200 + /mcp 401 (OAuth intact).
+- Deployed + verified each: github-mcp 2.79s / 43 tools authed / 0 errno-48; obsidian-mcp 2.32s /
+  0 errno-48; mac-mcp **2.56s** (was ~2 min) / authed serving / 0 errno-48. mac-mcp restarted via a
+  detached double-fork daemon (it is the operating channel on claude.ai web — a foreground restart
+  would sever the call; the task prompt's "local shell, no daemon trick" was wrong for this surface).
+- Empirically confirmed op-wrap.sh `exec op run -- python` forwards SIGTERM to the child (clean
+  uvicorn shutdown in the log). Updated mac-mcp recovery command in schnapp-bet/docs/CONNECTIONS.md.
+- Part 10 (package + wire surfaces) and Part 11 (scheduler/orchestrator/control plane) still NEXT.

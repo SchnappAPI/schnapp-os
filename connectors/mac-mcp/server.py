@@ -1153,5 +1153,18 @@ class _BearerAuthMiddleware:
 
 
 if __name__ == "__main__":
+    import socket
+
+    # Pre-bind the listen socket with SO_REUSEADDR + SO_REUSEPORT so a fresh
+    # process can rebind :8765 even if the prior socket still lingers on a fast
+    # restart. Fixes the [Errno 48] bind race that throttled launchd recovery to
+    # ~2 min. See decision 0010 / handoff 020-021.
+    _sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    _sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    _sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    _sock.bind(("127.0.0.1", 8765))
+    _sock.listen()
+
     app = mcp.streamable_http_app()
-    uvicorn.run(_BearerAuthMiddleware(app), host="127.0.0.1", port=8765)
+    _config = uvicorn.Config(_BearerAuthMiddleware(app), host="127.0.0.1", port=8765)
+    uvicorn.Server(_config).run(sockets=[_sock])

@@ -482,4 +482,24 @@ def get_index() -> dict:
 
 
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+    import socket
+    import uvicorn
+
+    # Mirror FastMCP.run_streamable_http_async() (mcp 1.27.2): same
+    # streamable_http_app() (carries the OAuth consent routes, decision 0009)
+    # and Config(host, port, log_level) -- but serve a pre-bound
+    # SO_REUSEADDR + SO_REUSEPORT socket to rebind :8767 without the [Errno 48]
+    # race on a fast restart. See decision 0010 / handoff 020-021.
+    _sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    _sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    _sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    _sock.bind((mcp.settings.host, mcp.settings.port))
+    _sock.listen()
+
+    _config = uvicorn.Config(
+        mcp.streamable_http_app(),
+        host=mcp.settings.host,
+        port=mcp.settings.port,
+        log_level=mcp.settings.log_level.lower(),
+    )
+    uvicorn.Server(_config).run(sockets=[_sock])
