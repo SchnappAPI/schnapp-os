@@ -57,3 +57,31 @@ Effort: ~30–45 min for mac+github together (no OAuth complexity). op-mcp is a 
 - Reference implementation: connectors/obsidian-mcp/ (requirements.txt, .env.template, README, symlink).
 - Decision 0008 (single-source rationale), 0009 (the dep-drift failure mode), handoff 018 (full repair).
 - Infra doc: ~/code/schnapp-bet/docs/CONNECTIONS.md (service labels, ports, recovery commands).
+
+## EXECUTED 2026-06-16 (same day)
+Both servers single-sourced + pinned, mirroring connectors/obsidian-mcp/.
+- **github-mcp** (commit 0e6a04f): repo copy + symlink + requirements.txt (mcp==1.27.0, requests/
+  starlette/uvicorn) + lock + .env.template + README + .gitignore. Restarted clean (fast), authed
+  smoke OK: initialize 200, tools/list 200, **43 tools**.
+- **mac-mcp** (commit 85fc26e): same treatment (+ rotate_logs.sh mirrored, NOT symlinked). Booted
+  from the symlink and is stable + listening on 127.0.0.1:8765, serving live connector traffic.
+- fastmcp standalone was unused in both; left installed (not uninstalled) on these live venvs to
+  minimise mutation — captured in each lock. Dead-code: none to remove (these weren't OAuth servers).
+
+### Operational finding — mac-mcp restart is SLOW (~2 min), not instant
+Restarting com.schnapp.macmcp via `kickstart -k` took ~2 min to return to a listening state (25×
+~4s polls of HTTP 000 before it bound :8765), with one intermediate launchd exit-status 1. It
+recovered to a stable process and has stayed up. Cause not definitively pinned; consistent with
+launchd restart-throttle (kickstart racing KeepAlive) + op-wrap secret resolution on each boot.
+Implication: do NOT expect mac-mcp back in seconds after a restart/reboot — budget ~1-2 min, and if
+automating, poll for :8765 LISTEN rather than assuming. github-mcp did NOT show this (came back fast).
+Worth a follow-up if reboot resilience matters: check the macmcp plist ThrottleInterval and whether
+startup does any blocking network/SQL probe. Logged as a watch-item, not fixed.
+
+### Testing note
+Could not run a nested authed tools/list against mac-mcp from inside a mac-mcp tool call — the server
+is single-worker and was busy serving that very call (self-deadlock → ReadTimeout). Health is instead
+proven by (a) all shell_exec/op_run calls succeeding through it and (b) lsof showing it stably LISTEN
+on :8765. github-mcp's authed check worked because it is not the operating channel.
+
+Status: **DONE.** op-mcp/1Password (different portal stack) remains the only unaddressed item — separate investigation. Part 10 still NEXT.

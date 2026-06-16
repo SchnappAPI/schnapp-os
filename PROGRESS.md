@@ -528,3 +528,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   investigation, not lumped in. 1Password desktop app procs are unrelated.
 - Scoped fix (mirror obsidian-mcp: import->symlink->pin->lock->restart->smoke) in handoffs/019. NOT
   executed — handoff only. Part 10 still NEXT.
+
+## 2026-06-16 (cont. 5) — executed handoff 019: single-sourced + pinned mac-mcp & github-mcp
+- github-mcp (0e6a04f) + mac-mcp (85fc26e): imported to connectors/<svc>/, Mac runs via symlink,
+  pinned requirements.txt + lock, .env.template/.gitignore/README. Mirrors obsidian-mcp.
+- github-mcp verified: initialize 200, tools/list 200, 43 tools. mac-mcp booted from symlink, stable
+  + listening :8765, serving live traffic (nested authed check N/A — single-worker self-deadlock).
+- FINDING: mac-mcp restart is slow (~2 min to rebind :8765, one intermediate launchd exit 1) —
+  likely launchd throttle + op-secret resolution on boot. Recovered stable. Watch-item for reboot
+  resilience, not fixed. github-mcp restarts fast.
+- op-mcp/1Password still separate (portal stack). Part 10 still NEXT.
