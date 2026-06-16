@@ -108,19 +108,28 @@ class ObsidianOAuthProvider(OAuthAuthorizationServerProvider):
         data = state["clients"].get(client_id)
         if not data:
             return None
+        # Reconstruct the FULL registration. mcp>=1.x validates the requested scope at
+        # /authorize and the auth method at /token against these fields; dropping them
+        # yields invalid_scope and "Unsupported auth method: None". Round-trip everything.
+        info = data.get("info")
+        if info:
+            return OAuthClientInformationFull.model_validate(info)
+        # Legacy partial record (pre-fix): supply sane defaults so old clients still work.
         return OAuthClientInformationFull(
             client_id=client_id,
             client_secret=data.get("client_secret"),
             redirect_uris=data.get("redirect_uris", []),
             client_name=data.get("client_name", "Claude"),
+            scope="mcp:tools",
+            token_endpoint_auth_method=data.get("token_endpoint_auth_method", "client_secret_post"),
         )
 
     async def register_client(self, client_info: OAuthClientInformationFull) -> None:
         state = _load()
+        # Persist the complete client registration so get_client() round-trips every field
+        # the auth layer validates (scope, token_endpoint_auth_method, grant/response types).
         state["clients"][client_info.client_id] = {
-            "client_secret": client_info.client_secret,
-            "redirect_uris": [str(u) for u in (client_info.redirect_uris or [])],
-            "client_name": client_info.client_name or "Claude",
+            "info": client_info.model_dump(mode="json"),
             "registered_at": int(time.time()),
         }
         _save(state)
@@ -132,7 +141,7 @@ class ObsidianOAuthProvider(OAuthAuthorizationServerProvider):
             "redirect_uri":          str(params.redirect_uri),
             "state":                 params.state or "",
             "code_challenge":        params.code_challenge or "",
-            "code_challenge_method": params.code_challenge_method or "S256",
+            "code_challenge_method": "S256",  # mcp>=1.x AuthorizationParams has no code_challenge_method field; S256 is the only supported method
             "scope":                 " ".join(params.scopes or ["mcp:tools"]),
             "boot_secret":           BOOT_SECRET,
         })
@@ -140,7 +149,7 @@ class ObsidianOAuthProvider(OAuthAuthorizationServerProvider):
 
     async def load_authorization_code(
         self, client: OAuthClientInformationFull, authorization_code: str
-    ) -> AuthCode | None:
+    ) -> AuthorizationCodeBase | None:
         state = _load()
         data = state["codes"].get(authorization_code)
         if not data or data["client_id"] != client.client_id:
@@ -149,26 +158,22 @@ class ObsidianOAuthProvider(OAuthAuthorizationServerProvider):
             del state["codes"][authorization_code]
             _save(state)
             return None
-        return AuthCode(
+        return AuthorizationCodeBase(
             code=authorization_code,
-            client_id=data["client_id"],
-            redirect_uri=data["redirect_uri"],
-            code_challenge=data["code_challenge"],
-            challenge_method=data["code_challenge_method"],
-            scope=data["scope"],
+            scopes=data["scope"].split() if data.get("scope") else ["mcp:tools"],
             expires_at=data["expires_at"],
+            client_id=data["client_id"],
+            code_challenge=data["code_challenge"],
+            redirect_uri=data["redirect_uri"],
+            redirect_uri_provided_explicitly=True,
+            resource=data.get("resource"),
         )
 
     async def exchange_authorization_code(
-        self, client: OAuthClientInformationFull, authorization_code: AuthCode
+        self, client: OAuthClientInformationFull, authorization_code: AuthorizationCodeBase
     ) -> OAuthToken:
-        # Verify PKCE
-        verifier = getattr(authorization_code, "_verifier", None)
-        if authorization_code.code_challenge and verifier:
-            if not _verify_pkce(verifier, authorization_code.code_challenge, authorization_code.challenge_method):
-                from mcp.server.auth.errors import TokenError
-                raise TokenError("invalid_grant")
-
+        # PKCE is verified by the framework's token handler before this is called.
+        scope_str = " ".join(authorization_code.scopes) if authorization_code.scopes else "mcp:tools"
         access_token  = secrets.token_urlsafe(48)
         refresh_token = secrets.token_urlsafe(48)
         expires_in    = 3600
@@ -176,12 +181,12 @@ class ObsidianOAuthProvider(OAuthAuthorizationServerProvider):
         state = _load()
         state["tokens"][access_token] = {
             "client_id": client.client_id,
-            "scope": authorization_code.scope,
+            "scope": scope_str,
             "expires_at": int(time.time()) + expires_in,
         }
         state["refresh_tokens"][refresh_token] = {
             "client_id": client.client_id,
-            "scope": authorization_code.scope,
+            "scope": scope_str,
             "access_token": access_token,
         }
         if authorization_code.code in state["codes"]:
@@ -193,35 +198,36 @@ class ObsidianOAuthProvider(OAuthAuthorizationServerProvider):
             token_type="Bearer",
             expires_in=expires_in,
             refresh_token=refresh_token,
-            scope=authorization_code.scope,
+            scope=scope_str,
         )
 
     async def load_refresh_token(
         self, client: OAuthClientInformationFull, refresh_token: str
-    ) -> StoredRefreshToken | None:
+    ) -> RefreshTokenBase | None:
         state = _load()
         data = state["refresh_tokens"].get(refresh_token)
         if not data or data["client_id"] != client.client_id:
             return None
-        return StoredRefreshToken(
+        return RefreshTokenBase(
             token=refresh_token,
             client_id=data["client_id"],
-            scope=data["scope"],
-            access_token=data.get("access_token", ""),
+            scopes=data["scope"].split() if data.get("scope") else ["mcp:tools"],
+            expires_at=None,
         )
 
     async def exchange_refresh_token(
-        self, client: OAuthClientInformationFull, refresh_token: StoredRefreshToken, scopes: list[str]
+        self, client: OAuthClientInformationFull, refresh_token: RefreshTokenBase, scopes: list[str]
     ) -> OAuthToken:
         state = _load()
-        old_access = refresh_token.access_token
-        if old_access in state["tokens"]:
+        old = state["refresh_tokens"].get(refresh_token.token, {})
+        old_access = old.get("access_token")
+        if old_access and old_access in state["tokens"]:
             del state["tokens"][old_access]
 
         access_token      = secrets.token_urlsafe(48)
         new_refresh_token = secrets.token_urlsafe(48)
         expires_in        = 3600
-        scope             = " ".join(scopes) if scopes else refresh_token.scope
+        scope             = " ".join(scopes) if scopes else " ".join(refresh_token.scopes)
 
         state["tokens"][access_token] = {
             "client_id": client.client_id,
@@ -364,7 +370,11 @@ mcp = FastMCP(
     auth=AuthSettings(
         resource_server_url=BASE_URL,
         issuer_url=BASE_URL,
-        client_registration_options=ClientRegistrationOptions(enabled=True),
+        client_registration_options=ClientRegistrationOptions(
+            enabled=True,
+            valid_scopes=["mcp:tools"],
+            default_scopes=["mcp:tools"],
+        ),
         required_scopes=["mcp:tools"],
     ),
 )

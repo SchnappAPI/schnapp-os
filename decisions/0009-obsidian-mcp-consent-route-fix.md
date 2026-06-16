@@ -37,3 +37,27 @@ Never attach FastMCP routes by assigning private attributes -- they are version-
 server answers 401 on /mcp, suspect the authorize->consent->token leg, not the transport: check
 that every endpoint in .well-known/oauth-authorization-server actually resolves (esp. any custom
 consent page) and that codes/tokens in state are being written.
+
+## Update — consent fix was necessary but not sufficient
+End-to-end testing (curl driving register->authorize->consent->token->/mcp) revealed the entire
+OAuth provider was written against an older mcp and broke against 1.27.2's stricter validation.
+Full set of fixes applied in the same file:
+- get_client/register_client: persist and round-trip the COMPLETE client registration
+  (model_dump/model_validate). Previously dropped scope + token_endpoint_auth_method ->
+  `invalid_scope` at /authorize and "Unsupported auth method: None" at /token.
+- ClientRegistrationOptions: set valid_scopes/default_scopes=["mcp:tools"] so DCR clients
+  actually carry the scope the authorize step checks.
+- authorize(): AuthorizationParams no longer has `code_challenge_method` -> hardcode "S256"
+  (the AttributeError surfaced as error=server_error at /authorize).
+- load_authorization_code/exchange_authorization_code: return the framework AuthorizationCode
+  model (fields: scopes[list], redirect_uri_provided_explicitly, resource, subject) instead of a
+  hand-rolled AuthCode; the missing `redirect_uri_provided_explicitly` 500'd the token handler.
+  PKCE is now verified by the framework before exchange — removed the dead hand-rolled PKCE.
+- load_refresh_token/exchange_refresh_token: return framework RefreshToken model; look up the
+  prior access token from state rather than a custom attribute.
+Verified: token 200, initialize 200, tools/list returns all 7 tools.
+
+## Follow-ups (not yet done)
+- Pin `mcp` in the venv (currently floating; a future bump can break the provider again). fastmcp
+  3.4.2 is installed but unused.
+- Dead code left in place (AuthCode class, StoredRefreshToken, _verify_pkce) — safe to delete.
