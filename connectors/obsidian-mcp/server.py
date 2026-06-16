@@ -369,11 +369,13 @@ mcp = FastMCP(
     ),
 )
 
-# Add consent routes
-mcp._custom_routes = [
-    Route("/consent", consent_get,  methods=["GET"]),
-    Route("/consent", consent_post, methods=["POST"]),
-]
+# Add consent routes.
+# NOTE: FastMCP (mcp>=1.x) builds its Starlette app from `_custom_starlette_routes`,
+# which is populated ONLY by the custom_route() decorator. Assigning to the private
+# `_custom_routes` attribute is silently ignored, dropping the consent page (404) and
+# breaking the entire OAuth authorize->code->token flow. Use the supported API:
+mcp.custom_route("/consent", methods=["GET"])(consent_get)
+mcp.custom_route("/consent", methods=["POST"])(consent_post)
 
 # ---------------------------------------------------------------------------
 # MCP tools
