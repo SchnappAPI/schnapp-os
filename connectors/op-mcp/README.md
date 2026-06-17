@@ -34,8 +34,8 @@ execution is not safe to expose. This connector only reads.
 
 ## Security
 
-- Endpoint is **bearer-protected** (`Authorization: Bearer <CONNECTOR_AUTH_TOKEN>`).
-  The server refuses to start if `CONNECTOR_AUTH_TOKEN` or
+- Endpoint is **bearer-protected** (`Authorization: Bearer <OP_MCP_BEARER>`).
+  The server refuses to start if `OP_MCP_BEARER` or
   `OP_SERVICE_ACCOUNT_TOKEN` is unset — it never runs open.
 - Secrets live only in the host environment (Fly secrets, etc.), never in the
   repo or image. `.env` is gitignored; only `.env.template` is tracked.
@@ -66,10 +66,10 @@ OP_SERVICE_ACCOUNT_TOKEN="$(op read op://<vault>/claude-kit-op-mcp/service-accou
   npm run verify
 
 # Run the HTTP server locally:
-OP_SERVICE_ACCOUNT_TOKEN=... CONNECTOR_AUTH_TOKEN="$(openssl rand -hex 32)" npm start
+OP_SERVICE_ACCOUNT_TOKEN=... OP_MCP_BEARER="$(openssl rand -hex 32)" npm start
 # Smoke test (in another shell), list tools:
 curl -s localhost:3000/mcp -H 'content-type: application/json' \
-  -H "authorization: Bearer $CONNECTOR_AUTH_TOKEN" \
+  -H "authorization: Bearer $OP_MCP_BEARER" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | head
 ```
 

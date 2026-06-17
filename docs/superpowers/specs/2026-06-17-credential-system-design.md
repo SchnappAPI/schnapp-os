@@ -90,7 +90,7 @@ Every rename or rotation is governed by two artifacts:
 
    | date | change | every location updated | done |
    |---|---|---|---|
-   | 2026-06-17 | `CONNECTOR_AUTH_TOKEN` → `OP_MCP_BEARER` | 1P title; connector source; render.yaml; Render dashboard env; op-mcp/.env.template; DEPLOY.md; credentials-map.md | ☐ |
+   | 2026-06-17 | `CONNECTOR_AUTH_TOKEN` → `OP_MCP_BEARER` | repo done (src+dist, render.yaml, Dockerfile, .env.template, DEPLOY.md, README, map); owner-pending: 1P title + Render env key + redeploy | ◑ |
 
    Any stale reference found later traces back through this log instantly.
 

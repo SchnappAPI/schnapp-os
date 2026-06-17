@@ -24,9 +24,9 @@ services:
     envVars:
       # Set both in the Render dashboard at Blueprint creation (sync:false = prompt,
       # never stored in the repo). OP_SERVICE_ACCOUNT_TOKEN = the 1Password Service
-      # Account token; CONNECTOR_AUTH_TOKEN = a random bearer, e.g. `openssl rand -hex 32`
+      # Account token; OP_MCP_BEARER = a random bearer, e.g. `openssl rand -hex 32`
       # (save it into 1Password after). The server refuses to start if either is missing.
       - key: OP_SERVICE_ACCOUNT_TOKEN
         sync: false
-      - key: CONNECTOR_AUTH_TOKEN
+      - key: OP_MCP_BEARER
         sync: false

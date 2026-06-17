@@ -20,7 +20,7 @@ The repo root has `render.yaml` (a Blueprint). It builds `connectors/op-mcp/Dock
 3. It prompts for the two secrets (they are `sync: false`, never in the repo):
    - `OP_SERVICE_ACCOUNT_TOKEN` — the 1Password Service Account token
      (`op://web-variables/OP_SERVICE_ACCOUNT_TOKEN/credential`).
-   - `CONNECTOR_AUTH_TOKEN` — a fresh random bearer: `openssl rand -hex 32`.
+   - `OP_MCP_BEARER` — a fresh random bearer: `openssl rand -hex 32`.
      **Save this value into 1Password** after — you need it in Step 3.
 4. Apply. Render builds the image and gives a URL like `https://op-mcp.onrender.com`.
 
@@ -33,7 +33,7 @@ cold-starts in ~30–60s. Fine for an occasional secret resolver.
 curl https://op-mcp.onrender.com/health
 # -> {"status":"ok","server":"op-mcp-server","version":"1.0.0"}
 
-# Bearer-gated MCP endpoint (replace TOKEN with CONNECTOR_AUTH_TOKEN):
+# Bearer-gated MCP endpoint (replace TOKEN with OP_MCP_BEARER):
 curl -s https://op-mcp.onrender.com/mcp \
   -H 'content-type: application/json' \
   -H 'authorization: Bearer TOKEN' \
@@ -53,7 +53,7 @@ reference, never a literal (see `credentials-map.md`). Example Claude Code confi
     "op-mcp": {
       "type": "http",
       "url": "https://op-mcp.onrender.com/mcp",
-      "headers": { "Authorization": "Bearer ${CONNECTOR_AUTH_TOKEN}" }
+      "headers": { "Authorization": "Bearer ${OP_MCP_BEARER}" }
     }
   }
 }
@@ -76,7 +76,7 @@ working 2026-06-05 on the owner's account (`schnapp.bet` is a zone in it). Exact
    "Zero Trust" nav item is just a splash).
 2. **Add the MCP server** (Access controls → AI controls → **MCP servers** → Add an MCP server):
    name `op-mcp`, Server ID `op-mcp`, HTTP URL `https://op-mcp.onrender.com/mcp`,
-   **Authentication type = Custom headers** → header `Authorization: Bearer <CONNECTOR_AUTH_TOKEN>`
+   **Authentication type = Custom headers** → header `Authorization: Bearer <OP_MCP_BEARER>`
    (exact match to Render). **Attach an Allow policy to the SERVER** (Emails = your login email) —
    skipping this causes "No allowed servers available" after login. Save → status goes **Ready**,
    4 tools synced.

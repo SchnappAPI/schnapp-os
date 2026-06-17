@@ -10,7 +10,7 @@ import type { Request, Response, NextFunction } from "express";
  *   - pass `Authorization: Bearer <token>` from clients that allow custom headers
  *     (Claude Code / Cowork mcp config support this).
  *
- * Set CONNECTOR_AUTH_TOKEN in the host environment. If it is unset the server
+ * Set OP_MCP_BEARER in the host environment. If it is unset the server
  * refuses to start (see index.ts) — we never run an open secrets endpoint.
  */
 export function bearerAuth(expectedToken: string) {

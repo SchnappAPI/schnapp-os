@@ -18,6 +18,6 @@ RUN npm install --omit=dev
 COPY --from=build /app/dist ./dist
 # Secrets come from the host environment at runtime, never baked into the image:
 #   OP_SERVICE_ACCOUNT_TOKEN  (1Password Service Account)
-#   CONNECTOR_AUTH_TOKEN      (bearer gate for the /mcp endpoint)
+#   OP_MCP_BEARER      (bearer gate for the /mcp endpoint)
 EXPOSE 3000
 CMD ["node", "dist/index.js"]

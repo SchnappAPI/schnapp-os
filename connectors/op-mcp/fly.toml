@@ -5,7 +5,7 @@
 # Deploy (owner step — needs your Fly account):
 #   fly launch --no-deploy --copy-config --name op-mcp-<suffix>
 #   fly secrets set OP_SERVICE_ACCOUNT_TOKEN="$(op read op://<vault>/claude-kit-op-mcp/service-account-token)"
-#   fly secrets set CONNECTOR_AUTH_TOKEN="$(openssl rand -hex 32)"   # then save it to 1Password
+#   fly secrets set OP_MCP_BEARER="$(openssl rand -hex 32)"   # then save it to 1Password
 #   fly deploy
 #   curl https://<app>.fly.dev/health   # -> {"status":"ok",...}
 

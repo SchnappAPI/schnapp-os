@@ -32,7 +32,7 @@ async function main(): Promise<void> {
   // Both must be present: the 1Password SA token and the bearer gate.
   // We never run an open secrets endpoint.
   requireEnv("OP_SERVICE_ACCOUNT_TOKEN");
-  const authToken = requireEnv("CONNECTOR_AUTH_TOKEN");
+  const authToken = requireEnv("OP_MCP_BEARER");
 
   const app = express();
   app.use(express.json());

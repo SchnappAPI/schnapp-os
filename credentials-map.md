@@ -33,7 +33,7 @@ System items (verified 2026-06-17). `→` notes the planned target from the desi
 |---|---|---|---|---|
 | `OP_SERVICE_ACCOUNT_TOKEN` | `/credential` | bootstrap | The 1Password SA token; resolves all other refs. **Not itself op://-resolvable.** | `~/.zshrc`, `~/.zshenv`; `com.schnapp.environment` (launchctl setenv); `op-wrap.sh`; GH Actions repo secrets (per repo); **Render `op-mcp` env** |
 | `GITHUB_PAT` | `/token` | github | GitHub PAT (all-repos/all-perms; shared — see spec Accepted risks) | `gh` CLI (op plugin); Next.js web routes (Actions dispatch); mac-mcp; github-mcp |
-| `CONNECTOR_AUTH_TOKEN` `→ OP_MCP_BEARER` | `/credential` | mcp | Static bearer gating the op-mcp connector `/mcp` | Render `op-mcp` env; Cloudflare portal Custom header; Code/Cowork bearer |
+| `OP_MCP_BEARER` | `/credential` | mcp | Static bearer gating the op-mcp connector `/mcp` | Render `op-mcp` env; Cloudflare portal Custom header; Code/Cowork bearer |
 | `MCP Tokens` `→ split` | `/schnapp_mac` `→ MAC_MCP_AUTH_TOKEN`, `/schnapp_github` `→ GITHUB_MCP_AUTH_TOKEN` | mcp | Bearer gates for the two MCP servers | mac-mcp (`MAC_MCP_AUTH_TOKEN`); github-mcp / Copilot (`schnapp_github`) |
 | `Anthropic` `→ dissolve` | `/api_key` (live), `/CLAUDE_CODE_OAUTH_TOKEN`, `/password` (empty), `/schnapps-mbp-brain-agent` (stale dup) | llm | `api_key` = Obsidian brain-agent Anthropic key | `api_key`: `com.schnapp.brain-watcher` → `brain_agent.py` (as `ANTHROPIC_API_KEY`) |
 | `Claude Code` | `/oauth_token` | llm | Claude Code OAuth token (dup of `Anthropic/CLAUDE_CODE_OAUTH_TOKEN`) | Claude Code auth |
@@ -51,7 +51,7 @@ Personal (non-system, untouched): `Elgato`, `Obsidian`, `Schnapp's MacBook Pro`.
 
 ## Bootstrap + connector secrets (NOT `op://`-resolvable — they ARE the keys)
 - `OP_SERVICE_ACCOUNT_TOKEN` — the SA token; set directly in each surface's env (see table row).
-- `CONNECTOR_AUTH_TOKEN` (`→ OP_MCP_BEARER`) — op-mcp bearer; generate (`openssl rand -hex 32`),
+- `OP_MCP_BEARER` — op-mcp bearer; generate (`openssl rand -hex 32`),
   store in 1Password, set as Render env + Cloudflare portal header.
 
 ## Status (2026-06-17)
@@ -68,4 +68,4 @@ Personal (non-system, untouched): `Elgato`, `Obsidian`, `Schnapp's MacBook Pro`.
 | date | change | locations updated | done |
 |---|---|---|---|
 | 2026-06-17 | Map upgraded to canonical inventory; SA item title corrected `Service Account Auth Token: schnapp-automation` → `OP_SERVICE_ACCOUNT_TOKEN` | this doc | ✓ |
-| _planned_ | `CONNECTOR_AUTH_TOKEN` → `OP_MCP_BEARER` | 1P title; connector source; render.yaml; Render env; op-mcp/.env.template; DEPLOY.md; this map | ☐ |
+| 2026-06-17 | `CONNECTOR_AUTH_TOKEN` → `OP_MCP_BEARER` | repo done: connector src+dist, render.yaml, Dockerfile, fly.toml, .env.template, DEPLOY.md, README, this map. **owner-pending:** 1P item title + Render env key + redeploy | ◑ |
