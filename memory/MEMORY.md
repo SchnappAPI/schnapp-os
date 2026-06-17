@@ -9,6 +9,6 @@ holds durable cross-surface facts and context.
 
 ## Index
 - [Keep tracker current](keep-tracker-current.md) — flip PLAN box + PROGRESS line in the same commit as the deliverable; never claim verified before the verify ran.
-- [Credentials state](credentials-state.md) — **1Password secret resolution failing 2026-06-16 (after 05:12): hosted op-mcp DOWN + Mac op_whoami unauthorized; FV#7 fails. Likely a token-PROPAGATION issue (Render env / long-running service holds old token), NOT a dead SA — diagnose before rotating. gh/GitHub unaffected.**
+- [Credentials state](credentials-state.md) — **Re-verified 2026-06-17: root cause CONFIRMED = stale in-process/Render token after the 06-15 SA rotation (NOT a dead SA). Mac shell SA valid; off-Mac op-mcp STILL down (Render token pending owner update+redeploy); Mac MCP restart pending. gh/GitHub unaffected.** Map: [credentials-map](../credentials-map.md).
 - [Mac connector tooling](mac-connector-tooling.md) — Schnapp Mac `write_file` OVERWRITES (no append; use `shell_exec` `cat >>` / python rmw); `shell_exec` strips op identity (use `op_run` for secrets).
 - [Obsidian state](obsidian-state.md) — vault canonical at OneDrive (symlink at ~/Documents/Obsidian); off-Mac obsidian = Mac-hosted server obsidian-mcp.schnapp.bet (search_notes/read_note/...), Mac-dependent; the Render connectors/obsidian-mcp is superseded.

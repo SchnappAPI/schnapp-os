@@ -19,7 +19,7 @@ The repo root has `render.yaml` (a Blueprint). It builds `connectors/op-mcp/Dock
 2. Render reads `render.yaml` and proposes one service, `op-mcp` (free, Docker).
 3. It prompts for the two secrets (they are `sync: false`, never in the repo):
    - `OP_SERVICE_ACCOUNT_TOKEN` — the 1Password Service Account token
-     (`op://<vault>/claude-kit-op-mcp/service-account-token`).
+     (`op://web-variables/OP_SERVICE_ACCOUNT_TOKEN/credential`).
    - `CONNECTOR_AUTH_TOKEN` — a fresh random bearer: `openssl rand -hex 32`.
      **Save this value into 1Password** after — you need it in Step 3.
 4. Apply. Render builds the image and gives a URL like `https://op-mcp.onrender.com`.

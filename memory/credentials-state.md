@@ -4,7 +4,7 @@ metadata:
   node_type: memory
   scope: global
   source: "decisions/0001, decisions/0004, handoffs/004, handoffs/016"
-  updated: 2026-06-16
+  updated: 2026-06-17
   supersedes: ""
   originSessionId: 33c726f1-b86d-4a93-8586-061ec9ca3f3e
 ---
@@ -14,6 +14,12 @@ metadata:
 `OP_SERVICE_ACCOUNT_TOKEN` on the Render op-mcp host. It worked earlier 2026-06-16 (the brain
 pipeline resolved secrets at 05:12) but **broke after that point** — see the outage below. `gh`
 uses its own token and is unaffected (GitHub connector still pushes).
+
+**Re-verified 2026-06-17:** Mac shell `op whoami` works — SA valid, sees `web-variables` (the token
+in `~/.zshrc`/`~/.zshenv` is current). Off-Mac `op_health` STILL fails (Render env holds the
+pre-06-15 token) — FIX 2 below pending owner. The `com.schnapp.macmcp` in-process restart (FIX 1) is
+still pending. Net: off-Mac path down; Mac resolves via shell `op`, but the long-running MCP service
+must still be restarted to clear its stale token. Canonical map: [credentials-map](../credentials-map.md).
 
 **1Password outage as of 2026-06-16 (after ~05:12)** — secret resolution is failing on the SA
 token, apparently on BOTH paths:

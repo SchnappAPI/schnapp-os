@@ -1,59 +1,71 @@
-# Credentials map — `op://` references, never values
+# Credentials map — canonical inventory (`op://` references, never values)
 
-How every surface finds secrets. **References only** — no secret value ever lands in a
-tracked file ([secrets-as-references](plugins/core/rules/global/secrets-as-references.md)).
-Resolution: `op read` / `op run` on the Mac; the [op-mcp connector](connectors/op-mcp/)
-off-Mac (claude.ai / iPhone); a GitHub Actions secret in CI.
+The single source of truth for what every credential is, where it resolves, and everywhere
+its value is set. **References only** — no secret value ever lands here
+([secrets-as-references](plugins/core/rules/global/secrets-as-references.md)). Verified against
+`op item list` on 2026-06-17.
+
+- **History:** [docs/credentials-archaeology-2026-06-17.md](docs/credentials-archaeology-2026-06-17.md)
+- **Target design + conventions:** [docs/superpowers/specs/2026-06-17-credential-system-design.md](docs/superpowers/specs/2026-06-17-credential-system-design.md)
+- **Connector runbook:** [connectors/op-mcp/DEPLOY.md](connectors/op-mcp/DEPLOY.md) · decisions `0001`, `0002`, `0004`
 
 ## Resolution by surface
 | Surface | How secrets resolve |
 |---|---|
-| Code (Mac) | `op` CLI + Mac `op_*` MCP, Service Account token in the shell env |
+| Code (Mac) | `op` CLI + Mac `op_*` MCP; SA token in the shell env (`~/.zshrc`/`~/.zshenv`) |
 | Code (work machines) | `op` CLI with the SA token in that machine's env |
-| claude.ai / iPhone | op-mcp connector LIVE — portal `https://mcp.schnapp.bet/mcp` (decisions/0004). `op_read` returns values; prefer the Mac `op_run`/`op_inject` to *use* a secret |
-| GitHub Actions | repo secret `OP_SERVICE_ACCOUNT_TOKEN` (set on the tracked repos; 2 unscoped repos pending — see Status) |
+| claude.ai / iPhone | op-mcp connector via Cloudflare portal `https://mcp.schnapp.bet/mcp` (**DOWN 2026-06-17, see Status**) |
+| Code / Cowork (off-Mac) | op-mcp connector `https://op-mcp.onrender.com/mcp` + bearer |
+| GitHub Actions | repo secret `OP_SERVICE_ACCOUNT_TOKEN` → `1password/load-secrets-action@v2` → `op://` per workflow |
 
 ## Reference syntax
-`op://<vault>/<item>/<field>` (sections: `op://<vault>/<item>/<section>/<field>`).
-Discover with the connector: `op_list_vaults` -> `op_list_items` -> `op_read`.
+`op://web-variables/<item>/<field>` (sections: `op://web-variables/<item>/<section>/<field>`).
+Discover via `op_list_vaults` → `op_list_items` → `op_read`.
 
-> Field labels are NOT reliably the category default in this vault. Verified examples:
-> `op://web-variables/GITHUB_PAT/credential` does NOT resolve (field is labeled
-> differently). Confirm the exact field label in 1Password (or via `op_read`) before
-> wiring a reference — do not assume `password`/`credential`.
+> **Field labels are NOT the category default in this vault.** The reference must match the
+> real field label. Verified: `GITHUB_PAT` resolves at `/token` (not `/credential`). Confirm
+> the exact label (this table, or `op_read`) before wiring a new reference.
 
 ## Vault: `web-variables` (id `o3rjqrgvascutyedbmuzfl4yzu`)
-System-relevant items (titles from `op_list_items`; categories in brackets). Build
-`op://web-variables/<item>/<field>` once you confirm the field label.
+System items (verified 2026-06-17). `→` notes the planned target from the design spec.
 
-| Item | Category | Used for |
-|---|---|---|
-| `Service Account Auth Token: schnapp-automation` | ApiCredentials | The 1Password SA token (bootstrap secret; see below) |
-| `GITHUB_PAT` | ApiCredentials | GitHub fine-grained PAT (gh / GitHub MCP) |
-| `GitHub Actions Runner` | Password | Self-hosted runner registration |
-| `Cloudflare Tunnel` | Password | Cloudflare tunnel for the Mac infra |
-| `Database` | Password | SQL Server (Docker/Colima on the Mac) |
-| `Web App` | Password | Production Next.js site |
-| `MCP Tokens` | Password | MCP connector tokens |
-| `Anthropic` / `Claude Code` | Password | Anthropic API / Claude Code |
-| `Webshare Proxy` | Password | Proxy credentials |
-| `QUICKBASE_EXCEL_SYNC` | ApiCredentials | Quickbase ETL |
-| `GitHub SSH Key` | SshKey | git over SSH |
+| Item | `op_ref` (key fields) | Tag | Purpose | Consumed by (everywhere the value is set) |
+|---|---|---|---|---|
+| `OP_SERVICE_ACCOUNT_TOKEN` | `/credential` | bootstrap | The 1Password SA token; resolves all other refs. **Not itself op://-resolvable.** | `~/.zshrc`, `~/.zshenv`; `com.schnapp.environment` (launchctl setenv); `op-wrap.sh`; GH Actions repo secrets (per repo); **Render `op-mcp` env** |
+| `GITHUB_PAT` | `/token` | github | GitHub PAT (all-repos/all-perms; shared — see spec Accepted risks) | `gh` CLI (op plugin); Next.js web routes (Actions dispatch); mac-mcp; github-mcp |
+| `CONNECTOR_AUTH_TOKEN` `→ OP_MCP_BEARER` | `/credential` | mcp | Static bearer gating the op-mcp connector `/mcp` | Render `op-mcp` env; Cloudflare portal Custom header; Code/Cowork bearer |
+| `MCP Tokens` `→ split` | `/schnapp_mac` `→ MAC_MCP_AUTH_TOKEN`, `/schnapp_github` `→ GITHUB_MCP_AUTH_TOKEN` | mcp | Bearer gates for the two MCP servers | mac-mcp (`MAC_MCP_AUTH_TOKEN`); github-mcp / Copilot (`schnapp_github`) |
+| `Anthropic` `→ dissolve` | `/api_key` (live), `/CLAUDE_CODE_OAUTH_TOKEN`, `/password` (empty), `/schnapps-mbp-brain-agent` (stale dup) | llm | `api_key` = Obsidian brain-agent Anthropic key | `api_key`: `com.schnapp.brain-watcher` → `brain_agent.py` (as `ANTHROPIC_API_KEY`) |
+| `Claude Code` | `/oauth_token` | llm | Claude Code OAuth token (dup of `Anthropic/CLAUDE_CODE_OAUTH_TOKEN`) | Claude Code auth |
+| `Database` | `/server` `/database` `/username` `/password` `/trust_cert` `/mssql_sa_password` `→ split MSSQL_SA_PASSWORD` | db | SQL Server (Docker/Colima) connection | ETL, grading, Flask, Next.js web, mac-mcp `sql_query` |
+| `Web App` `→ split` | secrets: `/admin_passcode` `/admin_refresh_code` `/auth_token_secret` `/odds_api_key` `/runner_api_key` `/sql_connection_string`; config: `/hostname` `/node_env` `/port_prod` `/port_dev` `/runner_url` `/runner_url_dev` `→ WEB_APP_CONFIG` | config | Production Next.js app secrets + non-secret config | Next.js web app; web↔Flask runner dispatch |
+| `Webshare Proxy` | `/host` `/port` `/username` `/password` `/proxy_url` | proxy | NBA scraping proxy | NBA ETL (`NBA_PROXY_URL`) |
+| `Cloudflare Tunnel` | `/tunnel_id` `/account_tag` `/tunnel_secret` `/argo_token` `/config_path` `/credentials_path` | cloudflare | cloudflared tunnel for Mac infra | `cloudflared` on the Mac |
+| `GitHub Actions Runner` | `/agent_name` `/agent_id` `/pool_id` `/pool_name` `/client_id` `/runner_location` `/github_url` `/label` | github | Self-hosted runner registration | mac runner registration |
+| `Dropbox` | `/DROPBOX_APP_KEY` `/DROPBOX_APP_SECRET` `/DROPBOX_REFRESH_TOKEN` | config | Dropbox app OAuth creds | Dropbox integration |
+| `QUICKBASE_EXCEL_SYNC` | `/credential` | etl | Quickbase ETL API | Quickbase ETL |
+| `GitHub SSH Key` | keys | github | git over SSH | git |
+| _(to create)_ `CLOUDFLARE_API_TOKEN` | `/credential` | cloudflare | Scoped Cloudflare User API Token for the Cloudflare MCP connector | Cloudflare MCP connector |
 
-(Personal items in the vault are omitted; this map is the system surface.)
+Personal (non-system, untouched): `Elgato`, `Obsidian`, `Schnapp's MacBook Pro`.
 
-## Bootstrap + connector secrets (not `op://`-resolvable — they ARE the keys)
-- `OP_SERVICE_ACCOUNT_TOKEN` — the SA token itself; set directly in each surface's env
-  from the `Service Account Auth Token: schnapp-automation` item. It is what resolves all
-  other `op://` references, so it cannot itself be an `op://` lookup at bootstrap.
-- `CONNECTOR_AUTH_TOKEN` — op-mcp bearer gate; generate (`openssl rand -hex 32`) and store
-  in 1Password, then set as a host secret. See connectors/op-mcp/.env.template.
+## Bootstrap + connector secrets (NOT `op://`-resolvable — they ARE the keys)
+- `OP_SERVICE_ACCOUNT_TOKEN` — the SA token; set directly in each surface's env (see table row).
+- `CONNECTOR_AUTH_TOKEN` (`→ OP_MCP_BEARER`) — op-mcp bearer; generate (`openssl rand -hex 32`),
+  store in 1Password, set as Render env + Cloudflare portal header.
 
-## Status
-- 1Password SA rotated 2026-06-03; `op`/`gh` work (memory/credentials-state.md).
-- **op-mcp connector LIVE (2026-06-05):** Render `https://op-mcp.onrender.com` + Cloudflare portal
-  `https://mcp.schnapp.bet/mcp`, registered in claude.ai. `op_health`/`op_read` verified from
-  claude.ai (decisions/0004, connectors/op-mcp/DEPLOY.md).
-- PAT widened to all repos; Actions secret set on the authorized repos incl. `af-invoice-parser` +
-  `af-query-api`. `DB_Storage` + `appfolio-marketing-project` still lack it (never scoped — awaiting
-  owner decision; classifier-flagged master-token spread).
+## Status (2026-06-17)
+- **Off-Mac op-mcp connector: DOWN on auth.** `op_health` → authentication error. Render
+  `OP_SERVICE_ACCOUNT_TOKEN` is the pre-2026-06-15-rotation token. Fix: update Render env +
+  redeploy (`connectors/op-mcp/DEPLOY.md`).
+- **Mac shell SA: valid** (`op whoami` → SERVICE_ACCOUNT, sees `web-variables`). The Mac MCP
+  service holds a stale in-process token after rotation → restart to clear (see decisions/0010).
+- **GitHub Actions:** PAT widened to all repos; `OP_SERVICE_ACCOUNT_TOKEN` secret set on authorized
+  repos (incl. `af-invoice-parser`, `af-query-api`). `DB_Storage`, `appfolio-marketing-project`
+  still unset — awaiting owner decision.
+
+## Changelog (append-only; the where-to-change log for every rename/rotation)
+| date | change | locations updated | done |
+|---|---|---|---|
+| 2026-06-17 | Map upgraded to canonical inventory; SA item title corrected `Service Account Auth Token: schnapp-automation` → `OP_SERVICE_ACCOUNT_TOKEN` | this doc | ✓ |
+| _planned_ | `CONNECTOR_AUTH_TOKEN` → `OP_MCP_BEARER` | 1P title; connector source; render.yaml; Render env; op-mcp/.env.template; DEPLOY.md; this map | ☐ |
