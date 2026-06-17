@@ -15,11 +15,12 @@ metadata:
 pipeline resolved secrets at 05:12) but **broke after that point** — see the outage below. `gh`
 uses its own token and is unaffected (GitHub connector still pushes).
 
-**Re-verified 2026-06-17:** Mac shell `op whoami` works — SA valid, sees `web-variables` (the token
-in `~/.zshrc`/`~/.zshenv` is current). Off-Mac `op_health` STILL fails (Render env holds the
-pre-06-15 token) — FIX 2 below pending owner. The `com.schnapp.macmcp` in-process restart (FIX 1) is
-still pending. Net: off-Mac path down; Mac resolves via shell `op`, but the long-running MCP service
-must still be restarted to clear its stale token. Canonical map: [credentials-map](../credentials-map.md).
+**RESOLVED 2026-06-17.** Both fixes applied: (1) `com.schnapp.macmcp` restarted
+(`launchctl kill TERM gui/$(id -u)/com.schnapp.macmcp`) → re-read the current `~/.zshrc` token via
+`op-wrap.sh`; shell `op whoami` confirms SA valid, sees `web-variables`. (2) Render `op-mcp`
+`OP_SERVICE_ACCOUNT_TOKEN` updated to the current SA + redeployed → `op_health` returns
+`authenticated` (integration `claude-kit-op-mcp`, 1 vault). Off-Mac path green end-to-end. The
+ROTATION GOTCHA below stays in force for every future rotation. Map: [credentials-map](../credentials-map.md).
 
 **1Password outage as of 2026-06-16 (after ~05:12)** — secret resolution is failing on the SA
 token, apparently on BOTH paths:

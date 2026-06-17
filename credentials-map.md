@@ -14,7 +14,7 @@ its value is set. **References only** — no secret value ever lands here
 |---|---|
 | Code (Mac) | `op` CLI + Mac `op_*` MCP; SA token in the shell env (`~/.zshrc`/`~/.zshenv`) |
 | Code (work machines) | `op` CLI with the SA token in that machine's env |
-| claude.ai / iPhone | op-mcp connector via Cloudflare portal `https://mcp.schnapp.bet/mcp` (**DOWN 2026-06-17, see Status**) |
+| claude.ai / iPhone | op-mcp connector via Cloudflare portal `https://mcp.schnapp.bet/mcp` |
 | Code / Cowork (off-Mac) | op-mcp connector `https://op-mcp.onrender.com/mcp` + bearer |
 | GitHub Actions | repo secret `OP_SERVICE_ACCOUNT_TOKEN` → `1password/load-secrets-action@v2` → `op://` per workflow |
 
@@ -55,11 +55,11 @@ Personal (non-system, untouched): `Elgato`, `Obsidian`, `Schnapp's MacBook Pro`.
   store in 1Password, set as Render env + Cloudflare portal header.
 
 ## Status (2026-06-17)
-- **Off-Mac op-mcp connector: DOWN on auth.** `op_health` → authentication error. Render
-  `OP_SERVICE_ACCOUNT_TOKEN` is the pre-2026-06-15-rotation token. Fix: update Render env +
-  redeploy (`connectors/op-mcp/DEPLOY.md`).
-- **Mac shell SA: valid** (`op whoami` → SERVICE_ACCOUNT, sees `web-variables`). The Mac MCP
-  service holds a stale in-process token after rotation → restart to clear (see decisions/0010).
+- **Off-Mac op-mcp connector: UP (verified 2026-06-17).** After the Render
+  `OP_SERVICE_ACCOUNT_TOKEN` was updated to the current SA + redeployed, `op_health` →
+  `authenticated` (integration `claude-kit-op-mcp`, 1 vault).
+- **Mac path: restored.** Shell SA valid (`op whoami` → SERVICE_ACCOUNT); `com.schnapp.macmcp`
+  restarted to clear its stale in-process token (decisions/0010).
 - **GitHub Actions:** PAT widened to all repos; `OP_SERVICE_ACCOUNT_TOKEN` secret set on authorized
   repos (incl. `af-invoice-parser`, `af-query-api`). `DB_Storage`, `appfolio-marketing-project`
   still unset — awaiting owner decision.
