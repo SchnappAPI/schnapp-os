@@ -68,4 +68,4 @@ Personal (non-system, untouched): `Elgato`, `Obsidian`, `Schnapp's MacBook Pro`.
 | date | change | locations updated | done |
 |---|---|---|---|
 | 2026-06-17 | Map upgraded to canonical inventory; SA item title corrected `Service Account Auth Token: schnapp-automation` → `OP_SERVICE_ACCOUNT_TOKEN` | this doc | ✓ |
-| 2026-06-17 | `CONNECTOR_AUTH_TOKEN` → `OP_MCP_BEARER` | repo done: connector src+dist, render.yaml, Dockerfile, fly.toml, .env.template, DEPLOY.md, README, this map. **owner-pending:** 1P item title + Render env key + redeploy | ◑ |
+| 2026-06-17 | `CONNECTOR_AUTH_TOKEN` → `OP_MCP_BEARER` | repo (src+dist, render.yaml, Dockerfile, fly.toml, .env.template, DEPLOY.md, README, map); 1P item title; Render env key + redeploy. **Verified: `op_health` green on the new name.** | ✓ |
