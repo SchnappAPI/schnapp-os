@@ -9,6 +9,12 @@ metadata:
   originSessionId: 33c726f1-b86d-4a93-8586-061ec9ca3f3e
 ---
 
+> 🔴 **CONFIDENTIALITY BREACH 2026-06-17 — supersedes the "healthy" framing below for secret SECRECY (not availability).**
+> A plaintext dump of every vault value (incl. the master SA token, all PATs, API keys, DB/`sa`
+> passwords) is committed + pushed in `obsidian-vault` Claude Export files and synced to OneDrive →
+> all values compromised, **rotation required** (rotate-on-migrate). See [[credential-leak-2026-06-17]].
+> The availability/auth notes below remain accurate.
+
 1Password Service Account was deleted, then **rotated** (2026-06-03) and **rotated again
 (2026-06-15)** — the SA token lives in `~/.zshrc` + `~/.zshenv` on the Mac and as
 `OP_SERVICE_ACCOUNT_TOKEN` on the Render op-mcp host. It worked earlier 2026-06-16 (the brain

@@ -8,6 +8,8 @@ Not a dumping ground: behavioral preferences live as rules
 holds durable cross-surface facts and context.
 
 ## Index
+- [Owner working preferences](owner-working-preferences.md) — parallelize; small reusable skills; skill-ify repetition; automate (do, don't tell); concise caveman replies; rich handoffs + copy-paste primer. (→ formalize as rules)
+- [Credential leak 2026-06-17](credential-leak-2026-06-17.md) — 🔴 plaintext dump of ALL vault secrets (incl. master SA token) committed + pushed in obsidian-vault Claude Export files; every value compromised; **rotate-on-migrate** in progress. See [credentials-state](credentials-state.md).
 - [Keep tracker current](keep-tracker-current.md) — flip PLAN box + PROGRESS line in the same commit as the deliverable; never claim verified before the verify ran.
 - [Credentials state](credentials-state.md) — **RESOLVED 2026-06-17: stale-token outage cleared — Mac MCP restarted + Render SA token updated/redeployed; `op_health` authenticated, shell `op whoami` valid. ROTATION GOTCHA: after ANY SA rotation, restart long-running launchd MCP services AND update the Render env, or `op_*` keeps failing. gh/GitHub unaffected.** Map: [credentials-map](../credentials-map.md).
 - [Mac connector tooling](mac-connector-tooling.md) — Schnapp Mac `write_file` OVERWRITES (no append; use `shell_exec` `cat >>` / python rmw); `shell_exec` strips op identity (use `op_run` for secrets).
