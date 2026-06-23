@@ -15,7 +15,7 @@ fails a push if this file is out of date. Do not hand-edit.
 - **Verify before asserting** — `rules/global/verify-before-asserting.md`
 - **Working style** — `rules/global/working-style.md`
 
-## Rule modules (composed per project by `/new-project`)
+## Rule modules (path-scoped reference library; `@import` per project as needed)
 
 ### activity
 
@@ -60,14 +60,9 @@ fails a push if this file is out of date. Do not hand-edit.
 | `tool/appfolio` | all files (on-demand) | AppFolio |
 | `tool/quickbase` | all files (on-demand) | Quickbase |
 
-### reference-only (not composed into projects)
+### reference-only (read on demand, not path-scoped)
 
 - `rules/modules/lang/_reference-why-naming-differs.md` — Why the naming rules differ (reference)
-
-## Presets
-
-Named module lists applied in one choice by `/new-project`. Canonical source:
-[`rules/presets/presets.md`](rules/presets/presets.md).
 
 ## Skills
 
@@ -97,8 +92,7 @@ Named module lists applied in one choice by `/new-project`. Canonical source:
 ## Commands
 
 - **/clean-gone** — Prune local branches whose remote was deleted ([gone]) and remove their worktrees
-- **/do** — Dispatch a task — pick the preset/rules, the skill or agent, and the model tier, then run it
-- **/new-project** — Compose a project's rule set from the gallery (preset + free pick) and write its CLAUDE.md
+- **/do** — Dispatch a task — pick the rules, the skill or agent, and the model tier, then run it
 - **/update-codemaps** — Generate or refresh a token-lean architecture map (codemap) of a repo — entry points, modules, data flow, and the pipeline/table topology — written as a …
 - **/update-docs** — Regenerate a repo's derived docs (schema dumps, env-var lists, route/endpoint or pipeline catalogs) from their canonical sources, and flag any doc whose source …
 
@@ -108,6 +102,7 @@ Scripts in `hooks/`, wired to events in [`hooks/hooks.json`](hooks/hooks.json)
 (plugin delivery) and the repo's `.claude/settings.json` (dev-time dogfood).
 
 - **capture-nudge.sh** — UserPromptSubmit. The learning loop's CAPTURE trigger (correction half).
+- **no-force-push-guard.sh** — PreToolUse HARD guard against force-push (decisions/0011 #9).
 - **session-end-backup.sh** — schnapp-os end-of-session write, deterministic half (PLAN.md 5.4 / 7.2).
 - **session-start-gate.sh** — schnapp-os SessionStart freshness gate.
 - **session-stop-push-gate.sh** — schnapp-os Stop gate: never leave unpushed commits

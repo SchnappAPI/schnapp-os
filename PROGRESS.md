@@ -950,3 +950,19 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Tested 10 cases (5 block incl. -c-bypass/+refspec/compound, 5 allow incl. --follow-tags/rm -f/--grep=push).
   Wired in `.claude/settings.json` PreToolUse; de-staled the settings `$comment` to list all 5 hooks
   (it said "all three" and omitted capture-nudge). Activates next session start (hooks load at startup).
+
+## 2026-06-23 (cont.) — #4 rules-simplification (drop the gallery machinery, keep the content)
+- Decision 0011 #4: plain rules files + CLAUDE.md, no module gallery / presets / symlink composer.
+  Executed (decided by the architecture, not re-asked). REMOVED: `rules/presets/presets.md` and the
+  `/new-project` symlink composer command. KEPT all rule content: `rules/global/*` (7 always-on) and
+  `rules/modules/*` (lang/tool/activity/context — incl. the locked `lang/sql-server.md` table rules),
+  now a plain reference library (a project `@import`s only what it needs; no gallery/preset/composer).
+- Ripples fixed in the same pass (think-in-systems): `do.md` routes by modules + CATALOG (not presets);
+  `gen-catalog.sh` dropped the Presets section + reworded the modules heading; regenerated `CATALOG.md`
+  (freshness green); `templates/project-CLAUDE.md` rewritten as a manual composer-free starter;
+  `templates/user-global-CLAUDE.md` (the canonical `~/.claude/CLAUDE.md` copy) de-staled off `/new-project`;
+  `README.md` (rules/templates/connectors rows, + added memory-mcp); `PLAN.md` Part 3 marked SUPERSEDED.
+- Remaining live-ref sweep clean (only handoffs/PROGRESS/decisions/intent-capture retain it as history).
+- OWNER 1-liner: re-copy `templates/user-global-CLAUDE.md` body to `~/.claude/CLAUDE.md` (its `/new-project`
+  note is now stale on your machine until synced). NEXT deferred: #2 repo-flattening (riskier — plugin still
+  delivers skills/rules/commands) + the learning-loop eval gate.

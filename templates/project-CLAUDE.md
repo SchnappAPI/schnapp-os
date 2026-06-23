@@ -1,9 +1,8 @@
 <!--
-  TEMPLATE — written into a project by /new-project (schnapp-os). It is the single source for
-  the shape of a composed project CLAUDE.md. Keep it THIN: it REFERENCES canonical rules, it
-  never copies them (anti-stale: one fact, one source). Replace <PLACEHOLDERS>; /new-project
-  fills the composed-module list from the chosen preset. Edit the project lane freely; re-run
-  /new-project to recompose the module set.
+  TEMPLATE — a thin starter for a project's CLAUDE.md. Copy it by hand into a new (or existing)
+  project and fill the <PLACEHOLDERS>. Keep it THIN: it REFERENCES canonical rules, never copies
+  them (anti-stale: one fact, one source). There is no gallery/preset/composer — modules are a
+  plain reference library; @import only the ones a project actually needs.
 -->
 # <PROJECT NAME>
 
@@ -13,30 +12,25 @@
 ## Rules in effect
 
 **Global rules** — always on in every project on this machine. They load via `~/.claude/CLAUDE.md`,
-which `@import`s schnapp-os's lean global lane. They are **not** re-imported here: that would
-double-load. Canonical source (working-style, knowledge-capture, naming-discipline,
-secrets-as-references, verify-before-asserting, anti-stale, speed-by-default):
-`~/code/schnapp-os/plugins/core/rules/global/`.
+which `@import`s schnapp-os's lean global lane (working-style, knowledge-capture, naming-discipline,
+secrets-as-references, verify-before-asserting, anti-stale, speed-by-default). Do **not** re-import
+them here — that double-loads. Canonical source: `~/code/schnapp-os/plugins/core/rules/global/`.
 
-**Composed modules** — this project's chosen modules load from `./.claude/rules/`, which holds
-symlinks into the schnapp-os gallery (one source of truth; language modules are path-scoped via
-`paths:` frontmatter, so they load only for their own file types). Composed set:
+**Path-scoped modules** — `@import` only the modules this project needs, directly, from the reference
+library `~/code/schnapp-os/plugins/core/rules/modules/`. They are plain rule files; pick by relevance.
+Full inventory + scopes: `~/code/schnapp-os/plugins/core/CATALOG.md` (generated). Example:
 
-<!-- /new-project replaces the lines below with the preset's modules (example shown). -->
-- preset: `<preset-name>`
-- `lang/python` — `**/*.py`
-- `coding/error-handling`, `coding/input-validation`, `coding/design-defaults`
-- `activity/<...>`, `context/<work|personal>`
+<!-- Replace with the modules this project actually uses. -->
+@~/code/schnapp-os/plugins/core/rules/modules/lang/python.md
+@~/code/schnapp-os/plugins/core/rules/modules/lang/sql-server.md
+@~/code/schnapp-os/plugins/core/rules/modules/activity/etl-pipeline.md
 
-Full gallery + scopes: `~/code/schnapp-os/plugins/core/CATALOG.md` (generated). Change the set
-anytime: re-run `/new-project`, or add/remove a symlink in `./.claude/rules/`.
+**Skills in reach** — schnapp-os skills/agents are plugin-global (available everywhere it is
+installed); reach for them by name. See `CATALOG.md` for the inventory; name the few most relevant
+to this project here.
 
-**Skills in reach** — plugin-global skills/agents (available everywhere schnapp-os is installed,
-not symlinked) most relevant to this project. `/new-project` fills these from the preset's
-`skills:` list in `presets/presets.md`; reach for them by name.
-
-<!-- /new-project replaces the line below with the preset's recommended skills. -->
-- <skill-1>, <skill-2>, ... (see `presets/presets.md` "Recommended skills per preset")
+<!-- e.g. etl-pipeline-build, sql-server-patterns, sql-etl-reviewer, performance-optimizer, docs-lookup -->
+- <skill-1>, <skill-2>, ...
 
 ## Project lane (project-specific facts — the one place they live)
 

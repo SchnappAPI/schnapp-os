@@ -75,7 +75,7 @@ trap 'rm -f "$TMP"' EXIT
   echo
 
   # ---- Modules by dimension ----
-  echo "## Rule modules (composed per project by \`/new-project\`)"
+  echo "## Rule modules (path-scoped reference library; \`@import\` per project as needed)"
   echo
   refs=""
   for dim in "$CORE"/rules/modules/*/; do
@@ -104,18 +104,11 @@ trap 'rm -f "$TMP"' EXIT
     fi
   done
   if [ -n "$refs" ]; then
-    echo "### reference-only (not composed into projects)"
+    echo "### reference-only (read on demand, not path-scoped)"
     echo
     printf "%b" "$refs"
     echo
   fi
-
-  # ---- Presets (reference canonical source; do not duplicate) ----
-  echo "## Presets"
-  echo
-  echo "Named module lists applied in one choice by \`/new-project\`. Canonical source:"
-  echo "[\`rules/presets/presets.md\`](rules/presets/presets.md)."
-  echo
 
   # ---- Skills ----
   echo "## Skills"

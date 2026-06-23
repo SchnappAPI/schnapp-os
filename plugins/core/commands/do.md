@@ -1,12 +1,12 @@
 ---
-description: Dispatch a task — pick the preset/rules, the skill or agent, and the model tier, then run it
+description: Dispatch a task — pick the rules, the skill or agent, and the model tier, then run it
 argument-hint: "[task description]"
 ---
 # /do
 
 One front door for "just do this." Take the task, route it to the right worker with the right
 rules at the right model tier, say what you chose and why, then run it. This composes what already
-exists (presets, skills, agents, the planner) — it does not reimplement any of them.
+exists (rules, skills, agents, the planner) — it does not reimplement any of them.
 
 `$ARGUMENTS` is the task. If empty, ask for it in one line.
 
@@ -18,16 +18,16 @@ exists (presets, skills, agents, the planner) — it does not reimplement any of
    guess on a task that mutates data, money, or production.
 
 2. **Route to rules + worker + model.** Resolve all three, then state them before acting:
-   - **Rules/preset:** map the class to a preset in
-     [`rules/presets/presets.md`](../rules/presets/presets.md) (e.g. ETL/SQL → `work-etl-sql` or
-     `personal-sports-etl`; web → `web-tool`; policy → `policy-procedure`; Quickbase →
-     `quickbase`). The global rules always apply; name any extra module the task needs.
-   - **Skill/agent:** pick from that preset's `skills:` list and [`../CATALOG.md`](../CATALOG.md).
-     Prefer an existing skill/agent over doing it inline. Examples: build/optimize an ETL load →
-     `etl-pipeline-build` + `performance-optimizer`; SQL correctness → `sql-etl-reviewer`; "is X
-     slow" → `performance-optimizer`; deep question → `deep-research`; decision/interrogation →
-     `council` / `grill-me`; review a diff → `/code-review`; set up a repo → `/new-project`;
-     whole-system state → the `status` skill; what's loaded here → `surface-check`.
+   - **Rules:** global rules always apply. Name any path-scoped modules the task needs directly
+     from [`rules/modules/`](../rules/modules/) (e.g. ETL/SQL → `lang/python` + `lang/sql-server` +
+     `activity/etl-pipeline` + `context/work|personal`; web → `lang/typescript` + `activity/web-tool`;
+     policy → `activity/policy-procedure`; Quickbase → `tool/quickbase`). Inventory: [`../CATALOG.md`](../CATALOG.md).
+   - **Skill/agent:** pick from [`../CATALOG.md`](../CATALOG.md). Prefer an existing skill/agent over
+     doing it inline. Examples: build/optimize an ETL load → `etl-pipeline-build` +
+     `performance-optimizer`; SQL correctness → `sql-etl-reviewer`; "is X slow" →
+     `performance-optimizer`; deep question → `deep-research`; decision/interrogation → `council` /
+     `grill-me`; review a diff → `/code-review`; whole-system state → the `status` skill; what's
+     loaded here → `surface-check`.
    - **Model tier:** match effort to the work — a small, well-specified edit or lookup → a fast
      tier (haiku); standard build/review → sonnet; deep reasoning, architecture, or a hard debug →
      opus. State the tier; if dispatching to an agent, that agent's own `model` frontmatter wins.

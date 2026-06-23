@@ -147,7 +147,11 @@ Parts 0-10 build the OS. Part 11 adds the three pieces that make it run itself.
 - **modules/activity/** loaded for the kind of work (etl-pipeline, policy-procedure, web-tool, data-modeling).
 - **modules/context/** the work-vs-personal defaults that genuinely differ.
 
-**Composition:** a `/new-project` command applies a **preset** (one choice) then lets you add or
+**Composition — SUPERSEDED by [decisions/0011](decisions/0011-plan-review-ten-redecisions.md) #4 (removed 2026-06-23).**
+The `/new-project` composer, `presets/`, and the symlink gallery were dropped for a plainer model:
+modules are now a plain reference library under `rules/modules/`, and a project `@import`s only the
+ones it needs directly (see `templates/project-CLAUDE.md`). Original design kept below as parking-lot record:
+a `/new-project` command applies a **preset** (one choice) then lets you add or
 remove any module. It **symlinks** the chosen modules into the project's `.claude/rules/`
 (single source in the repo, path-scoped loading, zero drift) and writes a thin project
 `CLAUDE.md` that `@imports` the always-on selections. Claude flags a better-fitting module if

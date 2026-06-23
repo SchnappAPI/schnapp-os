@@ -18,11 +18,11 @@ Status lives in one canonical place and is read there:
 | [PROGRESS.md](PROGRESS.md) | Execution log |
 | [decisions/](decisions/) | One file per decision (the "why") |
 | [handoffs/](handoffs/) | Dated session handoffs; the newest, highest-numbered is the resume point |
-| [plugins/core/rules/](plugins/core/rules/) | Rule gallery — `global/` (always-on) + `modules/` (path-scoped lang, tool, activity, context) + `presets/` |
+| [plugins/core/rules/](plugins/core/rules/) | Rules — `global/` (always-on) + `modules/` (path-scoped lang, tool, activity, context — a plain reference library) |
 | [plugins/core/CATALOG.md](plugins/core/CATALOG.md) | Generated inventory of rules/skills/commands/hooks (do not edit; `gen-catalog.sh`) |
-| [templates/](templates/) | `project-CLAUDE.md` (`/new-project` output) + `user-global-CLAUDE.md` (the `~/.claude/CLAUDE.md` copy) |
+| [templates/](templates/) | `project-CLAUDE.md` (manual project starter) + `user-global-CLAUDE.md` (the `~/.claude/CLAUDE.md` copy) |
 | [surfaces/](surfaces/) | One operating profile per surface (Code, Cowork, claude.ai, iPhone) |
-| [connectors/op-mcp/](connectors/op-mcp/) | Off-Mac 1Password MCP connector (Node host) |
+| [connectors/](connectors/) | Remote MCP connectors — `op-mcp` (1Password resolver), `memory-mcp` (cross-surface memory), `mac`/`github`/`obsidian-mcp` |
 | [memory/](memory/) | Global memory lane — `MEMORY.md` index + per-fact files ([conventions](memory/README.md)) |
 | [credentials-map.md](credentials-map.md) | `op://` reference map (references only) |
 
