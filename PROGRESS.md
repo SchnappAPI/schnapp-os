@@ -802,3 +802,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   `op-mcp.onrender.com` client would use the bearer, none configured. **Verified:** `op_health`
   authenticated (OAuth client → portal new-header → Render new-env); origin `/health` 200, `/mcp` NEW
   bearer → 200, bogus → 401. Phase 3B self-serve + owner-coordinated rotations all DONE.
+- Mid-rotation infra fixes (rename residual + security, Mac-side): repointed deployed
+  `~/{mac,github,obsidian}-mcp/server.py` off the dead `~/code/claude-kit/*` path → `~/code/schnapp-os/*`
+  (a restart/reboot would have crash-looped all three); rewrote the **clobbered** `com.schnapp.macmcp.plist`
+  (bare JSON array → proper secrets-free op-wrap `<dict>`, lint OK, not reloaded) closing a reboot-time
+  bearer-disable/exposure; removed the vestigial `MAC_MCP_AUTH_TOKEN` ref from `obsidian-mcp/.env.template`
+  (OAuth server ignores it). Flagged a plaintext-secrets `.bak` (dead MAC bearer + live `GH_PAT` +
+  `RUNNER_API_KEY`) for owner `rm` + console rotation. Memory (credentials-state / credential-leak / index)
+  updated; handoff `033-phase3b-bearer-rotations.md`. Owner-pending: 2 client bearers, the `.bak` rm, the
+  owner-console rotation set, PR merge.
