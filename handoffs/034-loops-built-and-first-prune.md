@@ -53,7 +53,14 @@ Operationally: **fix defects/stale data on sight, don't ask; reserve questions f
   incl. RUNNER_API_KEY, Webshare, Cloudflare); 2 client bearer legs (claude.ai mac-mcp, Copilot
   github-mcp); `rm` the plaintext `…macmcp.plist.bak`; 28-file obsidian-vault leak scrub.
 - Dead plugin registrations in `~/.claude` (`claude-kit-core@claude-kit`, `schnapp-kit`) — clean via
-  `/plugin` (interactive). Cosmetic now (the gate no longer depends on the plugin).
+  `/plugin` (interactive). ~~Cosmetic now (the gate no longer depends on the plugin).~~
+  **CORRECTED 2026-06-23 (handoff 035): NOT cosmetic, and now DONE.** The live plugin
+  `claude-kit-core@schnapp-os` was pinned at an old commit whose bundled `hooks.json` still declared
+  the SessionStart gate; the desktop local-agent harness snapshots from the pinned commit, so the
+  stale `claude-kit` gate fired every session and its bare `git pull` raced the project gate
+  ("Cannot fast-forward to multiple branches"). Fixed: re-pinned `@schnapp-os` to HEAD (empty hooks),
+  removed both dead registrations + the dead `schnapp-kit` marketplace. See
+  [[plugin-registry-snapshot-gotchas]]. Verifies at next restart (single clean gate).
 
 ## Resume primer (paste to start the next session)
 > Load schnapp-os. Read handoffs/034 first. Confirm the SessionStart gate fired as `schnapp-os`

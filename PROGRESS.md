@@ -854,6 +854,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Scope = schnapp-os repo (per 0011 #2); cross-surface freshness = the remote-MCP layer (next).
   Cosmetic cleanup remaining (non-blocking, gate no longer depends on it): dead plugin registrations
   in ~/.claude (claude-kit-core@claude-kit, schnapp-kit) — clean via /plugin when convenient.
+  [CORRECTED below 2026-06-23 cont.: this was NOT cosmetic — the live plugin's OLD pin re-fired the
+  stale gate and raced the project gate's pull; "verified no multi-branch error" held only when the
+  gate ran ALONE, not with the double-gate live. Fixed by re-pinning. See next block.]
 - LEARNING LOOP capture-and-route step (loop 2). The routing procedures already existed
   (memory/README "on-correction": behavioral->rule, fact->memory-supersede, stale-doc->doc-fix); the
   missing piece was the TRIGGER — capture relied on the agent remembering, so corrections got fixed
@@ -878,3 +881,30 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   regenerated CATALOG (26→22 skills), freshness gate GREEN. Historical records (decisions/0007,
   handoffs 014/015) left intact as record; CATALOG is the live inventory. Lesson reinforced: cut only
   on verified redundancy or owner-confirmed out-of-domain, never on an agent's label.
+
+## 2026-06-23 (cont.) — Loops live-proofed + stale-gate root-caused & fixed (NOT cosmetic)
+- LIVE-PROOF (first fresh session since the loops were built). Freshness gate fired correctly as
+  `schnapp-os` with `[creds] 1Password SA resolves`. Learning loop fired: the `[capture]` route-it
+  nudge triggered this turn (matched "Don't ask" in the owner's opening message — a loose but
+  accepted precision-over-recall match; documented in capture-nudge.sh). Both loops confirmed live.
+- BUT two defects surfaced in the gate output, both fixed on sight:
+  (1) A SECOND, stale `claude-kit SESSION-START GATE` fired alongside the `schnapp-os` one, and BOTH
+  printed `fatal: Cannot fast-forward to multiple branches`. Root cause (run the gate command alone →
+  clean, so it's not the refspec the prior session "fixed"): the desktop **local-agent-mode** harness
+  snapshots each enabled plugin from its PINNED commit (`installed_plugins.json` gitCommitSha), not
+  the working tree. `claude-kit-core@schnapp-os` was pinned at `8417c2c4` (pre-hook-move), whose
+  `hooks.json` still declared SessionStart+Stop. That snapshot ran the OLD bare `git pull --ff-only`,
+  which raced the project gate's `git pull --ff-only origin main` on `FETCH_HEAD` → both errored.
+- FIX: re-pinned `claude-kit-core@schnapp-os` to HEAD `86dba69` (where `hooks.json` is `{}`) via
+  uninstall+reinstall — `claude plugin update` is version-keyed and no-ops at the same 0.1.0. Removed
+  the two dead registrations (`claude-kit-core@claude-kit` orphan, `schnapp-kit@schnapp-kit`) and the
+  dead `schnapp-kit` marketplace. GOTCHA hit en route: `claude plugin uninstall name@mkt` matches by
+  NAME and removed the live `@schnapp-os` instead of the named `@claude-kit` orphan; restored by
+  reinstall (which also achieved the re-pin), then deleted the orphan by hand-editing the JSON key.
+  All three harness JSON files validated. Captured: memory [[plugin-registry-snapshot-gotchas]].
+- VERIFIES AT NEXT RESTART: the desktop harness rebuilds the snapshot from the new pin, so next
+  session should show a SINGLE clean `schnapp-os` gate (no `claude-kit` gate, clean `[sync]` line).
+  This session's already-built snapshot still carries the old hooks (harmless; self-heals next start).
+- Permanent class-fix remains decision 0011 #2 (drop the plugin packaging in repo-flattening); until
+  then, re-pin after any hook/structure change. Corrected the "cosmetic" misclaim in handoff 034 and
+  the FRESHNESS GATE block above.
