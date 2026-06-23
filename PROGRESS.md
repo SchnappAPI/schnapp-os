@@ -793,3 +793,10 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Restarted `com.schnapp.githubmcp`. **Verified Mac:** `:8766` NEW bearer → HTTP 200, bogus → 401
   (fresh PID). **OWNER leg pending (client):** set the github-mcp client bearer (Copilot config) =
   `op://web-variables/GITHUB_MCP_AUTH_TOKEN/credential`.
+- **Rotation 3 — `OP_MCP_BEARER`** `[~]` (owner present, opted in). Vault value minted+stored fresh
+  (non-echoing, concealed). Connector intentionally stays live on the OLD value until the owner
+  propagates all 3 legs in one window (rotating the vault alone would not break it; the break is during
+  propagation). Baseline `op_health` = authenticated before rotation. **OWNER legs (same window):**
+  (1) Render `op-mcp` env `OP_MCP_BEARER` + redeploy, (2) Cloudflare portal `mcp.schnapp.bet` op-mcp
+  Custom header, (3) Code/Cowork client bearer. **Verify pending:** `op-mcp.onrender.com/health` up +
+  `/mcp` new bearer → not-401 + `op_health` authenticated. Value source `op://web-variables/OP_MCP_BEARER/credential`.
