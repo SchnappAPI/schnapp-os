@@ -1,5 +1,9 @@
 # Deploy memory-mcp
 
+**DONE + LIVE 2026-06-23** — origin `memory-mcp-rtad.onrender.com`, behind the shared Cloudflare portal
+`mcp.schnapp.bet`. Verified from claude.ai web: `memory_health` authenticated, `memory_index` returned the
+lane. Kept below as the reproducible runbook / re-deploy reference.
+
 The cross-surface memory server. Hosted off-Mac (always-on) like `op-mcp`, so claude.ai / iPhone /
 Cowork reach the same memory lane the Mac does. Steps tagged **🖐️ YOU** (a console only you can reach)
 vs **🤖 / terminal** (runnable). Effects: a deployed Render service + a custom connector.

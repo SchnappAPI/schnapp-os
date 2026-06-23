@@ -966,3 +966,17 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - OWNER 1-liner: re-copy `templates/user-global-CLAUDE.md` body to `~/.claude/CLAUDE.md` (its `/new-project`
   note is now stale on your machine until synced). NEXT deferred: #2 repo-flattening (riskier — plugin still
   delivers skills/rules/commands) + the learning-loop eval gate.
+
+## 2026-06-23 (cont.) — memory-mcp DEPLOYED + VERIFIED cross-surface (the vision's biggest piece)
+- Owner deployed memory-mcp to Render (`memory-mcp-rtad.onrender.com`): env `GITHUB_TOKEN` = a fine-grained
+  PAT named `SCHNAPP_OS_PAT` (contents R/W on schnapp-os only) + `MEMORY_MCP_BEARER` (I created it in 1P).
+  Added the `memory-mcp` server to the existing Cloudflare `mcp.schnapp.bet` portal (User-auth OFF, shared
+  with op-mcp — still separately revocable); reconnected the claude.ai "1Password" connector → 11 tools.
+- VERIFIED from claude.ai web (a hookless surface): `memory_health` = authenticated, repo schnapp-os, 10 files;
+  `memory_index` returned the full MEMORY.md. iPhone uses the same connector automatically. This closes the
+  freshness loop for hookless surfaces — the single biggest deferred piece of the vision is done.
+- Naming settled: credential identity = `SCHNAPP_OS_PAT` (GitHub label + 1P + map) and `MEMORY_MCP_BEARER`;
+  Render env-var keys stay `GITHUB_TOKEN` + `MEMORY_MCP_BEARER` (the names the code reads).
+- FOLLOW-UP: confirm `SCHNAPP_OS_PAT` value is stored in 1P (`op://.../SCHNAPP_OS_PAT/token`). Still open:
+  #2 repo-flattening, learning-loop eval gate, GITHUB_PAT rotation (9 vault files), brain-capture prune,
+  ~/.claude/CLAUDE.md sync, gate verification next restart.
