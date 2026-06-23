@@ -1,7 +1,19 @@
 {
-  "$comment": "Shared, tracked project settings for schnapp-os. Local-only overrides go in settings.local.json. autoMemoryDirectory points the harness auto-memory at the git-tracked repo memory/ lane so memory commits and syncs across machines/surfaces (PLAN.md Part 5; see memory/README.md); the same value is set at USER scope in ~/.claude/settings.json so the lane is active everywhere — plugins can't set this key (handoff 023). HOOKS (scripts in plugins/core/hooks/, canonical procedures in memory/README.md): all three are now wired HERE against live ${CLAUDE_PROJECT_DIR} paths — SessionStart freshness gate (session-start-gate.sh), Stop push-gate (session-stop-push-gate.sh), SessionEnd backup (session-end-backup.sh). This replaces the prior split where SessionStart+Stop were delivered globally by the claude-kit-core plugin: per decision 0011 #2 (plainer repo, drop plugin-packaging reliance) and because plugin snapshot delivery was unreliable (installed_plugins.json pinned old commits / referenced cleaned cache paths, so a stale claude-kit-era gate fired), hooks read the live repo file every session — no snapshot drift. The plugin hooks.json now declares no hooks. These hooks are scoped to schnapp-os (the OS repo); cross-surface freshness for hookless surfaces is the remote-MCP layer's job. Project hooks honored after the per-machine workspace-trust dialog; hooks load at session start (restart to pick up changes).",
+  "$comment": "Shared, tracked project settings for schnapp-os. Local-only overrides go in settings.local.json. autoMemoryDirectory points the harness auto-memory at the git-tracked repo memory/ lane so memory commits and syncs across machines/surfaces (PLAN.md Part 5; see memory/README.md); the same value is set at USER scope in ~/.claude/settings.json so the lane is active everywhere — plugins can't set this key (handoff 023). HOOKS (scripts in plugins/core/hooks/, canonical procedures in memory/README.md): all wired HERE against live ${CLAUDE_PROJECT_DIR} paths — PreToolUse force-push guard (no-force-push-guard.sh, decisions/0011 #9, blocks force-push to protected history), UserPromptSubmit capture-nudge (learning-loop correction trigger), SessionStart freshness gate (session-start-gate.sh), Stop push-gate (session-stop-push-gate.sh), SessionEnd backup (session-end-backup.sh). This replaces the prior split where SessionStart+Stop were delivered globally by the claude-kit-core plugin: per decision 0011 #2 (plainer repo, drop plugin-packaging reliance) and because plugin snapshot delivery was unreliable (installed_plugins.json pinned old commits / referenced cleaned cache paths, so a stale claude-kit-era gate fired), hooks read the live repo file every session — no snapshot drift. The plugin hooks.json now declares no hooks. These hooks are scoped to schnapp-os (the OS repo); cross-surface freshness for hookless surfaces is the remote-MCP layer's job. Project hooks honored after the per-machine workspace-trust dialog; hooks load at session start (restart to pick up changes).",
   "autoMemoryDirectory": "~/code/schnapp-os/memory",
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/plugins/core/hooks/no-force-push-guard.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "matcher": "*",

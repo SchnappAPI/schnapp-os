@@ -938,3 +938,15 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   noise commits). DEPLOY.md written (owner: fine-grained PAT + bearer + Render service + connector; Render owner-only).
 - NEXT: owner deploys per DEPLOY.md + records the two secrets in the map `consumed_by`; then prune the
   brain-capture server; then #4 rules-simplification / #2 repo-flattening / force-push guard #9 / eval gate.
+
+## 2026-06-23 (cont.) — force-push guard #9 built (the one missing guardrail)
+- Decision 0011 #9 (main-only + a PreToolUse guard blocking force-push to protected repos). The old
+  schnapp-kit `no-commit-to-main.sh` was buggy + policy-wrong and is now removed, leaving ZERO
+  force-push protection — a real gap given the recent history cleanse used force-push.
+- Built `plugins/core/hooks/no-force-push-guard.sh` (PreToolUse, matcher Bash). PreToolUse fires before
+  the permission check, so exit 2 hard-blocks even under --dangerously-skip-permissions (research §4).
+  Detects `--force` / `-f` / `--force-with-lease` / `+refspec`, scoped to each `git ... push` segment's
+  own args (so a trailing `&& rm -f` does not false-trip) and handles the `git -c k=v push` bypass.
+  Tested 10 cases (5 block incl. -c-bypass/+refspec/compound, 5 allow incl. --follow-tags/rm -f/--grep=push).
+  Wired in `.claude/settings.json` PreToolUse; de-staled the settings `$comment` to list all 5 hooks
+  (it said "all three" and omitted capture-nudge). Activates next session start (hooks load at startup).
