@@ -793,10 +793,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Restarted `com.schnapp.githubmcp`. **Verified Mac:** `:8766` NEW bearer → HTTP 200, bogus → 401
   (fresh PID). **OWNER leg pending (client):** set the github-mcp client bearer (Copilot config) =
   `op://web-variables/GITHUB_MCP_AUTH_TOKEN/credential`.
-- **Rotation 3 — `OP_MCP_BEARER`** `[~]` (owner present, opted in). Vault value minted+stored fresh
-  (non-echoing, concealed). Connector intentionally stays live on the OLD value until the owner
-  propagates all 3 legs in one window (rotating the vault alone would not break it; the break is during
-  propagation). Baseline `op_health` = authenticated before rotation. **OWNER legs (same window):**
-  (1) Render `op-mcp` env `OP_MCP_BEARER` + redeploy, (2) Cloudflare portal `mcp.schnapp.bet` op-mcp
-  Custom header, (3) Code/Cowork client bearer. **Verify pending:** `op-mcp.onrender.com/health` up +
-  `/mcp` new bearer → not-401 + `op_health` authenticated. Value source `op://web-variables/OP_MCP_BEARER/credential`.
+- **Rotation 3 — `OP_MCP_BEARER`** ✓ (owner present, opted in). Vault value minted+stored fresh
+  (non-echoing, concealed); connector stayed live on the OLD value until the owner propagated, so no
+  outage. Owner did (1) Render `op-mcp` env + redeploy and (2) Cloudflare portal `mcp.schnapp.bet`
+  op-mcp Custom header `Authorization: Bearer …`. **Leg 3 (Code/Cowork direct client bearer) = N/A**:
+  this/claude.ai/iPhone reach op-mcp through the portal over **OAuth** (verified `config.json`
+  `oauth:tokenCache`, connector URL `mcp.schnapp.bet/mcp` — no static client bearer); a direct
+  `op-mcp.onrender.com` client would use the bearer, none configured. **Verified:** `op_health`
+  authenticated (OAuth client → portal new-header → Render new-env); origin `/health` 200, `/mcp` NEW
+  bearer → 200, bogus → 401. Phase 3B self-serve + owner-coordinated rotations all DONE.
