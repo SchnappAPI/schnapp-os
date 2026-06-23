@@ -1,5 +1,5 @@
 {
-  "name": "claude-kit",
+  "name": "schnapp-os",
   "owner": {
     "name": "SchnappAPI",
     "email": "apischnapp@gmail.com"
@@ -17,8 +17,8 @@
         "name": "SchnappAPI",
         "email": "apischnapp@gmail.com"
       },
-      "homepage": "https://github.com/SchnappAPI/claude-kit",
-      "repository": "https://github.com/SchnappAPI/claude-kit",
+      "homepage": "https://github.com/SchnappAPI/schnapp-os",
+      "repository": "https://github.com/SchnappAPI/schnapp-os",
       "license": "MIT",
       "keywords": [
         "claude-code",
