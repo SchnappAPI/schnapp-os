@@ -854,3 +854,16 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Scope = schnapp-os repo (per 0011 #2); cross-surface freshness = the remote-MCP layer (next).
   Cosmetic cleanup remaining (non-blocking, gate no longer depends on it): dead plugin registrations
   in ~/.claude (claude-kit-core@claude-kit, schnapp-kit) — clean via /plugin when convenient.
+- LEARNING LOOP capture-and-route step (loop 2). The routing procedures already existed
+  (memory/README "on-correction": behavioral->rule, fact->memory-supersede, stale-doc->doc-fix); the
+  missing piece was the TRIGGER — capture relied on the agent remembering, so corrections got fixed
+  locally and lost next session (the "fixes don't stick" failure). Built `capture-nudge.sh`
+  (UserPromptSubmit): high-precision grep for correction/teaching language -> injects a route-it nudge
+  pointing at memory/README. Deterministic, ~13ms, non-blocking, exit 0. Wired in `.claude/settings.json`.
+  Verified both ways: correction -> nudge; normal request -> silent (no false positive). Cross-surface
+  capture stays the `session-hygiene` skill (hookless surfaces). Eval/promote gate = a LATER step
+  (doc §7.8: build the gate before autonomous self-edits), so the nudge says STAGE rule edits.
+- Demonstrated the loop end-to-end on a real correction: owner's repeated "fix on sight, don't ask"
+  routed (behavioral) to the EXISTING rule, not a new file -> added a "A defect is not a decision"
+  bullet to `working-style.md` (bumped updated: 2026-06-23). Correct routing = sharpen the existing
+  home, not duplicate.

@@ -1,6 +1,6 @@
 ---
 scope: global
-updated: 2026-06-05
+updated: 2026-06-23
 ---
 # Working style
 
@@ -24,3 +24,6 @@ updated: 2026-06-05
 - Do not escalate decisions the objective or the locked plan already settles. Asking the owner to
   re-pick a mechanism the architecture dictates is abdication, not collaboration. Resolve from the
   plan, act, and record the decision; ask only when the objective genuinely underdetermines it.
+- A defect is not a decision. Stale data, a broken or stale file, a wrong value, an obvious error:
+  fix it on sight and report it in the same turn. Do not ask permission to fix something already
+  known broken. Reserve questions for genuine forks the plan does not settle.
