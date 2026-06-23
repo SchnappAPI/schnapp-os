@@ -828,3 +828,14 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   `git merge-base`) AND policy-wrong (forces branches vs decision #9 main-only). To be removed + replaced by the
   real force-push guard. These records are written but NOT yet committed because of it.
 - NEXT (do not build yet): capture original repo intent → freshness gate → capture-and-route → prune.
+- CAPTURE INTENT done (doc §7.2 step 1) → `docs/intent-capture-2026-06-23.md`. Method: 5 parallel read-only
+  investigators (hooks+scripts / skills+commands+agents / rules / connectors / memory+surfaces+meta), each
+  grounding component intent in decisions+handoffs. Records what each of the 26 skills / 5 cmds / 2 agents /
+  26 rules / 4 connectors / 6 surfaces / 6 scripts / 3 hooks was MEANT to do; load-bearing vs accretion;
+  prune/defer CANDIDATES (not actions — prune is the last step). Headline findings: (1) freshness loop exists
+  but its core `git pull` sync is broken; (2) learning loop mostly absent (no capture hook, no promote/validate
+  gate); (3) decision #2 (drop plugin packaging) SEVERS the only delivery vehicle for the global freshness+push
+  hooks → re-homing them is a prerequisite of #2 and is freshness-loop work; (4) a stale `claude-kit` gate copy
+  still fires vs the repo's `schnapp-os` source; (5) no scoped memory/control-plane MCP server, mac-mcp is the
+  mega-server #6 warns against; (6) force-push guard #9 not built yet. Owner-action items (chat-memory off,
+  open credential legs) listed in the doc §6.
