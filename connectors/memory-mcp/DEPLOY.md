@@ -9,7 +9,9 @@ vs **🤖 / terminal** (runnable). Effects: a deployed Render service + a custom
 **GitHub token** (`GITHUB_TOKEN`) — least privilege beats reuse:
 - 🖐️ **Recommended:** github.com → Settings → Developer settings → **Fine-grained PAT** → repository
   access = *Only* `SchnappAPI/schnapp-os` → Repository permissions → **Contents: Read and write** →
-  Metadata stays Read. Generate. Store in 1Password as a new item, ref `op://web-variables/MEMORY_GITHUB_PAT/token`.
+  Metadata stays Read. Generate. Store in 1Password as a new item named `SCHNAPP_OS_PAT`, ref
+  `op://web-variables/SCHNAPP_OS_PAT/token`. (That is the credential's name; the Render env var that
+  HOLDS it stays `GITHUB_TOKEN` — the name the server code reads.)
 - Or reuse the existing `op://web-variables/GITHUB_PAT/token` (broader scope — all repos/perms;
   simpler, but a bigger blast radius if the server is compromised). The map's `consumed_by` must then
   list memory-mcp so a `GITHUB_PAT` rotation updates it.
