@@ -56,15 +56,11 @@ Personal (non-system, untouched): `Elgato`, `Obsidian`, `Schnapp's MacBook Pro`.
 - `OP_MCP_BEARER` — op-mcp bearer; generate (`openssl rand -hex 32`),
   store in 1Password, set as Render env + Cloudflare portal header.
 
-## Status (2026-06-17)
-- **Off-Mac op-mcp connector: UP (verified 2026-06-17).** After the Render
-  `OP_SERVICE_ACCOUNT_TOKEN` was updated to the current SA + redeployed, `op_health` →
-  `authenticated` (integration `claude-kit-op-mcp`, 1 vault).
-- **Mac path: restored.** Shell SA valid (`op whoami` → SERVICE_ACCOUNT); `com.schnapp.macmcp`
-  restarted to clear its stale in-process token (decisions/0010).
-- **GitHub Actions:** PAT widened to all repos; `OP_SERVICE_ACCOUNT_TOKEN` secret set on authorized
-  repos (incl. `af-invoice-parser`, `af-query-api`). `DB_Storage`, `appfolio-marketing-project`
-  still unset — awaiting owner decision.
+## Status — see the canonical source (do not hardcode mutable status here)
+Live credential / rotation status goes stale if pinned in this doc, so it is NOT kept here.
+Canonical, supersede-on-change: [`memory/credentials-state.md`](memory/credentials-state.md)
+(SA + MCP-bearer rotation state, what is verified, what is owner-pending). The append-only
+**Changelog** below is the where-to-change record for every rename/rotation.
 
 ## Changelog (append-only; the where-to-change log for every rename/rotation)
 | date | change | locations updated | done |

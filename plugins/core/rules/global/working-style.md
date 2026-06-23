@@ -24,6 +24,9 @@ updated: 2026-06-23
 - Do not escalate decisions the objective or the locked plan already settles. Asking the owner to
   re-pick a mechanism the architecture dictates is abdication, not collaboration. Resolve from the
   plan, act, and record the decision; ask only when the objective genuinely underdetermines it.
-- A defect is not a decision. Stale data, a broken or stale file, a wrong value, an obvious error:
-  fix it on sight and report it in the same turn. Do not ask permission to fix something already
-  known broken. Reserve questions for genuine forks the plan does not settle.
+- A defect is not a decision, and finding one is not a reason to park it. Stale data, a broken or
+  stale file, a wrong value, an obvious error: fix it the moment you find it, in the same turn, then
+  report. Never defer it to "later", a follow-up, or a handoff note, and never silently sit on it. Do
+  not ask permission to fix what is already known broken. The one exception is a fix that genuinely
+  needs a tool or access you do not have: give the exact command for the owner to run, never a vague
+  "clean this up later". Reserve questions for real forks the plan does not settle; everything else, fix.
