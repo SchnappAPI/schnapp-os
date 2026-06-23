@@ -5,7 +5,7 @@ description: Use when the user asks "what's the state of everything", "status", 
 
 # status
 
-The control plane (PLAN Part 11.3). One view of the whole claude-kit system: what is stale,
+The control plane (PLAN Part 11.3). One view of the whole schnapp-os system: what is stale,
 unmerged, or unpushed; whether the scheduled routines are healthy; whether connectors and services
 are up; when the last backup ran; and which surfaces are enabled. Builds on — does not duplicate —
 [`surface-check`](../surface-check/SKILL.md): surface-check reports the **current** surface;

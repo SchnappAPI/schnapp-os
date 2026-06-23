@@ -26,6 +26,6 @@
 3. **Always-loaded instructions:** paste [`always-loaded-instructions.md`](always-loaded-instructions.md)
    into **Settings > Profile > Preferences** (account-wide / global — owner's choice 2026-06-16, so
    it applies to every chat and to iPhone on the same account). Use a dedicated Project's
-   instructions instead only if you later want it scoped to claude-kit work.
+   instructions instead only if you later want it scoped to schnapp-os work.
 4. **Verify:** run `surface-check`. Expect connectors present, global rules + session-hygiene loaded,
    no hooks (expected here), persist via GitHub connector or a generated Code prompt.

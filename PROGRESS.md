@@ -728,3 +728,21 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - PENDING (owner): Mac MCP connector bearer is stale in the **Claude account** connector config
   (server/env/vault all = `…6267`). Fix in claude.ai Settings→Connectors / the Cloudflare MCP portal.
   Details: `handoffs/030-phase1-sa-rotation-complete.md`.
+
+## 2026-06-22 (cont.) — Phase 2 rename finalized: transitional symlink removed + residual name sweep
+- Removed transitional symlink `~/code/claude-kit -> schnapp-os`. Its load-bearing siblings removed
+  first so nothing resolved through a dead path: dropped the dormant `claude-kit` marketplace entry
+  from `~/.claude/plugins/known_marketplaces.json` (live plugin is `claude-kit-core@schnapp-os`,
+  nothing bound to it) and repointed the active plan's spec path. Orphaned `~/.claude/plugins/cache/
+  claude-kit/` left in place — destructive-guard + auto-mode blocked its `rm -rf`; harmless cruft now
+  its marketplace entry is gone (optional owner `rm`).
+- Swept residual old-distribution-name refs `claude-kit -> schnapp-os` across 28 active files (README,
+  templates, surfaces, plugin hooks/scripts/skills/commands/rules, memory, scheduled-tasks, CI, op-mcp
+  DEPLOY). Symmetric 63/63 diff (pure 1:1 swaps). Hook banners renamed (`===== schnapp-os SESSION-*`);
+  `CATALOG.md` regenerated from updated hook headers.
+- KEPT (deliberate identifiers, not renamed by PR #4): `claude-kit-core` (plugin/skill namespace),
+  `CLAUDE_KIT_REPO` (env var), `claude-kit-op-mcp` (1P/Render integration). LEFT historical:
+  `handoffs/ decisions/ docs/ PLAN.md PROGRESS.md` + `keep-tracker-current.md` `source:` provenance.
+- Deleted rename-time backups `~/.claude/{CLAUDE.md,settings.json}.bak-rename-20260622`.
+- Verified: all JSON valid, `bash -n` clean on edited scripts, `known_marketplaces.json` parses
+  (6 entries, schnapp-os intact), real repo + `.git` untouched, plugin hooks still firing this session.

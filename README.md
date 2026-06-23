@@ -1,4 +1,4 @@
-# claude-kit
+# schnapp-os
 
 Central, multi-surface Claude system: skills, commands, hooks, agents, composable rules,
 memory, and credential references, usable on Claude Code (all machines), Cowork, and
@@ -42,13 +42,13 @@ Part 10 is tracked in [PLAN.md](PLAN.md). Per-surface operating detail lives in
 [surfaces/](surfaces/) and is referenced here, not repeated.
 
 ### Code — primary Mac
-1. Clone to `~/code/claude-kit` (the path the hooks, `~/.claude/CLAUDE.md`, and the backup all assume).
+1. Clone to `~/code/schnapp-os` (the path the hooks, `~/.claude/CLAUDE.md`, and the backup all assume).
 2. **User-global setup in `~/.claude/`** (these load in *every* repo on the machine, not just this one —
    they are the global lane's delivery):
    - Create `~/.claude/CLAUDE.md` by copying the body of
      [templates/user-global-CLAUDE.md](templates/user-global-CLAUDE.md) (that file lives outside the repo,
      so the template is its canonical copy). It `@import`s the 7 global rules from the repo.
-   - In `~/.claude/settings.json` set `"autoMemoryDirectory": "~/code/claude-kit/memory"` so the global
+   - In `~/.claude/settings.json` set `"autoMemoryDirectory": "~/code/schnapp-os/memory"` so the global
      **memory** lane loads in every repo (the sibling of the `@import`ed rules). A plugin cannot deliver
      this key (only `agent`/`subagentStatusLine` are plugin-settable), and a project-scoped setting reaches
      only that project — so user scope is the only global delivery. Verified by 5.6.

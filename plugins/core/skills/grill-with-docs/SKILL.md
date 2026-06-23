@@ -35,7 +35,7 @@ Write resolutions where they belong, the moment they resolve — do not batch. P
 - **A resolved term** → the project's glossary doc (a `glossary` or `CONTEXT` note in the
   project, or the memory lane if the project has none). Keep it a glossary: definitions only,
   no implementation detail, no spec, no scratch.
-- **A durable decision** → the claude-kit `decisions/` directory convention (one file per
+- **A durable decision** → the schnapp-os `decisions/` directory convention (one file per
   decision). Record it sparingly — only when **all three** hold:
   1. **Hard to reverse** — changing your mind later costs something real.
   2. **Surprising without context** — a future reader will ask "why this way?"

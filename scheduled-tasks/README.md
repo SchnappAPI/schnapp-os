@@ -15,7 +15,7 @@ Every routine is classified, and the classification decides whether it may run o
   judgment (a memory *rewrite*, a merge, a deploy, a schema change). The routine does NOT act; it
   detects the condition and **queues** a report/prompt for an interactive session to approve.
 
-This mirrors the rest of claude-kit: never silently fail, never silently mutate. A scheduled
+This mirrors the rest of schnapp-os: never silently fail, never silently mutate. A scheduled
 routine that wants to change state stops at the proposal and hands it to a human-approved session.
 
 ## Where results go
@@ -42,6 +42,6 @@ signals on demand.
 
 ## Why split CI vs LaunchAgent
 GitHub Actions is the right host for repo-only, Mac-independent routines — it is the whole point of
-claude-kit that these do not depend on the Mac being awake. Anything that needs the Mac's MCP
+schnapp-os that these do not depend on the Mac being awake. Anything that needs the Mac's MCP
 (SQL Server, Flask, Docker, services) or LLM judgment runs from a Mac LaunchAgent that launches a
 headless Claude session, reusing the existing connectors and skills.

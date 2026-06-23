@@ -1,5 +1,5 @@
 {
-  "description": "claude-kit core hooks, delivered GLOBALLY by the plugin via ${CLAUDE_PLUGIN_ROOT}: SessionStart freshness/git gate (PLAN.md 5.3) + Stop push-gate (never leave unpushed commits). Canonical procedures live in memory/README.md — these hooks surface the deterministic signals and enforce push; memory/handoff authoring stays the agent's job. SessionEnd backup is intentionally NOT here: backup-archive.sh mirrors claude-kit's own knowledge base and must stay project-scoped to claude-kit/.claude/settings.json (decision 0005), never firing from unrelated repos.",
+  "description": "schnapp-os core hooks, delivered GLOBALLY by the plugin via ${CLAUDE_PLUGIN_ROOT}: SessionStart freshness/git gate (PLAN.md 5.3) + Stop push-gate (never leave unpushed commits). Canonical procedures live in memory/README.md — these hooks surface the deterministic signals and enforce push; memory/handoff authoring stays the agent's job. SessionEnd backup is intentionally NOT here: backup-archive.sh mirrors schnapp-os's own knowledge base and must stay project-scoped to schnapp-os/.claude/settings.json (decision 0005), never firing from unrelated repos.",
   "hooks": {
     "SessionStart": [
       {

@@ -30,7 +30,7 @@ No local git, shell, filesystem, or `backup-archive.sh` here. Same intent, diffe
   its remote MCP. If neither is available, state that you could not verify and ask.
 - **Persist memory / handoff / PROGRESS + "commit and push"** (end-of-session write, on-correction
   memory write): there is no local working tree. Write the file through the **GitHub connector**
-  (`create_or_update_file` to `SchnappAPI/claude-kit`), which commits and "pushes" in one step. If
+  (`create_or_update_file` to `SchnappAPI/schnapp-os`), which commits and "pushes" in one step. If
   the connector is absent, **generate a ready-to-run prompt/patch** for a Code session and hand it
   to the owner (always-complete: never silently skip the write).
 - **Back up** (end-of-session write): `backup-archive.sh` needs a shell and cannot run here. The

@@ -10,5 +10,5 @@
 - **Reports:** writes the gate output to the job Step Summary every run.
 - **Acts on its own?** No mutation. On drift it exits non-zero (visible failure); the fix
   (re-run `gen-catalog.sh`, commit) is done by a human-approved session, never auto-committed.
-- **Why it exists:** anti-staleness is a standing claude-kit invariant (global rule
+- **Why it exists:** anti-staleness is a standing schnapp-os invariant (global rule
   `anti-stale.md`); the nightly sweep enforces it continuously, not only at push time.

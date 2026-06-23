@@ -108,9 +108,9 @@ Named module lists applied in one choice by `/new-project`. Canonical source:
 Scripts in `hooks/`, wired to events in [`hooks/hooks.json`](hooks/hooks.json)
 (plugin delivery) and the repo's `.claude/settings.json` (dev-time dogfood).
 
-- **session-end-backup.sh** — claude-kit end-of-session write, deterministic half (PLAN.md 5.4 / 7.2).
-- **session-start-gate.sh** — claude-kit SessionStart freshness + git gate (PLAN.md 5.3 / 7.2).
-- **session-stop-push-gate.sh** — claude-kit Stop gate: never leave unpushed commits
+- **session-end-backup.sh** — schnapp-os end-of-session write, deterministic half (PLAN.md 5.4 / 7.2).
+- **session-start-gate.sh** — schnapp-os SessionStart freshness + git gate (PLAN.md 5.3 / 7.2).
+- **session-stop-push-gate.sh** — schnapp-os Stop gate: never leave unpushed commits
 
 ## Agents
 

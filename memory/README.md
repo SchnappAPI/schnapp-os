@@ -1,13 +1,13 @@
 # Memory — two lanes, cross-surface, never stale
 
-The canonical spec for how memory works in claude-kit. Rules reference this file;
+The canonical spec for how memory works in schnapp-os. Rules reference this file;
 do not restate its content elsewhere. (PLAN.md Part 5.)
 
 ## Two lanes
 
 | Lane | Where | Holds | Synced by |
 |---|---|---|---|
-| **Global** | `claude-kit/memory/` (this dir) | Cross-everything facts, reusable principles, who-the-user-is, durable preferences | git (claude-kit repo) |
+| **Global** | `schnapp-os/memory/` (this dir) | Cross-everything facts, reusable principles, who-the-user-is, durable preferences | git (schnapp-os repo) |
 | **Project** | each project's `<project>/memory/` (set via `autoMemoryDirectory`) | Facts specific to that repo: which table, which endpoint, this project's quirks | git (that project's repo) |
 
 Both lanes are **git-tracked**, so a lesson written on one machine or surface is
@@ -22,7 +22,7 @@ machine-local; pointing `autoMemoryDirectory` at a repo path makes it travel.
   trust dialog is accepted** on that machine (same gate as hooks).
 - The harness writes `MEMORY.md` (index; first ~200 lines / 25KB loaded at session
   start) plus topic files (loaded on demand).
-- claude-kit points it at `~/code/claude-kit/memory`. A machine that clones the repo
+- schnapp-os points it at `~/code/schnapp-os/memory`. A machine that clones the repo
   elsewhere overrides the path in its own `.claude/settings.local.json`.
 
 ## Discipline (the anti-stale rules)

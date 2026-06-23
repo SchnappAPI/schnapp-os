@@ -5,14 +5,14 @@ argument-hint: "[target-dir]"
 # /update-docs
 
 Regenerate the **derived** docs in the target repo so no doc hand-lists a mutable fact and
-goes stale. This is the generic form of claude-kit's own `gen-catalog.sh`, run against the
+goes stale. This is the generic form of schnapp-os's own `gen-catalog.sh`, run against the
 owner's *other* ETL repos. Honors [`global/anti-stale`](../rules/global/anti-stale.md)
 ("Doc currency": generate anything derivable; mark output generated).
 
 Steps Claude follows:
 
 1. Resolve the target directory (argument, else the current repo root). This command is for
-   the owner's downstream repos, NOT claude-kit (claude-kit uses `gen-catalog.sh` directly).
+   the owner's downstream repos, NOT schnapp-os (schnapp-os uses `gen-catalog.sh` directly).
 2. Discover the doc generators already in the repo (a `scripts/` generator, a Makefile/`just`
    target, an `npm run docs`, a `gen-*.sh`). If one exists, run it — do not invent a parallel
    generator.

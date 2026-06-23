@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/schemas/claude-plugin/v1.json",
   "name": "claude-kit-core",
   "version": "0.1.0",
-  "description": "claude-kit core: SessionStart freshness/git gate + Stop push-gate (hooks/hooks.json via ${CLAUDE_PLUGIN_ROOT}); session-hygiene & surface-check skills, domain skills, agents, commands, and composable rules. Components auto-discover from this plugin root; SessionEnd backup stays project-scoped to the schnapp-os repo (decision 0005).",
+  "description": "schnapp-os core: SessionStart freshness/git gate + Stop push-gate (hooks/hooks.json via ${CLAUDE_PLUGIN_ROOT}); session-hygiene & surface-check skills, domain skills, agents, commands, and composable rules. Components auto-discover from this plugin root; SessionEnd backup stays project-scoped to the schnapp-os repo (decision 0005).",
   "author": {
     "name": "SchnappAPI",
     "email": "apischnapp@gmail.com",

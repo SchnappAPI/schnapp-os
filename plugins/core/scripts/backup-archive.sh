@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# backup-archive.sh — mirror claude-kit knowledge + Claude Code session
+# backup-archive.sh — mirror schnapp-os knowledge + Claude Code session
 # transcripts into two destinations (PLAN.md Part 6; decisions/0004 is unrelated):
 #   1. OneDrive `claude-archive/` — cloud-durable backup (repo md + raw .jsonl sessions).
 #   2. The canonical Obsidian vault `claude-archive/` subfolder — the browsable, searchable
@@ -51,7 +51,7 @@ SESSION_COUNT="$(find "$ARCHIVE/sessions" -name '*.jsonl' 2>/dev/null | wc -l | 
 cat > "$ARCHIVE/README.md" <<EOF
 # claude-archive (generated — do not edit)
 
-OneDrive-synced, Obsidian-mirrored backup of the claude-kit knowledge base.
+OneDrive-synced, Obsidian-mirrored backup of the schnapp-os knowledge base.
 Refreshed by \`plugins/core/scripts/backup-archive.sh\`. The live source of truth
 is the git repo; this is a browsable, cross-device copy.
 

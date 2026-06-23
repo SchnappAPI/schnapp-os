@@ -25,7 +25,7 @@ revoke — there is no separate revoke step.
 
 Propagated to: `~/.zshrc`, `~/.zshenv` (**UNQUOTED** — see op-wrap gotcha), the launchd session env
 (via the `com.schnapp.environment` run-once agent, which `. ~/.zshenv && launchctl setenv …`),
-**11 GH repo secrets** (obsidian-vault, schnapp-bet, claude-kit, appfolio-quickbase-sync, schnapp-kit,
+**11 GH repo secrets** (obsidian-vault, schnapp-bet, schnapp-os, appfolio-quickbase-sync, schnapp-kit,
 claude-skills, sports-modeling, appfolio-mcp, ref-vault, af-invoice-parser, af-query-api), and the
 **Render `op-mcp`** env + redeploy (owner). All 6 launchd services restarted and **healthy** on the
 new token: macmcp / githubmcp / obsidian-mcp / brain-watcher + bet.schnapp web-prod (HTTP 200) / flask.
