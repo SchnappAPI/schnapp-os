@@ -10,7 +10,7 @@
 # OneDrive (each session is a distinct artifact). The repo is never modified — read-only source.
 #
 # Config (env overrides, machine-portable):
-#   CLAUDE_KIT_REPO     default ~/code/claude-kit
+#   CLAUDE_KIT_REPO     default ~/code/schnapp-os
 #   CLAUDE_ARCHIVE_DIR  default ~/Library/CloudStorage/OneDrive-Schnapp/claude-archive
 #   OBSIDIAN_VAULT_DIR  default ~/Library/CloudStorage/OneDrive-Schnapp/Obsidian
 #                       (canonical vault, OneDrive-synced; ~/Documents/Obsidian is a back-compat
@@ -19,7 +19,7 @@
 # Run manually now; Part 7 wires it to the Stop/SessionEnd hook (PLAN 5.4).
 set -euo pipefail
 
-REPO="${CLAUDE_KIT_REPO:-$HOME/code/claude-kit}"
+REPO="${CLAUDE_KIT_REPO:-$HOME/code/schnapp-os}"
 ARCHIVE="${CLAUDE_ARCHIVE_DIR:-$HOME/Library/CloudStorage/OneDrive-Schnapp/claude-archive}"
 
 # Claude Code stores transcripts under a slug derived from the project path.

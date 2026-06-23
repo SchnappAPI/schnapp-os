@@ -14,7 +14,7 @@
 # the relevant generator. "update-docs" = this script today; add generators here as needed.
 #
 # Config: CLAUDE_KIT_REPO (default: derived from this script's location, so it runs anywhere —
-# locally and in CI where the checkout is not at ~/code/claude-kit).
+# locally and in CI where the checkout is not at ~/code/schnapp-os).
 set -euo pipefail
 export LC_ALL=C
 
