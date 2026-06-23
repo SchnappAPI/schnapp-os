@@ -789,3 +789,7 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   **OWNER leg pending (client):** set claude.ai connector `mac-mcp.schnapp.bet` Authorization Bearer (or
   the Cloudflare One MCP portal entry) = `op://web-variables/MAC_MCP_AUTH_TOKEN/credential` — also clears
   the stale-connector open item from handoff 032.
+- **Rotation 2 — `GITHUB_MCP_AUTH_TOKEN`** (leaked → fresh `openssl rand -hex 32`, non-echoing).
+  Restarted `com.schnapp.githubmcp`. **Verified Mac:** `:8766` NEW bearer → HTTP 200, bogus → 401
+  (fresh PID). **OWNER leg pending (client):** set the github-mcp client bearer (Copilot config) =
+  `op://web-variables/GITHUB_MCP_AUTH_TOKEN/credential`.
