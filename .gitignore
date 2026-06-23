@@ -5,12 +5,21 @@ CLAUDE.local.md
 .env
 .env.*
 !.env.template
-**/secret*
-**/*secret*
-# Exception: this rule DOC explains the secrets-as-references policy and holds NO secret
-# values; the globs above would wrongly exclude it. It is one of the 7 always-loaded global
-# rules and MUST be tracked + synced, so re-include it explicitly.
-!**/secrets-as-references.md
+# Files that typically hold secret VALUES (the CONTENTS are the risk):
+*secret*.json
+*secrets*.json
+client_secret*.json
+service-account*.json
+credentials.json
+*.secret
+.secrets/
+secrets/
+# Filenames containing "secret" are NOT blanket-ignored. This repo is a secrets *toolkit* —
+# scan-secrets.sh, skills/cleanse-secrets, skills/rotate-secret, rules/secrets-as-references.md all
+# legitimately carry "secret" in the name and MUST be tracked. A broad `**/*secret*` ignore silently
+# dropped them (and once dropped secrets-as-references.md, the always-loaded rule). The value-level
+# guard is plugins/core/scripts/scan-secrets.sh, run in CI: it BLOCKS any literal secret value in a
+# tracked file regardless of filename — that, not the filename, is what keeps values out.
 *.key
 *.pem
 .DS_Store
