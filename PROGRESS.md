@@ -752,3 +752,23 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   `git branch -D chore/phase1-sa-rotation-record chore/rename-to-schnapp-os` (2 stale `[gone]` branches).
 - Phase 2 COMPLETE. NEXT = Phase 3 (secrets domain): build vault-resolve / cleanse-secrets /
   rotate-secret; rotate remaining leaked values; retro-scrub ~28 export files; secret-scan CI.
+
+## 2026-06-22 (cont.) — Phase 3 part A: secrets skills + secret-scan CI (the toolkit)
+- Built the 3 secrets skills (`plugins/core/skills/`): `vault-resolve` (resolve op:// refs per
+  surface, field-label gotcha, non-echoing reads), `cleanse-secrets` (report+redact wrapping the
+  scanner), `rotate-secret` (rotate-on-migrate protocol: consumed_by → mint → store → propagate →
+  restart → verify → changelog). Owner pref: small reusable skills, not a monolith.
+- Single-source scanner `plugins/core/scripts/scan-secrets.sh` (one pattern set, two consumers: CI +
+  cleanse-secrets). Catches the leaked classes the reused opensource-sanitizer lib MISSED — `ops_`
+  (master SA token) and `sk-ant-*` (Anthropic/Claude) — as first-class BLOCK rules. Values masked,
+  op:// pointers skipped, exit non-zero on BLOCK. Proven against `scripts/tests/secret-fixtures.txt`
+  via `scripts/tests/test-scan-secrets.sh` (11 BLOCK + 3 WARN classes, masking + negative + exit code).
+- `plugins/core/scripts/check-op-refs.sh`: flags op:// refs whose item is absent from credentials-map
+  (single-source for valid refs). WARN-only for now.
+- Extended `.github/workflows/freshness.yml`: 3 new steps (scanner self-test; secret scan over tracked
+  files excluding the fixtures; op:// ref check). Repo scans **0 BLOCK** (no leaked value tracked here).
+- Verified: full CI gauntlet green locally; skill-reviewer gap-test passed after fixing all example
+  commands to be non-echoing-by-construction (the redact/store/read examples could have echoed a value).
+- DEFERRED to Phase 3 part B (owner-gated): actual rotations of the remaining leaked values (consoles +
+  Render redeploy + claude.ai connector), the ~28-file leak scrub (separate obsidian-vault repo +
+  history-rewrite decision), promoting op-ref check to BLOCK.
