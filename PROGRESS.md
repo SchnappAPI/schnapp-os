@@ -772,3 +772,20 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - DEFERRED to Phase 3 part B (owner-gated): actual rotations of the remaining leaked values (consoles +
   Render redeploy + claude.ai connector), the ~28-file leak scrub (separate obsidian-vault repo +
   history-rewrite decision), promoting op-ref check to BLOCK.
+
+## 2026-06-22 (cont.) — Phase 3 part B: self-serve MCP-bearer rotations (rotate-on-migrate)
+- PREREQ class-fix (rename residual caught before any restart): the deployed MCP services symlinked
+  `~/{mac-mcp,github-mcp,obsidian-mcp}/server.py` → the **dead** `~/code/claude-kit/connectors/*` path
+  (the Phase 2 finalize removed the `~/code/claude-kit` transitional symlink). All three were broken
+  symlinks; the services only survived because they were long-running processes holding already-loaded
+  code — **any restart (or reboot) would crash-loop all three on ENOENT**. Repointed all three to
+  `~/code/schnapp-os/connectors/*/server.py` (`ln -sfn`, self-serve, non-destructive); each now resolves.
+  Validated by the rotation restarts below (fresh PIDs loaded the new target cleanly).
+- **Rotation 1 — `MAC_MCP_AUTH_TOKEN`** (leaked bearer → fresh `openssl rand -hex 32`, non-echoing
+  mint+store; field `/credential` stays CONCEALED, len 64). Restarted `com.schnapp.macmcp` (+
+  `com.schnapp.obsidian-mcp`). **Verified Mac:** `:8765` NEW bearer → HTTP 200, bogus → 401; obsidian
+  `:8767` up + gated (401). consumed_by corrected in the map: mac-mcp is the functional consumer;
+  obsidian-mcp's `.env.template` injects the var but the OAuth server **ignores it** (vestigial, flagged).
+  **OWNER leg pending (client):** set claude.ai connector `mac-mcp.schnapp.bet` Authorization Bearer (or
+  the Cloudflare One MCP portal entry) = `op://web-variables/MAC_MCP_AUTH_TOKEN/credential` — also clears
+  the stale-connector open item from handoff 032.
