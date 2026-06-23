@@ -1,5 +1,12 @@
 # Rebuild: a central, multi-surface Claude system
 
+> **STATUS (2026-06-23): NOT THE SPINE. This file is a parking lot of ideas.**
+> The governing plan is now [`docs/schnapp-os-research-and-decisions-2026-06-23.md`](docs/schnapp-os-research-and-decisions-2026-06-23.md)
+> (§7.4 / §7.7) and the plan-review re-decisions in [`decisions/0011`](decisions/0011-plan-review-ten-redecisions.md).
+> The 11-Part build below was answered on "recommended" defaults; it was **not** finished as written, by deliberate
+> choice (loops before features; subtract rather than complete). Pull ideas from here as a backlog; do not execute it
+> in order. Where this file conflicts with 0011, **0011 wins**. Not abandoned, not authoritative.
+
 ## Context
 
 schnapp-kit grew into a sprawling plugin you no longer fully understand. The real cost is
@@ -16,6 +23,11 @@ This file is committed to the new repo as `PLAN.md` (globally accessible). `PROG
 logs every step. `decisions/` logs every decision.
 
 ## Locked decisions
+
+> Several of these were re-decided on purpose on 2026-06-23 — see [`decisions/0011`](decisions/0011-plan-review-ten-redecisions.md),
+> which supersedes the conflicting items below (repo form → plainer repo, not a plugin marketplace; rules → plain files,
+> no module gallery; surface scope → narrow to surfaces used now; credentials → one centralized remote-MCP tool; git →
+> main only + force-push guard). Read 0011 as the current truth; the items below are kept as the record of what was.
 
 - New clean repo (`claude-kit`); old repo frozen as the record.
 - **Always-complete, never degraded:** if a surface cannot do something natively, it does it

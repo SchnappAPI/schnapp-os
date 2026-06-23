@@ -811,3 +811,20 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   `RUNNER_API_KEY`) for owner `rm` + console rotation. Memory (credentials-state / credential-leak / index)
   updated; handoff `033-phase3b-bearer-rotations.md`. Owner-pending: 2 client bearers, the `.bak` rm, the
   owner-console rotation set, PR merge.
+
+## 2026-06-23 — Plan review: ten decisions re-decided on purpose (decisions/0011)
+- Read the decision record `docs/schnapp-os-research-and-decisions-2026-06-23.md` (it was NOT on disk —
+  lived only in unpulled remote commit `48e2cec`, a GitHub web upload; local pull was failing). Fast-forwarded
+  local main → origin (clean, ff-only) to land it. First freshness casualty, logged in 0011.
+- Plan review (doc §7.4 step3 / §8): walked all ten load-bearing decisions; owner re-decided each on purpose.
+  Outcomes in `decisions/0011`: plan authority → doc governs, PLAN.md = parking lot; repo form → plainer (drop
+  marketplace-plugin); surface scope → narrow to current; rules → plain files (no gallery/presets/symlinks);
+  credentials → one centralized remote-MCP tool; MCP topology → few scoped servers, keep current host, defer
+  Cloudflare; backup → keep, prune write-only Obsidian mirror; agentic-OS layer → defer until loops fire; git →
+  main only + force-push guard; chat-memory → delete + generation off. Locked: keep Schnapp-OS, no 4th repo.
+- Reframed PLAN.md (same change): top banner + Locked-decisions note → not the spine, a backlog; 0011 wins on conflict.
+- FINDING (for the freshness/guardrail phase): old "frozen" schnapp-kit is still live — its
+  `no-commit-to-main.sh` PreToolUse hook fired here, blocking commits. Buggy (false-positives read-only
+  `git merge-base`) AND policy-wrong (forces branches vs decision #9 main-only). To be removed + replaced by the
+  real force-push guard. These records are written but NOT yet committed because of it.
+- NEXT (do not build yet): capture original repo intent → freshness gate → capture-and-route → prune.
