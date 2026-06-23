@@ -15,6 +15,32 @@ append-only **changelog**.
 > A value that leaked is dead the moment it is exposed. Relocating or redacting it is not enough —
 > only rotation makes it safe. [[credential-leak-2026-06-17]]
 
+## What the owner gets when this fires
+
+Trigger: the owner types **`/rotate-secret <name>`** (or just "X leaked / rotate X"), or I auto-invoke
+it the moment I expose something. Output is ONE ordered runbook for that secret — never a lecture.
+Every step is tagged so the owner never guesses who does what:
+
+- **🤖 ME** — I run it this session, no owner action: `op item edit`, `gh secret set` across repos,
+  launchd restarts, all verification.
+- **🖐️ YOU** — only the legs I can't reach: an external console (GitHub / Anthropic / Cloudflare /
+  Render redeploy) or pasting an owner-minted value. Each comes with the **exact URL + click-path**
+  and the **exact line to paste** — nothing to look up.
+
+The runbook is always the same shape, generated for the named secret:
+
+1. **Is it dead yet?** one line (leaked = compromised until rotated; we rotate, never hide).
+2. **Mint** the fresh value — 🤖 if `openssl`-generatable, 🖐️ if a console regen (I give the click-path).
+3. **Store** in 1Password — 🤖, non-echoing (step 3 below).
+4. **Propagate** to every leg in the map's `consumed_by` — each a copy-paste block, in order, gotchas inline.
+5. **Restart / redeploy** what caches it — 🤖 for launchd, 🖐️ for the Render redeploy.
+6. **Verify** every surface — 🤖; old value must fail, new must work.
+7. **Record** in the map changelog — 🤖.
+
+I close with: **"Say `go` and I run every 🤖 step now."** The owner only ever does the 🖐️ ones.
+On a surface without this skill (claude.ai web, iPhone), the same runbook comes from the remote-MCP
+credential tool once it is built — until then, [session-hygiene](../session-hygiene/SKILL.md) covers it.
+
 ## Protocol (one item at a time)
 
 1. **List the legs.** Read the item's `consumed_by` in the [map](../../../../credentials-map.md).

@@ -38,6 +38,7 @@ Transport: streamable-http on port 8765
 
 import contextvars
 import os
+import re
 import subprocess
 import platform
 import time
@@ -583,6 +584,28 @@ def web_status() -> dict:
     }
 
 
+# --- secret redaction: never surface a secret value (launchctl print dumps the process's
+# inherited environment, which holds OP_SERVICE_ACCOUNT_TOKEN and friends). secrets-as-references. ---
+_SECRET_LINE = re.compile(
+    r'([A-Za-z0-9_]*(?:TOKEN|SECRET|PASSWORD|BEARER|CREDENTIAL|API_?KEY|_KEY|AUTH|_PAT)[A-Za-z0-9_]*'
+    r'\s*(?:=>|=|:)\s*)(\S+)'
+)
+_SECRET_TOKEN = re.compile(
+    r'(?:ops_[A-Za-z0-9._-]{12,}|sk-ant-[A-Za-z0-9._-]{12,}|ghp_[A-Za-z0-9]{12,}'
+    r'|github_pat_[A-Za-z0-9_]{12,}|eyJ[A-Za-z0-9._-]{20,})'
+)
+
+
+def _redact_secrets(text):
+    """Strip secret values from any text we surface. Redacts KEY=>value pairs whose key names a
+    secret, plus known token formats anywhere. Over-redaction is safe; a leaked value is not."""
+    if not text:
+        return text
+    text = _SECRET_LINE.sub(lambda m: m.group(1) + "[REDACTED]", text)
+    text = _SECRET_TOKEN.sub("[REDACTED]", text)
+    return text
+
+
 @mcp.tool()
 def service_status(label: str) -> dict:
     """
@@ -599,7 +622,7 @@ def service_status(label: str) -> dict:
         text=True,
         timeout=10,
     )
-    detail = r.stdout.strip()[:2000] if r.returncode == 0 else None
+    detail = _redact_secrets(r.stdout.strip())[:2000] if r.returncode == 0 else None
     return {
         "label": label,
         "running": pid is not None,
