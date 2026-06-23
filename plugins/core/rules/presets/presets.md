@@ -24,7 +24,7 @@ an already-available skill, not built here). Full inventory: [`CATALOG.md`](../.
 
 - **work-etl-sql / personal-sports-etl** (the ETL core):
   `etl-pipeline-build`, `sql-server-patterns`, `regex-vs-llm-structured-text`,
-  `data-throughput-accelerator`, `benchmark`, `benchmark-optimization-loop`;
+  `data-throughput-accelerator`, `benchmark`;
   agents `sql-etl-reviewer`, `performance-optimizer`;
   HAVE: `pq-flat-map-type`, the `data:*` suite (analyze, write-query, explore-data,
   build-dashboard), `xlsx`, `deep-research`, `docs-lookup`.
@@ -39,8 +39,7 @@ an already-available skill, not built here). Full inventory: [`CATALOG.md`](../.
 
 **Cross-cutting (reach for in any project):** `docs-lookup`, `council`, `grill-me`,
 `rules-distill`, `surface-check`, `session-hygiene`, `merge-with-discretion`,
-`token-budget-advisor`, `context-budget`, `strategic-compact`, `clean-gone`,
-`cost-aware-llm-pipeline`, `content-hash-cache-pattern`, `latency-critical-systems`; plus the
+`context-budget`, `clean-gone`, `content-hash-cache-pattern`, `latency-critical-systems`; plus the
 keep-set plugins (superpowers brainstorming / TDD / systematic-debugging /
 requesting-code-review, `/code-review`, caveman).
 

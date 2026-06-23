@@ -867,3 +867,14 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   routed (behavioral) to the EXISTING rule, not a new file -> added a "A defect is not a decision"
   bullet to `working-style.md` (bumped updated: 2026-06-23). Correct routing = sharpen the existing
   home, not duplicate.
+- PRUNE step (first cut), owner-approved after challenging the reasoning. Cut 4 skills on SOUND
+  per-item grounds (NOT provenance): `token-budget-advisor` + `strategic-compact` (redundant with
+  active caveman mode / native compaction), `cost-aware-llm-pipeline` (no owner LLM-batch work) +
+  `benchmark-optimization-loop` (redundant with the kept performance-optimizer agent). KEPT the rest:
+  the owner challenged my initial 8-cut list; verified per-item, most touch real ETL/sports/perf
+  domains (regex-vs-llm, content-hash-cache, benchmark, latency-critical, data-throughput) or the
+  leanness goal (context-budget) — keeping them is "narrow to what is REAL." Ripples fixed in the same
+  change: 5 live references (performance-optimizer agent, presets ×2, benchmark, context-budget),
+  regenerated CATALOG (26→22 skills), freshness gate GREEN. Historical records (decisions/0007,
+  handoffs 014/015) left intact as record; CATALOG is the live inventory. Lesson reinforced: cut only
+  on verified redundancy or owner-confirmed out-of-domain, never on an agent's label.

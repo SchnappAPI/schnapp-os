@@ -6,10 +6,8 @@ description: Use when a session feels sluggish or output quality is degrading, a
 # context-budget
 
 Estimate token overhead across the loaded components (agents, skills, rules, MCP servers,
-CLAUDE.md) and surface what to trim. This is about *loaded-component* cost. For per-answer
-output depth see `token-budget-advisor`; for when to compact mid-session see
-`strategic-compact`. Estimation heuristics live here and are reused by `token-budget-advisor`:
-prose `words × 1.3`, code-heavy `chars / 4`.
+CLAUDE.md) and surface what to trim. This is about *loaded-component* cost. Estimation
+heuristics: prose `words × 1.3`, code-heavy `chars / 4`.
 
 ## 1. Inventory
 
