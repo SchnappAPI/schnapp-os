@@ -1,17 +1,21 @@
 #!/usr/bin/env bash
-# session-start-gate.sh — schnapp-os SessionStart freshness + git gate (PLAN.md 5.3 / 7.2).
+# session-start-gate.sh — schnapp-os SessionStart freshness gate.
 #
-# Fires at session start (matcher: startup). Two deterministic jobs:
-#   1. SYNC: git pull --ff-only — absorbs the Part 0.3 sync (non-fatal, fast-forward only,
-#      never clobbers local work; surfaces divergence).
-#   2. GATE: surface unmerged / unpushed / dirty git state + a memory freshness scan so the
-#      agent addresses stale state and unpushed work BEFORE new work. This is the deterministic
-#      half of the freshness-gate procedure in memory/README.md; the memory *reasoning*
-#      (compare updated:, decide what is current) stays the agent's job — this hook only
-#      surfaces the signals.
+# Fires at session start (matcher: startup). Reconciles local state against ground truth
+# BEFORE any work, because GitHub origin is the source of truth (you may have edited it from
+# the web / another surface) and the 1Password store is the source of truth for credentials.
 #
-# Stdout is injected into the session context by Claude Code. The hook never blocks and
-# always exits 0 (a SessionStart failure must not stop the session).
+# Jobs (all deterministic; the agent's reasoning stays the agent's job):
+#   1. SYNC: fast-forward local to origin (explicit refspec — the bare `git pull --ff-only`
+#      form once failed with "Cannot fast-forward to multiple branches" and silently left the
+#      repo stale). Never clobbers local work; surfaces divergence loudly.
+#   2. GIT STATE: surface dirty / unpushed / behind so it is addressed before new work.
+#   3. MEMORY: supersede-orphan scan (a fact that supersedes another whose file still exists).
+#   4. SATELLITES: unpushed state in related repos (decisions/0008).
+#   5. CREDS: light reconcile that the 1Password store resolves (deep check = remote op-mcp health).
+#
+# Stdout is injected into the session context by Claude Code. Budget ~1s. Never blocks; always
+# exits 0 (a SessionStart failure must not stop the session).
 set -uo pipefail
 
 REPO="${CLAUDE_PROJECT_DIR:-$PWD}"
@@ -25,17 +29,18 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   exit 0
 fi
 
-# 1. Sync (Part 0.3): fast-forward only; non-fatal.
-if pull_out="$(git pull --ff-only 2>&1)"; then
-  echo "[sync] $pull_out"
+branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'HEAD')"
+
+# 1. Sync: explicit fast-forward to origin/<branch>. Ground truth (origin) wins; never clobbers.
+if sync_out="$(git pull --ff-only origin "$branch" 2>&1)"; then
+  echo "[sync] origin/$branch: $(echo "$sync_out" | tail -1)"
 else
-  echo "[sync] pull not fast-forward or offline — resolve before work (PLAN 0.3 / 8.2): $pull_out"
+  echo "[sync] could NOT fast-forward origin/$branch — diverged, dirty, or offline. Reconcile before work:"
+  echo "$sync_out" | sed 's/^/        /'
 fi
 
-# 2. Git gate: surface state to address first.
-branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?')"
+# 2. Git state to address first.
 echo "[git] branch: $branch"
-
 dirty="$(git status --porcelain 2>/dev/null)"
 if [ -n "$dirty" ]; then
   echo "[git] UNCOMMITTED changes — commit state-changing work before new work:"
@@ -43,7 +48,6 @@ if [ -n "$dirty" ]; then
 else
   echo "[git] working tree clean"
 fi
-
 upstream="$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null || true)"
 if [ -n "$upstream" ]; then
   ahead="$(git rev-list --count '@{u}'..HEAD 2>/dev/null || echo 0)"
@@ -68,7 +72,7 @@ if [ -d "$MEM" ]; then
     [ -f "$MEM/$sup.md" ] && orphans="${orphans}        - $(basename "$f") supersedes '$sup' but $sup.md still exists"$'\n'
   done
   if [ -n "$orphans" ]; then
-    echo "[memory] SUPERSEDE-ORPHANS — the old fact should be replaced/removed (supersede-not-append):"
+    echo "[memory] SUPERSEDE-ORPHANS — replace/remove the old fact (supersede-not-append):"
     printf "%s" "$orphans"
   else
     echo "[memory] no supersede-orphans"
@@ -77,18 +81,29 @@ else
   echo "[memory] no memory/ dir"
 fi
 
-# 4. Satellite repos (owner Mac): surface unpushed/dirty state in related repos so cross-repo
-#    work is not lost (decisions/0008 — both CONNECTIONS.md and the vault once sat unpushed).
-#    Existence-guarded, so this no-ops on machines that lack these checkouts.
+# 4. Satellite repos (owner Mac): surface unpushed state so cross-repo work is not lost
+#    (decisions/0008). Existence-guarded, so this no-ops on machines that lack these checkouts.
 for sat in "$HOME/code/schnapp-bet" "$HOME/Library/CloudStorage/OneDrive-Schnapp/Obsidian"; do
   [ -d "$sat/.git" ] || continue
   name="$(basename "$sat")"
-  # unpushed-only: these repos (esp. the vault) are routinely mid-edit, so dirty is expected
-  # noise; the lapse we guard against is committed-but-unpushed work.
   sa="$(git -C "$sat" rev-list --count '@{u}'..HEAD 2>/dev/null || echo 0)"
-  if [ "$sa" != "0" ]; then echo "[satellite:$name] UNPUSHED: $sa commit(s) not on origin — push (decisions/0008)."; else echo "[satellite:$name] pushed (no unpushed commits)"; fi
+  if [ "$sa" != "0" ]; then echo "[satellite:$name] UNPUSHED: $sa commit(s) not on origin — push (decisions/0008)."; else echo "[satellite:$name] pushed"; fi
 done
 
-echo "[next] Address unpushed/unmerged + stale memory above BEFORE new work (PLAN 5.3 / 8.2)."
+# 5. Credential reconcile (light; the authoritative deep check is the remote op-mcp op_health tool).
+#    Only calls the network when the SA token is already in env, so it never cries wolf.
+if [ -n "${OP_SERVICE_ACCOUNT_TOKEN:-}" ] && command -v op >/dev/null 2>&1; then
+  if op whoami >/dev/null 2>&1; then
+    echo "[creds] 1Password SA resolves (op whoami ok)"
+  else
+    echo "[creds] SA token set but 'op whoami' FAILED — may be rotated/invalid; fix before secret-dependent work."
+  fi
+elif command -v op >/dev/null 2>&1; then
+  echo "[creds] op CLI present; SA token not in hook env (per-command 'op run' resolves it). Deep check = remote op-mcp health."
+else
+  echo "[creds] no local op — this surface resolves secrets via the remote op-mcp tool."
+fi
+
+echo "[next] Address sync/unpushed/dirty + stale memory + creds above BEFORE new work."
 echo "========================================"
 exit 0

@@ -1,5 +1,14 @@
 # 0005 — Hook delivery: plugin-global vs claude-kit-project split (2026-06-05)
 
+> **SUPERSEDED 2026-06-23 (decision 0011 #2).** The plugin-global delivery described here was
+> reversed: all three hooks are now wired directly in `schnapp-os/.claude/settings.json` against
+> live `${CLAUDE_PROJECT_DIR}` paths, and the plugin `hooks.json` declares no hooks. Reasons: the
+> "plainer repo, drop plugin packaging" decision, and plugin snapshot delivery proved unreliable
+> (`installed_plugins.json` pinned old commits / referenced cleaned cache paths, so a stale
+> claude-kit-era gate fired). The "every Code project on every machine" goal below is intentionally
+> dropped — hooks are scoped to the schnapp-os OS repo; cross-surface freshness is the remote-MCP
+> layer's job (decision 0011 #2, #5, #6). The rest of this ADR is kept as the record of what was.
+
 Goal: the Part-7 "must happen" hooks run on **every Code project on every machine**, per PLAN 7.2
 ("hooks for Code on all machines") and the kernel objective (one central system, not Mac-bound or
 repo-siloed).

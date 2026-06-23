@@ -839,3 +839,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   still fires vs the repo's `schnapp-os` source; (5) no scoped memory/control-plane MCP server, mac-mcp is the
   mega-server #6 warns against; (6) force-push guard #9 not built yet. Owner-action items (chat-memory off,
   open credential legs) listed in the doc §6.
+- FRESHNESS GATE built (loop 1, the next step after capture-intent). Three changes:
+  (1) Fixed the sync bug: `session-start-gate.sh` bare `git pull --ff-only` (which failed "Cannot
+  fast-forward to multiple branches" and silently left the repo stale — it lost the decision doc) →
+  explicit `git pull --ff-only origin "$branch"`. Added a light credential reconcile (`op whoami`
+  when the SA token is in env; deep check = remote op-mcp). ~1s, non-blocking, exit 0.
+  (2) Moved hook DELIVERY off the fragile plugin → into `.claude/settings.json` (live
+  `${CLAUDE_PROJECT_DIR}` paths) for all three hooks (SessionStart gate, Stop push-gate, SessionEnd
+  backup). Root cause: `installed_plugins.json` pinned old commits + referenced cleaned cache paths,
+  so a stale claude-kit-era gate fired. Plugin `hooks.json` now declares no hooks; decision 0005
+  annotated SUPERSEDED.
+  (3) VERIFIED by running: sync `Already up to date` (no multi-branch error), git/memory/satellite
+  state correct, `[creds] 1Password SA resolves`, 1.7s. Live-fires via project settings NEXT session.
+  Scope = schnapp-os repo (per 0011 #2); cross-surface freshness = the remote-MCP layer (next).
+  Cosmetic cleanup remaining (non-blocking, gate no longer depends on it): dead plugin registrations
+  in ~/.claude (claude-kit-core@claude-kit, schnapp-kit) — clean via /plugin when convenient.
