@@ -908,3 +908,33 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Permanent class-fix remains decision 0011 #2 (drop the plugin packaging in repo-flattening); until
   then, re-pin after any hook/structure change. Corrected the "cosmetic" misclaim in handoff 034 and
   the FRESHNESS GATE block above.
+
+## 2026-06-23 (cont.) — rotate-secret reshaped + service_status leak plugged (4820fef)
+- Owner fed up with rotation churn, asked for a trigger-it-and-tell-me tool. That skill already
+  existed (`rotate-secret`) but read as agent-internal. Reshaped it: explicit owner trigger
+  `/rotate-secret <name>` + an output contract emitting one ordered runbook per secret, every step
+  tagged 🖐️ YOU (exact console click-path / paste line) vs 🤖 ME (I run it), closing "say go". Drives
+  off the map's `consumed_by`. NOT a new skill — sharpened the existing one (adherence, not duplication).
+- Prevention for the leak that prompted it: the Mac MCP `service_status` returned raw `launchctl print`
+  incl. the process's `inherited environment` → leaked the live `OP_SERVICE_ACCOUNT_TOKEN` into the
+  transcript. Added `_redact_secrets()` to `connectors/mac-mcp/server.py`; fixed an over-redaction bug
+  (`PAT`→`_PAT` so PATH survives); unit-tested, scanner clean. Owner reloaded macmcp → live. SA NOT
+  re-rotated (owner call; token only hit a local transcript, source now fixed). De-staled map + leak count.
+
+## 2026-06-23 (cont.) — memory-mcp built (cross-surface memory layer, biggest deferred piece)
+- Inventoried the live remote MCP servers first (owner method §7.2 step 2): op-mcp = credential tool
+  (#5, exists); Mac ops = control-plane but the mega-server #6 warns against; a `76d929ef` brain-capture
+  notes server = test-only/unadopted; GitHub/M365/Cloudflare = integrations. Conclusion: credential +
+  integration slots filled; the real gap is **cross-surface memory reconcile** — the `memory/` lane is
+  only reachable on Code-on-Mac (hooks + git). Owner chose: new memory server over the git-tracked lane,
+  prune the brain-capture server.
+- Built `connectors/memory-mcp/` (TypeScript, mirrors the op-mcp Render template: Express + MCP SDK
+  StreamableHTTP stateless, bearer gate, Dockerfile, `.env.template` op:// refs). Backing store = the
+  **GitHub Contents API** on `SchnappAPI/schnapp-os@main` `memory/` → GitHub origin is the source of truth,
+  no Mac dependency. Tools: `memory_health/index/list/read/search/write/delete`; `memory_write` enforces the
+  `memory/README` discipline (one-fact-one-file, supersede-not-append, source/updated frontmatter, index upkeep).
+- Verified: `npm run build` clean; smoke-tested the GitHub client against the LIVE repo (health authenticated,
+  read MEMORY.md, listed 10 .md / 8 facts). Write path reuses the same proven client (unverified-live to avoid
+  noise commits). DEPLOY.md written (owner: fine-grained PAT + bearer + Render service + connector; Render owner-only).
+- NEXT: owner deploys per DEPLOY.md + records the two secrets in the map `consumed_by`; then prune the
+  brain-capture server; then #4 rules-simplification / #2 repo-flattening / force-push guard #9 / eval gate.
