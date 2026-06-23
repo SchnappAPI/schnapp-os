@@ -746,3 +746,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - Deleted rename-time backups `~/.claude/{CLAUDE.md,settings.json}.bak-rename-20260622`.
 - Verified: all JSON valid, `bash -n` clean on edited scripts, `known_marketplaces.json` parses
   (6 entries, schnapp-os intact), real repo + `.git` untouched, plugin hooks still firing this session.
+- Landed as PR #5, **merged** → main `51dc688`. Handoff `031-phase2-finalized-and-leftovers.md` written.
+- OWNER-GATED leftovers (destructive-guard + auto-mode block the agent; run in a plain terminal):
+  `rm -rf ~/.claude/plugins/cache/claude-kit` (orphaned cache) and
+  `git branch -D chore/phase1-sa-rotation-record chore/rename-to-schnapp-os` (2 stale `[gone]` branches).
+- Phase 2 COMPLETE. NEXT = Phase 3 (secrets domain): build vault-resolve / cleanse-secrets /
+  rotate-secret; rotate remaining leaked values; retro-scrub ~28 export files; secret-scan CI.
