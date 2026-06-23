@@ -713,3 +713,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   FIX (no rotation): graceful-restart com.schnapp.macmcp (re-reads ~/.zshrc) + update the Render
   op-mcp OP_SERVICE_ACCOUNT_TOKEN env + redeploy. Captured the rotation gotcha for the 0001 runbook.
   credentials-state.md updated with the confirmed cause + fix; FV#7 reopens to PASS once verified green.
+
+## 2026-06-22 — Phase 1 SA-token rotation COMPLETE
+- Owner rotated the SA token **in place** (1P `OP_SERVICE_ACCOUNT_TOKEN/credential`). Old token dead
+  (`403 Service Account Deleted`); new last4 `bSJ9`, `op whoami` integration `55TZ…` (was `VU2RK…`).
+- Propagated no-echo: 11 GH repo secrets, `~/.zshrc` + `~/.zshenv` (**UNQUOTED**), launchd session env
+  (`com.schnapp.environment` re-run), Render `op-mcp` env + redeploy (owner). plist holds no token
+  (sources `~/.zshenv`).
+- Restarted + verified healthy: `com.schnapp.{macmcp,githubmcp,obsidian-mcp,brain-watcher}` +
+  `bet.schnapp.{web-prod(200),flask}`. shell `op whoami`=`55TZ`; Render `op_health`=authenticated.
+- Self-inflicted + fixed: quoting the token broke `op-wrap.sh` (greps `~/.zshrc`, no source) → 6
+  services crash-looped on `unrecognized auth type`; fixed by unquoting. Lesson:
+  `memory/op-wrap-token-unquoted.md`.
+- PENDING (owner): Mac MCP connector bearer is stale in the **Claude account** connector config
+  (server/env/vault all = `…6267`). Fix in claude.ai Settings→Connectors / the Cloudflare MCP portal.
+  Details: `handoffs/030-phase1-sa-rotation-complete.md`.
