@@ -34,8 +34,21 @@ as compromised. Reorg-without-rotation only relocates burned values.
   dead values). Stop exporting credential-bearing chats; never paste vault values into notes.
 - NEVER write a secret value into any tracked file ([secrets-as-references] rule).
 
-Status as of 2026-06-17: leak found, plan locked, SA-token rotation pending owner mint.
-Reorg in-flight: created items `MAC_MCP_AUTH_TOKEN` + `GITHUB_MCP_AUTH_TOKEN` (currently hold
-leaked bearer values → must get fresh values), repointed 6 connector `.env.template` files
-(repo + deployed). Nothing committed/deleted/restarted yet. Links: [[credentials-state]],
-[[obsidian-state]], [[mac-connector-tooling]].
+**Rotation progress (supersedes the 2026-06-17 "nothing rotated yet" status):**
+- ✅ `OP_SERVICE_ACCOUNT_TOKEN` rotated 2026-06-22 (Phase 1) — old SA deleted. [[credentials-state]]
+- ✅ **All 3 MCP bearers rotated 2026-06-23 (Phase 3B)**, fresh `openssl` values, non-echoing, Mac-side
+  verified (`:8765`/`:8766` new→200/bogus→401; op-mcp `op_health` authenticated). Owner client legs
+  (claude.ai `mac-mcp` bearer, Copilot `github-mcp` bearer) still pending; op-mcp clients are OAuth.
+- ⏳ **Still outstanding (owner consoles, rotate-on-migrate):** `GITHUB_PAT` (+`GITHUB_PAT_ADMIN`),
+  Anthropic API key, Claude OAuth, DB `sa`, Web App secrets, **`RUNNER_API_KEY`** (newly surfaced — see
+  below), Webshare, Cloudflare.
+- ⏳ Leak scrub of the ~28 `obsidian-vault` export files: not started (separate repo; history-rewrite
+  still deferred until after rotation).
+
+**New leak vector found 2026-06-23 (Phase 3B):** plaintext-secrets backup
+`~/Library/LaunchAgents/com.schnapp.macmcp.plist.bak.20260524-105649` (the pre-op-wrap design) hardcoded
+`MAC_MCP_AUTH_TOKEN` (now dead, rotated), `GH_PAT`, and `RUNNER_API_KEY` (`= Web App /runner_api_key`).
+Owner: `rm` the `.bak`; `GITHUB_PAT` + `RUNNER_API_KEY` join the console-rotation set. `RUNNER_API_KEY`'s
+value also transited the 2026-06-23 Code session transcript (a redaction gap when dumping the file).
+
+Links: [[credentials-state]], [[obsidian-state]], [[mac-connector-tooling]].

@@ -3,16 +3,18 @@ name: credentials-state
 metadata: 
   node_type: memory
   scope: global
-  source: "decisions/0001, decisions/0004; SA rotation 2026-06-22"
-  updated: 2026-06-22
-  supersedes: "2026-06-17 outage-resolved note"
+  source: "decisions/0001, decisions/0004; SA rotation 2026-06-22; Phase 3B bearer rotations 2026-06-23"
+  updated: 2026-06-23
+  supersedes: "2026-06-17 outage-resolved note; pre-3B 'Mac MCP client bearer PENDING' framing"
   originSessionId: 33c726f1-b86d-4a93-8586-061ec9ca3f3e
 ---
 
 > 🔴 **Leak still in force for SECRECY:** every PRE-2026-06-22 vault value was dumped in
-> `obsidian-vault` Claude-export files + synced to OneDrive → compromised. The **SA token** was
-> rotated 2026-06-22 (below); the other leaked values still await rotate-on-migrate (Phase 3).
-> See [[credential-leak-2026-06-17]].
+> `obsidian-vault` Claude-export files + synced to OneDrive → compromised. **Rotated so far:** the
+> **SA token** (2026-06-22, below) and **all 3 MCP bearers** (`MAC_MCP_AUTH_TOKEN`,
+> `GITHUB_MCP_AUTH_TOKEN`, `OP_MCP_BEARER` — 2026-06-23, Phase 3B). **Still compromised → owner-console
+> rotation outstanding:** `GITHUB_PAT`, Anthropic API key, Claude OAuth, DB `sa`, Web App secrets
+> (incl. `RUNNER_API_KEY`), Webshare, Cloudflare. See [[credential-leak-2026-06-17]].
 
 **SA TOKEN ROTATED 2026-06-22 (Phase 1 done).** Old SA `VU2RKR2IDZB6TCAKQRK7J2W5EE` is **deleted**
 (any old token now returns `403 Forbidden — Service Account Deleted`). New SA integration
@@ -47,10 +49,26 @@ the old token in-process → restart them (`launchctl kickstart -k gui/$(id -u)/
 `com.schnapp.environment` to refresh the launchd session env, AND update Render `op-mcp` env +
 redeploy. Else `op_*` keeps failing though `~/.zshrc` is correct.
 
-**Mac MCP client bearer (PENDING, separate):** the `com.schnapp.macmcp` MCP tools return
-`unauthorized` to the Claude session even with the server healthy (`Application startup complete`).
-That is the client↔server **bearer** (`OP_MCP_BEARER` / `MAC_MCP_AUTH_TOKEN`, recent rename), NOT the
-SA token — fix in the bearer step. `gh`/GitHub auth is independent of the SA and unaffected.
+**MCP bearers ROTATED 2026-06-23 (Phase 3B).** All three leaked bearers minted fresh
+(`openssl rand -hex 32`, non-echoing) and verified on the Mac side:
+- `MAC_MCP_AUTH_TOKEN` → restarted `com.schnapp.macmcp`; `:8765` new bearer 200 / bogus 401. (The old
+  `…6267` value — the one this/earlier sessions' Mac MCP tools presented as `unauthorized` — is now dead.)
+- `GITHUB_MCP_AUTH_TOKEN` → restarted `com.schnapp.githubmcp`; `:8766` new bearer 200 / bogus 401.
+- `OP_MCP_BEARER` → owner propagated Render env (+redeploy) + Cloudflare portal Custom header; `op_health`
+  authenticated; origin `/mcp` new bearer 200 / bogus 401. (Clients reach the portal over **OAuth** — no
+  static client bearer to rotate on Mac/claude.ai/iPhone.)
+
+**Owner CLIENT legs still pending (don't break anything; just refresh the client to the new value):**
+- claude.ai connector `mac-mcp.schnapp.bet` Authorization Bearer = `op://web-variables/MAC_MCP_AUTH_TOKEN/credential`.
+- Copilot / github-mcp client bearer = `op://web-variables/GITHUB_MCP_AUTH_TOKEN/credential`.
+
+**Found mid-3B (Mac infra, not the SA):** (a) deployed `~/{mac,github,obsidian}-mcp/server.py` symlinked
+the **dead** `~/code/claude-kit/*` path (Phase 2 rename residual) — repointed to `~/code/schnapp-os/*`
+before any restart (else all three crash-loop). (b) `com.schnapp.macmcp.plist` had been clobbered to a
+bare JSON array (no `Label`/`WorkingDirectory`) → reboot would run macmcp **unauthed/exposed** — rewrote
+as a proper secrets-free op-wrap `<dict>` (not reloaded; running job healthy). (c) plaintext-secrets
+backup `…macmcp.plist.bak.20260524` holds the dead MAC bearer + live `GH_PAT`/`RUNNER_API_KEY` → owner
+`rm` + those two join the console-rotation set. `gh`/GitHub auth is independent of the SA and unaffected.
 
 GitHub Actions: `OP_SERVICE_ACCOUNT_TOKEN` set on all 11 repos 2026-06-22 (not yet exercised by a real
 run post-rotation). `DB_Storage` + `appfolio-marketing-project` still lack it (owner decision pending).
