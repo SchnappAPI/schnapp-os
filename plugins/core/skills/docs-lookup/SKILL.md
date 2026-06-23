@@ -1,13 +1,13 @@
 ---
 name: docs-lookup
-description: Use when the answer likely lives in the owner's OWN notes/knowledge — a past decision, project context, a runbook, a domain fact, or anything captured in the Obsidian vault (which mirrors claude-kit's memory/handoffs/decisions). Search the owner's knowledge before answering from memory or rebuilding context. For EXTERNAL library/framework/API docs use context7 instead.
+description: Use when the answer likely lives in the owner's OWN notes/knowledge — a past decision, project context, a runbook, a domain fact, or anything captured in the Obsidian vault (which mirrors schnapp-os's memory/handoffs/decisions). Search the owner's knowledge before answering from memory or rebuilding context. For EXTERNAL library/framework/API docs use context7 instead.
 ---
 
 # docs-lookup
 
 Look up the owner's own knowledge in the **Obsidian vault** before answering from training
 memory or re-deriving context. The vault holds the owner's notes plus the mirrored
-`claude-archive` (claude-kit's `memory/`, `handoffs/`, `decisions/`, PLAN/PROGRESS — written
+`claude-archive` (schnapp-os's `memory/`, `handoffs/`, `decisions/`, PLAN/PROGRESS — written
 by `backup-archive.sh`), so past decisions and project context are searchable here.
 
 This is for the owner's OWN knowledge. For external library/framework/API docs, use the
@@ -22,7 +22,7 @@ This is for the owner's OWN knowledge. For external library/framework/API docs, 
 
 Probe before relying on it (see [`verify-before-asserting`](../../rules/global/verify-before-asserting.md)):
 if the obsidian tools are not present (or the Mac is off), say so and fall back to the GitHub copy
-(`SchnappAPI/obsidian-vault`, or claude-kit's own `memory/`/`decisions/` in this repo).
+(`SchnappAPI/obsidian-vault`, or schnapp-os's own `memory/`/`decisions/` in this repo).
 
 ## Workflow
 

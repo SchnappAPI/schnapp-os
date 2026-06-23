@@ -12,7 +12,7 @@ source → script → table. A generated projection, not hand-maintained prose (
 Steps Claude follows:
 
 1. Resolve the target directory (argument, else the current repo root). For the owner's
-   downstream ETL repos, not claude-kit (which is a docs/config repo with no code graph —
+   downstream ETL repos, not schnapp-os (which is a docs/config repo with no code graph —
    its catalog IS its map).
 2. Scan structure without dumping it: top-level packages/dirs, entry points (`__main__`,
    CLI scripts, scheduled jobs), and the module each one calls.

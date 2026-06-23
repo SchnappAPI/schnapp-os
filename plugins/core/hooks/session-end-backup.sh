@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# session-end-backup.sh — claude-kit end-of-session write, deterministic half (PLAN.md 5.4 / 7.2).
+# session-end-backup.sh — schnapp-os end-of-session write, deterministic half (PLAN.md 5.4 / 7.2).
 #
 # Fires on SessionEnd. Two jobs:
 #   1. BACKUP: run backup-archive.sh — mirror memory/handoffs/decisions/PLAN/PROGRESS +
@@ -17,9 +17,9 @@ set -uo pipefail
 REPO="${CLAUDE_PROJECT_DIR:-$PWD}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "===== claude-kit SESSION-END ====="
+echo "===== schnapp-os SESSION-END ====="
 
-# 1. Backup (non-fatal). backup-archive.sh always mirrors the claude-kit knowledge base
+# 1. Backup (non-fatal). backup-archive.sh always mirrors the schnapp-os knowledge base
 #    (its own CLAUDE_KIT_REPO default / env override), regardless of the session's project.
 BACKUP="$SCRIPT_DIR/../scripts/backup-archive.sh"
 if [ -f "$BACKUP" ]; then

@@ -12,16 +12,16 @@
 -->
 # Global instructions (this machine)
 
-Single source of truth for the always-on global rules is the claude-kit repo:
-`~/code/claude-kit/plugins/core/rules/global/`. These load in every project on this
+Single source of truth for the always-on global rules is the schnapp-os repo:
+`~/code/schnapp-os/plugins/core/rules/global/`. These load in every project on this
 machine and stay current via the repo's SessionStart `git pull` (PLAN.md Part 0.3 / 2.2).
 Edit the files in the repo, never here. Path-scoped language/tool/activity modules are
 NOT global — projects compose those via `/new-project` (Part 3).
 
-@~/code/claude-kit/plugins/core/rules/global/working-style.md
-@~/code/claude-kit/plugins/core/rules/global/knowledge-capture.md
-@~/code/claude-kit/plugins/core/rules/global/naming-discipline.md
-@~/code/claude-kit/plugins/core/rules/global/secrets-as-references.md
-@~/code/claude-kit/plugins/core/rules/global/verify-before-asserting.md
-@~/code/claude-kit/plugins/core/rules/global/anti-stale.md
-@~/code/claude-kit/plugins/core/rules/global/speed-by-default.md
+@~/code/schnapp-os/plugins/core/rules/global/working-style.md
+@~/code/schnapp-os/plugins/core/rules/global/knowledge-capture.md
+@~/code/schnapp-os/plugins/core/rules/global/naming-discipline.md
+@~/code/schnapp-os/plugins/core/rules/global/secrets-as-references.md
+@~/code/schnapp-os/plugins/core/rules/global/verify-before-asserting.md
+@~/code/schnapp-os/plugins/core/rules/global/anti-stale.md
+@~/code/schnapp-os/plugins/core/rules/global/speed-by-default.md

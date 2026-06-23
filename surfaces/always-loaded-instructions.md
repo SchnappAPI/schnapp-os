@@ -1,4 +1,4 @@
-# claude-kit always-loaded instructions (hookless surfaces)
+# schnapp-os always-loaded instructions (hookless surfaces)
 
 Canonical text to paste into the always-loaded slot of each hookless surface: claude.ai
 (Settings > Profile > Preferences = account-wide/global, owner's choice 2026-06-16 — this also
@@ -13,7 +13,7 @@ for a Code session. State which path you used. Do not claim a capability exists 
 
 ## Must-happen procedures (no hooks here): run the session-hygiene skill
 - Start of work: the freshness/git gate. Catch up, then surface unmerged, unpushed, or stale state
-  (claude-kit plus the satellite repos schnapp-bet and obsidian-vault) before starting new work.
+  (schnapp-os plus the satellite repos schnapp-bet and obsidian-vault) before starting new work.
 - Wrapping up: the end-of-session write. Persist memory, a handoff, and PROGRESS, then commit/push
   via the GitHub connector or a generated Code prompt. Never skip the write.
 - After the owner corrects something: route it. Preference goes to a rules/global file; durable fact
@@ -39,5 +39,5 @@ On an unfamiliar surface, run surface-check first (loaded vs missing, with the f
 
 ## Persist (hookless)
 No local git here. Write repo files through the GitHub connector (create_or_update_file to
-SchnappAPI/claude-kit commits and pushes in one step), or hand the owner a ready-to-run Code prompt.
+SchnappAPI/schnapp-os commits and pushes in one step), or hand the owner a ready-to-run Code prompt.
 The OneDrive/Obsidian backup mirror runs from a Code/Mac SessionEnd hook, not from here: do not claim it ran.

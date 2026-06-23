@@ -43,7 +43,7 @@ where a *fresh* window is better, use a handoff skill instead:
 - **conversation-handoff** (anthropic) — structured summary when a task is wrapping and new
   work begins.
 
-Either output belongs in the claude-kit lanes: durable facts to the
+Either output belongs in the schnapp-os lanes: durable facts to the
 [memory lane](../../../../memory/README.md), session state to [`handoffs/`](../../../../handoffs/).
 See [knowledge-capture](../../rules/global/knowledge-capture.md) for what goes where.
 

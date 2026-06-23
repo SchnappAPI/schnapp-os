@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# session-start-gate.sh — claude-kit SessionStart freshness + git gate (PLAN.md 5.3 / 7.2).
+# session-start-gate.sh — schnapp-os SessionStart freshness + git gate (PLAN.md 5.3 / 7.2).
 #
 # Fires at session start (matcher: startup). Two deterministic jobs:
 #   1. SYNC: git pull --ff-only — absorbs the Part 0.3 sync (non-fatal, fast-forward only,
@@ -15,9 +15,9 @@
 set -uo pipefail
 
 REPO="${CLAUDE_PROJECT_DIR:-$PWD}"
-cd "$REPO" 2>/dev/null || { echo "[claude-kit gate] cannot cd to $REPO"; exit 0; }
+cd "$REPO" 2>/dev/null || { echo "[schnapp-os gate] cannot cd to $REPO"; exit 0; }
 
-echo "===== claude-kit SESSION-START GATE ====="
+echo "===== schnapp-os SESSION-START GATE ====="
 
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "[sync] not a git work tree; skipping gate"

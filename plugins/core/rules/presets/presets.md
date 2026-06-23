@@ -16,10 +16,10 @@ always apply and are not listed. You can add or remove any module after applying
 
 ## Recommended skills per preset
 
-Skills and agents are **plugin-global** (available in every project once claude-kit is
+Skills and agents are **plugin-global** (available in every project once schnapp-os is
 installed); they are not symlinked like rule modules. This list names the ones most relevant to
 each preset so `/new-project` records them in the project's CLAUDE.md and you reach for the
-right tool. Names are claude-kit skills/agents unless tagged with their source plugin (HAVE =
+right tool. Names are schnapp-os skills/agents unless tagged with their source plugin (HAVE =
 an already-available skill, not built here). Full inventory: [`CATALOG.md`](../../CATALOG.md).
 
 - **work-etl-sql / personal-sports-etl** (the ETL core):
