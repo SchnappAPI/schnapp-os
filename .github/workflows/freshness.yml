@@ -29,6 +29,9 @@ jobs:
       - name: Secret scanner self-test
         run: bash plugins/core/scripts/tests/test-scan-secrets.sh
 
+      - name: Supersede-orphan detector self-test
+        run: bash plugins/core/scripts/tests/test-supersede-orphans.sh
+
       - name: Secret scan (no literal values in tracked files)
         run: bash plugins/core/scripts/scan-secrets.sh --exclude 'plugins/core/scripts/tests/*'
 

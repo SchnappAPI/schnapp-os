@@ -60,20 +60,14 @@ else
 fi
 
 # 3. Memory freshness scan (deterministic signals; reasoning stays the agent's per memory/README.md).
+#    Detection logic + its unit test live in plugins/core/scripts/check-supersede-orphans.sh so the
+#    column-0-vs-indented-frontmatter bug (which made this a silent no-op) cannot regress unnoticed.
 MEM="$REPO/memory"
 if [ -d "$MEM" ]; then
-  orphans=""
-  for f in "$MEM"/*.md; do
-    [ -e "$f" ] || continue
-    case "$(basename "$f")" in MEMORY.md|README.md) continue;; esac
-    sup="$(sed -n 's/^supersedes:[[:space:]]*//p' "$f" | head -1)"
-    sup="${sup//\"/}"; sup="${sup//\'/}"; sup="${sup// /}"
-    [ -z "$sup" ] && continue
-    [ -f "$MEM/$sup.md" ] && orphans="${orphans}        - $(basename "$f") supersedes '$sup' but $sup.md still exists"$'\n'
-  done
+  orphans="$(bash "$REPO/plugins/core/scripts/check-supersede-orphans.sh" "$MEM" 2>/dev/null)"
   if [ -n "$orphans" ]; then
     echo "[memory] SUPERSEDE-ORPHANS — replace/remove the old fact (supersede-not-append):"
-    printf "%s" "$orphans"
+    printf '%s\n' "$orphans" | sed 's/^/        - /'
   else
     echo "[memory] no supersede-orphans"
   fi

@@ -236,7 +236,7 @@ The repo is **not the vault** the spec describes — it is the **OS/tooling laye
 Ordered by the owner's weighting (Fresh > Global > …), with A/B floated up. Each item points at the real paths.
 
 **Tier 0 — cheapest fix with outsized freshness impact (do first):**
-1. **Fix the supersede-orphan scan** so the one deterministic anti-stale signal actually fires. `plugins/core/hooks/session-start-gate.sh:69` → match indented keys (`sed -n 's/^[[:space:]]*supersedes:[[:space:]]*//p'`); add a unit test against `memory/credentials-state.md`. *(B/C/L · S)*
+1. ✅ **DONE (this branch).** **Fixed the supersede-orphan scan** so the one deterministic anti-stale signal actually fires. The detection logic was extracted from `session-start-gate.sh` into a frontmatter-aware, indentation-tolerant, **unit-tested** script: `plugins/core/scripts/check-supersede-orphans.sh` (reads `supersedes:` from the YAML frontmatter at any indentation, incl. nested under `metadata:`; skips prose values; strips `[[wikilink]]`/quotes), wired back into `session-start-gate.sh` §3, with `plugins/core/scripts/tests/test-supersede-orphans.sh` (regression case = an *indented* `supersedes:` the old column-0 scan missed, plus the real `memory/credentials-state.md`) now run by `.github/workflows/freshness.yml`. *(B/C/L · S)*
 
 **Tier 1 — Freshness engine (Group B, top priority):**
 2. **Install + schedule the reflective heartbeat.** Commit a LaunchAgent plist/installer for `scheduled-tasks/memory-consolidation.md` (+ `infra-health.md`), or add a second weekly cron; record `launchctl list` confirmation in `PROGRESS.md`. *(B1/B5/B8 · M)*
