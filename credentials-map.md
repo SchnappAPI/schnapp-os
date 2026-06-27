@@ -53,7 +53,7 @@ System items (verified 2026-06-17). `→` notes the planned target from the desi
 | `GitHub SSH Key` | keys | github | git over SSH | git |
 | `CLOUDFLARE_API_TOKEN` | `/credential` `/account_id` `/access_key_id` `/secret_access_key` `/s3_endpoint` | cloudflare | Broad-scope Cloudflare **account** API token (created 2026-06-27) + its auto-derived R2 S3 credentials (same token; S3 keys appear because R2 perms were included). Distinct item from `Cloudflare Tunnel` (which is cloudflared runtime plumbing). | Cloudflare MCP connector; R2 S3 API |
 
-Personal (non-system, untouched): `Elgato`, `Obsidian`, `Schnapp's MacBook Pro`.
+Personal (non-system): `Elgato`, `Obsidian`, `MacbookPro` (owner renamed from `Schnapp’s MacBook Pro` 2026-06-27 — dropped the curly apostrophe so op:// can reference it by name, no item-ID needed).
 
 ## Bootstrap + connector secrets (NOT `op://`-resolvable — they ARE the keys)
 - `OP_SERVICE_ACCOUNT_TOKEN` — the SA token; set directly in each surface's env (see table row).
