@@ -53,6 +53,9 @@ jobs:
       - name: Learning-eval self-test
         run: bash plugins/core/scripts/tests/test-learning-eval.sh
 
+      - name: Learning-gate self-test
+        run: bash plugins/core/scripts/tests/test-learning-gate.sh
+
       - name: LaunchAgent plist is valid
         run: python3 -c "import plistlib; plistlib.load(open('scheduled-tasks/com.schnapp.memory-consolidation.plist','rb')); print('plist OK')"
 

@@ -94,6 +94,12 @@ learn-route procedure (plugins/core/skills/learn-route/SKILL.md):
     bash $GATE <slug> "<rationale>"
     where slug is a short kebab-case label for the principle.
 
+DEDUPE before staging a judgment change: a principle that is ALREADY captured must not be re-proposed.
+Check the target file for an equivalent rule/fact, and run \`gh pr list --state open\` for an existing
+self-edit/* PR proposing the same thing. If it is already covered or already proposed, say so and SKIP
+(do not open a redundant PR). The eval gate (self-edit-gate.yml) will also hold duplicates, but not
+opening them is cheaper.
+
 NEVER commit to memory/ or plugins/core/rules/ directly (no direct-to-main for judgment changes).
 Writing the proposed edit to the working tree and then running self-edit-stage.sh IS the path —
 it commits the edit onto a review branch and opens a PR, leaving main untouched until review.

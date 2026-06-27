@@ -1,0 +1,96 @@
+name: self-edit-gate
+
+# The eval / promote gate for the learning loop's self-edits (agentic-OS Phase 4b).
+# On a self-edit/* PR: run the deterministic learning-gate, dedupe against other open self-edit PRs,
+# wait for the other CI checks to pass, and AUTO-MERGE only a clean+unique+green proposal. Anything
+# else gets labelled needs-human-review with the reasons. Conservative: holds on any uncertainty
+# (decision doc §7.8; ADRs 0012/0015 — self-edits auto-land ONLY when the gate vets them).
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+jobs:
+  gate:
+    if: startsWith(github.head_ref, 'self-edit/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Evaluate and act
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -uo pipefail
+          git fetch -q origin main
+
+          # 1. Deterministic gate (scope / size / provenance / in-file dup)
+          if bash plugins/core/scripts/learning-gate.sh origin/main > gate.out 2>&1; then
+            verdict=approve
+          else
+            verdict=hold
+          fi
+          echo "=== learning-gate ==="; cat gate.out
+
+          # 2. Cross-PR dedupe: any OTHER open self-edit PR touching a file this PR touches?
+          changed="$(git diff --name-only origin/main...HEAD)"
+          dup_pr=""
+          for n in $(gh pr list --state open --json number,headRefName \
+                      --jq '.[] | select(.headRefName|startswith("self-edit/")) | .number'); do
+            [ "$n" = "$PR" ] && continue
+            other="$(gh pr diff "$n" --name-only 2>/dev/null || true)"
+            for f in $changed; do
+              printf '%s\n' "$other" | grep -qxF "$f" && { dup_pr="$n"; break; }
+            done
+            [ -n "$dup_pr" ] && break
+          done
+
+          # 3. Require the OTHER CI checks (freshness 'check', ci-lint 'memory-frontmatter') green —
+          #    wait up to ~3 min for them to finish so we never merge over a red/pending check.
+          checks_ok=no
+          for _ in $(seq 1 18); do
+            runs="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/check-runs" \
+                     --jq '.check_runs[] | select(.name=="check" or .name=="memory-frontmatter") | "\(.status):\(.conclusion)"' 2>/dev/null || true)"
+            n_done="$(printf '%s\n' "$runs" | grep -c '^completed:' || true)"
+            if [ "${n_done:-0}" -ge 2 ]; then
+              if printf '%s\n' "$runs" | grep -q 'completed:failure\|completed:cancelled\|completed:timed_out'; then
+                checks_ok=failed
+              else
+                checks_ok=yes
+              fi
+              break
+            fi
+            sleep 10
+          done
+
+          # 4. Act
+          if [ "$verdict" = approve ] && [ -z "$dup_pr" ] && [ "$checks_ok" = yes ]; then
+            if gh pr merge "$PR" --merge --delete-branch \
+                 --subject "Merge PR #${PR}: auto-approved self-edit (${HEAD_REF})"; then
+              echo "AUTO-MERGED #${PR}"
+            else
+              printf '%b' "🚦 Eval gate **approved** this self-edit, but the auto-merge call failed (branch protection, or 'Allow auto-merge' needed). Merge it by hand.\n\n\`\`\`\n$(cat gate.out)\n\`\`\`\n" \
+                | gh pr comment "$PR" --body-file - || true
+            fi
+          else
+            gh pr edit "$PR" --add-label "needs-human-review" 2>/dev/null || true
+            if [ -n "$dup_pr" ]; then
+              head="HOLD — possible **duplicate of #${dup_pr}** (touches the same file). Pick one, close the other."
+            elif [ "$checks_ok" != yes ]; then
+              head="HOLD — other CI checks are not green (state: ${checks_ok}). Fix CI, then a human can merge."
+            else
+              head="HOLD — needs human review."
+            fi
+            printf '%b' "🚦 Eval gate: ${head}\n\n\`\`\`\n$(cat gate.out)\n\`\`\`\n" \
+              | gh pr comment "$PR" --body-file - || true
+            echo "HELD #${PR}: ${head}"
+          fi
