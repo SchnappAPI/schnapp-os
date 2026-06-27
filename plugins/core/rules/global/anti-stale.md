@@ -1,6 +1,6 @@
 ---
 scope: global
-updated: 2026-06-05
+updated: 2026-06-27
 ---
 # Anti-staleness (single source of truth)
 
@@ -25,3 +25,8 @@ updated: 2026-06-05
   decisions/ for choices, the code/config for behavior). A commit that changes state updates every
   doc whose claim changed, in that same commit. README carries no status string; it points to the
   live trackers. CI freshness enforcement is wired in Part 9.3.
+- Current-state only: a doc shows what IS, never a layered history of what was. When something
+  changes, OVERWRITE it — do not leave the old value struck-through, marked "deprecated/old/deleted",
+  or sitting beside the new one. The record of the change belongs in `decisions/` (an ADR) or a
+  changelog, never inline in the doc it changed. The lone exceptions are the history artifacts
+  themselves — `decisions/`, `handoffs/`, and any explicit changelog — which are append-only by design.
