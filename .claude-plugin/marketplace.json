@@ -9,9 +9,9 @@
   },
   "plugins": [
     {
-      "name": "claude-kit-core",
+      "name": "schnapp-os-core",
       "source": "./plugins/core",
-      "description": "Core layer: SessionStart freshness/git gate + Stop push-gate (hooks.json, global via ${CLAUDE_PLUGIN_ROOT}); skills, commands, agents, and composable rules. SessionEnd backup is delivered project-scoped, not by this plugin (decision 0005).",
+      "description": "Core layer: skills, commands, agents, and composable rules. Hooks (freshness gate, push-gate, backup) are wired in the repo .claude/settings.json against live paths, not via this plugin (decision 0011 #2).",
       "version": "0.1.0",
       "author": {
         "name": "SchnappAPI",
