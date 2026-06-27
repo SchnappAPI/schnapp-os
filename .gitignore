@@ -28,3 +28,4 @@ tmp/
 
 # Local learning-loop capture queue (per-machine; distilled+reviewed output is what's durable)
 scheduled-tasks/.learning-queue.tsv
+scheduled-tasks/.learning-queue.archive.tsv
