@@ -1,57 +1,44 @@
 #!/usr/bin/env bash
-# learning-worker.sh — nightly learning-loop driver (Phase 4).
+# learning-worker.sh — nightly learning-loop driver (Phase 4, pre-commit gate, ADR 0016).
 #
-# Reads the local learning queue (git-ignored .learning-queue.tsv), distills+classifies each
-# capture, routes judgment-bearing ones through self-edit-stage.sh (the gate, ADR 0012), and
-# archives processed lines. Never writes memory/ or plugins/core/rules/ directly.
+# Reads the local learning queue (git-ignored .learning-queue.tsv), has a headless `claude -p`
+# distill+classify each capture and WRITE any proposed rule/fact edit to the working tree (no branch,
+# no commit, no PR), then the WORKER gates the working-tree diff (learning-gate.sh): a clean proposal
+# is committed straight to main; anything the gate holds is filed as a GitHub issue. No branches —
+# everything that lands goes to main (owner pref 2026-06-27; ADR 0016 refines 0012/0013/0015).
 #
 # Usage: learning-worker.sh [--dry-run]
-#
 # Env:
-#   LEARNING_QUEUE   — path to queue file (default: scheduled-tasks/.learning-queue.tsv)
-#   LEARNING_ARCHIVE — path to archive file (default: alongside queue, .learning-queue.archive.tsv)
+#   LEARNING_QUEUE   — queue file (default: scheduled-tasks/.learning-queue.tsv)
+#   LEARNING_ARCHIVE — archive file (default: alongside queue, .learning-queue.archive.tsv)
+#   LEARNING_CLAUDE_TOKEN_REF — op:// ref to the Claude credential (headless auth; see docs/headless-claude-auth.md)
 #
-# --dry-run: exercises all logic with no claude -p call, no network, and no writes to memory/rules.
-#            Processed lines ARE moved to the archive (safe: the dry-run tests the full plumbing).
+# --dry-run: exercises queue/classify/archive plumbing with NO claude call, NO git, NO network.
 #
 # Safety:
-#   - Empty/missing queue → message + exit 0.
-#   - Live path requires the claude CLI; if absent → message + exit 0 (no-op, not a crash).
-#   - Never writes memory/ or plugins/core/rules/ directly (all judgment via self-edit-stage.sh).
+#   - Empty/missing queue → message + exit 0.  Live path needs the `claude` CLI; absent → no-op exit 0.
+#   - Claude is given only Read,Edit,Write (no Bash) — it edits files; the worker does all git.
+#   - Only a gate-APPROVED diff is pushed to main; held proposals never touch main (→ issue).
 #   - Archiving (not deleting) means a capture is never silently lost.
-
 set -uo pipefail
 
 DRY_RUN=false
-for arg in "$@"; do
-  [ "$arg" = "--dry-run" ] && DRY_RUN=true
-done
+for arg in "$@"; do [ "$arg" = "--dry-run" ] && DRY_RUN=true; done
 
 REPO_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
-
 Q="${LEARNING_QUEUE:-"$REPO_ROOT/scheduled-tasks/.learning-queue.tsv"}"
 A="${LEARNING_ARCHIVE:-"${Q%.tsv}.archive.tsv"}"
 
-# Empty/missing queue → clean no-op
 if [ ! -f "$Q" ] || [ ! -s "$Q" ]; then
-  echo "learning-worker: queue empty — nothing to consolidate"
-  exit 0
+  echo "learning-worker: queue empty — nothing to consolidate"; exit 0
 fi
 
-# Deterministic heuristic for --dry-run: a capture mentioning a concrete value/name
-# (digits, op://, a path) is classified as 'judgment' (fact-supersede); others as 'mechanical'.
-# In live mode the LLM does the real classification; this only labels the dry-run output.
+# Deterministic label for --dry-run only (the live LLM does the real classification).
 classify_capture() {
-  local text="$1"
-  if printf '%s' "$text" | grep -qE '[0-9]{2,}|op://|/[a-zA-Z]'; then
-    echo "judgment"
-  else
-    echo "mechanical"
-  fi
+  if printf '%s' "$1" | grep -qE '[0-9]{2,}|op://|/[a-zA-Z]'; then echo "judgment"; else echo "mechanical"; fi
 }
 
-# Archive processed captures, THEN drain — but NEVER drain if the archive write failed
-# (e.g. LEARNING_ARCHIVE points at a missing/unwritable dir), or captures would be lost.
+# Archive processed captures, THEN drain — never drain if the archive write failed (no captures lost).
 archive_and_drain() {
   if ! cat "$Q" >> "$A" 2>/dev/null; then
     echo "learning-worker: ERROR — could not write archive '$A'; queue NOT drained (no captures lost)." >&2
@@ -61,12 +48,9 @@ archive_and_drain() {
 }
 
 if $DRY_RUN; then
-  # Dry-run: print what would happen, archive processed lines, write nothing to memory/rules
   while IFS=$'\t' read -r ts tag text; do
-    lane="$(classify_capture "$text")"
-    echo "would distill+route: [$lane] $text"
+    echo "would distill+route: [$(classify_capture "$text")] $text"
   done < "$Q"
-
   archive_and_drain
   exit 0
 fi
@@ -77,54 +61,36 @@ if ! command -v claude >/dev/null 2>&1; then
   exit 0
 fi
 
-# Live: invoke claude -p with a prompt that loads the learn-route procedure, distills each
-# queued capture to a reusable principle, and for judgment-bearing ones calls self-edit-stage.sh
-# to open a PR. The worker is the driver; the LLM does the judgment.
-GATE="$REPO_ROOT/plugins/core/scripts/self-edit-stage.sh"
-
-# Build the prompt from queue contents
 PROMPT="$(cat <<PROMPT_EOF
-You are running as the nightly learning worker for this repo (scheduled-tasks/memory-consolidation.md).
+You are the nightly learning worker for this repo (scheduled-tasks/memory-consolidation.md).
 
-For each queued correction below, distill it to a reusable principle and classify it using the
+For each queued correction below: distill it to a reusable principle and classify it with the
 learn-route procedure (plugins/core/skills/learn-route/SKILL.md):
-  - mechanical (typo/format/regenerate) → state it is mechanical and skip (committed direct in session)
-  - judgment (rule-meaning change, fact supersede, doc fix) → WRITE the proposed edit to the working
-    tree first, then invoke the gate to stage it on a review branch + PR:
-    bash $GATE <slug> "<rationale>"
-    where slug is a short kebab-case label for the principle.
+  - behavioral / how-to-work principle → sharpen the EXISTING rule in plugins/core/rules/global/
+  - durable fact → supersede in memory/ (one fact, one file; bump updated:, source: correction)
+  - mechanical / already-covered / duplicate → make NO change and say so
 
-DEDUPE before staging a judgment change: a principle that is ALREADY captured must not be re-proposed.
-Check the target file for an equivalent rule/fact, and run \`gh pr list --state open\` for an existing
-self-edit/* PR proposing the same thing. If it is already covered or already proposed, say so and SKIP
-(do not open a redundant PR). The eval gate (self-edit-gate.yml) will also hold duplicates, but not
-opening them is cheaper.
+To propose a change: EDIT the target .md file in the working tree and BUMP its frontmatter updated:
+to today's date. Do NOT create a branch, commit, open a PR, or run any git/shell command — just leave
+the edited .md in the working tree. The worker gates the diff and commits clean changes to main itself.
 
-NEVER commit to memory/ or plugins/core/rules/ directly (no direct-to-main for judgment changes).
-Writing the proposed edit to the working tree and then running self-edit-stage.sh IS the path —
-it commits the edit onto a review branch and opens a PR, leaving main untouched until review.
+DEDUPE first: if the principle is already present in the target file (or anywhere under rules/memory),
+make NO change. Keep each edit SMALL and IN-SCOPE — only .md files under plugins/core/rules/ or
+memory/. Never touch code, CI, or anything else.
 
 Queued corrections:
 $(cat "$Q")
 PROMPT_EOF
 )"
 
-# Run from the repo root so the headless session loads CLAUDE.md / .claude/settings.json and can
-# resolve relative paths (the learn-route skill, the gate). The LaunchAgent's cwd is / otherwise.
+# Run from repo root so the headless session loads CLAUDE.md / .claude/settings.json + relative paths.
 cd "$REPO_ROOT" || { echo "learning-worker: ERROR — cannot cd to repo root '$REPO_ROOT'." >&2; exit 1; }
 
-# Headless auth: `claude setup-token` writes to the login Keychain, which a launchd job cannot
-# read (it 401s). Inject the credential from 1Password at runtime instead — the LaunchAgent
-# inherits OP_SERVICE_ACCOUNT_TOKEN, so `op read` resolves here. LEARNING_CLAUDE_TOKEN_REF is an
-# op:// REFERENCE (safe to commit/set; the value is never stored on disk). The referenced item may
-# hold EITHER an Anthropic API key (sk-ant-api…) or a Claude OAuth token (sk-ant-oat…); we export it
-# under the matching env var so the ref can point at whichever credential actually authenticates.
-# No-op if a credential is already in the env (e.g. an interactive test) or no ref is configured.
+# Headless auth: launchd can't read the login Keychain, so inject the credential from 1Password at
+# runtime (the LaunchAgent inherits OP_SERVICE_ACCOUNT_TOKEN). LEARNING_CLAUDE_TOKEN_REF is an op://
+# REFERENCE; the item may hold an Anthropic API key (sk-ant-api…) or a Claude OAuth token (sk-ant-oat…)
+# — export under the matching env var. No-op if a credential is already set or no ref is configured.
 if [ -z "${ANTHROPIC_API_KEY:-}" ] && [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ] && [ -n "${LEARNING_CLAUDE_TOKEN_REF:-}" ]; then
-  # Observability: a headless job must NOT swallow its auth failure silently (that turns a
-  # credential problem into a mystery). Log the resolution outcome — length + which env var —
-  # but NEVER the value. The launchd op identity (the inherited service account) differs from an
-  # interactive shell's personal login, so this is the only place we see what it gets.
   echo "learning-worker: auth — op:$(command -v op || echo MISSING) OP_SA:${OP_SERVICE_ACCOUNT_TOKEN:+set}${OP_SERVICE_ACCOUNT_TOKEN:-UNSET} ref:${LEARNING_CLAUDE_TOKEN_REF}"
   if command -v op >/dev/null 2>&1; then
     if _tok="$(op read "$LEARNING_CLAUDE_TOKEN_REF" 2>&1)"; then
@@ -139,19 +105,55 @@ if [ -z "${ANTHROPIC_API_KEY:-}" ] && [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ] && [
     fi
     unset _tok
   else
-    echo "learning-worker: auth — ERROR: op not on PATH; cannot resolve headless token." >&2
+    echo "learning-worker: auth — ERROR: op not on PATH; cannot resolve headless credential." >&2
   fi
 fi
 
+# Pre-commit gate flow (ADR 0016, no branches): start from a clean main synced to origin so the only
+# diff after the run is the worker's proposal.
+git fetch -q origin main 2>/dev/null || true
+if [ -n "$(git status --porcelain)" ]; then
+  echo "learning-worker: working tree not clean — aborting (queue preserved)." >&2; exit 1
+fi
+git checkout -q main 2>/dev/null || true
+git reset -q --hard origin/main 2>/dev/null || true
+
 echo "learning-worker: processing $(wc -l < "$Q" | tr -d ' ') capture(s) via claude -p ..."
-# Pass the prompt on STDIN, not as a positional arg: --allowedTools accepts a list and otherwise
-# swallows the trailing prompt argument, leaving claude with no input ("Input must be provided
-# ... when using --print"). Tools are bounded as defense-in-depth behind the gate.
-if ! printf '%s' "$PROMPT" | claude -p --allowedTools "Read,Edit,Write,Bash"; then
-  echo "learning-worker: ERROR — claude run failed; queue NOT drained (captures preserved for next run)." >&2
+# Claude gets Read,Edit,Write only — NO Bash. It edits .md files; the worker does all git below.
+if ! printf '%s' "$PROMPT" | claude -p --allowedTools "Read,Edit,Write"; then
+  git reset -q --hard origin/main 2>/dev/null || true
+  echo "learning-worker: ERROR — claude run failed; queue NOT drained (captures preserved)." >&2
   exit 1
 fi
 
-# Archive + drain ONLY after a successful run (a failed run above already exited without draining).
+if [ -z "$(git status --porcelain)" ]; then
+  echo "learning-worker: no rule/fact change proposed (skipped / duplicate / mechanical)."
+else
+  git add -A
+  git commit -q -m "self-edit: learning-loop promotion $(date -u +%F)"
+  gate_out="$(mktemp)"
+  if bash "$REPO_ROOT/plugins/core/scripts/learning-gate.sh" origin/main > "$gate_out" 2>&1; then
+    if git push -q origin HEAD:main 2>/dev/null; then
+      echo "learning-worker: PROMOTED a clean self-edit to main."
+    else
+      git reset -q --hard origin/main 2>/dev/null || true
+      echo "learning-worker: push to main failed (remote moved?) — discarded; will recapture." >&2
+    fi
+  else
+    patch="$(git show HEAD --patch --stat 2>/dev/null | head -c 8000)"
+    reasons="$(cat "$gate_out")"
+    git reset -q --hard origin/main 2>/dev/null || true
+    if command -v gh >/dev/null 2>&1 && \
+       gh issue create --title "learning-loop: self-edit held for review ($(date -u +%F))" \
+         --body "$(printf 'The nightly learning worker proposed a self-edit the eval gate HELD (no branch, nothing landed on main).\n\n## Gate reasons\n%s\n\n## Proposed change\n```diff\n%s\n```\n' "$reasons" "$patch")" \
+         >/dev/null 2>&1; then
+      echo "learning-worker: HELD self-edit — opened a review issue (nothing on main)."
+    else
+      echo "learning-worker: HELD self-edit (could not open issue) — $reasons" >&2
+    fi
+  fi
+  rm -f "$gate_out"
+fi
+
 archive_and_drain
 echo "learning-worker: done — $(wc -l < "$A" | tr -d ' ') total archived captures."

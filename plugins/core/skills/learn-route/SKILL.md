@@ -7,10 +7,11 @@ description: Use immediately after a correction or capture lands — to classify
 
 The authored classifier for the learning loop's capture-and-route step. Run this after any
 correction arrives (hook fires on hookless surfaces, or invoke manually). It does three things:
-classify → pick the lane → act. The classification taxonomy lives in
-[memory/README.md](../../../../memory/README.md) ("on-correction" section); the lane policy lives
-in [ADR 0012](../../../../decisions/0012-self-edit-gate-two-lane.md). This skill does not restate
-either — it points to each and adds the execution notes.
+classify → route → act. The classification taxonomy lives in
+[memory/README.md](../../../../memory/README.md) ("on-correction" section); the routing policy lives
+in [ADR 0016](../../../../decisions/0016-no-branches-precommit-gate.md) (refines 0012/0013/0015 —
+no branches, everything to main). This skill does not restate either — it points to each and adds
+the execution notes.
 
 ## 1 — Classify
 
@@ -28,54 +29,34 @@ When unsure of the type, apply the "one fact, one canonical home" principle from
 [ADR 0011 #4](../../../../decisions/0011-plan-review-ten-redecisions.md): pick the single most
 appropriate place; do not scatter copies.
 
-## 2 — Pick the lane
+## 2 — Route it (everything to main, no branches)
 
-Consult [ADR 0012](../../../../decisions/0012-self-edit-gate-two-lane.md) for the authoritative
-lane split. The short rule:
+Per [ADR 0016](../../../../decisions/0016-no-branches-precommit-gate.md): **no branches.** Two paths,
+by who is acting:
 
-| If the edit … | Lane |
-|---|---|
-| Is mechanical: typo, formatting, dead-link fix, regenerating a catalog, backfilling provenance — **does not change a rule's meaning or a fact's truth** | **Direct to main** — commit and push. |
-| Changes a **rule's meaning**, **supersedes a fact**, adds or removes a rule — anything a reviewer should weigh | **Branch + PR** — use `self-edit-stage.sh`. |
+- **In-session, acting on a correction the owner just made** — the owner is the reviewer in real
+  time. Edit the EXISTING rule (behavioral) or supersede the fact (memory), bump `updated:`, and
+  commit **straight to `main`**.
+- **The nightly autonomous worker** (`learning-worker.sh`) is the only self-gated path: it writes a
+  proposed edit, then `learning-gate.sh` vets it — a clean proposal commits to `main`, anything held
+  becomes a GitHub **issue** for review. You never run that by hand.
 
-The gate is **preferred-not-mandatory**. When in doubt, use the gate (the cost of an extra PR is
-lower than the cost of an unreviewable rule change landing silently).
+## 3 — Act (in-session)
 
-Humans always commit to main directly; this routing applies to **agent-proposed** self-edits only.
+Edit the EXISTING rule/fact in the working tree (never duplicate; bump its frontmatter `updated:`),
+then commit straight to main:
 
-## 3 — Act
-
-**Mechanical lane (direct to main):**
 ```
 git add <file>
-git commit -m "fix: [meta] <short description>"
+git commit -m "fix: [meta] <what changed + why + source>"
 git push
 ```
 
-**Judgment lane (branch + PR):**
-```
-# (the proposed edit is already in the working tree)
-bash plugins/core/scripts/self-edit-stage.sh <slug> "<rationale>"
-```
-
-The `<rationale>` should state: what changed, why it is correct, what source/event triggered it,
-and (for fact supersedes) what value is being replaced. Example:
-
-```
-bash plugins/core/scripts/self-edit-stage.sh supersede-api-key \
-  "correction: API key rotated 2026-06-27; old value was stale; source: owner; supersedes previous key in memory/credentials.md"
-```
-
-The stager creates `self-edit/<date>-<slug>`, commits the change there with the rationale in the
-commit body, restores the original branch with a clean working tree, and opens a PR (or prints a
-compare URL if `gh` is absent). Main is untouched until the PR is merged.
-
-The human (or a future eval agent) reviews and approves. No further action is needed from the
-agent once the stager exits 0.
+Keep it small and in-scope (the one file that owns the fact). State in the commit body what changed,
+why it is correct, what triggered it, and — for a fact supersede — what value it replaces.
 
 ## Companion skills
 
-- [session-hygiene](../session-hygiene/SKILL.md) — on hookless surfaces, run this skill by hand
-  as the "route the correction" step of the on-correction procedure. `session-hygiene` points to
-  `memory/README.md` for the canonical on-correction flow; `learn-route` adds the lane decision
-  and the exact `self-edit-stage.sh` invocation.
+- [session-hygiene](../session-hygiene/SKILL.md) — on hookless surfaces, run this skill by hand as
+  the "route the correction" step of the on-correction procedure. It points to `memory/README.md`
+  for the canonical on-correction flow; `learn-route` adds the classification + the commit-to-main step.

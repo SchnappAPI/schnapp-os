@@ -108,8 +108,10 @@ rm ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
 
 ### What the worker does (asks-first policy)
 
-The worker reads the local git-ignored queue (`scheduled-tasks/.learning-queue.tsv`), distills
-each queued correction, and routes judgment-bearing ones through `self-edit-stage.sh` to open a PR.
-It NEVER writes `memory/` or `plugins/core/rules/` directly. See
+The worker reads the local git-ignored queue (`scheduled-tasks/.learning-queue.tsv`), has a headless
+`claude -p` distill each correction and write any proposed rule/fact edit to the working tree, then
+GATES that diff with `learning-gate.sh` (no branches — ADR 0016): a clean self-edit is committed
+straight to `main`; anything the gate holds is filed as a GitHub issue for review, never landing on
+main. See
 [memory-consolidation.md](memory-consolidation.md) for the asks-first consolidation policy and the
 agent instructions that govern the live `claude -p` run.

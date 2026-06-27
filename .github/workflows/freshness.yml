@@ -41,9 +41,6 @@ jobs:
       - name: Stale-facts detector self-test
         run: bash plugins/core/scripts/tests/test-stale-facts.sh
 
-      - name: Self-edit stager self-test
-        run: bash plugins/core/scripts/tests/test-self-edit-stage.sh
-
       - name: Capture-enqueue self-test
         run: bash plugins/core/scripts/tests/test-capture-enqueue.sh
 

@@ -28,8 +28,9 @@ if printf '%s' "$INPUT" | grep -qiE "you'?re wrong|that'?s wrong|that is wrong|i
   - behavioral / how-to-work -> sharpen the EXISTING rule in rules/global/ (add a new file only if there is no home; never duplicate)
   - durable fact (a value/name/where) -> memory/ (supersede the old fact; source: correction; today's updated:)
   - stale doc or claim -> fix the doc in the SAME change
-  Route via the learn-route skill: mechanical fixes (typo/format/regenerate) commit direct to main;
-  a rule-meaning change or fact supersede goes through self-edit-stage.sh (branch + PR, ADR 0012).
+  Route via the learn-route skill. In-session: edit the rule/fact + commit straight to main (no
+  branches — owner pref 2026-06-27 / ADR 0016). The nightly learning-worker gates its OWN autonomous
+  proposals (learning-gate.sh): clean ones land on main, held ones become a review issue.
   If the lesson maps to an existing rule, the fix is adherence, not a new file.
 EOF
 fi
