@@ -980,3 +980,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - FOLLOW-UP: confirm `SCHNAPP_OS_PAT` value is stored in 1P (`op://.../SCHNAPP_OS_PAT/token`). Still open:
   #2 repo-flattening, learning-loop eval gate, GITHUB_PAT rotation (9 vault files), brain-capture prune,
   ~/.claude/CLAUDE.md sync, gate verification next restart.
+- 2026-06-26 VAULT FLATTEN executed (owner-directed, overrides 0011 #2 deferral; flatten-only, no rotation).
+  Phase A: created 10 per-secret items in `web-variables` (Web App→6 + WEB_APP_CONFIG; Database→MSSQL_SA_PASSWORD;
+  Anthropic→ANTHROPIC_API_KEY; Claude Code→CLAUDE_CODE_OAUTH_TOKEN), values copied, all resolve. Phase B: repointed
+  every live consumer — schnapp-bet (.env.template+8 workflows+docs), obsidian-vault, brain-watcher's OneDrive
+  .env.template, schnapp-os manifest/README. Database core stays bundled (~18 ETL workflows untouched). Phase C
+  (delete drained bundles) next. ROTATION still owed: bundles never rotated post-leak (updated_at all 2026-05).

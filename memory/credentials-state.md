@@ -3,8 +3,8 @@ name: credentials-state
 metadata: 
   node_type: memory
   scope: global
-  source: "decisions/0001, decisions/0004; SA rotation 2026-06-22; Phase 3B bearer rotations 2026-06-23"
-  updated: 2026-06-23
+  source: "decisions/0001, decisions/0004; SA rotation 2026-06-22; Phase 3B bearer rotations 2026-06-23; flatten Phase A 2026-06-26"
+  updated: 2026-06-26
   supersedes: "2026-06-17 outage-resolved note; pre-3B 'Mac MCP client bearer PENDING' framing"
   originSessionId: 33c726f1-b86d-4a93-8586-061ec9ca3f3e
 ---
@@ -15,6 +15,24 @@ metadata:
 > `GITHUB_MCP_AUTH_TOKEN`, `OP_MCP_BEARER` — 2026-06-23, Phase 3B). **Still compromised → owner-console
 > rotation outstanding:** `GITHUB_PAT`, Anthropic API key, Claude OAuth, DB `sa`, Web App secrets
 > (incl. `RUNNER_API_KEY`), Webshare, Cloudflare. See [[credential-leak-2026-06-17]].
+
+**VAULT FLATTEN — Phase A done 2026-06-26 (owner-directed, overrides the 0011 deferral; flatten-only, NO rotation).**
+Created 10 split items in `web-variables`, values COPIED from the bundles: `ADMIN_PASSCODE`,
+`ADMIN_REFRESH_CODE`, `AUTH_TOKEN_SECRET`, `ODDS_API_KEY`, `RUNNER_API_KEY`, `SQL_CONNECTION_STRING`
+(← `Web App`); `WEB_APP_CONFIG` (non-secret config, Secure Note); `MSSQL_SA_PASSWORD` (← `Database`);
+`ANTHROPIC_API_KEY` (← `Anthropic/api_key`); `CLAUDE_CODE_OAUTH_TOKEN` (← `Claude Code/oauth_token`).
+All resolve. **Old bundles untouched → nothing broken.** `schnapp-os/.env.template` +
+`obsidian-mcp/README.md` repointed to the new items. **`ADMIN_REFRESH_CODE` copied as only 2 chars —
+owner to sanity-check source.** Confirmed via `updated_at` (all bundles 2026-05, pre-leak) that the
+copied values are STILL the leaked ones — flatten does not rotate; rotation backlog below stands.
+**Phase B/C PENDING (owner go):** repoint live consumers in **`schnapp-bet`** (`.env.template`,
+`claude.yml`, `nba-backfill.yml`) then delete drained bundles (`Web App` secrets, `MCP Tokens`,
+`GitHub`, `Claude Code`, `Anthropic`, `Database/mssql_sa_password` field). `Database` core
+{server,database,username,password,trust_cert} STAYS bundled → ~18 ETL/grading workflows unchanged.
+Where-to-change detail in [credentials-map](../credentials-map.md) changelog (2026-06-26 rows).
+Mac vault writes this session ran via **MacOS-MCP `Shell` + `zsh -lic`** (loads the SA token from the
+login profile); the `mac-mcp` op_run/op_whoami connector is still `unauthorized` (dead client bearer,
+below) — irrelevant, the shell path works.
 
 **SA TOKEN ROTATED 2026-06-22 (Phase 1 done).** Old SA `VU2RKR2IDZB6TCAKQRK7J2W5EE` is **deleted**
 (any old token now returns `403 Forbidden — Service Account Deleted`). New SA integration

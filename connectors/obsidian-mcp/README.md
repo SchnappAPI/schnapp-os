@@ -33,4 +33,4 @@ the GitHub `obsidian-vault` mirror (kept current by obsidian-git) and this repo'
 ## Secrets
 
 `.env.template` holds only `op://` references (never values); `op-wrap.sh` resolves them at launchd
-start. `MAC_MCP_AUTH_TOKEN` = `op://web-variables/MCP Tokens/schnapp_mac`.
+start. `MAC_MCP_AUTH_TOKEN` = `op://web-variables/MAC_MCP_AUTH_TOKEN/credential`.
