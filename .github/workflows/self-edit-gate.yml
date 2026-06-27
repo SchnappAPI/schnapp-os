@@ -44,13 +44,17 @@ jobs:
           # 2. Cross-PR dedupe: any OTHER open self-edit PR touching a file this PR touches?
           changed="$(git diff --name-only origin/main...HEAD)"
           dup_pr=""
-          for n in $(gh pr list --state open --json number,headRefName \
-                      --jq '.[] | select(.headRefName|startswith("self-edit/")) | .number'); do
+          if ! open_prs="$(gh pr list --state open --json number,headRefName \
+                            --jq '.[] | select(.headRefName|startswith("self-edit/")) | .number' 2>/dev/null)"; then
+            echo "could not list open PRs for dedupe — holding"; verdict=hold; open_prs=""
+          fi
+          for n in $open_prs; do
             [ "$n" = "$PR" ] && continue
             other="$(gh pr diff "$n" --name-only 2>/dev/null || true)"
-            for f in $changed; do
+            while IFS= read -r f; do
+              [ -n "$f" ] || continue
               printf '%s\n' "$other" | grep -qxF "$f" && { dup_pr="$n"; break; }
-            done
+            done <<< "$changed"
             [ -n "$dup_pr" ] && break
           done
 
