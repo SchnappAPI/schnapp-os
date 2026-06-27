@@ -15,6 +15,15 @@
     <key>WorkingDirectory</key>
     <string>__REPO__</string>
 
+    <!-- launchd's default PATH is only /usr/bin:/bin:/usr/sbin:/sbin, so `claude` (in
+         /usr/local/bin) and homebrew git/gh would not be found and the live run would
+         silently no-op. Prepend the dirs the worker + gate need. -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
     <!-- Run nightly at 03:17 local time. RunAtLoad false: never runs automatically on launchctl load. -->
     <key>StartCalendarInterval</key>
     <dict>
