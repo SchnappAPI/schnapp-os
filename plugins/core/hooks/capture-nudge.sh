@@ -21,7 +21,9 @@ if printf '%s' "$INPUT" | grep -qiE "you'?re wrong|that'?s wrong|that is wrong|i
   - behavioral / how-to-work -> sharpen the EXISTING rule in rules/global/ (add a new file only if there is no home; never duplicate)
   - durable fact (a value/name/where) -> memory/ (supersede the old fact; source: correction; today's updated:)
   - stale doc or claim -> fix the doc in the SAME change
-  Stage rule edits for review (the eval/promote gate is not built yet). If the lesson maps to an existing rule, the fix is adherence, not a new file.
+  Route via the learn-route skill: mechanical fixes (typo/format/regenerate) commit direct to main;
+  a rule-meaning change or fact supersede goes through self-edit-stage.sh (branch + PR, ADR 0012).
+  If the lesson maps to an existing rule, the fix is adherence, not a new file.
 EOF
 fi
 exit 0

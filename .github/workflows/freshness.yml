@@ -41,6 +41,9 @@ jobs:
       - name: Stale-facts detector self-test
         run: bash plugins/core/scripts/tests/test-stale-facts.sh
 
+      - name: Self-edit stager self-test
+        run: bash plugins/core/scripts/tests/test-self-edit-stage.sh
+
       - name: Secret scan (no literal values in tracked files)
         run: bash plugins/core/scripts/scan-secrets.sh --exclude 'plugins/core/scripts/tests/*'
 
