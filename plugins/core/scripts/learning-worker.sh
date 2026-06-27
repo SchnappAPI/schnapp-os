@@ -108,8 +108,10 @@ PROMPT_EOF
 cd "$REPO_ROOT" || { echo "learning-worker: ERROR — cannot cd to repo root '$REPO_ROOT'." >&2; exit 1; }
 
 echo "learning-worker: processing $(wc -l < "$Q" | tr -d ' ') capture(s) via claude -p ..."
-# Bound the headless session's tools to what the gate flow needs (defense-in-depth behind the gate).
-if ! claude -p --allowedTools "Read,Edit,Write,Bash" "$PROMPT"; then
+# Pass the prompt on STDIN, not as a positional arg: --allowedTools accepts a list and otherwise
+# swallows the trailing prompt argument, leaving claude with no input ("Input must be provided
+# ... when using --print"). Tools are bounded as defense-in-depth behind the gate.
+if ! printf '%s' "$PROMPT" | claude -p --allowedTools "Read,Edit,Write,Bash"; then
   echo "learning-worker: ERROR — claude run failed; queue NOT drained (captures preserved for next run)." >&2
   exit 1
 fi
