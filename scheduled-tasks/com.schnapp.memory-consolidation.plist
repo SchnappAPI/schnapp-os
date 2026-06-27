@@ -11,6 +11,10 @@
         <string>__REPO__/plugins/core/scripts/learning-worker.sh</string>
     </array>
 
+    <!-- Run from the repo root so the worker's own REPO_ROOT and relative paths resolve. -->
+    <key>WorkingDirectory</key>
+    <string>__REPO__</string>
+
     <!-- Run nightly at 03:17 local time. RunAtLoad false: never runs automatically on launchctl load. -->
     <key>StartCalendarInterval</key>
     <dict>
@@ -24,9 +28,9 @@
     <false/>
 
     <key>StandardOutPath</key>
-    <string>/Users/andrewschnapp/Library/Logs/schnapp-os/memory-consolidation.log</string>
+    <string>__HOME__/Library/Logs/schnapp-os/memory-consolidation.log</string>
 
     <key>StandardErrorPath</key>
-    <string>/Users/andrewschnapp/Library/Logs/schnapp-os/memory-consolidation.err.log</string>
+    <string>__HOME__/Library/Logs/schnapp-os/memory-consolidation.err.log</string>
 </dict>
 </plist>

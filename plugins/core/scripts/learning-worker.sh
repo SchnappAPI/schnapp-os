@@ -50,6 +50,16 @@ classify_capture() {
   fi
 }
 
+# Archive processed captures, THEN drain — but NEVER drain if the archive write failed
+# (e.g. LEARNING_ARCHIVE points at a missing/unwritable dir), or captures would be lost.
+archive_and_drain() {
+  if ! cat "$Q" >> "$A" 2>/dev/null; then
+    echo "learning-worker: ERROR — could not write archive '$A'; queue NOT drained (no captures lost)." >&2
+    exit 1
+  fi
+  : > "$Q"
+}
+
 if $DRY_RUN; then
   # Dry-run: print what would happen, archive processed lines, write nothing to memory/rules
   while IFS=$'\t' read -r ts tag text; do
@@ -57,10 +67,7 @@ if $DRY_RUN; then
     echo "would distill+route: [$lane] $text"
   done < "$Q"
 
-  # Archive processed lines
-  cat "$Q" >> "$A"
-  # Drain the queue
-  : > "$Q"
+  archive_and_drain
   exit 0
 fi
 
@@ -80,24 +87,33 @@ PROMPT="$(cat <<PROMPT_EOF
 You are running as the nightly learning worker for this repo (scheduled-tasks/memory-consolidation.md).
 
 For each queued correction below, distill it to a reusable principle and classify it using the
-learn-route procedure (plugins/core/skills/learn-route.md):
+learn-route procedure (plugins/core/skills/learn-route/SKILL.md):
   - mechanical (typo/format/regenerate) → state it is mechanical and skip (committed direct in session)
-  - judgment (rule-meaning change, fact supersede, doc fix) → invoke the gate:
+  - judgment (rule-meaning change, fact supersede, doc fix) → WRITE the proposed edit to the working
+    tree first, then invoke the gate to stage it on a review branch + PR:
     bash $GATE <slug> "<rationale>"
     where slug is a short kebab-case label for the principle.
 
-NEVER write to memory/ or plugins/core/rules/ directly. All judgment-bearing changes go through
-self-edit-stage.sh so they are reviewed via PR before taking effect.
+NEVER commit to memory/ or plugins/core/rules/ directly (no direct-to-main for judgment changes).
+Writing the proposed edit to the working tree and then running self-edit-stage.sh IS the path —
+it commits the edit onto a review branch and opens a PR, leaving main untouched until review.
 
 Queued corrections:
 $(cat "$Q")
 PROMPT_EOF
 )"
 
-echo "learning-worker: processing $(wc -l < "$Q" | tr -d ' ') capture(s) via claude -p ..."
-claude -p "$PROMPT"
+# Run from the repo root so the headless session loads CLAUDE.md / .claude/settings.json and can
+# resolve relative paths (the learn-route skill, the gate). The LaunchAgent's cwd is / otherwise.
+cd "$REPO_ROOT" || { echo "learning-worker: ERROR — cannot cd to repo root '$REPO_ROOT'." >&2; exit 1; }
 
-# Archive processed lines after successful run
-cat "$Q" >> "$A"
-: > "$Q"
+echo "learning-worker: processing $(wc -l < "$Q" | tr -d ' ') capture(s) via claude -p ..."
+# Bound the headless session's tools to what the gate flow needs (defense-in-depth behind the gate).
+if ! claude -p --allowedTools "Read,Edit,Write,Bash" "$PROMPT"; then
+  echo "learning-worker: ERROR — claude run failed; queue NOT drained (captures preserved for next run)." >&2
+  exit 1
+fi
+
+# Archive + drain ONLY after a successful run (a failed run above already exited without draining).
+archive_and_drain
 echo "learning-worker: done — $(wc -l < "$A" | tr -d ' ') total archived captures."

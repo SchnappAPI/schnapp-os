@@ -52,8 +52,9 @@ headless Claude session, reusing the existing connectors and skills.
 
 The nightly learning worker (`plugins/core/scripts/learning-worker.sh`) is scheduled via
 [`com.schnapp.memory-consolidation.plist`](com.schnapp.memory-consolidation.plist). The plist uses
-a `__REPO__` placeholder for the absolute path so it can be committed without hard-coding the Mac's
-directory layout.
+a `__REPO__` placeholder for the repo's absolute path (also its `WorkingDirectory`) and a `__HOME__`
+placeholder for the log paths, so it can be committed without hard-coding the Mac's directory layout
+or username.
 
 **Policy: activation is owner-confirmed, production-Mac-only.** CI builds and unit-tests the worker
 (`--dry-run`), but `launchctl load` runs on the production Mac only, via the `Schnapp_Mac` MCP,
@@ -62,9 +63,9 @@ after explicit owner approval. Never auto-loaded by CI or a cloud session.
 ### Install steps (run on the Mac, after explicit owner OK)
 
 ```bash
-# 1. Substitute the repo path into the plist
+# 1. Substitute the repo path and home dir into the plist
 REPO="$HOME/schnapp-os"   # adjust if different
-sed "s|__REPO__|$REPO|g" \
+sed -e "s|__REPO__|$REPO|g" -e "s|__HOME__|$HOME|g" \
   "$REPO/scheduled-tasks/com.schnapp.memory-consolidation.plist" \
   > ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
 
