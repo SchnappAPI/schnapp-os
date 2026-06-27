@@ -4,6 +4,8 @@ description: Plaintext dump of ALL vault secrets is committed + pushed in obsidi
 metadata: 
   node_type: memory
   type: project
+  source: "session 9f0ff006 (credential reorg 2026-06-17); owner risk-accepted decision 2026-06-27"
+  updated: 2026-06-27
   originSessionId: 9f0ff006-412e-4529-aed7-032cd4dbd18a
 ---
 

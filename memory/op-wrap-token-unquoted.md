@@ -4,6 +4,8 @@ description: "launchd op-wrap.sh greps the SA token out of ~/.zshrc and strips t
 metadata: 
   node_type: memory
   type: project
+  source: "session f25f3f99 (SA token rotation / launchd crash diagnosis 2026-06-22)"
+  updated: 2026-06-22
   originSessionId: f25f3f99-54d9-4eda-9ce7-e06604900a56
 ---
 

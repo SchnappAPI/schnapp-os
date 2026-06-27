@@ -4,6 +4,8 @@ description: "Owner working prefs (2026-06-17) — parallelize via subagents; ma
 metadata: 
   node_type: memory
   type: feedback
+  source: "owner statement, session 9f0ff006 (2026-06-17)"
+  updated: 2026-06-17
   originSessionId: 9f0ff006-412e-4529-aed7-032cd4dbd18a
 ---
 
