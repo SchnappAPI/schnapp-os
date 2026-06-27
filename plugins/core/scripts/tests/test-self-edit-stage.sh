@@ -42,4 +42,18 @@ check "$(git -C "$tmp" status --porcelain)" "" "working tree clean after staging
 echo "y" > "$tmp/fact.md"
 ( cd "$tmp" && bash "$SCRIPT" ) >/dev/null 2>&1; check "$?" 2 "missing slug -> exit 2"
 
+# C1 regression: a slug with spaces must be REJECTED before any branch op, and must
+# NOT commit the (dirty) working tree onto main. The tree is dirty here (fact.md=y).
+( cd "$tmp" && bash "$SCRIPT" "slug with spaces" "r" ) >/dev/null 2>&1; check "$?" 2 "slug with spaces -> exit 2"
+check "$(git -C "$tmp" rev-parse main)" "$main_before" "main unchanged after bad-slug (spaces)"
+check "$(git -C "$tmp" rev-parse --abbrev-ref HEAD)" "main" "still on main after bad-slug (spaces)"
+
+# whitespace-only slug must be rejected (the non-empty check alone would let it through)
+( cd "$tmp" && bash "$SCRIPT" "   " "r" ) >/dev/null 2>&1; check "$?" 2 "whitespace-only slug -> exit 2"
+check "$(git -C "$tmp" rev-parse main)" "$main_before" "main unchanged after whitespace-only slug"
+
+# slash in slug must be rejected (avoid nested/ambiguous refs)
+( cd "$tmp" && bash "$SCRIPT" "has/slash" "r" ) >/dev/null 2>&1; check "$?" 2 "slug with slash -> exit 2"
+check "$(git -C "$tmp" rev-parse main)" "$main_before" "main unchanged after slash slug"
+
 echo "pass=$pass fail=$fail"; [ "$fail" = 0 ]

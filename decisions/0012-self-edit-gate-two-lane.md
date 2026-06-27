@@ -11,8 +11,9 @@ rule), it must land as a **reviewable PR**, not a silent commit to main.
 Two prior constraints bear on this:
 - **ADR 0011 #9** (git workflow) — main-only for routine work; no straight-to-main autopush without
   the force-push guard. Self-edits are a sanctioned exception to the "no feature branches" norm.
-- **§7.8** of `docs/schnapp-os-research-and-decisions-2026-06-23.md` — "git pull-request review for
-  self-edits" was listed as a desired guardrail.
+- **§7.7** (build order, item 8) of `docs/schnapp-os-research-and-decisions-2026-06-23.md` — "git
+  pull-request review for self-edits" was listed as a desired guardrail; **§7.8** ("hard parts") adds
+  that "self-modification needs governance, gained nearly for free by routing every self-edit through git."
 
 The owner re-decided Decision D1 on 2026-06-27: the gate exists **and** the agent may commit
 low-risk/mechanical self-edits directly to main. The gate is **preferred-not-mandatory**.

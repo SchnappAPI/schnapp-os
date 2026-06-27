@@ -30,6 +30,18 @@ if [ -z "$SLUG" ]; then
   exit 2
 fi
 
+# Slug must be a safe single ref component: letters, digits, dot, underscore, hyphen.
+# This rejects whitespace (incl. whitespace-only), slashes, and shell/ref metacharacters
+# BEFORE any branch is created — without it, a `git checkout -b` failure under
+# `set +e` would fall through and commit the self-edit onto the CURRENT branch (main),
+# defeating the gate.
+case "$SLUG" in
+  *[!a-zA-Z0-9._-]*)
+    echo "self-edit-stage: error: slug '$SLUG' has invalid characters (allowed: a-z A-Z 0-9 . _ -)" >&2
+    exit 2
+    ;;
+esac
+
 if [ -z "$(git status --porcelain 2>/dev/null)" ]; then
   echo "self-edit-stage: error: working tree is clean — nothing to stage" >&2
   exit 2
@@ -41,12 +53,19 @@ branch="self-edit/${DATE}-${SLUG}"
 
 # ensure original branch is restored even if something errors mid-flight
 restore_orig() {
-  git checkout -q "$orig" 2>/dev/null || true
+  git checkout -q "$orig" 2>/dev/null || \
+    echo "self-edit-stage: WARNING: could not restore original branch '$orig'" >&2
 }
 trap restore_orig EXIT
 
 # ── create branch, carry working-tree changes, commit ─────────────────────────
-git checkout -q -b "$branch"
+# Defense-in-depth: if branch creation fails for any reason, abort BEFORE add/commit
+# so the staged change can never land on the current branch (the slug guard above is
+# the primary protection; this is the backstop).
+git checkout -q -b "$branch" || {
+  echo "self-edit-stage: error: could not create branch '$branch'" >&2
+  exit 2
+}
 git add -A
 git commit -q -m "self-edit: $SLUG" -m "$RATIONALE"
 
