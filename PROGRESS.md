@@ -983,6 +983,8 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - 2026-06-26 VAULT FLATTEN executed (owner-directed, overrides 0011 #2 deferral; flatten-only, no rotation).
   Phase A: created 10 per-secret items in `web-variables` (Web App→6 + WEB_APP_CONFIG; Database→MSSQL_SA_PASSWORD;
   Anthropic→ANTHROPIC_API_KEY; Claude Code→CLAUDE_CODE_OAUTH_TOKEN), values copied, all resolve. Phase B: repointed
-  every live consumer — schnapp-bet (.env.template+8 workflows+docs), obsidian-vault, brain-watcher's OneDrive
-  .env.template, schnapp-os manifest/README. Database core stays bundled (~18 ETL workflows untouched). Phase C
-  (delete drained bundles) next. ROTATION still owed: bundles never rotated post-leak (updated_at all 2026-05).
+  every live consumer — schnapp-bet (.env.template+9 workflows+docs, commit c626196 pushed), web-bad, obsidian-vault,
+  brain-watcher's OneDrive .env.template, schnapp-os manifest/README. Database core stays bundled (~18 ETL workflows
+  untouched). Phase C: deleted Web App / Anthropic / Claude Code / MCP Tokens / GitHub bundles + Database/mssql_sa_password
+  field, each after a 0-ref grep guard. Verified vault=27 items, all new refs + Database core resolve, 5 bundles gone.
+  ROTATION still owed: flatten copied values, never rotated post-leak (updated_at all 2026-05); sanity-check 2-char ADMIN_REFRESH_CODE.

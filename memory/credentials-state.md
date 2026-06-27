@@ -25,11 +25,18 @@ All resolve. **Old bundles untouched → nothing broken.** `schnapp-os/.env.temp
 `obsidian-mcp/README.md` repointed to the new items. **`ADMIN_REFRESH_CODE` copied as only 2 chars —
 owner to sanity-check source.** Confirmed via `updated_at` (all bundles 2026-05, pre-leak) that the
 copied values are STILL the leaked ones — flatten does not rotate; rotation backlog below stands.
-**Phase B/C PENDING (owner go):** repoint live consumers in **`schnapp-bet`** (`.env.template`,
-`claude.yml`, `nba-backfill.yml`) then delete drained bundles (`Web App` secrets, `MCP Tokens`,
-`GitHub`, `Claude Code`, `Anthropic`, `Database/mssql_sa_password` field). `Database` core
-{server,database,username,password,trust_cert} STAYS bundled → ~18 ETL/grading workflows unchanged.
-Where-to-change detail in [credentials-map](../credentials-map.md) changelog (2026-06-26 rows).
+**Phase B+C DONE 2026-06-26.** Repointed every consumer (verified) then deleted the bundles.
+Repointed+pushed: schnapp-bet (`c626196`: .env.template+9 workflows+docs, 23 refs), obsidian-vault,
+schnapp-os. Repointed-not-committed: `web-bad` (stale local clone of schnapp-bet's remote — workflows
+don't run from it). Edited on disk: **brain-watcher's `OneDrive/Obsidian/.github/.env.template`** (a
+SEPARATE file from `~/code/obsidian-vault` — different inode — would've broken brain-agent if missed;
+the repo grep alone does NOT catch it). Deleted (after 0-ref grep guard across all repos+OneDrive):
+`Web App`, `Anthropic`, `Claude Code`, `MCP Tokens`, `GitHub`; removed `Database/mssql_sa_password`
+field. `Database` core {server,database,username,password,trust_cert} kept → ~18 ETL workflows
+unchanged. **Verified: vault=27 items, all new refs + Database core resolve, 5 bundles not-found.**
+**ROTATION STILL OWED** — flatten copied values, did not rotate; the leak banner's outstanding set
+(GITHUB_PAT, Anthropic key, Claude OAuth, DB sa, Web App secrets, Webshare, Cloudflare) stands, now as
+discrete items. Where-to-change detail: [credentials-map](../credentials-map.md) changelog (2026-06-26).
 Mac vault writes this session ran via **MacOS-MCP `Shell` + `zsh -lic`** (loads the SA token from the
 login profile); the `mac-mcp` op_run/op_whoami connector is still `unauthorized` (dead client bearer,
 below) — irrelevant, the shell path works.
