@@ -51,7 +51,7 @@ System items (verified 2026-06-17). `→` notes the planned target from the desi
 | `Dropbox` | `/DROPBOX_APP_KEY` `/DROPBOX_APP_SECRET` `/DROPBOX_REFRESH_TOKEN` | config | Dropbox app OAuth creds | Dropbox integration |
 | `QUICKBASE_EXCEL_SYNC` | `/credential` | etl | Quickbase ETL API | Quickbase ETL |
 | `GitHub SSH Key` | keys | github | git over SSH | git |
-| _(to create)_ `CLOUDFLARE_API_TOKEN` | `/credential` | cloudflare | Scoped Cloudflare User API Token for the Cloudflare MCP connector | Cloudflare MCP connector |
+| `CLOUDFLARE_API_TOKEN` | `/credential` `/account_id` `/access_key_id` `/secret_access_key` `/s3_endpoint` | cloudflare | Broad-scope Cloudflare **account** API token (created 2026-06-27) + its auto-derived R2 S3 credentials (same token; S3 keys appear because R2 perms were included). Distinct item from `Cloudflare Tunnel` (which is cloudflared runtime plumbing). | Cloudflare MCP connector; R2 S3 API |
 
 Personal (non-system, untouched): `Elgato`, `Obsidian`, `Schnapp's MacBook Pro`.
 
