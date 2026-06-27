@@ -27,7 +27,7 @@
 | File | Phase | Responsibility |
 |---|---|---|
 | `plugins/core/scripts/check-memory-frontmatter.sh` | 1 | Detector: fail if any fact file lacks `name`/`source`/ISO `updated`. |
-| `tests/memory-frontmatter.test.sh` | 1 | Unit test for the detector (fixtures + exit-code asserts). |
+| `plugins/core/scripts/tests/test-memory-frontmatter.sh` | 1 | Unit test for the detector (fixtures + exit-code asserts). Matches the existing `test-*.sh` convention. |
 | `memory/owner-working-preferences.md`, `memory/op-wrap-token-unquoted.md` | 1 | Backfill missing `source:`. |
 | `.github/workflows/ci-lint.yml` | 1 | Run the detector on push/PR (fast gate, fails the build on violation). |
 | `plugins/core/scripts/check-stale-facts.sh` | 2 | Detector: flag facts whose `updated:` is older than 7/30/90-day thresholds. |
