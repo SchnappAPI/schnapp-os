@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.schnapp.memory-consolidation</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>__REPO__/plugins/core/scripts/learning-worker.sh</string>
+    </array>
+
+    <!-- Run from the repo root so the worker's own REPO_ROOT and relative paths resolve. -->
+    <key>WorkingDirectory</key>
+    <string>__REPO__</string>
+
+    <!-- Run nightly at 03:17 local time. RunAtLoad false: never runs automatically on launchctl load. -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>3</integer>
+        <key>Minute</key>
+        <integer>17</integer>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <false/>
+
+    <key>StandardOutPath</key>
+    <string>__HOME__/Library/Logs/schnapp-os/memory-consolidation.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>__HOME__/Library/Logs/schnapp-os/memory-consolidation.err.log</string>
+</dict>
+</plist>

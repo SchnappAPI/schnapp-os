@@ -45,3 +45,54 @@ GitHub Actions is the right host for repo-only, Mac-independent routines — it 
 schnapp-os that these do not depend on the Mac being awake. Anything that needs the Mac's MCP
 (SQL Server, Flask, Docker, services) or LLM judgment runs from a Mac LaunchAgent that launches a
 headless Claude session, reusing the existing connectors and skills.
+
+---
+
+## LaunchAgent install — learning-worker (Phase 4)
+
+The nightly learning worker (`plugins/core/scripts/learning-worker.sh`) is scheduled via
+[`com.schnapp.memory-consolidation.plist`](com.schnapp.memory-consolidation.plist). The plist uses
+a `__REPO__` placeholder for the repo's absolute path (also its `WorkingDirectory`) and a `__HOME__`
+placeholder for the log paths, so it can be committed without hard-coding the Mac's directory layout
+or username.
+
+**Policy: activation is owner-confirmed, production-Mac-only.** CI builds and unit-tests the worker
+(`--dry-run`), but `launchctl load` runs on the production Mac only, via the `Schnapp_Mac` MCP,
+after explicit owner approval. Never auto-loaded by CI or a cloud session.
+
+### Install steps (run on the Mac, after explicit owner OK)
+
+```bash
+# 1. Substitute the repo path and home dir into the plist
+REPO="$HOME/schnapp-os"   # adjust if different
+sed -e "s|__REPO__|$REPO|g" -e "s|__HOME__|$HOME|g" \
+  "$REPO/scheduled-tasks/com.schnapp.memory-consolidation.plist" \
+  > ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
+
+# 2. Create the log directory if it doesn't exist
+mkdir -p ~/Library/Logs/schnapp-os
+
+# 3. Load the agent (RunAtLoad false — it will first fire at 03:17)
+launchctl load ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
+```
+
+### Verify it is loaded
+
+```bash
+launchctl list | grep com.schnapp.memory-consolidation
+```
+
+### Uninstall / disable
+
+```bash
+launchctl unload ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
+rm ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
+```
+
+### What the worker does (asks-first policy)
+
+The worker reads the local git-ignored queue (`scheduled-tasks/.learning-queue.tsv`), distills
+each queued correction, and routes judgment-bearing ones through `self-edit-stage.sh` to open a PR.
+It NEVER writes `memory/` or `plugins/core/rules/` directly. See
+[memory-consolidation.md](memory-consolidation.md) for the asks-first consolidation policy and the
+agent instructions that govern the live `claude -p` run.
