@@ -22,6 +22,11 @@
     <dict>
         <key>PATH</key>
         <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <!-- op:// reference to the Claude OAuth token (a reference, not the secret). The worker
+             resolves it via `op read` at runtime so the headless run authenticates despite
+             launchd not reaching the login Keychain. Substituted at install (see README). -->
+        <key>LEARNING_CLAUDE_TOKEN_REF</key>
+        <string>__CLAUDE_TOKEN_REF__</string>
     </dict>
 
     <!-- Run nightly at 03:17 local time. RunAtLoad false: never runs automatically on launchctl load. -->

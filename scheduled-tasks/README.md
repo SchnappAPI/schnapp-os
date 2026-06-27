@@ -60,12 +60,29 @@ or username.
 (`--dry-run`), but `launchctl load` runs on the production Mac only, via the `Schnapp_Mac` MCP,
 after explicit owner approval. Never auto-loaded by CI or a cloud session.
 
+### Headless auth (one-time prerequisite)
+
+`claude setup-token` stores the Claude OAuth token in the **login Keychain**, which a launchd job
+cannot read — the live run 401s. So store the token in 1Password and let the worker resolve it via
+`op` at runtime (the LaunchAgent inherits `OP_SERVICE_ACCOUNT_TOKEN`). The plist carries the op://
+**reference** (`LEARNING_CLAUDE_TOKEN_REF`); the value is never written to disk.
+
+```bash
+# Mint a long-lived token (prints an sk-ant-oat... value), then store it in 1Password.
+# Keep the value out of your shell history / any transcript — paste it into the op prompt only.
+claude setup-token
+op item create --category "API Credential" --vault Private \
+  --title "Claude Code OAuth (memory-worker)" "credential[password]=<paste-token>"
+# Your reference is then: op://Private/Claude Code OAuth (memory-worker)/credential
+```
+
 ### Install steps (run on the Mac, after explicit owner OK)
 
 ```bash
-# 1. Substitute the repo path and home dir into the plist
-REPO="$HOME/schnapp-os"   # adjust if different
-sed -e "s|__REPO__|$REPO|g" -e "s|__HOME__|$HOME|g" \
+# 1. Substitute the repo path, home dir, and op:// token reference into the plist
+REPO="$HOME/code/schnapp-os"   # adjust if different
+TOKEN_REF="op://Private/Claude Code OAuth (memory-worker)/credential"   # your reference
+sed -e "s|__REPO__|$REPO|g" -e "s|__HOME__|$HOME|g" -e "s|__CLAUDE_TOKEN_REF__|$TOKEN_REF|g" \
   "$REPO/scheduled-tasks/com.schnapp.memory-consolidation.plist" \
   > ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
 
