@@ -10,6 +10,8 @@ updated: 2026-06-23
 - Never guess. If a fact, date, number, quote, file, or capability is uncertain, say so
   before stating it. "I am not certain" beats a confident wrong answer.
 - Plan before non-trivial work (3+ steps or an architectural choice). Re-plan if it drifts.
+- Before retrying a failed approach, record what was tried and why it failed. Do not repeat an
+  approach that has already failed without a concrete reason to expect a different outcome.
 - Ask when genuinely unclear; do not invent intent. Otherwise act on sensible defaults.
 - Production-ready by default, not a starting point. Verify before claiming done.
 - Surface a better option if you see one; do not force a choice when a default is sensible.
