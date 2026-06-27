@@ -1,6 +1,6 @@
 ---
 name: credential-leak-2026-06-17
-description: Plaintext dump of ALL vault secrets (incl. the master OP_SERVICE_ACCOUNT_TOKEN) is committed + pushed in obsidian-vault Claude Export files — every value compromised; rotate-on-migrate in progress.
+description: Plaintext dump of ALL vault secrets is committed + pushed in obsidian-vault Claude Export files (PRIVATE repo). SA token + 3 MCP bearers rotated; flatten 2026-06-26 COPIED (did not rotate) the rest; owner ACCEPTED the residual risk 2026-06-27 (private repo, not public) — no further rotation/scrub. NOT "nothing exposed": values are plaintext in a private pushed repo.
 metadata: 
   node_type: memory
   type: project
@@ -50,5 +50,19 @@ as compromised. Reorg-without-rotation only relocates burned values.
 `MAC_MCP_AUTH_TOKEN` (now dead, rotated), `GH_PAT`, and `RUNNER_API_KEY` (`= Web App /runner_api_key`).
 Owner: `rm` the `.bak`; `GITHUB_PAT` + `RUNNER_API_KEY` join the console-rotation set. `RUNNER_API_KEY`'s
 value also transited the 2026-06-23 Code session transcript (a redaction gap when dumping the file).
+
+**OWNER DECISION 2026-06-27 — residual risk ACCEPTED, no rotation, no scrub.** After the
+2026-06-26 vault flatten (which COPIED values, did NOT rotate — split items still hold the
+leaked 2026-05 values), the owner chose to leave all values as-is and proceed. Grounding
+(verified 2026-06-27, counts only, no values printed): `SchnappAPI/obsidian-vault` is **PRIVATE**
+and pushed (`main` = `origin/main`); 30+ tracked files under `Claude Export/Conversations/*.md`
+still hold plaintext secret patterns — `github_pat_` ×89, `ghp_` ×22, `sk-ant-` ×11, `ops_` ×4
+(the `ops_` SA tokens are dead post-rotation). **Honest status: NOT "nothing was exposed" — the
+secrets are plaintext in a PRIVATE (not public) repo, exposed to anyone with access to that repo
+or the linked GitHub account, but not to the open internet.** Owner judged that audience acceptable.
+Real residual teeth = the live **GITHUB_PAT** + **Anthropic key** sitting in that plaintext;
+declined to rotate those too. The rotate-on-migrate strategy above is therefore CLOSED as
+"won't-do" unless the owner reopens it; the scrub is likewise deferred indefinitely. Do not
+re-flag this as urgent without new exposure (e.g. repo goes public, or a third party gains access).
 
 Links: [[credentials-state]], [[obsidian-state]], [[mac-connector-tooling]].

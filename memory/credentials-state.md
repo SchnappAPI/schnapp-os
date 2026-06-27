@@ -9,12 +9,14 @@ metadata:
   originSessionId: 33c726f1-b86d-4a93-8586-061ec9ca3f3e
 ---
 
-> 🔴 **Leak still in force for SECRECY:** every PRE-2026-06-22 vault value was dumped in
-> `obsidian-vault` Claude-export files + synced to OneDrive → compromised. **Rotated so far:** the
-> **SA token** (2026-06-22, below) and **all 3 MCP bearers** (`MAC_MCP_AUTH_TOKEN`,
-> `GITHUB_MCP_AUTH_TOKEN`, `OP_MCP_BEARER` — 2026-06-23, Phase 3B). **Still compromised → owner-console
-> rotation outstanding:** `GITHUB_PAT`, Anthropic API key, Claude OAuth, DB `sa`, Web App secrets
-> (incl. `RUNNER_API_KEY`), Webshare, Cloudflare. See [[credential-leak-2026-06-17]].
+> ⚪ **Leak — residual risk ACCEPTED by owner 2026-06-27 (no further rotation, no scrub).** Every
+> PRE-2026-06-22 vault value was dumped in `obsidian-vault` Claude-export files (PRIVATE repo, pushed +
+> OneDrive-synced). **Rotated:** the **SA token** (2026-06-22) and **all 3 MCP bearers** (2026-06-23).
+> **NOT rotated (values still leaked, owner accepted):** `GITHUB_PAT`, Anthropic key, Claude OAuth, DB
+> `sa`, Web App secrets (incl. `RUNNER_API_KEY`), Webshare, Cloudflare — the 2026-06-26 flatten COPIED
+> these, did not rotate. Basis: repo is PRIVATE (not public); exposure limited to repo/account access.
+> NOT "nothing exposed" — plaintext in a private pushed repo. Don't re-flag unless it goes public or a
+> third party gains access. See [[credential-leak-2026-06-17]].
 
 **VAULT FLATTEN — Phase A done 2026-06-26 (owner-directed, overrides the 0011 deferral; flatten-only, NO rotation).**
 Created 10 split items in `web-variables`, values COPIED from the bundles: `ADMIN_PASSCODE`,
