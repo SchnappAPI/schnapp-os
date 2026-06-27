@@ -1,0 +1,11 @@
+name: ci-lint
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  memory-frontmatter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: memory frontmatter provenance
+        run: bash plugins/core/scripts/check-memory-frontmatter.sh memory
