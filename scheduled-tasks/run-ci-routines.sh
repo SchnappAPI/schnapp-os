@@ -84,4 +84,15 @@ echo "_Read-only: flags facts crossing 7/30/90-day \`updated:\` thresholds. Refr
 echo "in an approved session — this routine never edits._"
 echo
 
+# --- Routine 4: learning-loop eval (informational) ---
+echo "## Learning-loop eval"
+echo
+echo '```'
+bash plugins/core/scripts/learning-eval.sh 2>&1 || true
+echo '```'
+echo
+echo "_Read-only: flags corrections that recurred after promotion (the rule may not have stuck) —"
+echo "the signal for revisiting a promoted rule. This routine never edits._"
+echo
+
 exit "$rc"
