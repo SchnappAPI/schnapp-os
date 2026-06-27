@@ -998,3 +998,7 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   plugin still `claude-kit-core@schnapp-os` until then): `claude plugin uninstall claude-kit-core@schnapp-os`
   → `claude plugin marketplace update schnapp-os` → `claude plugin install schnapp-os-core@schnapp-os`.
   Skill/command namespace then flips `claude-kit-core:` → `schnapp-os-core:`. No breakage until reinstall.
+- 2026-06-27 Agentic-OS loops Phase 1 SHIPPED (provenance detector + CI, ci-lint green); see plan
+  docs/superpowers/plans/2026-06-27-agentic-os-loops.md + handoff 035. Phase 2 (reflective freshness)
+  next, to continue in a fresh session. Detours resolved this session: stale schnapp-kit no-commit-to-main
+  hook (frozen Desktop snapshot, neutralized; self-heals fresh session) + plugin rename claude-kit-core→schnapp-os-core.
