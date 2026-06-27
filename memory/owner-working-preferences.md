@@ -4,8 +4,8 @@ description: "Owner working prefs (2026-06-17) — parallelize via subagents; ma
 metadata: 
   node_type: memory
   type: feedback
-  source: "owner statement, session 9f0ff006 (2026-06-17)"
-  updated: 2026-06-17
+  source: "owner statement, session 9f0ff006 (2026-06-17); +2026-06-27 (main-only / no branches)"
+  updated: 2026-06-27
   originSessionId: 9f0ff006-412e-4529-aed7-032cd4dbd18a
 ---
 
@@ -17,6 +17,7 @@ Owner stated 2026-06-17 (to be formalized as global rules in the Rules-domain co
 4. **Automate; do, don't tell.** Don't instruct the owner to copy/paste or run things I can run. Run the command, read the output, proceed. Only surface genuinely owner-only steps (e.g. 1P-admin mint, third-party console regen).
 5. **Concise, actionable-only.** Reply with what needs owner input or action. Assume long detail goes unread. When important, write no-prose/caveman (drop preambles, fillers, hedging). Detail only on request.
 6. **Handoffs = primer + file.** On any handoff request, always (a) provide a copy-paste-ready primer block for a new chat/session, AND (b) write a handoff file packing maximal relevant context in a concise format built to let me resume seamlessly.
+7. **Main-only, no branches (2026-06-27).** Commit directed work straight to `main` — no feature branches, no PRs for my own changes (decisions/0011 #9; ADR 0015 grants standing merge/act authority). Run tests + a local review pass before pushing. The learning loop's *autonomous* self-edits are the only thing that may use a short-lived branch (the eval gate, decisions/0012) — pending the owner's call on whether even those go direct-to-main.
 
 **Why:** owner is fighting sprawl/staleness/overload; these reduce friction and round-trips.
 **How to apply:** every session, all surfaces. Links: [[credential-leak-2026-06-17]], [[keep-tracker-current]].
