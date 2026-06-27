@@ -988,3 +988,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   untouched). Phase C: deleted Web App / Anthropic / Claude Code / MCP Tokens / GitHub bundles + Database/mssql_sa_password
   field, each after a 0-ref grep guard. Verified vault=27 items, all new refs + Database core resolve, 5 bundles gone.
   ROTATION still owed: flatten copied values, never rotated post-leak (updated_at all 2026-05); sanity-check 2-char ADMIN_REFRESH_CODE.
+- 2026-06-27 Renamed the schnapp-os marketplace core plugin `claude-kit-core` → `schnapp-os-core`
+  (legacy claude-kit-lineage name; owner flagged the inconsistency). Canonical defs updated
+  (.claude-plugin/marketplace.json, plugins/core/.claude-plugin/plugin.json) + 2 live refs
+  (surfaces/cowork.md, .claude/settings.json comment); ~38 historical refs in PROGRESS/handoffs/
+  PLAN/memory kept (they record the past name correctly). Also corrected the marketplace
+  description's stale "delivers hooks" claim (hooks moved to .claude/settings.json per 0011 #2).
+  Repo: commit d6e0a51 pushed. **OWNER must reinstall to activate** (repo def changed, installed
+  plugin still `claude-kit-core@schnapp-os` until then): `claude plugin uninstall claude-kit-core@schnapp-os`
+  → `claude plugin marketplace update schnapp-os` → `claude plugin install schnapp-os-core@schnapp-os`.
+  Skill/command namespace then flips `claude-kit-core:` → `schnapp-os-core:`. No breakage until reinstall.
