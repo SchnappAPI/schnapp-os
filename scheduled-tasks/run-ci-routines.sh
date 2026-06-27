@@ -73,4 +73,15 @@ else
 fi
 echo
 
+# --- Routine 3: memory freshness sweep (informational) ---
+echo "## Memory freshness sweep"
+echo
+echo '```'
+bash plugins/core/scripts/check-stale-facts.sh memory 2>&1 || true
+echo '```'
+echo
+echo "_Read-only: flags facts crossing 7/30/90-day \`updated:\` thresholds. Refresh via supersede"
+echo "in an approved session — this routine never edits._"
+echo
+
 exit "$rc"

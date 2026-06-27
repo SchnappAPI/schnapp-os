@@ -32,6 +32,15 @@ jobs:
       - name: Supersede-orphan detector self-test
         run: bash plugins/core/scripts/tests/test-supersede-orphans.sh
 
+      - name: Frontmatter lib self-test
+        run: bash plugins/core/scripts/tests/test-lib-frontmatter.sh
+
+      - name: Memory frontmatter detector self-test
+        run: bash plugins/core/scripts/tests/test-memory-frontmatter.sh
+
+      - name: Stale-facts detector self-test
+        run: bash plugins/core/scripts/tests/test-stale-facts.sh
+
       - name: Secret scan (no literal values in tracked files)
         run: bash plugins/core/scripts/scan-secrets.sh --exclude 'plugins/core/scripts/tests/*'
 

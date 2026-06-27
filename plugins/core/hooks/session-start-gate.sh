@@ -71,6 +71,14 @@ if [ -d "$MEM" ]; then
   else
     echo "[memory] no supersede-orphans"
   fi
+  stale="$(bash "$REPO/plugins/core/scripts/check-stale-facts.sh" "$MEM" 2>/dev/null \
+            | grep -v '^memory freshness OK')"
+  if [ -n "$stale" ]; then
+    echo "[memory] STALE FACTS — review/refresh (read-only flag; supersede-not-append):"
+    printf '%s\n' "$stale" | sed 's/^/        - /'
+  else
+    echo "[memory] no stale facts (<7d)"
+  fi
 else
   echo "[memory] no memory/ dir"
 fi
