@@ -107,6 +107,16 @@ PROMPT_EOF
 # resolve relative paths (the learn-route skill, the gate). The LaunchAgent's cwd is / otherwise.
 cd "$REPO_ROOT" || { echo "learning-worker: ERROR — cannot cd to repo root '$REPO_ROOT'." >&2; exit 1; }
 
+# Headless auth: `claude setup-token` writes to the login Keychain, which a launchd job cannot
+# read (it 401s). Inject the Claude OAuth token from 1Password at runtime instead — the LaunchAgent
+# inherits OP_SERVICE_ACCOUNT_TOKEN, so `op read` resolves here. LEARNING_CLAUDE_TOKEN_REF is an
+# op:// REFERENCE (safe to commit/set; the value is never stored on disk). No-op if a token is
+# already in the env (e.g. an interactive test) or no ref is configured.
+if [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ] && [ -n "${LEARNING_CLAUDE_TOKEN_REF:-}" ] && command -v op >/dev/null 2>&1; then
+  CLAUDE_CODE_OAUTH_TOKEN="$(op read "$LEARNING_CLAUDE_TOKEN_REF" 2>/dev/null || true)"
+  export CLAUDE_CODE_OAUTH_TOKEN
+fi
+
 echo "learning-worker: processing $(wc -l < "$Q" | tr -d ' ') capture(s) via claude -p ..."
 # Pass the prompt on STDIN, not as a positional arg: --allowedTools accepts a list and otherwise
 # swallows the trailing prompt argument, leaving claude with no input ("Input must be provided
