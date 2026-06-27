@@ -1,0 +1,12 @@
+{
+  "$comment": "Project-scoped MCP servers (carry over to Claude Code on the web; checked into version control per https://code.claude.com/docs/en/mcp project-scope). The Schnapp_Mac remote server (connectors/mac-mcp/server.py, live at mac-mcp.schnapp.bet/mcp) authorizes a request that carries Authorization: Bearer <MAC_MCP_AUTH_TOKEN> via its _BearerAuthMiddleware; once authorized, ALL tools (incl. shell_exec/op_run) work with no per-call token. The bearer is a REFERENCE to the MAC_MCP_AUTH_TOKEN env var (set in the cloud environment), expanded at connect time — the literal value is never stored here (secrets-as-references). Enabling this grants this surface full Mac tool access: a deliberate, owner-accepted decision recorded in decisions/0014-enable-autonomous-cloud-agent-mac-access.md (refines 0013). New project servers require one-time approval on first use (Claude Code prompts).",
+  "mcpServers": {
+    "Schnapp_Mac": {
+      "type": "http",
+      "url": "https://mac-mcp.schnapp.bet/mcp",
+      "headers": {
+        "Authorization": "Bearer ${MAC_MCP_AUTH_TOKEN}"
+      }
+    }
+  }
+}
