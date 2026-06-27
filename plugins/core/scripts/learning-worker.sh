@@ -108,20 +108,26 @@ PROMPT_EOF
 cd "$REPO_ROOT" || { echo "learning-worker: ERROR — cannot cd to repo root '$REPO_ROOT'." >&2; exit 1; }
 
 # Headless auth: `claude setup-token` writes to the login Keychain, which a launchd job cannot
-# read (it 401s). Inject the Claude OAuth token from 1Password at runtime instead — the LaunchAgent
+# read (it 401s). Inject the credential from 1Password at runtime instead — the LaunchAgent
 # inherits OP_SERVICE_ACCOUNT_TOKEN, so `op read` resolves here. LEARNING_CLAUDE_TOKEN_REF is an
-# op:// REFERENCE (safe to commit/set; the value is never stored on disk). No-op if a token is
-# already in the env (e.g. an interactive test) or no ref is configured.
-if [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ] && [ -n "${LEARNING_CLAUDE_TOKEN_REF:-}" ]; then
+# op:// REFERENCE (safe to commit/set; the value is never stored on disk). The referenced item may
+# hold EITHER an Anthropic API key (sk-ant-api…) or a Claude OAuth token (sk-ant-oat…); we export it
+# under the matching env var so the ref can point at whichever credential actually authenticates.
+# No-op if a credential is already in the env (e.g. an interactive test) or no ref is configured.
+if [ -z "${ANTHROPIC_API_KEY:-}" ] && [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ] && [ -n "${LEARNING_CLAUDE_TOKEN_REF:-}" ]; then
   # Observability: a headless job must NOT swallow its auth failure silently (that turns a
-  # credential problem into a mystery). Log the resolution outcome — length + any op error —
-  # but NEVER the token value. The launchd op identity (the inherited service account) differs
-  # from an interactive shell's personal login, so this is the only place we see what it gets.
+  # credential problem into a mystery). Log the resolution outcome — length + which env var —
+  # but NEVER the value. The launchd op identity (the inherited service account) differs from an
+  # interactive shell's personal login, so this is the only place we see what it gets.
   echo "learning-worker: auth — op:$(command -v op || echo MISSING) OP_SA:${OP_SERVICE_ACCOUNT_TOKEN:+set}${OP_SERVICE_ACCOUNT_TOKEN:-UNSET} ref:${LEARNING_CLAUDE_TOKEN_REF}"
   if command -v op >/dev/null 2>&1; then
     if _tok="$(op read "$LEARNING_CLAUDE_TOKEN_REF" 2>&1)"; then
-      export CLAUDE_CODE_OAUTH_TOKEN="$_tok"
-      echo "learning-worker: auth — resolved token via op (${#_tok} chars)."
+      case "$_tok" in
+        sk-ant-api*) export ANTHROPIC_API_KEY="$_tok";       _kind=ANTHROPIC_API_KEY ;;
+        *)           export CLAUDE_CODE_OAUTH_TOKEN="$_tok"; _kind=CLAUDE_CODE_OAUTH_TOKEN ;;
+      esac
+      echo "learning-worker: auth — resolved credential via op (${#_tok} chars) -> $_kind."
+      unset _kind
     else
       echo "learning-worker: auth — ERROR: op read failed: $_tok" >&2
     fi
