@@ -17,8 +17,11 @@
 #
 # Safety:
 #   - Empty/missing queue → message + exit 0.  Live path needs the `claude` CLI; absent → no-op exit 0.
-#   - Claude is given only Read,Edit,Write (no Bash) — it edits files; the worker does all git.
-#   - Only a gate-APPROVED diff is pushed to main; held proposals never touch main (→ issue).
+#   - Claude runs FULL-CAPABILITY (--dangerously-skip-permissions: all tools incl. Bash, no prompts),
+#     per owner directive (max capability, never blocked). The prompt steers it to the gated flow
+#     (edit the .md; let the worker commit+gate), but it is not hard-sandboxed.
+#   - Default flow: the worker gates the resulting diff (learning-gate.sh) and pushes only APPROVED
+#     changes to main; held proposals never touch main (→ issue).
 #   - Archiving (not deleting) means a capture is never silently lost.
 set -uo pipefail
 
@@ -119,8 +122,9 @@ git checkout -q main 2>/dev/null || true
 git reset -q --hard origin/main 2>/dev/null || true
 
 echo "learning-worker: processing $(wc -l < "$Q" | tr -d ' ') capture(s) via claude -p ..."
-# Claude gets Read,Edit,Write only — NO Bash. It edits .md files; the worker does all git below.
-if ! printf '%s' "$PROMPT" | claude -p --allowedTools "Read,Edit,Write"; then
+# Full capability (owner directive): all tools incl. Bash, no permission prompts. The prompt steers
+# it to edit-only and let the worker gate+commit; the gate is the default path, not a hard sandbox.
+if ! printf '%s' "$PROMPT" | claude -p --dangerously-skip-permissions; then
   git reset -q --hard origin/main 2>/dev/null || true
   echo "learning-worker: ERROR — claude run failed; queue NOT drained (captures preserved)." >&2
   exit 1

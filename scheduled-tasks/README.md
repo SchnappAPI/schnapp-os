@@ -81,15 +81,17 @@ op item create --category "API Credential" --vault Private \
 ```bash
 # 1. Substitute the repo path, home dir, and op:// token reference into the plist
 REPO="$HOME/code/schnapp-os"   # adjust if different
-TOKEN_REF="op://Private/Claude Code OAuth (memory-worker)/credential"   # your reference
+TOKEN_REF="op://web-variables/ANTHROPIC_API_KEY/credential"   # the credential the worker authenticates with
 sed -e "s|__REPO__|$REPO|g" -e "s|__HOME__|$HOME|g" -e "s|__CLAUDE_TOKEN_REF__|$TOKEN_REF|g" \
   "$REPO/scheduled-tasks/com.schnapp.memory-consolidation.plist" \
   > ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
 
-# 2. Create the log directory if it doesn't exist
+# 2. Create the log directory AND the queue file (WatchPaths needs the file to exist to arm)
 mkdir -p ~/Library/Logs/schnapp-os
+touch "$REPO/scheduled-tasks/.learning-queue.tsv"
 
-# 3. Load the agent (RunAtLoad false — it will first fire at 03:17)
+# 3. Load the agent. RunAtLoad false — it fires WHEN the queue file changes (a capture is enqueued)
+#    and every 30 min as a backstop. Re-run unload+load after any plist change.
 launchctl load ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
 ```
 

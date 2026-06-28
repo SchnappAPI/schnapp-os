@@ -29,14 +29,17 @@
         <string>__CLAUDE_TOKEN_REF__</string>
     </dict>
 
-    <!-- Run nightly at 03:17 local time. RunAtLoad false: never runs automatically on launchctl load. -->
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>3</integer>
-        <key>Minute</key>
-        <integer>17</integer>
-    </dict>
+    <!-- Run the moment a capture is enqueued (the queue file changes) AND every 30 min as a backstop,
+         so a correction is consolidated within seconds of being captured — no reliance on a nightly
+         time or a manual SessionEnd trigger you might forget. Empty-queue runs exit immediately
+         (near-free). The worker drains the queue on completion, which re-fires WatchPaths once → an
+         instant no-op. (The queue file must exist for the watch; the install `touch`es it — see README.) -->
+    <key>WatchPaths</key>
+    <array>
+        <string>__REPO__/scheduled-tasks/.learning-queue.tsv</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>1800</integer>
 
     <key>RunAtLoad</key>
     <false/>
