@@ -25,6 +25,7 @@ Status lives in one canonical place and is read there:
 | [connectors/](connectors/) | Remote MCP connectors — `op-mcp` (1Password resolver), `memory-mcp` (cross-surface memory), `mac`/`github`/`obsidian-mcp` |
 | [memory/](memory/) | Global memory lane — `MEMORY.md` index + per-fact files ([conventions](memory/README.md)) |
 | [credentials-map.md](credentials-map.md) | `op://` reference map (references only) |
+| [docs/environment-and-access.md](docs/environment-and-access.md) | Never-blocked config: required network allowlist, git-write path, per-surface delivery (ADR 0018) |
 
 ## Staying current (anti-stale)
 - Docs reference canonical sources for mutable facts; they never copy them. See the
