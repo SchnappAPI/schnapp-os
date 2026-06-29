@@ -38,38 +38,52 @@ else
 fi
 echo
 
-# --- Routine 2: sync / unmerged check (informational) ---
+# --- Routine 2: sync / unmerged + stray-branch reconcile (informational) ---
+# Under ADR 0016/0017 `main` is the only long-lived branch on any surface, so EVERY other remote
+# branch is session residue. Surface both kinds: unmerged (review before retiring) and merged
+# (orphaned session litter, safe to delete). Read-only — never merges or deletes.
 echo "## Sync / unmerged check"
 echo
 # Best-effort: ensure we can see all remote branches (CI may have fetched only one ref).
 git fetch --quiet origin '+refs/heads/*:refs/remotes/origin/*' 2>/dev/null || true
 base="origin/main"
 if ! git rev-parse --verify --quiet "$base" >/dev/null; then base="main"; fi
-unmerged="$(git for-each-ref --format='%(refname:short)' refs/remotes/origin \
+strays="$(git for-each-ref --format='%(refname:short)' refs/remotes/origin \
   | grep -vE "^origin/(HEAD|main)$" || true)"
-if [ -z "$unmerged" ]; then
-  echo "No remote branches besides \`main\`."
+if [ -z "$strays" ]; then
+  echo "No remote branches besides \`main\`. ✅"
 else
-  found=0
-  echo "| Branch | Ahead of main | Behind main | Last commit |"
-  echo "|---|---|---|---|"
+  unmerged_rows=""; merged_rows=""
   while IFS= read -r b; do
     [ -z "$b" ] && continue
     counts="$(git rev-list --left-right --count "$base...$b" 2>/dev/null)" || continue
     behind="$(printf '%s' "$counts" | awk '{print $1}')"
     ahead="$(printf '%s' "$counts" | awk '{print $2}')"
-    [ "${ahead:-0}" = "0" ] && continue   # fully merged → not outstanding
     when="$(git log -1 --format='%cr' "$b" 2>/dev/null)"
-    echo "| \`$b\` | $ahead | $behind | $when |"
-    found=1
-  done <<< "$unmerged"
-  if [ "$found" = "0" ]; then
-    echo "All remote branches are merged into \`main\`."
-  else
+    if [ "${ahead:-0}" = "0" ]; then
+      merged_rows="${merged_rows}| \`$b\` | $behind | $when |"$'\n'
+    else
+      unmerged_rows="${unmerged_rows}| \`$b\` | $ahead | $behind | $when |"$'\n'
+    fi
+  done <<< "$strays"
+  if [ -n "$unmerged_rows" ]; then
+    echo "### Unmerged work — review before retiring"
+    echo "| Branch | Ahead of main | Behind main | Last commit |"
+    echo "|---|---|---|---|"
+    printf '%s' "$unmerged_rows"
     echo
-    echo "_Unmerged work above. Merge via \`merge-with-discretion\` or retire via \`/clean-gone\`"
-    echo "in an approved session — this routine never merges or deletes._"
   fi
+  if [ -n "$merged_rows" ]; then
+    echo "### Merged residue — orphaned session branches, safe to retire"
+    echo "| Branch | Behind main | Last commit |"
+    echo "|---|---|---|"
+    printf '%s' "$merged_rows"
+    echo
+  fi
+  echo "_Every branch above is session residue (ADR 0016/0017: \`main\` is the only live branch)."
+  echo "Merged ones are safe to delete; unmerged ones need a review pass first. Retire via"
+  echo "\`git push origin --delete <branch>\` on the Mac (the cloud env's git proxy 403s pushes), or"
+  echo "\`/clean-gone\` in an approved session — this routine never merges or deletes._"
 fi
 echo
 
