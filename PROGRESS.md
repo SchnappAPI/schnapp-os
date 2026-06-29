@@ -1002,3 +1002,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   docs/superpowers/plans/2026-06-27-agentic-os-loops.md + handoff 035. Phase 2 (reflective freshness)
   next, to continue in a fresh session. Detours resolved this session: stale schnapp-kit no-commit-to-main
   hook (frozen Desktop snapshot, neutralized; self-heals fresh session) + plugin rename claude-kit-core→schnapp-os-core.
+- 2026-06-29 Edit-time security hooks wired (PostToolUse in .claude/settings.json): secret-scan-on-write.sh
+  (runs scan-secrets.sh on each Write/Edit, exit 2 on a literal secret value — shift-left from the
+  freshness.yml CI gate) + shellcheck-on-write.sh (lints *.sh at -S info, catches the unquoted-var/word-split
+  class SC2086; no-ops if shellcheck absent — now brew-installed, v0.11.0). New agent secrets-leak-reviewer.md
+  (adversarial leak audit beyond the regex gate; runs the scanner then finds what regex misses). CATALOG.md
+  regenerated to list both. Also de-staled the live ~/.claude/CLAUDE.md off the removed /new-project composer
+  (decisions/0011 #4) — completed the pending owner re-copy from templates/user-global-CLAUDE.md flagged earlier
+  in this log; the template was already correct, only the per-machine file lagged. Both hooks dogfood-clean at
+  shellcheck -S info; tested (planted token→block, SC2086→block, clean→pass, non-edit/non-sh→ignored);
+  scan-secrets self-test passes. Hooks/agent activate next session (loaded at startup).

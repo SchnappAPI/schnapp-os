@@ -104,11 +104,14 @@ Scripts in `hooks/`, wired to events in [`hooks/hooks.json`](hooks/hooks.json)
 
 - **capture-nudge.sh** — UserPromptSubmit. The learning loop's CAPTURE trigger (correction half).
 - **no-force-push-guard.sh** — PreToolUse HARD guard against force-push (decisions/0011 #9).
+- **secret-scan-on-write.sh** — PostToolUse shift-left leak guard.
 - **session-end-backup.sh** — schnapp-os end-of-session write, deterministic half (PLAN.md 5.4 / 7.2).
 - **session-start-gate.sh** — schnapp-os SessionStart freshness gate.
 - **session-stop-push-gate.sh** — schnapp-os Stop gate: never leave unpushed commits
+- **shellcheck-on-write.sh** — PostToolUse shell-lint gate.
 
 ## Agents
 
 - **performance-optimizer**
+- **secrets-leak-reviewer**
 - **sql-etl-reviewer**
