@@ -1236,3 +1236,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   (ADR 0011 #2). Reworded to match reality + cite 0011 #2. (Owner asked to "execute everything"; the brain-watcher
   LaunchAgent RESTORE was correctly denied by the Mac persistence guardrail as not specifically authorized by a broad
   ask — paused pending an explicit owner go; the 3 connector/SDK migrations need an owner-present cutover, see below.)
+- 2026-06-30 Session wrap -> **handoff 040**. Steps 1 (brain-watcher restored + monitored) and 2 (Agent SDK feature
+  set verified; "library, not Managed-Agents cloud deployments" decision, because the learning-worker is Mac-coupled)
+  of the substrate rethink are DONE. Step 3 (Loop->Agent SDK build) is fully designed + owner-approved but, at owner
+  request, DEFERRED to a fresh session to keep this long context clean — no live worker change was made this session.
+  `handoffs/040-loop-to-agent-sdk-build.md` packs zero-loss context: the complete `learning_distill.py` source, the
+  exact `learning-worker.sh` diff, the venv wiring, the authoritative Agent SDK API facts (`claude-agent-sdk` reads
+  `CLAUDE_CODE_OAUTH_TOKEN` -> preserves ADR 0019 subscription billing; spawns the `claude` CLI; file-only tools =
+  safer than `--dangerously-skip-permissions`), the make-or-break headless-auth proof to run FIRST, and the
+  build->verify->cutover order + rollback.
