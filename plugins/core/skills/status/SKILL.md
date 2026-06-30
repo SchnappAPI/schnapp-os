@@ -34,7 +34,7 @@ row. Then a one-line verdict and the **single most important next action** (e.g.
 Rules:
 - Read-only. `status` never merges, deletes, restarts, or mutates — it reports and points at the
   action that would fix each row (delete merged-residue branches per ADR 0017, prune stale
-  `[gone]` branches, run the infra-health routine).
+  `[gone]` branches, run the infra-health routine, clear open PRs via [`pr-sweep`](../pr-sweep/SKILL.md)).
 - Distinguish "WARN: real drift" from "could not read on this surface" — never let an unreadable
   signal look green. Name the fallback for each gap (same always-complete discipline as
   `surface-check`).

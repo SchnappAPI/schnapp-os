@@ -1116,3 +1116,10 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   `cat`'d via Bash. Fix-the-class, not the instance. Also: merged the last org-wide open PR (schnapp-bet #2, the
   fail-closed secrets security fix, reviewed) and closed two dead ones (schnapp-bet #1 empty, schnapp-kit #29 moot)
   → 0 open PRs across SchnappAPI, per the new never-leave-open-PRs preference.
+- 2026-06-30 Built the pr-sweep skill (plugins/core/skills/pr-sweep) — on-demand org-wide open-PR triage: one
+  `gh search prs` call → classify (empty/moot/mergeable/needs-review) → close dead + gated-merge clean; never
+  blind-merge prod/security (the auto-mode classifier blocks merging a PR the agent didn't open without specific
+  auth). Codifies this session's efficiency lessons (one wide call, token-readable fields only — `statusCheckRollup`
+  403s on some repos) and the safe-vs-asks-first split (framework F). Cross-linked from status; complements the
+  read-only sync/unmerged routine (that = branches, this = PR objects). CATALOG regenerated; components auto-discover
+  (plugin.json) so it is live on next plugin load.
