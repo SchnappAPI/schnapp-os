@@ -36,9 +36,11 @@ the repo grep alone does NOT catch it). Deleted (after 0-ref grep guard across a
 `Web App`, `Anthropic`, `Claude Code`, `MCP Tokens`, `GitHub`; removed `Database/mssql_sa_password`
 field. `Database` core {server,database,username,password,trust_cert} kept → ~18 ETL workflows
 unchanged. **Verified: vault=27 items, all new refs + Database core resolve, 5 bundles not-found.**
-**ROTATION STILL OWED** — flatten copied values, did not rotate; the leak banner's outstanding set
-(GITHUB_PAT, Anthropic key, Claude OAuth, DB sa, Web App secrets, Webshare, Cloudflare) stands, now as
-discrete items. Where-to-change detail: [credentials-map](../credentials-map.md) changelog (2026-06-26).
+**ROTATION NOT DONE — owner-ACCEPTED won't-do (2026-06-27; see banner above).** The flatten copied
+values, did not rotate; the un-rotated set (GITHUB_PAT, Anthropic key, Claude OAuth, DB sa, Web App
+secrets incl. RUNNER_API_KEY, Webshare, Cloudflare) stays leaked-but-accepted as discrete items — it is
+**not an open task**. Re-open only on new exposure (repo goes public / third-party access). Where-to-change
+detail if reopened: [credentials-map](../credentials-map.md) changelog (2026-06-26).
 Mac vault writes this session ran via **MacOS-MCP `Shell` + `zsh -lic`** (loads the SA token from the
 login profile); the `mac-mcp` op_run/op_whoami connector is still `unauthorized` (dead client bearer,
 below) — irrelevant, the shell path works.

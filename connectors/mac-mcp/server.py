@@ -59,7 +59,7 @@ MCP_TOKEN = os.environ.get("MAC_MCP_AUTH_TOKEN", "")
 _http_authed: contextvars.ContextVar[bool] = contextvars.ContextVar(
     "http_authed", default=False
 )
-RUNNER_KEY = os.environ.get("RUNNER_API_KEY", "runner-Lake4971")
+RUNNER_KEY = os.environ.get("RUNNER_API_KEY", "")  # no hardcoded fallback (secrets-as-references); empty -> fail closed
 FLASK_BASE = "http://localhost:5000"
 GH_PAT = os.environ.get("GH_PAT", "")
 GITHUB_REPO = "SchnappAPI/schnapp-bet"

@@ -3,6 +3,7 @@ name: owner-working-preferences
 description: "Owner working prefs (2026-06-17) — parallelize via subagents; many small reusable skills not monoliths; skill-ify repeated actions; automate (do, don't tell); concise caveman actionable-only replies; rich handoffs + copy-paste primer."
 metadata: 
   node_type: memory
+  scope: global
   type: feedback
   source: "owner statement, session 9f0ff006 (2026-06-17); +2026-06-27 (main-only / no branches); +2026-06-29 (web sessions target main); +2026-06-30 (auto commit+push by default; never leave open PRs)"
   updated: 2026-06-30

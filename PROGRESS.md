@@ -1180,3 +1180,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
 - 2026-06-30 Owner ENABLED the Cloudflare Tunnel Health Alert (Cloudflare Zero Trust → Notifications; free, email),
   the event-driven complement to mac-liveness for Mac-dark. Recorded as active in scheduled-tasks/mac-liveness.md +
   handoff 039; no longer an open/optional item (supersedes the prior wrap line's "optional owner task").
+- 2026-06-30 Substrate-rethink review (5-agent parallel audit: connectors / processes / automation / governance +
+  a "what's-newly-possible" grounding pass; output `docs/repo-review-2026-06-30-substrate-rethink.md`). Applied the
+  P0 defect batch found en route: (a) SECURITY — stripped the hardcoded `runner-Lake4971` fallback from
+  `connectors/mac-mcp/server.py:62` (now `""`, fail-closed; the live `RUNNER_API_KEY` op:// is always injected so
+  prod is unaffected) per secrets-as-references; this is code hygiene, NOT a rotation (the leak is owner-accepted
+  won't-do 2026-06-27). (b) Reconciled two stale-status contradictions, current-state-only: PLAN.md final-verify #7
+  `FAILING 2026-06-16` -> `RESOLVED 2026-06-30` (ADR 0020 portal), and credentials-state.md "ROTATION STILL OWED" ->
+  "owner-accepted won't-do" (it contradicted its own risk-accepted banner two paragraphs up). (c) Added the missing
+  `scope: global` to 3 memory facts (owner-working-preferences, op-wrap-token-unquoted, credential-leak-2026-06-17)
+  toward one-schema normalization. Hardening (op-mcp heartbeat + learning-worker failure alert) + the assessment doc follow.

@@ -3,6 +3,7 @@ name: op-wrap-token-unquoted
 description: "launchd op-wrap.sh greps the SA token out of ~/.zshrc and strips the prefix literally (no sourcing) — so the token line MUST be unquoted, or every service crash-loops on \"unrecognized auth type\"."
 metadata: 
   node_type: memory
+  scope: global
   type: project
   source: "session f25f3f99 (SA token rotation / launchd crash diagnosis 2026-06-22)"
   updated: 2026-06-30

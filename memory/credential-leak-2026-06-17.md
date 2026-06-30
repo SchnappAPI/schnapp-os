@@ -3,6 +3,7 @@ name: credential-leak-2026-06-17
 description: Plaintext dump of ALL vault secrets is committed + pushed in obsidian-vault Claude Export files (PRIVATE repo). SA token + 3 MCP bearers rotated; flatten 2026-06-26 COPIED (did not rotate) the rest; owner ACCEPTED the residual risk 2026-06-27 (private repo, not public) — no further rotation/scrub. NOT "nothing exposed": values are plaintext in a private pushed repo.
 metadata: 
   node_type: memory
+  scope: global
   type: project
   source: "session 9f0ff006 (credential reorg 2026-06-17); owner risk-accepted decision 2026-06-27"
   updated: 2026-06-27
