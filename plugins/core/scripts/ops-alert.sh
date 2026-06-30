@@ -37,16 +37,13 @@ find_open_issue() {
 }
 
 if [ "$status" = "red" ]; then
-  if have_gh; then
-    n="$(find_open_issue)"
-    if [ -z "$n" ]; then
-      printf '%s\n\nFailing checks at %s:\n\n%s\n\nThis issue auto-closes when the next run is all green.\n' \
-        "$title" "$now" "$summary" \
-        | gh issue create --repo "$REPO" --title "$ISSUE_TITLE" --body-file - --assignee "$ASSIGNEE" >/dev/null 2>&1 || true
-    else
-      printf 'Still failing at %s:\n\n%s\n' "$now" "$summary" \
-        | gh issue comment "$n" --repo "$REPO" --body-file - >/dev/null 2>&1 || true
-    fi
+  # File ONE incident issue (assigned -> native email). A persistent RED keeps this single open issue
+  # as the standing record; we deliberately do NOT comment each run, so a long outage is one email,
+  # not one per probe cycle. It auto-closes on recovery.
+  if have_gh && [ -z "$(find_open_issue)" ]; then
+    printf '%s\n\nFailing checks at %s:\n\n%s\n\nThis issue auto-closes when the next run is all green.\n' \
+      "$title" "$now" "$summary" \
+      | gh issue create --repo "$REPO" --title "$ISSUE_TITLE" --body-file - --assignee "$ASSIGNEE" >/dev/null 2>&1 || true
   fi
   if [ "$last" != "red" ]; then
     "$SCRIPT_DIR/notify-ops.sh" "$title (see GitHub issue). $summary" "$ISSUE_TITLE" "high" "rotating_light" >/dev/null 2>&1 || true
