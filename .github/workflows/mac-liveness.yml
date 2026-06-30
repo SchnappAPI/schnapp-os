@@ -1,0 +1,101 @@
+name: mac-liveness
+
+# Dead-man's-switch for the watchdog. GitHub-hosted (so it is Mac-INDEPENDENT) cron that proves the
+# Mac platform is alive. If schnapp.bet (served by the Mac's web-prod LaunchAgent) stops responding,
+# the Mac is off/asleep/tunnel-down and the on-Mac infra-health probe is NOT running either — the one
+# thing infra-health cannot catch about itself. On DOWN it opens a GitHub issue assigned to the owner
+# (a NATIVE email alert — no app to install) and auto-closes it on recovery. Free, no secrets: uses
+# the built-in GITHUB_TOKEN. Closes infra-health residual #1. See scheduled-tasks/mac-liveness.md.
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'      # every 30 minutes (GitHub may delay scheduled runs under load)
+  workflow_dispatch:
+    inputs:
+      simulate:
+        description: 'Set to "down" to force the alarm path (tests the issue/email without a real outage)'
+        required: false
+        default: ''
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: mac-liveness
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe the Mac, alarm or recover
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SIMULATE: ${{ github.event.inputs.simulate }}
+        run: |
+          set -uo pipefail
+          PRIMARY="https://schnapp.bet"
+          SECONDARY="https://mac-flask.schnapp.bet"
+          TITLE="[mac-liveness] schnapp Mac platform unreachable"
+          ASSIGNEE="SchnappAPI"
+          now="$(date -u '+%Y-%m-%d %H:%M:%SZ')"
+
+          # up = the origin answered with HTTP 200-499. Connection failure, 000, or a Cloudflare
+          # origin-down 5xx counts as down. Retry 3x to ride out a transient blip / deploy restart.
+          is_up() {
+            local url="$1" code
+            for _ in 1 2 3; do
+              code="$(curl -s -o /dev/null -m 12 -w '%{http_code}' "$url" 2>/dev/null || echo 000)"
+              if [ "${code:-000}" -ge 200 ] && [ "${code:-000}" -lt 500 ]; then return 0; fi
+              sleep 8
+            done
+            echo "down: $url last=$code" >&2
+            return 1
+          }
+
+          DOWN=0; DETAIL=""
+          if [ "${SIMULATE:-}" = "down" ]; then
+            DOWN=1; DETAIL="SIMULATED via workflow_dispatch (simulate=down). Not a real outage — this is an alert-path test."
+          elif is_up "$PRIMARY"; then
+            echo "primary up: $PRIMARY"
+          elif is_up "$SECONDARY"; then
+            DOWN=1; DETAIL="Production site $PRIMARY did not respond, though $SECONDARY did. The Mac web-prod service is likely down."
+          else
+            DOWN=1; DETAIL="Neither $PRIMARY nor $SECONDARY responded. The Mac is likely off, asleep, or its Cloudflare tunnel is down, so infra-health is not running either."
+          fi
+
+          existing="$(gh issue list --repo "$REPO" --state open --json number,title \
+            --jq '.[] | select(.title|test("mac-liveness")) | .number' | head -1)"
+
+          if [ "$DOWN" -eq 1 ]; then
+            body="$(cat <<EOF
+**Mac liveness check FAILED** at ${now}.
+
+${DETAIL}
+
+The GitHub-hosted watcher could not confirm the Mac platform is alive, so the on-Mac infra-health probe is almost certainly not running either. This is the deadman switch for the watchdog.
+
+**Check:** run the \`status\` skill from a Code/Cowork session, or on the Mac:
+\`launchctl list | grep -E 'web-prod|infra-health|cloudflared'\` and \`tail ~/Library/Logs/schnapp-os/infra-health.log\`.
+
+This issue auto-closes when a later check sees the Mac respond.
+EOF
+)"
+            if [ -z "$existing" ]; then
+              gh issue create --repo "$REPO" --title "$TITLE" --body "$body" --assignee "$ASSIGNEE"
+              echo "::notice::opened Mac-liveness alarm issue"
+            else
+              gh issue comment "$existing" --repo "$REPO" --body "Still failing at ${now}. ${DETAIL}"
+              echo "::notice::updated existing alarm issue #${existing}"
+            fi
+            exit 1
+          else
+            if [ -n "$existing" ]; then
+              gh issue comment "$existing" --repo "$REPO" --body "Recovered: the Mac responded at ${now}. Auto-closing."
+              gh issue close "$existing" --repo "$REPO" --reason completed
+              echo "::notice::recovered — closed issue #${existing}"
+            fi
+            echo "Mac liveness OK at ${now}"
+          fi

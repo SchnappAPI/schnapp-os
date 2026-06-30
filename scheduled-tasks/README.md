@@ -32,6 +32,7 @@ routine that wants to change state stops at the proposal and hands it to a human
 | Sync / unmerged check | safe | GitHub Actions cron | no | [sync-unmerged-check.md](sync-unmerged-check.md) |
 | Memory consolidation | asks-first | LaunchAgent → `claude -p` | no (repo only) | [memory-consolidation.md](memory-consolidation.md) |
 | Infra / pipeline health | safe (probe) | LaunchAgent → `check-infra-health.sh` (pure bash) | yes (launchctl/docker/ports) | [infra-health.md](infra-health.md) |
+| Mac liveness (dead-man's-switch) | safe (probe) | GitHub Actions cron | no (pings the Mac from the cloud) | [mac-liveness.md](mac-liveness.md) |
 
 The **safe, Mac-independent** routines are wired now in
 [`.github/workflows/scheduled-routines.yml`](../.github/workflows/scheduled-routines.yml) via the

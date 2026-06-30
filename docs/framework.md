@@ -173,6 +173,6 @@ The system's two enemies are **silent drift** (things quietly going out of date)
 stop** (automation quietly dying). The framework is strong against the first: canonical sources,
 supersede-not-append, freshness CI, current-state-only docs. It is weaker against the second, but no longer blind to it: the infra-health probe now **pages off-Mac
 on a RED** (`notify-ops.sh` to ntfy) for a missing agent, a stale backup, or a down service, so a silent
-stop alarms instead of sitting undetected. Two edges remain: the probe only fires if it *itself* stays
-scheduled (an external dead-man's-switch is the deeper guard), and a probe that fails for the wrong reason
-still has to be told apart from a true RED.
+stop alarms instead of sitting undetected. One edge remains: a probe that fails for the wrong reason still has to be told apart from a true RED. The
+other (the probe fires only if it *itself* stays scheduled) is now covered by a GitHub-hosted **liveness
+watcher** that pings the Mac from outside it and opens an issue (native email) when it goes dark.

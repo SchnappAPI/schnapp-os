@@ -1149,3 +1149,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   VERIFIED end-to-end on the Mac: ntfy HTTP 200, and a forced fake-RED run paged. Owner action: subscribe to the
   topic in the ntfy app. Updated infra-health.md + framework.md throughline (silent-stop now alarms; residuals: the
   probe must itself stay scheduled / a dead-man's-switch, and tell a wrong-reason failure from a true RED).
+- 2026-06-30 Built the Mac liveness dead-man's-switch (closes infra-health residual #1: who watches the watchdog).
+  New GitHub Actions cron `.github/workflows/mac-liveness.yml` (every 30 min, Mac-independent, free, built-in
+  GITHUB_TOKEN, no secrets): pings the Mac's public surface (`schnapp.bet` 200 / `mac-flask` 404 = up; 000/52x/
+  conn-fail = down, 3 retries to ride blips). On DOWN it opens a GitHub issue assigned to the owner (NATIVE email
+  alert, no app to install — owner preference) via open-issue-as-state dedup, and exits non-zero; on recovery it
+  comments + auto-closes. Owner-side install: none. Tested both paths via workflow_dispatch (simulate=down opens +
+  assigns + emails; a normal run recovers + closes). Spec `scheduled-tasks/mac-liveness.md`; README routine table +
+  framework throughline updated. Remaining edge (documented, optional): Mac fully up but the infra-health plist
+  specifically unloaded — covered only by an optional mac-mcp service_status pull (needs a repo secret), not wired.
