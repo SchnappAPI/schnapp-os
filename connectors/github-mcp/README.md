@@ -2,7 +2,9 @@
 
 Self-hosted MCP server exposing GitHub operations. Bearer-token auth
 (`GITHUB_MCP_AUTH_TOKEN`); secrets resolved at launch via `op-wrap.sh` +
-`~/github-mcp/.env.template` (op:// refs). Connected in claude.ai as "Schnapp GitHub".
+`~/github-mcp/.env.template` (op:// refs). Reached off-Mac through the shared Cloudflare MCP
+portal (`mcp.schnapp.bet`, the "Schnapp Portal" connector) for claude.ai; clients that send custom
+headers (Code/Cowork, Copilot) can also hit the origin directly with the bearer (header or `?token=`).
 
 - URL: https://github-mcp.schnapp.bet/mcp  (Mac :8766 via the schnapp-mac tunnel)
 - Service: launchd `com.schnapp.githubmcp` (RunAtLoad, KeepAlive)

@@ -1093,3 +1093,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   claude.ai/iPhone. BLOCKED: idle tunnel schnapp-mcp (6725bd14, 0 conns) delete — CLOUDFLARE_API_TOKEN 401s on DNS
   read, can't confirm no dependents. Validations: .mcp.json valid JSON; server.py compiles. Complements (remote/auth
   side) the Mac-side plugins/core/scripts/check-infra-health.sh.
+- 2026-06-30 Portal doc-sync (after the owner moved mac-mcp + github-mcp behind the Cloudflare portal in step 5 of
+  the connector cleanup). Verified the portal live first: `portal_list_servers` → op-mcp + memory-mcp + mac-mcp +
+  github-mcp all enabled; `op_health` + `memory_health` authenticated through it. Then swept every doc off the old
+  standalone-connector model onto "Schnapp Portal fronts the four static-bearer servers; obsidian stays native-OAuth
+  standalone": credentials-map (mac/github bearer consumers → portal Custom header + changelog row), memory/
+  credentials-state ("Owner CLIENT legs pending" → RESOLVED), surfaces/{claude-ai-web,iphone,cowork,always-loaded-
+  instructions}, connectors/{mac,github}-mcp/README, docs/environment-and-access (portal = all 4), memory/mac-cloud-
+  access (claude.ai chat now via portal; .mcp.json Code path unchanged). New ADR 0020 records the decision + the
+  security note (User-auth OFF → the portal Access policy gates a full Mac shell). No env-file change — the portal
+  reuses existing bearers as Cloudflare Custom headers. 11 files.

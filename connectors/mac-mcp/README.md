@@ -2,8 +2,9 @@
 
 Self-hosted MCP server for Mac operations (shell_exec, op_run, file ops, SQL queries,
 service control, live sports). Bearer-token auth (`MAC_MCP_AUTH_TOKEN`); secrets resolved
-at launch via `op-wrap.sh` + `~/mac-mcp/.env.template` (op:// refs). Connected in claude.ai
-as "Schnapp Mac". Talks to SQL Server via pyodbc.
+at launch via `op-wrap.sh` + `~/mac-mcp/.env.template` (op:// refs). Reached off-Mac through the
+shared Cloudflare MCP portal (`mcp.schnapp.bet`, the "Schnapp Portal" connector) for claude.ai/iPhone,
+and directly via `.mcp.json` (`Schnapp_Mac`, bearer header) for Code/Cowork. Talks to SQL Server via pyodbc.
 
 - URL: https://mac-mcp.schnapp.bet/mcp  (Mac :8765 via the schnapp-mac tunnel)
 - Service: launchd `com.schnapp.macmcp` (RunAtLoad, KeepAlive). Log rotation:

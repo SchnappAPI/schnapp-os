@@ -7,8 +7,8 @@ On Code these behaviors are delivered by the plugin + global rules; this block i
 equivalent. Authored once here; the surface profiles point to it.
 
 ## Operating model: never silently fail
-Resolve any requested action in order: (1) native on this surface; (2) remote MCP (call the Mac
-via the Schnapp Mac connector, or a hosted service); (3) generate a ready-to-run prompt or command
+Resolve any requested action in order: (1) native on this surface; (2) remote MCP (call the Mac via
+the Schnapp Portal's mac-mcp tools, or a hosted service); (3) generate a ready-to-run prompt or command
 for a Code session. State which path you used. Do not claim a capability exists without probing it.
 
 ## Must-happen procedures (no hooks here): run the session-hygiene skill

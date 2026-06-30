@@ -1,11 +1,12 @@
 ---
 name: mac-cloud-access
-metadata:
+metadata: 
   node_type: memory
   scope: global
   source: "session 2026-06-29 (network-policy allowlist fix; corrects handoff 037 open #1)"
-  updated: 2026-06-29
+  updated: 2026-06-30
   supersedes: ""
+  originSessionId: bc32f391-fbab-4f1a-b7f7-22e02d92511e
 ---
 
 Reaching the Schnapp Mac from Claude Code on the web / any cloud surface.
@@ -15,6 +16,9 @@ Reaching the Schnapp Mac from Claude Code on the web / any cloud surface.
   depend on a claude.ai UI connector. Removing the UI "Schnapp Mac" connector does NOT cut cloud-agent
   access; `.mcp.json` is the source of truth. Auth = `Authorization: Bearer ${MAC_MCP_AUTH_TOKEN}` (env
   var, expanded at connect; the server's `_BearerAuthMiddleware` then authorizes ALL tools, no per-call token).
+  The standalone claude.ai UI "Schnapp Mac" connector is now **retired** — claude.ai *chat* reaches the Mac
+  through the **Schnapp Portal** (`mcp.schnapp.bet`, ADR 0020); this `.mcp.json` path is the Code / cloud-agent
+  path and is unchanged.
 - **The operative gate for a web/cloud session is the environment NETWORK-POLICY allowlist.** If
   `mac-mcp.schnapp.bet` is not on the allowed-domains list, the agent proxy returns **403 on CONNECT**
   and `Schnapp_Mac` never connects (its tools are simply absent). In-session symptom: the proxy status

@@ -2,10 +2,11 @@
 
 Most limited. Use for capture, quick questions, and triggering remote work.
 
-- **Tools/credentials:** hosted MCP connectors only. No local anything. The **1Password**
-  connector (op-mcp portal, same as claude.ai web) resolves `op://` secrets off-Mac when the
-  hosted op-mcp is healthy (current status: [`memory/credentials-state.md`](../memory/credentials-state.md));
-  to *use* a secret prefer the Mac's `op_run`/`op_inject` via the Mac connector when it is on.
+- **Tools/credentials:** hosted MCP connectors only. No local anything. The **Schnapp Portal**
+  connector (Cloudflare portal `https://mcp.schnapp.bet/mcp`, same as claude.ai web) fronts op-mcp +
+  memory-mcp + mac-mcp + github-mcp; it resolves `op://` secrets off-Mac when op-mcp is healthy
+  (status: [`memory/credentials-state.md`](../memory/credentials-state.md)); to *use* a secret prefer
+  the Mac's `op_run`/`op_inject` via the portal's mac-mcp tools when the Mac is on.
 - **Skills:** whatever is enabled on the account.
 - **"Must happen" behavior:** no hooks — the [`session-hygiene`](../plugins/core/skills/session-hygiene/SKILL.md)
   skill applies as on claude.ai, but iPhone is for triggering: prefer firing the procedure on the Mac
@@ -19,5 +20,5 @@ Most limited. Use for capture, quick questions, and triggering remote work.
   (global) instructions carry over automatically. In the iPhone app, confirm the connectors are
   toggled on; skills follow the account.
 - This surface is for capture and triggering: prefer firing the procedure on the Mac via the Schnapp
-  Mac connector over doing a repo write from the phone.
+  Portal's mac-mcp tools over doing a repo write from the phone.
 - **Verify:** run `surface-check` (most limited surface; hosted connectors only, no hooks).
