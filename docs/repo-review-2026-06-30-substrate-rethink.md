@@ -108,7 +108,7 @@ rules) or the portability layer (op-mcp + memory-mcp + portal) — those stay.
 |---|---|---|
 | op-mcp + memory-mcp heartbeat | NEW `render-health.yml` cron (30 min, Mac-independent) pings both `/health`, opens/auto-closes a `[render-health]` issue on down, doubles as keep-warm. The only previously-unmonitored surface. | **DONE** `a5f0476` |
 | learning-worker failure alert | `ops-alert.sh` RED on real failures / GREEN on healthy runs — closes the silent-swallow (a failed nightly run had no off-Mac signal). | **DONE** `a5f0476` |
-| `com.schnapp.brain-watcher` | **Found DEAD since 2026-06-22** (Obsidian inbox→brain-agent watcher; killed by the op-wrap unquoted-token bug during the SA rotation, then unloaded, never reloaded — a real silent-stop infra-health missed because it isn't in `EXPECTED_AGENTS`). Restore is near-zero risk (`launchctl load`; no backlog reprocess); then add to `EXPECTED_AGENTS`. | **OPEN — awaiting owner restore/retire** |
+| `com.schnapp.brain-watcher` | **Found DEAD since 2026-06-22** (Obsidian inbox→brain-agent watcher; killed by the op-wrap unquoted-token bug during the SA rotation, then unloaded, never reloaded — a real silent-stop infra-health missed because it isn't in `EXPECTED_AGENTS`). Restore is near-zero risk (`launchctl load`; no backlog reprocess); then add to `EXPECTED_AGENTS`. | **DONE 2026-06-30** — restored (owner-loaded; verified healthy, fresh clean log) + added to `EXPECTED_AGENTS`; live probe shows 🟢. |
 
 ---
 

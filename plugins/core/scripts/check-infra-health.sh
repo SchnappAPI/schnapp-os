@@ -26,6 +26,7 @@ else
     com.schnapp.macmcp
     com.schnapp.githubmcp
     com.schnapp.obsidian-mcp
+    com.schnapp.brain-watcher
     com.schnapp.memory-consolidation
     com.schnapp.syncrepos
     bet.schnapp.bacpac-backup

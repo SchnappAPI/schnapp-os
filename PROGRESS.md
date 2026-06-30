@@ -1223,6 +1223,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   the "double-load" finding: it was overstated — the session registry shows the agents once, namespaced; the repo is its own
   marketplace. Real items: version mismatch (`marketplace.json` 0.1.0 -> aligned to `plugin.json`'s 0.1.1) + `plugin.json`
   description still references the superseded ADR-0005 hook-delivery (flagged for owner).
+- 2026-06-30 **Step 1 of the post-review execution — brain-watcher restored from its silent-stop.** Owner ran
+  `launchctl load` (the Mac persistence guardrail correctly blocked the remote agent from doing it); verified healthy
+  via mac-mcp — PID 36217 alive, fresh `2026-06-30 13:31:32 Brain watcher starting` + `Watching: …/Inbox`, no auth
+  errors (the op-wrap unquoted-token bug that killed it 2026-06-22 is long fixed). Closed the gap that hid the death:
+  added `com.schnapp.brain-watcher` to `EXPECTED_AGENTS` in `check-infra-health.sh`. Verified the deployed infra-health
+  LaunchAgent runs the repo script directly (`/bin/bash …/schnapp-os/.../check-infra-health.sh`) so the edit is live
+  with no redeploy, and the live probe now shows brain-watcher 🟢 (11/11 agents). A future death pages within 30 min.
 - 2026-06-30 Corrected `plugins/core/.claude-plugin/plugin.json` description (current-state-only): it claimed the
   plugin delivers the SessionStart/Stop hooks via `hooks.json`/`${CLAUDE_PLUGIN_ROOT}` and cited the superseded
   decision 0005 — but `hooks.json` is intentionally empty and the hooks are wired in the repo `.claude/settings.json`
