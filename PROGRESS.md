@@ -1072,3 +1072,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Global-memory fact memory/malformed-stored-secret-401.md (+ MEMORY.md index): the general lesson behind ADR
   0019 — a stored secret with stray whitespace/quotes 401s "Invalid bearer token"; verify raw bytes before
   blaming the tool/CLI. Validations: probe exit 0; test PASS; memory-frontmatter OK (11 facts); freshness OK.
+- 2026-06-30 MCP connector remote-reachability audit (5 connectors) + config fixes. Probed live (Code-Mac):
+  all 5 reachable off-Mac, all bearers are op:// refs, both Render services up (op-mcp + memory-mcp /health 200),
+  obsidian native OAuth confirmed (WWW-Authenticate + well-knowns). mac-mcp unauth `initialize` 200 traced to a
+  safe-by-design two-layer gate (middleware 401s a WRONG bearer; every tool self-gates via _check_token before
+  any subprocess — verified: unauth shell_exec → unauthorized), not an open shell. Fixes landed: (1)
+  docs/environment-and-access.md allowlist host memory-mcp.onrender.com → memory-mcp-rtad.onrender.com (bare name
+  503s; -rtad is the real origin) + portal row notes mcp.schnapp.bet fronts op-mcp+memory-mcp; (2) .mcp.json added
+  Schnapp_Secrets (op-mcp) + Schnapp_Memory (memory-mcp) bearer-ref servers for off-Mac Code/Cowork (cloud-only;
+  disconnected on the Mac by design); (3) rotate-secret SKILL.md gotcha — client-side static-bearer connectors are
+  rotation legs (portal/OAuth-fronted ones aren't); (4) mac-mcp server.py instructions string no longer enumerates
+  internal infra on unauth initialize. Owner-pending (off-repo): mirror the corrected host into each env network
+  policy; set OP_MCP_BEARER/MEMORY_MCP_BEARER in cloud envs; portal-front or bearer-refresh mac-mcp+github-mcp for
+  claude.ai/iPhone. BLOCKED: idle tunnel schnapp-mcp (6725bd14, 0 conns) delete — CLOUDFLARE_API_TOKEN 401s on DNS
+  read, can't confirm no dependents. Validations: .mcp.json valid JSON; server.py compiles. Complements (remote/auth
+  side) the Mac-side plugins/core/scripts/check-infra-health.sh.
