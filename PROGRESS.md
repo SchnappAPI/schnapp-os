@@ -1140,3 +1140,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   LaunchAgents loaded + backup freshness (<=8d) + mssql container + MCP ports 8765/66/67; RED posts a macOS
   notification + non-zero exit, never remediates. Would have caught the backup lapse. PLAN 11.1 note + review doc
   annotated. (memory-consolidation is loaded too; its tiering/effectiveness tracked separately, AUDIT item B.)
+- 2026-06-30 Built off-Mac paging (the residual after the infra-health install). New reusable
+  `plugins/core/scripts/notify-ops.sh`: best-effort ntfy pager (pure bash + curl, 8s timeout, silent no-op if
+  `NTFY_URL` unset) that any routine can call unconditionally. Wired into `check-infra-health.sh`: on RED it now
+  pages off-Mac (with the failing-check summary) in addition to the local macOS notification. Topic is Mac-local in
+  `~/.config/schnapp-os/ops.env` (chmod 600), deliberately NOT op:// so the alert path can't die on 1Password;
+  documented in `.env.template` per the bootstrap-token precedent. Owner chose the channel (ntfy: free/OSS/$0).
+  VERIFIED end-to-end on the Mac: ntfy HTTP 200, and a forced fake-RED run paged. Owner action: subscribe to the
+  topic in the ntfy app. Updated infra-health.md + framework.md throughline (silent-stop now alarms; residuals: the
+  probe must itself stay scheduled / a dead-man's-switch, and tell a wrong-reason failure from a true RED).

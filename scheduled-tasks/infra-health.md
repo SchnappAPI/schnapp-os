@@ -11,8 +11,9 @@
   - the newest `schnapp-bet-*.bacpac` is younger than `MAX_BACKUP_AGE_DAYS` (default 8);
   - the `mssql` Docker container is running;
   - the three local MCP ports (8765 mac, 8766 github, 8767 obsidian) are LISTENing.
-- **On a RED signal:** prints the failing detail, posts a macOS notification, exits non-zero, and logs the
-  report to `~/Library/Logs/schnapp-os/infra-health.log`. It NEVER restarts or remediates — a fix is an
+- **On a RED signal:** prints the failing detail, posts a macOS notification, **pages off-Mac via
+  [`notify-ops.sh`](../plugins/core/scripts/notify-ops.sh) (ntfy) when `NTFY_URL` is set**, exits non-zero, and
+  logs the report to `~/Library/Logs/schnapp-os/infra-health.log`. It NEVER restarts or remediates — a fix is an
   approved-session action (and never foreground-restart `com.schnapp.macmcp`; use the detached daemon, per
   handoff 020/021).
 - **Why pure bash, not `claude -p` (deliberate divergence from the original spec):** a liveness probe must
