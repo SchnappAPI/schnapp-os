@@ -1259,3 +1259,15 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   shellcheck CLEAN, `test-learning-worker.sh` 7/0 (bash 3.2 + ubuntu CI). `learning-gate.sh` + LaunchAgent
   UNCHANGED; reversible (revert one block). Header comments refreshed to the file-scoped model (anti-stale).
   Controlled live e2e runs immediately post-push (result in the next line).
+- 2026-06-30 **Step 3 e2e PASSED** (controlled: throwaway queue via `LEARNING_QUEUE`/`LEARNING_ARCHIVE`, one trivial
+  already-covered capture; real backlog untouched). Live worker ran the new path: `op` resolved
+  `CLAUDE_CODE_OAUTH_TOKEN` → Agent SDK distilled (`is_error=False`, 3 turns, 21.7s) → bot deduped (no edit) →
+  queue drained → green alert; worker `rc=0`, `main` did not move. Loop is now live on the SDK path; the nightly
+  `com.schnapp.memory-consolidation` LaunchAgent fires it (infra-health monitors it).
+- 2026-06-30 🔴 **fix(security): learning-worker auth line logged the 1Password SA token value.** Pre-existing bug
+  surfaced by the e2e — `OP_SA:${OP_SERVICE_ACCOUNT_TOKEN:+set}${OP_SERVICE_ACCOUNT_TOKEN:-UNSET}`: the `:-` arm
+  substitutes the VALUE when the var is set, so the SA token was echoed to stdout → `memory-consolidation.log` on
+  every auth-resolving run. Replaced with a presence-only indicator (`set`/`UNSET`, never the value); scrubbed the
+  1 leaked occurrence from the log. Token value also reached this session's transcript → **SA-token rotation
+  recommended (owner decision)**; see `rotate-secret` skill + `credentials-state` memory. Not public (local log +
+  transcript only).

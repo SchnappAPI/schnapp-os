@@ -80,7 +80,8 @@ cd "$REPO_ROOT" || { echo "learning-worker: ERROR — cannot cd to repo root '$R
 # REFERENCE; the item may hold an Anthropic API key (sk-ant-api…) or a Claude OAuth token (sk-ant-oat…)
 # — export under the matching env var. No-op if a credential is already set or no ref is configured.
 if [ -z "${ANTHROPIC_API_KEY:-}" ] && [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ] && [ -n "${LEARNING_CLAUDE_TOKEN_REF:-}" ]; then
-  echo "learning-worker: auth — op:$(command -v op || echo MISSING) OP_SA:${OP_SERVICE_ACCOUNT_TOKEN:+set}${OP_SERVICE_ACCOUNT_TOKEN:-UNSET} ref:${LEARNING_CLAUDE_TOKEN_REF}"
+  op_sa_state="set"; [ -n "${OP_SERVICE_ACCOUNT_TOKEN:-}" ] || op_sa_state="UNSET"
+  echo "learning-worker: auth — op:$(command -v op || echo MISSING) OP_SA:${op_sa_state} ref:${LEARNING_CLAUDE_TOKEN_REF}"
   if command -v op >/dev/null 2>&1; then
     if _tok="$(op read "$LEARNING_CLAUDE_TOKEN_REF" 2>&1)"; then
       case "$_tok" in
