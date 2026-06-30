@@ -69,12 +69,12 @@ OAuth credentials), so the worker resolves its credential from **1Password at ru
 LaunchAgent inherits `OP_SERVICE_ACCOUNT_TOKEN`, so `op read` works headless; the plist carries only the
 op:// **reference** (`LEARNING_CLAUDE_TOKEN_REF`), never the value.
 
-**Sanctioned credential: `ANTHROPIC_API_KEY`**, the existing vault item
-`op://web-variables/ANTHROPIC_API_KEY/credential` (a `sk-ant-api…` key from platform.claude.com, API
-Keys). It is non-expiring, version-independent, and wins auth precedence over the Keychain; the
-subscription OAuth token is a fallback only (was unreliable on CLI v2.1.112). No `claude setup-token`
-step is needed: the item already exists (see `credentials-map.md`), so just confirm it holds a valid key
-with no trailing newline. The full auth model, precedence order, and 401 decoding are canonical in
+**Sanctioned credential: the subscription OAuth token**, `op://web-variables/CLAUDE_CODE_OAUTH_TOKEN/credential`
+(an `sk-ant-oat…` token from `claude setup-token`). It bills the Claude **subscription**, not the metered
+API (the cost-discipline default), and is verified to authenticate headless on CLI v2.1.112. Store the value
+with **no surrounding whitespace or quotes** (a malformed copy once 401'd a valid token: see ADR 0019). It
+expires ~yearly; re-mint via `claude setup-token`. `ANTHROPIC_API_KEY` (metered, non-expiring) is the
+fallback; never leave both set. The full auth model, precedence, and 401 decoding are canonical in
 [`docs/headless-claude-auth.md`](../docs/headless-claude-auth.md); read that before changing any of this.
 
 ### Install steps (run on the Mac, after explicit owner OK)
@@ -82,7 +82,7 @@ with no trailing newline. The full auth model, precedence order, and 401 decodin
 ```bash
 # 1. Substitute the repo path, home dir, and op:// token reference into the plist
 REPO="$HOME/code/schnapp-os"   # adjust if different
-TOKEN_REF="op://web-variables/ANTHROPIC_API_KEY/credential"   # the credential the worker authenticates with
+TOKEN_REF="op://web-variables/CLAUDE_CODE_OAUTH_TOKEN/credential"   # subscription OAuth token (ADR 0019); worker auto-exports it as CLAUDE_CODE_OAUTH_TOKEN
 sed -e "s|__REPO__|$REPO|g" -e "s|__HOME__|$HOME|g" -e "s|__CLAUDE_TOKEN_REF__|$TOKEN_REF|g" \
   "$REPO/scheduled-tasks/com.schnapp.memory-consolidation.plist" \
   > ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist

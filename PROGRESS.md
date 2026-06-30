@@ -1047,3 +1047,15 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   local / in-repo) — launchd doesn't source ~/.zshrc, can't read the Keychain, and gets only the plist env +
   inherited OP_SERVICE_ACCOUNT_TOKEN; repo .claude/settings.json injects no auth vars (verified ANTHROPIC_API_KEY
   + CLAUDE_CODE_OAUTH_TOKEN both unset this session). Worker reinstall + live-verify (038 #2/#3) still TODO.
+- 2026-06-29 SWITCHED the learning-worker to the Claude SUBSCRIPTION (ADR 0019), answering owner Q "how to
+  use subscription not API". Root-caused the prior API-key sanction as a MISDIAGNOSIS: the vault
+  CLAUDE_CODE_OAUTH_TOKEN was malformed (stored as ␣'sk-ant-oat…' — leading space + wrapping quotes, 111 vs
+  108 clean bytes), so a valid token was sent corrupted → 401 "Invalid bearer token", which the 2026-06-27
+  arc pinned on CLI v2.1.112. Disproven: control invalid token → 401; cleaned vault token → ok; worker's
+  exact resolution in a clean launchd-equivalent env (launchd OP_SA + OAuth ref) → "resolved ->
+  CLAUDE_CODE_OAUTH_TOKEN" then ok. Actions: cleaned the vault item in place (op item edit; verified 108
+  bytes, leading 's', headless ok); repointed LEARNING_CLAUDE_TOKEN_REF to the OAuth item + reinstalled the
+  plist from template (launchctl reload; ref confirmed; launchd has OP_SA). Worker reasoning now bills the
+  subscription, honoring cost discipline (AUDIT K). Docs corrected: headless-claude-auth.md (sanctioned cred
+  → OAuth + malformed-value gotcha + fixed 401 table/checklist), scheduled-tasks/README.md, review-doc P0 #2;
+  recorded as decisions/0019. NOT a credential rotation. Token expires ~2027-05 (re-mint via claude setup-token).

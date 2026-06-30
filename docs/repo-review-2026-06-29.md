@@ -192,12 +192,12 @@ north star and the live production risk.
    `~/Library/LaunchAgents`, and `weekly-backup.sh` still targeted the pre-rename DB name (`sports-modeling`,
    renamed to `schnapp-bet` after 2026-05-03). Fixed both. Separately, host `sqlcmd` is broken
    (`brew install unixodbc`); the backup uses `sqlpackage` and is unaffected. Install commands retained below.
-2. **Reinstall + verify the learning-worker LaunchAgent** (038 #2/#3). Auth is **settled, not a fork**:
-   `docs/headless-claude-auth.md` sanctions `ANTHROPIC_API_KEY` (`op://web-variables/ANTHROPIC_API_KEY/credential`);
-   the contradicting OAuth-minting prose in `scheduled-tasks/README.md` was stale and has been corrected to
-   match it. The remaining work is operational: install the plist with `LEARNING_CLAUDE_TOKEN_REF` set,
-   `launchctl load`, and verify the live `claude -p` run logs `-> ANTHROPIC_API_KEY` then `done`. (Worker
-   runs bill the API key, not the subscription.)
+2. **Learning-worker auth: DONE 2026-06-29 (ADR 0019).** Switched the worker to the **Claude subscription**
+   OAuth token (`CLAUDE_CODE_OAUTH_TOKEN`), verified headless end-to-end. The earlier `ANTHROPIC_API_KEY`
+   sanction was a misdiagnosis: the stored OAuth token was malformed (leading space + wrapping quotes), not
+   a CLI-version limit. Cleaned the vault value, repointed `LEARNING_CLAUDE_TOKEN_REF`, reinstalled the plist
+   from template. Worker reasoning now bills the subscription, not the API. The next queued capture (or the
+   30-min backstop) exercises the live run; its log will show `-> CLAUDE_CODE_OAUTH_TOKEN`.
 3. **Refresh the 2 stale memory facts** flagged by the start-gate: `keep-tracker-current`, `obsidian-state`
    (supersede-not-append).
 
