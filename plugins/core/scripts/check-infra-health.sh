@@ -104,6 +104,20 @@ for entry in "${PORT_CHECKS[@]}"; do
 done
 printf '\n'
 
+# Self-check the PRIMARY alert channel so a broken issue/email path becomes a detected RED (alerted via
+# the non-gh channels: ntfy/notification/iMessage), instead of silently failing. Sources ops.env for an
+# explicit GH_TOKEN if present, matching what ops-alert uses.
+printf '## GitHub alert channel (gh auth)\n'
+gh_ok=1
+# shellcheck disable=SC1090,SC1091
+( [ -r "$HOME/.config/schnapp-os/ops.env" ] && . "$HOME/.config/schnapp-os/ops.env"; command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1 ) || gh_ok=0
+if [ "$gh_ok" -eq 1 ]; then
+  grn "gh authenticated — issue/email alerts can fire"
+else
+  red "gh NOT authenticated — GitHub issue/email alerts will NOT fire (fix gh auth or set GH_TOKEN in ops.env)"
+fi
+printf '\n'
+
 DIR="$(cd "$(dirname "$0")" && pwd)"
 if [ "$rc" -eq 0 ]; then
   printf '**infra-health: OK** — all checks green.\n'
