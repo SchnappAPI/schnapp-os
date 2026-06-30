@@ -40,10 +40,11 @@ now="$(date -u '+%Y-%m-%d %H:%M:%SZ')"
 
 have_gh() { command -v gh >/dev/null 2>&1; }
 
-imsg() { # best-effort native iMessage to self; no-op unless OPS_IMESSAGE_TO is set + osascript present
+imsg() { # best-effort iMessage to self. BOUNDED: a blocking Automation/TCC prompt must never hang the
+         # caller (the probe), so the send runs in the background and is hard-killed after 10s.
   [ -n "${OPS_IMESSAGE_TO:-}" ] || return 0
   command -v osascript >/dev/null 2>&1 || return 0
-  osascript - "$OPS_IMESSAGE_TO" "$1" >/dev/null 2>&1 <<'APPLESCRIPT' || true
+  osascript - "$OPS_IMESSAGE_TO" "$1" >/dev/null 2>&1 <<'APPLESCRIPT' &
 on run {targetHandle, messageText}
   tell application "Messages"
     set targetService to 1st service whose service type = iMessage
@@ -51,6 +52,10 @@ on run {targetHandle, messageText}
   end tell
 end run
 APPLESCRIPT
+  imsg_pid=$!
+  ( sleep 10; kill -9 "$imsg_pid" 2>/dev/null ) >/dev/null 2>&1 &
+  wait "$imsg_pid" 2>/dev/null || true
+  return 0
 }
 
 find_open_issue() {
