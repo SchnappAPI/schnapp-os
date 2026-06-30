@@ -1,0 +1,105 @@
+name: render-health
+
+# Heartbeat + keep-warm for the two Render-hosted MCP connectors (op-mcp, memory-mcp). These are the
+# off-Mac credential + memory paths for claude.ai web / iPhone / Cowork; on the free tier they sleep
+# after ~15 min idle and a crash/sleep is otherwise SILENT (nothing pings them — the on-Mac infra-health
+# probe only watches Mac-local services). This GitHub-hosted cron (Mac-INDEPENDENT, free, built-in
+# GITHUB_TOKEN, no secrets) pings each /health every 30 min: it doubles as a keep-warm (kills the
+# ~30-60s cold start) and a liveness alarm. On DOWN it opens a GitHub issue assigned to the owner
+# (NATIVE email, no app to install) and auto-closes on recovery, deduped by the "[render-health]" title
+# prefix. Distinct from mac-liveness (which watches the Mac platform): a down Render service is NOT a Mac
+# outage, so it gets its own issue title. See scheduled-tasks/render-health.md.
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'      # every 30 minutes (GitHub may delay scheduled runs under load)
+  workflow_dispatch:
+    inputs:
+      simulate:
+        description: 'Set to "down" to force the alarm path (tests the issue/email without a real outage)'
+        required: false
+        default: ''
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: render-health
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe the Render connectors, alarm or recover
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SIMULATE: ${{ github.event.inputs.simulate }}
+        run: |
+          set -uo pipefail
+          # "name|url" pairs (no internal spaces — word-split on the space between pairs is intentional).
+          # Each /health returns 200 {"status":"ok",...} when the service is up.
+          TARGETS="op-mcp|https://op-mcp.onrender.com/health memory-mcp|https://memory-mcp-rtad.onrender.com/health"
+          TITLE="[render-health] schnapp Render MCP connector(s) unhealthy"
+          ASSIGNEE="SchnappAPI"
+          now="$(date -u '+%Y-%m-%d %H:%M:%SZ')"
+
+          # up = HTTP 200. Free-tier cold start can take ~30-60s, so retry up to ~105s before calling it
+          # down (a waking container may 502/503 briefly, then 200).
+          is_up() {
+            local url="$1" code
+            for _ in 1 2 3; do
+              code="$(curl -s -o /dev/null -m 25 -w '%{http_code}' "$url" 2>/dev/null)"
+              if [ "${code:-000}" = "200" ]; then return 0; fi
+              sleep 10
+            done
+            echo "down: $url last=$code" >&2
+            return 1
+          }
+
+          DOWN=0; DETAIL=""
+          if [ "${SIMULATE:-}" = "down" ]; then
+            DOWN=1; DETAIL="SIMULATED via workflow_dispatch (simulate=down). Not a real outage — this is an alert-path test."
+          else
+            # shellcheck disable=SC2086  # TARGETS is intentionally word-split into name|url pairs
+            for pair in $TARGETS; do
+              name="${pair%%|*}"; url="${pair#*|}"
+              if is_up "$url"; then
+                echo "$name up: $url"
+              else
+                DOWN=1; DETAIL="${DETAIL}${name} ($url) did not return 200 after retries. "
+              fi
+            done
+          fi
+
+          existing="$(gh issue list --repo "$REPO" --state open --json number,title \
+            --jq '.[] | select(.title|startswith("[render-health]")) | .number' | head -1)"
+
+          if [ "$DOWN" -eq 1 ]; then
+            {
+              echo "**Render connector health check FAILED** at ${now}."
+              echo
+              echo "${DETAIL}"
+              echo
+              echo "These two MCP connectors (op-mcp = off-Mac 1Password resolver; memory-mcp = cross-surface memory lane) serve claude.ai web / iPhone / Cowork. A free-tier sleep cold-starts in ~30-60s (this check retries to ride that); a persistent failure means the Render service is down or crashed."
+              echo
+              echo "Check: the Render dashboard for op-mcp + memory-mcp, or curl the /health URLs above. This issue auto-closes when a later check sees both return 200."
+            } > /tmp/render-body.md
+            if [ -z "$existing" ]; then
+              gh issue create --repo "$REPO" --title "$TITLE" --body-file /tmp/render-body.md --assignee "$ASSIGNEE"
+              echo "::notice::opened render-health alarm issue"
+            else
+              gh issue comment "$existing" --repo "$REPO" --body "Still failing at ${now}. ${DETAIL}"
+              echo "::notice::updated existing alarm issue #${existing}"
+            fi
+            exit 1
+          else
+            if [ -n "$existing" ]; then
+              gh issue comment "$existing" --repo "$REPO" --body "Recovered: both Render connectors returned 200 at ${now}. Auto-closing."
+              gh issue close "$existing" --repo "$REPO" --reason completed
+              echo "::notice::recovered, closed issue #${existing}"
+            fi
+            echo "Render connectors OK at ${now}"
+          fi

@@ -1190,3 +1190,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   "owner-accepted won't-do" (it contradicted its own risk-accepted banner two paragraphs up). (c) Added the missing
   `scope: global` to 3 memory facts (owner-working-preferences, op-wrap-token-unquoted, credential-leak-2026-06-17)
   toward one-schema normalization. Hardening (op-mcp heartbeat + learning-worker failure alert) + the assessment doc follow.
+- 2026-06-30 P0 silent-stop hardening (substrate-rethink follow-through). (1) `learning-worker.sh`: added best-effort
+  incident alerting via `ops-alert.sh` — RED on real failures (claude -p run failed; working tree not clean) + GREEN on
+  healthy runs (queue empty / completed), closing the silent-swallow gap where a failed nightly learning run exited
+  non-zero with no off-Mac signal. No-op under `--dry-run`; never breaks the worker (`|| true`). Also fixed 2 pre-existing
+  shellcheck nits there (SC2034 unused read vars -> `_ _ text`; SC2016 -> extracted `issue_body` with a scoped disable);
+  shellcheck CLEAN. (2) NEW `.github/workflows/render-health.yml` + `scheduled-tasks/render-health.md`: GitHub-hosted
+  cron (every 30 min, Mac-independent, free GITHUB_TOKEN) pings op-mcp + memory-mcp `/health` — the only previously
+  unmonitored surface — opening/auto-closing a `[render-health]` GitHub issue (native email) on down, doubling as a
+  keep-warm against the free-tier cold start. Both URLs verified live 200. Distinct title from mac-liveness so a Render
+  outage never reads as a Mac outage.

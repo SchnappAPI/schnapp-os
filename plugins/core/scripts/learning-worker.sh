@@ -32,8 +32,16 @@ REPO_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 Q="${LEARNING_QUEUE:-"$REPO_ROOT/scheduled-tasks/.learning-queue.tsv"}"
 A="${LEARNING_ARCHIVE:-"${Q%.tsv}.archive.tsv"}"
 
+# Best-effort native alerting (incident-managed via ops-alert.sh: opens/auto-closes a GitHub issue +
+# ntfy). Detection stays in this caller; the alert layer must NEVER break the worker, hence `|| true`.
+# No-op under --dry-run. Closes the silent-swallow gap: a failed claude run used to exit non-zero with
+# no signal off the Mac.
+alert() { $DRY_RUN && return 0; "$REPO_ROOT/plugins/core/scripts/ops-alert.sh" "$@" >/dev/null 2>&1 || true; }
+
 if [ ! -f "$Q" ] || [ ! -s "$Q" ]; then
-  echo "learning-worker: queue empty — nothing to consolidate"; exit 0
+  echo "learning-worker: queue empty — nothing to consolidate"
+  alert green learning-worker "Learning worker healthy" "queue empty — nothing to consolidate"
+  exit 0
 fi
 
 # Deterministic label for --dry-run only (the live LLM does the real classification).
@@ -51,7 +59,7 @@ archive_and_drain() {
 }
 
 if $DRY_RUN; then
-  while IFS=$'\t' read -r ts tag text; do
+  while IFS=$'\t' read -r _ _ text; do
     echo "would distill+route: [$(classify_capture "$text")] $text"
   done < "$Q"
   archive_and_drain
@@ -116,7 +124,9 @@ fi
 # diff after the run is the worker's proposal.
 git fetch -q origin main 2>/dev/null || true
 if [ -n "$(git status --porcelain)" ]; then
-  echo "learning-worker: working tree not clean — aborting (queue preserved)." >&2; exit 1
+  echo "learning-worker: working tree not clean — aborting (queue preserved)." >&2
+  alert red learning-worker "Learning worker blocked" "working tree not clean — aborted; queue preserved"
+  exit 1
 fi
 git checkout -q main 2>/dev/null || true
 git reset -q --hard origin/main 2>/dev/null || true
@@ -127,6 +137,7 @@ echo "learning-worker: processing $(wc -l < "$Q" | tr -d ' ') capture(s) via cla
 if ! printf '%s' "$PROMPT" | claude -p --dangerously-skip-permissions; then
   git reset -q --hard origin/main 2>/dev/null || true
   echo "learning-worker: ERROR — claude run failed; queue NOT drained (captures preserved)." >&2
+  alert red learning-worker "Learning worker failed" "claude -p run failed; queue preserved, will retry"
   exit 1
 fi
 
@@ -147,9 +158,11 @@ else
     patch="$(git show HEAD --patch --stat 2>/dev/null | head -c 8000)"
     reasons="$(cat "$gate_out")"
     git reset -q --hard origin/main 2>/dev/null || true
+    # shellcheck disable=SC2016  # single-quoted printf format is intentional — printf expands %s/\n, not the shell
+    issue_body="$(printf 'The nightly learning worker proposed a self-edit the eval gate HELD (no branch, nothing landed on main).\n\n## Gate reasons\n%s\n\n## Proposed change\n```diff\n%s\n```\n' "$reasons" "$patch")"
     if command -v gh >/dev/null 2>&1 && \
        gh issue create --title "learning-loop: self-edit held for review ($(date -u +%F))" \
-         --body "$(printf 'The nightly learning worker proposed a self-edit the eval gate HELD (no branch, nothing landed on main).\n\n## Gate reasons\n%s\n\n## Proposed change\n```diff\n%s\n```\n' "$reasons" "$patch")" \
+         --body "$issue_body" \
          >/dev/null 2>&1; then
       echo "learning-worker: HELD self-edit — opened a review issue (nothing on main)."
     else
@@ -160,4 +173,5 @@ else
 fi
 
 archive_and_drain
+alert green learning-worker "Learning worker healthy" "run completed; $(wc -l < "$A" | tr -d ' ') total archived captures"
 echo "learning-worker: done — $(wc -l < "$A" | tr -d ' ') total archived captures."
