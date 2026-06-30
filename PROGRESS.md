@@ -1012,3 +1012,8 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   in this log; the template was already correct, only the per-machine file lagged. Both hooks dogfood-clean at
   shellcheck -S info; tested (planted token→block, SC2086→block, clean→pass, non-edit/non-sh→ignored);
   scan-secrets self-test passes. Hooks/agent activate next session (loaded at startup).
+- 2026-06-29 Doc-currency sweep (repo-review follow-up): fixed three stale descriptions. The CI bundle
+  `scheduled-tasks/run-ci-routines.sh` header and `scheduled-tasks/README.md` said it runs "two" routines;
+  it runs four (doc-freshness gate, sync/unmerged, memory-freshness sweep, learning-loop eval) — corrected
+  both. `gen-catalog.sh` Hooks-section prose still described the old plugin hook-delivery split; rewrote it
+  to reflect settings.json-only wiring (ADR 0011 #2). Regenerated CATALOG.md; freshness gate green, shellcheck clean.

@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # run-ci-routines.sh — the SAFE, Mac-independent scheduled routines, as one bundle.
 #
-# Single source of truth for the two auto-class routines (PLAN Part 11.1): the doc-freshness
-# sweep and the sync/unmerged check. The cron workflow
+# Single source of truth for the safe, auto-class routines (PLAN Part 11.1): four read-only
+# passes — the doc-freshness sweep (hard gate), the sync/unmerged check, a memory-freshness
+# sweep (check-stale-facts.sh), and the learning-loop eval (learning-eval.sh). The cron workflow
 # (.github/workflows/scheduled-routines.yml) calls this; nothing here is duplicated in YAML.
 # Read-only except for the freshness generator's temp file. Exit non-zero ONLY when a hard gate
 # (freshness) fails, so a real problem is a visible failure and informational drift is not.

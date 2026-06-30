@@ -99,8 +99,9 @@ fails a push if this file is out of date. Do not hand-edit.
 
 ## Hooks
 
-Scripts in `hooks/`, wired to events in [`hooks/hooks.json`](hooks/hooks.json)
-(plugin delivery) and the repo's `.claude/settings.json` (dev-time dogfood).
+Scripts in `hooks/`, wired to events in the repo's `.claude/settings.json`
+against live project paths. (`hooks/hooks.json` intentionally delivers none —
+decision 0011 #2; the scripts in `hooks/` remain the canonical source.)
 
 - **capture-nudge.sh** — UserPromptSubmit. The learning loop's CAPTURE trigger (correction half).
 - **no-force-push-guard.sh** — PreToolUse HARD guard against force-push (decisions/0011 #9).

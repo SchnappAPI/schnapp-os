@@ -134,8 +134,9 @@ trap 'rm -f "$TMP"' EXIT
   # ---- Hooks (list the scripts; wiring is in hooks.json) ----
   echo "## Hooks"
   echo
-  echo "Scripts in \`hooks/\`, wired to events in [\`hooks/hooks.json\`](hooks/hooks.json)"
-  echo "(plugin delivery) and the repo's \`.claude/settings.json\` (dev-time dogfood)."
+  echo "Scripts in \`hooks/\`, wired to events in the repo's \`.claude/settings.json\`"
+  echo "against live project paths. (\`hooks/hooks.json\` intentionally delivers none —"
+  echo "decision 0011 #2; the scripts in \`hooks/\` remain the canonical source.)"
   echo
   for f in "$CORE"/hooks/*.sh; do
     [ -e "$f" ] || continue

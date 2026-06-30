@@ -33,9 +33,11 @@ routine that wants to change state stops at the proposal and hands it to a human
 | Memory consolidation | asks-first | LaunchAgent → `claude -p` | no (repo only) | [memory-consolidation.md](memory-consolidation.md) |
 | Infra / pipeline health | safe (probe) | LaunchAgent → `claude -p` | yes (Mac MCP) | [infra-health.md](infra-health.md) |
 
-The two **safe, Mac-independent** routines are wired now in
+The **safe, Mac-independent** routines are wired now in
 [`.github/workflows/scheduled-routines.yml`](../.github/workflows/scheduled-routines.yml) via the
-single-source bundle [`run-ci-routines.sh`](run-ci-routines.sh). The two that need the Mac or
+single-source bundle [`run-ci-routines.sh`](run-ci-routines.sh), which runs four read-only passes:
+the doc-freshness sweep (the hard gate), the sync/unmerged check, a memory-freshness sweep
+(`check-stale-facts.sh`), and the learning-loop eval (`learning-eval.sh`). The two that need the Mac or
 judgment are specified here for a LaunchAgent to drive a `claude -p` session (owner installs the
 LaunchAgent; the spec is the agent's instructions). The `status` skill (Part 11.3) reads the same
 signals on demand.
