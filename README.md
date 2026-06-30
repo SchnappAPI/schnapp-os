@@ -14,6 +14,7 @@ Status lives in one canonical place and is read there:
 ## Map
 | Path | What |
 |---|---|
+| [CLAUDE.md](CLAUDE.md) | Agent front door for working in this repo (thin, reference-only; global rules load separately) |
 | [PLAN.md](PLAN.md) | Master plan + live step status |
 | [PROGRESS.md](PROGRESS.md) | Execution log |
 | [decisions/](decisions/) | One file per decision (the "why") |

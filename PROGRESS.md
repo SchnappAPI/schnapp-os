@@ -1103,3 +1103,10 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   access (claude.ai chat now via portal; .mcp.json Code path unchanged). New ADR 0020 records the decision + the
   security note (User-auth OFF → the portal Access policy gates a full Mac shell). No env-file change — the portal
   reuses existing bearers as Cloudflare Custom headers. 11 files.
+- 2026-06-30 Added root CLAUDE.md (agent front door for working *in* schnapp-os): thin, reference-only — links the
+  canonical sources (global rules, PLAN/PROGRESS, decisions, memory, hooks, secrets-as-refs); re-imports no global
+  rules (they load machine-wide via ~/.claude/CLAUDE.md, so re-import would double-load) and hardcodes no status.
+  Linked it from the README map. Dogfoods templates/project-CLAUDE.md, which the repo shipped for other projects but
+  never used on itself. Verified every referenced path exists + every hook named is wired in .claude/settings.json.
+  Also captured owner preference (owner-working-preferences #7): commit + push to main automatically by default (no
+  per-change ask; overrides the harness "only when asked" default), and never leave open PRs.
