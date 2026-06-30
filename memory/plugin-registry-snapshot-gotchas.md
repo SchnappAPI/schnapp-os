@@ -4,7 +4,7 @@ metadata:
   node_type: memory
   scope: global
   source: "this session (observed 2026-06-23, handoff 035 loop live-proof)"
-  updated: 2026-06-23
+  updated: 2026-06-30
   supersedes: ""
   originSessionId: code-2026-06-23-loops-liveproof
 ---
@@ -33,5 +33,3 @@ Two durable Claude-plugin tooling gotchas, both of which bit while fixing the st
    directory source at current HEAD). Effect applies at the NEXT session start (fresh snapshot), so
    verification is always next-restart. Permanent class-fix = drop the plugin packaging entirely
    (decision 0011 #2, repo-flattening); until then, re-pin after any hook/structure change.
-</content>
-</invoke>

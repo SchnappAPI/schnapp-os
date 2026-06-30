@@ -4,7 +4,7 @@ metadata:
   node_type: memory
   scope: global
   source: "schnapp-bet docs/CONNECTIONS.md (Obsidian MCP / Brain Agent); handoffs/016"
-  updated: 2026-06-16
+  updated: 2026-06-30
   supersedes: ""
   originSessionId: claude-ai-web-2026-06-16-stale-review
 ---

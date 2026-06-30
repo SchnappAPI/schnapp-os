@@ -99,6 +99,11 @@ just cost real money in production:
   noticed. This is the silent-stop enemy exactly, and `infra-health.md` (which would have caught it) is the
   uninstalled probe. **Fix is asks-first** (it kicks a ~7-min export against production data) — commands in
   Part 4 P0.
+  **UPDATE 2026-06-30 (verified live): RESOLVED.** The `bet.schnapp.bacpac-backup` LaunchAgent is now installed in
+  `~/Library/LaunchAgents` and loaded (calendar trigger **Sunday 05:00**); `weekly-backup.sh` ran successfully
+  `2026-06-30 04:20 UTC` (fresh 344M `schnapp-bet-20260630.bacpac`). The ~55-day gap was the **old `sports-modeling`
+  DB name**; the renamed `schnapp-bet` DB is now backed up + scheduled. P1 #4 (the infra-health probe) remains the
+  guard against silent re-death.
 - 🟡 **The reflective freshness half does not run** (AUDIT B1, the #1 gap vs the owner's #1 goal): memory
   aging / consolidation / weekly review are spec'd but uninstalled; only the read-only doc cron runs
   (9 green runs, verified). The learning-worker LaunchAgent needs reinstall + end-to-end verification

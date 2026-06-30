@@ -1123,3 +1123,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   403s on some repos) and the safe-vs-asks-first split (framework F). Cross-linked from status; complements the
   read-only sync/unmerged routine (that = branches, this = PR objects). CATALOG regenerated; components auto-discover
   (plugin.json) so it is live on next plugin load.
+- 2026-06-30 Session-close hygiene. (a) Refreshed the 4 stale-flagged memory facts after VERIFYING each (not a blind
+  date-bump): keep-tracker-current (re-attested by this session's practice); op-wrap-token-unquoted + obsidian-state
+  Mac-verified live (zshrc token unquoted, op-wrap.sh still greps-not-sources; `com.schnapp.obsidian-mcp` agent up,
+  vault symlink intact — consistent with ADR 0020 obsidian-stays-standalone); plugin-registry-snapshot-gotchas (also
+  removed leaked `</content></invoke>` tags from the body). All `updated:`→2026-06-30. (b) Backup P0 from
+  repo-review-2026-06-29 verified **RESOLVED**: `bet.schnapp.bacpac-backup` LaunchAgent installed in
+  `~/Library/LaunchAgents` + loaded, armed Sun 05:00; `weekly-backup.sh` ran 2026-06-30 04:20 UTC (fresh 344M
+  `schnapp-bet-20260630.bacpac`). The 55-day gap was the old `sports-modeling` DB name; renamed `schnapp-bet` DB now
+  backed up + scheduled. Annotated the review doc; infra-health probe (P1 #4) still the silent-re-death guard.

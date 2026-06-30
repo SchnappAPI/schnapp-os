@@ -1,12 +1,15 @@
 ---
 name: keep-tracker-current
-scope: global
-source: owner correction, 2026-06-03 (claude-kit session)
-updated: 2026-06-03
-supersedes: ""
-metadata:
+metadata: 
+  node_type: memory
+  scope: global
+  source: "owner correction, 2026-06-03 (claude-kit session)"
+  updated: 2026-06-30
+  supersedes: ""
   type: feedback
+  originSessionId: 99b1dd4b-1024-4782-8aff-5088a7f0aaf5
 ---
+
 When a step's deliverable exists and is verified, flip its PLAN.md box and append a
 PROGRESS.md line **in the same commit** as the deliverable — never batch tracker updates
 to a later handoff. Mark partial work as `[~]`, not `[x]`. Never call something
