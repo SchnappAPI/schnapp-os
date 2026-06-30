@@ -53,8 +53,11 @@ jobs:
       - name: Learning-gate self-test
         run: bash plugins/core/scripts/tests/test-learning-gate.sh
 
-      - name: LaunchAgent plist is valid
-        run: python3 -c "import plistlib; plistlib.load(open('scheduled-tasks/com.schnapp.memory-consolidation.plist','rb')); print('plist OK')"
+      - name: Infra-health probe self-test
+        run: bash plugins/core/scripts/tests/test-infra-health.sh
+
+      - name: LaunchAgent plists are valid
+        run: python3 -c "import plistlib; [plistlib.load(open(p,'rb')) for p in ['scheduled-tasks/com.schnapp.memory-consolidation.plist','scheduled-tasks/com.schnapp.infra-health.plist']]; print('plists OK')"
 
       - name: Secret scan (no literal values in tracked files)
         run: bash plugins/core/scripts/scan-secrets.sh --exclude 'plugins/core/scripts/tests/*'

@@ -1059,3 +1059,16 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   subscription, honoring cost discipline (AUDIT K). Docs corrected: headless-claude-auth.md (sanctioned cred
   → OAuth + malformed-value gotcha + fixed 401 table/checklist), scheduled-tasks/README.md, review-doc P0 #2;
   recorded as decisions/0019. NOT a credential rotation. Token expires ~2027-05 (re-mint via claude setup-token).
+- 2026-06-29 Built the infra-health liveness probe (P1) + two smaller asks. (1) plugins/core/scripts/
+  check-infra-health.sh — pure-bash, read-only probe for the SILENT-STOP class: checks expected LaunchAgents
+  loaded (3 connectors, tunnel, worker, backup, CI runner, flask, web-prod), newest schnapp-bet-*.bacpac age
+  (<8d), mssql container up, local MCP ports 8765/66/67 listening; green/red, exits non-zero + macOS
+  notification on RED; NEVER remediates. Deliberate divergence from infra-health.md's claude -p design (a
+  liveness probe must not depend on the connector/credential it watches — the day's lesson). Scheduled via new
+  com.schnapp.infra-health.plist (daily 08:30 + RunAtLoad); INSTALLED + loaded on the Mac (exit 0, all green).
+  tests/test-infra-health.sh (skips on non-Darwin) wired into freshness.yml; new plist added to the CI
+  plist-validity check. infra-health.md rewritten to current state; scheduled-tasks/README surface-map row
+  updated. (2) brew install unixodbc → repaired the broken host sqlcmd (libodbc.2.dylib now linked). (3)
+  Global-memory fact memory/malformed-stored-secret-401.md (+ MEMORY.md index): the general lesson behind ADR
+  0019 — a stored secret with stray whitespace/quotes 401s "Invalid bearer token"; verify raw bytes before
+  blaming the tool/CLI. Validations: probe exit 0; test PASS; memory-frontmatter OK (11 facts); freshness OK.

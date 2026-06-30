@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.schnapp.infra-health</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>__REPO__/plugins/core/scripts/check-infra-health.sh</string>
+    </array>
+
+    <!-- Run from the repo root (the probe reads no repo state, but keeps logs/relative paths sane). -->
+    <key>WorkingDirectory</key>
+    <string>__REPO__</string>
+
+    <!-- launchd's default PATH lacks homebrew + docker/nc; prepend the dirs the probe needs. -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <!-- Daily at 08:30 local + once at load (so a fresh install verifies immediately). The probe is
+         read-only and cheap; on a RED signal it posts a notification and exits non-zero (logged below).
+         Substituted at install (see README): __REPO__ / __HOME__. -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>8</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>__HOME__/Library/Logs/schnapp-os/infra-health.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>__HOME__/Library/Logs/schnapp-os/infra-health.err.log</string>
+</dict>
+</plist>
