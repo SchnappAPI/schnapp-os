@@ -1017,3 +1017,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   it runs four (doc-freshness gate, sync/unmerged, memory-freshness sweep, learning-loop eval) — corrected
   both. `gen-catalog.sh` Hooks-section prose still described the old plugin hook-delivery split; rewrote it
   to reflect settings.json-only wiring (ADR 0011 #2). Regenerated CATALOG.md; freshness gate green, shellcheck clean.
+- 2026-06-29 Full repo review (on request): saved orientation map + optimization plan to
+  docs/repo-review-2026-06-29.md (dated snapshot; references PLAN/PROGRESS/AUDIT/CATALOG, copies no state).
+  Thesis: the build is solid, the gap is liveness — strong vs silent drift, weak vs silent stop. Root-caused
+  handoff 038's open backup risk: the SQL `weekly-backup.sh` last ran 2026-05-03 because its LaunchAgent plist
+  was never installed into ~/Library/LaunchAgents (it sat in ~/azure-sql-backups, RunAtLoad=false, so it never
+  re-armed after a reboot — it stopped silently, no crash). Fixed: installed + loaded `bet.schnapp.bacpac-backup`
+  (confirmed registered; weekly Sun 05:00, now survives reboots) and triggered an immediate export to backfill
+  the 55-day gap. Unresolved (owner call): the scheduled-tasks/README worker-auth contradiction (Claude OAuth
+  token vs ANTHROPIC_API_KEY), to settle with the learning-worker reinstall (038 #2).
