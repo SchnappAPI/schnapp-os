@@ -100,16 +100,16 @@ for entry in "${PORT_CHECKS[@]}"; do
 done
 printf '\n'
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
 if [ "$rc" -eq 0 ]; then
   printf '**infra-health: OK** — all checks green.\n'
+  # Resolve any open incident (best-effort): closes the GitHub issue + clears state on recovery.
+  "$DIR/ops-alert.sh" green infra-health "schnapp infra-health" "" >/dev/null 2>&1 || true
 else
   printf '**infra-health: RED** — a watched signal failed (read-only; nothing was restarted).\n'
-  if command -v osascript >/dev/null 2>&1; then
-    osascript -e 'display notification "infra-health found a RED signal — see the log" with title "schnapp-os infra-health"' >/dev/null 2>&1 || true
-  fi
-  # Off-Mac page (best-effort; silent no-op if NTFY_URL is unset). Helper lives beside this script.
-  "$(dirname "$0")/notify-ops.sh" \
-    "$(printf 'infra-health RED on %s:\n%s' "$(hostname -s)" "$RED_SUMMARY")" \
-    "schnapp-os infra-health" "high" "rotating_light" >/dev/null 2>&1 || true
+  # Native alert (best-effort): opens/updates an owner-assigned GitHub issue (email) for the incident,
+  # plus a one-shot ntfy/macOS notification on the green->red transition. See ops-alert.sh.
+  "$DIR/ops-alert.sh" red infra-health "schnapp infra-health RED" \
+    "$(printf 'Host %s:\n%s' "$(hostname -s)" "$RED_SUMMARY")" >/dev/null 2>&1 || true
 fi
 exit "$rc"

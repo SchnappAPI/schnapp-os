@@ -3,8 +3,7 @@
 - **Class:** safe (probe) — read-only health checks; no remediation without approval.
 - **Implementation:** [`plugins/core/scripts/check-infra-health.sh`](../plugins/core/scripts/check-infra-health.sh)
   — **pure bash**, deterministic, read-only. No LLM, no MCP, no auth dependency.
-- **Scheduler:** the [`com.schnapp.infra-health`](com.schnapp.infra-health.plist) Mac LaunchAgent (daily
-  08:30 local + once at load). Also runnable on demand and surfaced by the `status` skill.
+- **Scheduler:** the [`com.schnapp.infra-health`](com.schnapp.infra-health.plist) Mac LaunchAgent (every 30 min + once at load). Also runnable on demand and surfaced by the `status` skill.
 - **What it checks** (green/red; exits non-zero on any RED):
   - expected LaunchAgents are loaded (the three connectors, the tunnel, the worker, the backup, the CI
     runner, flask + web-prod) — a missing label is exactly how the bacpac backup silently lapsed;

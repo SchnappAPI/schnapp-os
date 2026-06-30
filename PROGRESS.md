@@ -1158,3 +1158,11 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   assigns + emails; a normal run recovers + closes). Spec `scheduled-tasks/mac-liveness.md`; README routine table +
   framework throughline updated. Remaining edge (documented, optional): Mac fully up but the infra-health plist
   specifically unloaded — covered only by an optional mac-mcp service_status pull (needs a repo secret), not wired.
+- 2026-06-30 Wired granular native alerting (no app needed). New `plugins/core/scripts/ops-alert.sh`: an incident
+  manager that on a routine RED opens an owner-assigned GitHub issue (NATIVE email) and auto-closes it on recovery
+  (open-issue-as-state dedup), plus a transition-only ntfy/macOS notification so a persistent RED is one issue, not
+  spam. `check-infra-health.sh` now delegates all alerting to it (red + green). `gh` works headless on the Mac
+  (verified: hosts.yml readable, clean-env test passed, `repo` scope), so no new secret. Bumped the infra-health
+  LaunchAgent from daily 08:30 to every 30 min (`StartInterval 1800`) so a downed service alerts within ~30 min. The
+  probe stays dependency-free (detection only); alerting is best-effort. Tested on the Mac (forced RED opened +
+  assigned a `[infra-health]` issue; recovery auto-closed it). infra-health.md + plist updated.

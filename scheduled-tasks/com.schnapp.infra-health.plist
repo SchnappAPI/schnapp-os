@@ -22,16 +22,12 @@
         <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
     </dict>
 
-    <!-- Daily at 08:30 local + once at load (so a fresh install verifies immediately). The probe is
-         read-only and cheap; on a RED signal it posts a notification and exits non-zero (logged below).
-         Substituted at install (see README): __REPO__ / __HOME__. -->
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>8</integer>
-        <key>Minute</key>
-        <integer>30</integer>
-    </dict>
+    <!-- Every 30 min (1800s) + once at load, so a downed service alerts within ~30 min, not a day. The
+         probe is read-only and cheap; on a RED it opens an owner-assigned GitHub issue (email) via
+         ops-alert.sh and exits non-zero (logged below). Alerting is transition-gated so a persistent RED
+         is one issue, not spam. Substituted at install (see README): __REPO__ / __HOME__. -->
+    <key>StartInterval</key>
+    <integer>1800</integer>
 
     <key>RunAtLoad</key>
     <true/>
