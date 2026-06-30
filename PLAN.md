@@ -609,6 +609,12 @@ The capstone (owner: finish it now). Reuses schnapp-kit pieces on-demand (model-
       `.github/workflows/scheduled-routines.yml`. Safe Mac-independent routines run in Actions;
       memory-consolidation (asks-first) + infra-health (Mac-needed) specified for a LaunchAgent
       `claude -p` session. Read-only: never auto-commits/merges/restarts.
+      INSTALLED 2026-06-30: the **infra-health** probe (`com.schnapp.infra-health`, daily 08:30 + RunAtLoad) is now
+      loaded + verified on the Mac (`runs=1 exit=0`, first report all-green, logs to
+      `~/Library/Logs/schnapp-os/infra-health.log`). Pure-bash read-only per `scheduled-tasks/infra-health.md`:
+      checks expected LaunchAgents loaded, backup freshness, mssql up, MCP ports listening; a RED posts a macOS
+      notification + exits non-zero, never remediates. (The memory-consolidation deep-heartbeat is loaded too; its
+      tiering/effectiveness is tracked separately, AUDIT item B.)
 - [x] 11.2 Orchestrator: a `/do` dispatcher that takes a task, picks the preset/rules, the
       agent or skill, and the model tier (reuse model-route and the planner), then runs it.
       DONE 2026-06-16: `plugins/core/commands/do.md` — classify → route to preset (presets.md) +

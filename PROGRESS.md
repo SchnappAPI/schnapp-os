@@ -1132,3 +1132,11 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   `~/Library/LaunchAgents` + loaded, armed Sun 05:00; `weekly-backup.sh` ran 2026-06-30 04:20 UTC (fresh 344M
   `schnapp-bet-20260630.bacpac`). The 55-day gap was the old `sports-modeling` DB name; renamed `schnapp-bet` DB now
   backed up + scheduled. Annotated the review doc; infra-health probe (P1 #4) still the silent-re-death guard.
+- 2026-06-30 Installed the infra-health liveness probe (repo-review P1 #4 / Part 3 #1 — the headline silent-stop
+  gap). Dry-ran `check-infra-health.sh` first (all green, zero day-one alarm noise), then substituted the plist
+  placeholders and `launchctl load`ed `com.schnapp.infra-health` on the Mac. Verified: loaded, `runs=1 exit=0`,
+  calendar trigger armed 08:30 daily, first RunAtLoad report all-green to `~/Library/Logs/schnapp-os/infra-health.log`.
+  Pure-bash read-only (no LLM/MCP/auth dependency, so the probe can't die on what it watches); checks expected
+  LaunchAgents loaded + backup freshness (<=8d) + mssql container + MCP ports 8765/66/67; RED posts a macOS
+  notification + non-zero exit, never remediates. Would have caught the backup lapse. PLAN 11.1 note + review doc
+  annotated. (memory-consolidation is loaded too; its tiering/effectiveness tracked separately, AUDIT item B.)

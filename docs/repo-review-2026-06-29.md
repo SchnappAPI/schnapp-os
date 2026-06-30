@@ -123,6 +123,9 @@ just cost real money in production:
 
 1. **A liveness heartbeat that proves jobs ran and alarms when they did not.** No "job did not fire" signal
    anywhere; the backup proves the cost. `infra-health` is the intended probe but is uninstalled.
+   **UPDATE 2026-06-30: INSTALLED + verified.** `com.schnapp.infra-health` is loaded on the Mac (daily 08:30 +
+   RunAtLoad), first run all-green; pure-bash read-only, a RED posts a macOS notification + logs to
+   `~/Library/Logs/schnapp-os/infra-health.log`. The "job did not fire" signal now exists.
 2. **The reflective memory loop**: episodic→semantic aging, consolidation, weekly deep review, 90-day
    age-flagging, "wiki grows from questions." Spec'd-only or absent (AUDIT B).
 3. **The eval/promote gate** — the keystone behind capture, wiki-grows, skill extraction, and self-learning
