@@ -1200,3 +1200,11 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   unmonitored surface — opening/auto-closing a `[render-health]` GitHub issue (native email) on down, doubling as a
   keep-warm against the free-tier cold start. Both URLs verified live 200. Distinct title from mac-liveness so a Render
   outage never reads as a Mac outage.
+- 2026-06-30 Wrote the substrate-rethink assessment `docs/repo-review-2026-06-30-substrate-rethink.md` — the
+  new-primitives lens (off-the-shelf MCP / Agent SDK / plugin marketplace) that AUDIT.md + repo-review-2026-06-29 did
+  not take. Verdict: surgical, not teardown — keep the kernel + portability; the wins are Agent-SDK loops + GitHub's
+  official MCP (replaces the hand-rolled 43-tool bridge) + the schnapp-os-core double-load dedup + the deferred prune +
+  silent-stop closes. Corrected a connectors-agent error (the in-session `e4f92151` github tools are the owner's OWN
+  portal, NOT an official Anthropic server; the real swap target is `github/github-mcp-server`). Records owner decisions
+  (Loop->SDK GREENLIT; GitHub + Obsidian CONDITIONAL on a no-functionality-loss parity proof — Obsidian's safe form is
+  auth-only, zero loss) and the P0 work shipped this session (62a837c defects + a5f0476 hardening).
