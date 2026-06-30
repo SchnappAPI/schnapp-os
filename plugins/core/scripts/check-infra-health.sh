@@ -40,7 +40,8 @@ fi
 PORT_CHECKS=( "8765:mac-mcp" "8766:github-mcp" "8767:obsidian-mcp" )
 
 rc=0
-red()  { rc=1; printf -- '- 🔴 %s\n' "$1"; }
+RED_SUMMARY=""
+red()  { rc=1; RED_SUMMARY+="• $1"$'\n'; printf -- '- 🔴 %s\n' "$1"; }
 grn()  { printf -- '- 🟢 %s\n' "$1"; }
 warn() { printf -- '- 🟡 %s\n' "$1"; }
 
@@ -106,5 +107,9 @@ else
   if command -v osascript >/dev/null 2>&1; then
     osascript -e 'display notification "infra-health found a RED signal — see the log" with title "schnapp-os infra-health"' >/dev/null 2>&1 || true
   fi
+  # Off-Mac page (best-effort; silent no-op if NTFY_URL is unset). Helper lives beside this script.
+  "$(dirname "$0")/notify-ops.sh" \
+    "$(printf 'infra-health RED on %s:\n%s' "$(hostname -s)" "$RED_SUMMARY")" \
+    "schnapp-os infra-health" "high" "rotating_light" >/dev/null 2>&1 || true
 fi
 exit "$rc"
