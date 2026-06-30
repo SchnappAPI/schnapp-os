@@ -49,13 +49,17 @@ printf '# infra-health — %s\n\n' "$(date -u '+%Y-%m-%d %H:%M:%SZ')"
 
 printf '## LaunchAgents loaded\n'
 loaded="$(launchctl list 2>/dev/null | awk 'NR>1{print $3}')"
-for label in "${EXPECTED_AGENTS[@]}"; do
-  if printf '%s\n' "$loaded" | grep -Fxq "$label"; then
-    grn "$label"
-  else
-    red "$label NOT loaded (a scheduled/service job is not armed)"
-  fi
-done
+if [ "${#EXPECTED_AGENTS[@]}" -gt 0 ]; then
+  for label in "${EXPECTED_AGENTS[@]}"; do
+    if printf '%s\n' "$loaded" | grep -Fxq "$label"; then
+      grn "$label"
+    else
+      red "$label NOT loaded (a scheduled/service job is not armed)"
+    fi
+  done
+else
+  red "EXPECTED_AGENTS is empty (malformed INFRA_EXPECTED_AGENTS override) — no agents checked"
+fi
 printf '\n'
 
 printf '## SQL backup freshness (%s/schnapp-bet-*.bacpac)\n' "$BACKUP_DIR"

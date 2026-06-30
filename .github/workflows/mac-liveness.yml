@@ -47,7 +47,7 @@ jobs:
           is_up() {
             local url="$1" code
             for _ in 1 2 3; do
-              code="$(curl -s -o /dev/null -m 12 -w '%{http_code}' "$url" 2>/dev/null || echo 000)"
+              code="$(curl -s -o /dev/null -m 12 -w '%{http_code}' "$url" 2>/dev/null)"
               if [ "${code:-000}" -ge 200 ] && [ "${code:-000}" -lt 500 ]; then return 0; fi
               sleep 8
             done
@@ -67,7 +67,7 @@ jobs:
           fi
 
           existing="$(gh issue list --repo "$REPO" --state open --json number,title \
-            --jq '.[] | select(.title|test("mac-liveness")) | .number' | head -1)"
+            --jq '.[] | select(.title|startswith("[mac-liveness]")) | .number' | head -1)"
 
           if [ "$DOWN" -eq 1 ]; then
             {

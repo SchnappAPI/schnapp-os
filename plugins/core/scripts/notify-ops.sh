@@ -36,7 +36,7 @@ curl -fsS -m 8 \
   -H "Title: ${title}" \
   -H "Priority: ${prio}" \
   -H "Tags: ${tags}" \
-  -d "$msg" \
+  --data-raw "$msg" \
   "$NTFY_URL" >/dev/null 2>&1 || true
 
 exit 0

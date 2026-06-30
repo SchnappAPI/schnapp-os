@@ -6,11 +6,12 @@
 # the caller):
 #   - GitHub issue, assigned to the owner -> NATIVE email. Open on red / close on green, deduped by
 #     the "[<key>] " title prefix (open-issue-as-state), so a persistent red is one issue, not spam.
-#   - ntfy push (via notify-ops.sh) + macOS notification, ONLY on the green->red transition, so a
-#     frequent probe cadence does not re-alert every run for the same ongoing failure.
+#   - ntfy push (via notify-ops.sh) + macOS notification + (optional) native iMessage, ONLY on the
+#     green->red transition and on recovery, so a frequent probe cadence does not re-alert every run.
 #
 # State: ~/.config/schnapp-os/state/<key>.state  (overridable via OPS_STATE_DIR).
-# Config: OPS_GH_REPO (default SchnappAPI/schnapp-os), OPS_GH_ASSIGNEE (default SchnappAPI).
+# Config (Mac-local ~/.config/schnapp-os/ops.env): NTFY_URL, OPS_IMESSAGE_TO (your iMessage handle:
+#   +15551234567 or an Apple ID email), OPS_GH_REPO, OPS_GH_ASSIGNEE.
 # Needs gh authenticated for the issue path; without gh it degrades to the push channels only.
 #
 # Usage: ops-alert.sh <red|green> <key> <title> <summary-text>
@@ -18,6 +19,13 @@ set -uo pipefail
 
 status="${1:-}"; key="${2:-}"; title="${3:-schnapp-os alert}"; summary="${4:-}"
 [ -n "$status" ] && [ -n "$key" ] || exit 0
+key="$(printf '%s' "$key" | tr -cd 'A-Za-z0-9._-')"   # interpolated into a jq filter + issue title; keep it inert
+[ -n "$key" ] || exit 0
+
+# Mac-local ops config: NTFY_URL, OPS_IMESSAGE_TO, and any OPS_* overrides (best-effort).
+OPS_ENV="${OPS_ENV:-$HOME/.config/schnapp-os/ops.env}"
+# shellcheck disable=SC1090
+[ -r "$OPS_ENV" ] && . "$OPS_ENV"
 
 STATE_DIR="${OPS_STATE_DIR:-$HOME/.config/schnapp-os/state}"
 mkdir -p "$STATE_DIR" 2>/dev/null || true
@@ -31,6 +39,20 @@ ISSUE_TITLE="[${key}] ${title}"
 now="$(date -u '+%Y-%m-%d %H:%M:%SZ')"
 
 have_gh() { command -v gh >/dev/null 2>&1; }
+
+imsg() { # best-effort native iMessage to self; no-op unless OPS_IMESSAGE_TO is set + osascript present
+  [ -n "${OPS_IMESSAGE_TO:-}" ] || return 0
+  command -v osascript >/dev/null 2>&1 || return 0
+  osascript - "$OPS_IMESSAGE_TO" "$1" >/dev/null 2>&1 <<'APPLESCRIPT' || true
+on run {targetHandle, messageText}
+  tell application "Messages"
+    set targetService to 1st service whose service type = iMessage
+    send messageText to buddy targetHandle of targetService
+  end tell
+end run
+APPLESCRIPT
+}
+
 find_open_issue() {
   gh issue list --repo "$REPO" --state open --json number,title \
     --jq '.[] | select(.title|startswith("['"$key"']")) | .number' 2>/dev/null | head -1
@@ -50,6 +72,7 @@ if [ "$status" = "red" ]; then
     if command -v osascript >/dev/null 2>&1; then
       osascript -e 'display notification "RED signal — see the GitHub issue / log" with title "schnapp-os infra-health"' >/dev/null 2>&1 || true
     fi
+    imsg "$title"
   fi
   echo red > "$state_file" 2>/dev/null || true
 else
@@ -64,6 +87,7 @@ else
       done
     fi
     "$SCRIPT_DIR/notify-ops.sh" "Recovered: $title" "$ISSUE_TITLE" "default" "white_check_mark" >/dev/null 2>&1 || true
+    imsg "Recovered: $title"
   fi
   echo green > "$state_file" 2>/dev/null || true
 fi
