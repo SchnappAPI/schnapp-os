@@ -58,11 +58,13 @@ if [ "$status" = "red" ]; then
 else
   if [ "$last" = "red" ]; then
     if have_gh; then
-      n="$(find_open_issue)"
-      if [ -n "$n" ]; then
+      # Close every matching open issue (guards the rare case where two runs raced and both opened one).
+      gh issue list --repo "$REPO" --state open --json number,title \
+        --jq '.[] | select(.title|startswith("['"$key"']")) | .number' 2>/dev/null | while read -r n; do
+        [ -n "$n" ] || continue
         printf 'Recovered at %s. Auto-closing.\n' "$now" | gh issue comment "$n" --repo "$REPO" --body-file - >/dev/null 2>&1 || true
         gh issue close "$n" --repo "$REPO" --reason completed >/dev/null 2>&1 || true
-      fi
+      done
     fi
     "$SCRIPT_DIR/notify-ops.sh" "Recovered: $title" "$ISSUE_TITLE" "default" "white_check_mark" >/dev/null 2>&1 || true
   fi
