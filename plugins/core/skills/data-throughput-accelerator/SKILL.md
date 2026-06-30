@@ -1,6 +1,6 @@
 ---
 name: data-throughput-accelerator
-description: Use when a backfill, bulk ingest, export, warehouse load, manifest catch-up, or table sync needs to be much faster while data stays correct. Triggers on "this load is too slow", "speed up the backfill", "the pipeline is behind".
+description: Use when a backfill, bulk ingest, export, warehouse load, manifest catch-up, or table sync needs to be much faster while data stays correct. Triggers on "this load is too slow", "speed up the backfill", "the pipeline is behind". Batch/throughput patterns (not hot-path latency — for a realtime/live feed see latency-critical-systems); the performance-optimizer agent composes this skill after profiling.
 ---
 
 # data-throughput-accelerator

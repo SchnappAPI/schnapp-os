@@ -20,8 +20,8 @@ exists (rules, skills, agents, the planner) — it does not reimplement any of t
 2. **Route to rules + worker + model.** Resolve all three, then state them before acting:
    - **Rules:** global rules always apply. Name any path-scoped modules the task needs directly
      from [`rules/modules/`](../rules/modules/) (e.g. ETL/SQL → `lang/python` + `lang/sql-server` +
-     `activity/etl-pipeline` + `context/work|personal`; web → `lang/typescript` + `activity/web-tool`;
-     policy → `activity/policy-procedure`; Quickbase → `tool/quickbase`). Inventory: [`../CATALOG.md`](../CATALOG.md).
+     `activity/etl-pipeline` + `context/work|personal`; web → `lang/typescript`;
+     Quickbase → `tool/quickbase`). Inventory: [`../CATALOG.md`](../CATALOG.md).
    - **Skill/agent:** pick from [`../CATALOG.md`](../CATALOG.md). Prefer an existing skill/agent over
      doing it inline. Examples: build/optimize an ETL load → `etl-pipeline-build` +
      `performance-optimizer`; SQL correctness → `sql-etl-reviewer`; "is X slow" →

@@ -1,6 +1,6 @@
 ---
 name: secrets-leak-reviewer
-description: Use to audit a diff, file, or tree for leaked secret VALUES before a commit, push, or any time content leaves the machine (sharing, exports, a repo about to go public). Goes beyond the regex gate — catches values the scanner's patterns miss: a token pasted into prose or a comment, a credential in a config/log/fixture/.bak, an op:// that should be a reference but holds a literal, a near-miss token format. Reach for this when "is this safe to push/share" matters and a generic reviewer would not know the owner's secret classes.
+description: Use to audit a diff, file, or tree for leaked secret VALUES before a commit, push, or any time content leaves the machine (sharing, exports, a repo about to go public). Goes beyond the regex gate — catches values the scanner's patterns miss: a token pasted into prose or a comment, a credential in a config/log/fixture/.bak, an op:// that should be a reference but holds a literal, a near-miss token format. Reach for this when "is this safe to push/share" matters and a generic reviewer would not know the owner's secret classes. Review-only: it flags and explains, it does not edit — to find AND remove the values, use the cleanse-secrets skill.
 tools: ["Read", "Grep", "Bash"]
 model: sonnet
 ---

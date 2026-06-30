@@ -1,6 +1,6 @@
 ---
 name: cleanse-secrets
-description: Use when files may contain literal secret VALUES that must be found and removed — auditing a repo/diff before commit or sharing, retro-scrubbing leaked exports (e.g. the obsidian-vault Claude-export dump), or confirming a tree holds references not values. Symptoms include "did a secret leak", "scrub the credentials out", hardcoded api_key/token/password, "is this safe to push/open-source".
+description: Use when files may contain literal secret VALUES that must be found and removed — auditing a repo/diff before commit or sharing, retro-scrubbing leaked exports (e.g. the obsidian-vault Claude-export dump), or confirming a tree holds references not values. Symptoms include "did a secret leak", "scrub the credentials out", hardcoded api_key/token/password, "is this safe to push/open-source". This skill finds AND removes (scrub/redact); for a read-only review pass that only flags without editing, use the secrets-leak-reviewer agent.
 ---
 
 # cleanse-secrets
@@ -9,7 +9,7 @@ Invariant: **no secret value in any tracked file — references (`op://`) only**
 ([secrets-as-references](../../rules/global/secrets-as-references.md)). This skill finds violations
 and removes them. Detection is delegated to one canonical scanner so CI and this skill can never
 drift apart: [`scan-secrets.sh`](../../scripts/scan-secrets.sh). For *diff-level* review during
-normal edits, the `secrets-hygiene-reviewer` agent is the lighter tool; use this skill for
+normal edits, the `secrets-leak-reviewer` agent is the lighter tool; use this skill for
 whole-file / whole-repo scans and for the redact step.
 
 ## Mode 1 — report (read-only)
@@ -72,5 +72,5 @@ redacted item is on the rotate list. That repo is separate from schnapp-os; comm
 - Adding a new pattern here instead of in `scan-secrets.sh` — there is **one** pattern source; edit
   the scanner (and its `tests/` fixture), never re-list patterns in this doc.
 
-Related: [`scan-secrets.sh`](../../scripts/scan-secrets.sh) · `secrets-hygiene-reviewer` agent
+Related: [`scan-secrets.sh`](../../scripts/scan-secrets.sh) · `secrets-leak-reviewer` agent
 (diff-level) · [vault-resolve](../vault-resolve/SKILL.md) · [rotate-secret](../rotate-secret/SKILL.md).

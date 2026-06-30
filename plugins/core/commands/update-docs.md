@@ -1,5 +1,5 @@
 ---
-description: Regenerate a repo's derived docs (schema dumps, env-var lists, route/endpoint or pipeline catalogs) from their canonical sources, and flag any doc whose source changed after its last-verified date.
+description: Regenerate a repo's derived docs (schema dumps, env-var lists, route/endpoint or pipeline catalogs) from their canonical sources, and flag any doc whose source changed after its last-verified date. Derived catalogs + staleness only; for a synthesized architecture map use /update-codemaps.
 argument-hint: "[target-dir]"
 ---
 # /update-docs

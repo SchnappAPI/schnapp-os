@@ -1,5 +1,5 @@
 ---
-description: Generate or refresh a token-lean architecture map (codemap) of a repo — entry points, modules, data flow, and the pipeline/table topology — written as a generated doc.
+description: Generate or refresh a token-lean architecture map (codemap) of a repo — entry points, modules, data flow, and the pipeline/table topology — written as a generated doc. Architecture map only; to regenerate schema/env/route catalogs use /update-docs.
 argument-hint: "[target-dir]"
 ---
 # /update-codemaps

@@ -28,7 +28,7 @@ The server is **Mac-hosted**, so off-Mac vault access requires the Mac powered o
 deliberate, logged choice (`decisions/0008`): the brain/inbox integration is inherently Mac-resident,
 and the plan permits "always-complete via fallback" for knowledge. **Fallback when the Mac is off**:
 the GitHub `obsidian-vault` mirror (kept current by obsidian-git) and this repo's own
-`memory/` + `decisions/`. See the `docs-lookup` skill for the usage entry point.
+`memory/` + `decisions/`. See the `notes-lookup` skill for the usage entry point.
 
 ## Secrets
 

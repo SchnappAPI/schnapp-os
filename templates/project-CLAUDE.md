@@ -29,7 +29,7 @@ Full inventory + scopes: `~/code/schnapp-os/plugins/core/CATALOG.md` (generated)
 installed); reach for them by name. See `CATALOG.md` for the inventory; name the few most relevant
 to this project here.
 
-<!-- e.g. etl-pipeline-build, sql-server-patterns, sql-etl-reviewer, performance-optimizer, docs-lookup -->
+<!-- e.g. etl-pipeline-build, sql-server-patterns, sql-etl-reviewer, performance-optimizer, notes-lookup -->
 - <skill-1>, <skill-2>, ...
 
 ## Project lane (project-specific facts — the one place they live)

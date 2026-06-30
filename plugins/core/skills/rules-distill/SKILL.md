@@ -65,5 +65,5 @@ carries `source:` and `updated:`. Draft text names the source skill so the detai
 3 | SQL Server bulk loads need fast_executemany            | rules/module | Already cov | speed-by-default.md     | n/a
 ```
 
-Row 1: in `merge-with-discretion` and `grill-with-docs`; failure mode = malformed model output
+Row 1: in `council` and `grill-with-docs`; failure mode = malformed model output
 crashes the consumer. General → global lane, new file. Row 3 drops: already stated.

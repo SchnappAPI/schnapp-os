@@ -37,10 +37,10 @@ No local git, shell, filesystem, or `backup-archive.sh` here. Same intent, diffe
   repo write above already lands in git (the source of truth); for the chat transcript itself use
   export or the `live-session-cache` skill. Do not claim the OneDrive/Obsidian mirror ran — it runs
   from a Code/Mac session (the SessionEnd hook), not from here.
-- **Route a correction** (on-correction update): same routing as the canonical procedure —
-  preference → a [`rules/global/`](../../rules/global/) file; durable fact → memory **supersede**
-  (`source: correction`, today's `updated:`); stale doc → fix the doc. Land each via the GitHub
-  connector or a generated Code prompt.
+- **Route a correction** (on-correction update): classify and route per the
+  [`learn-route`](../learn-route/SKILL.md) skill — preference → a [`rules/global/`](../../rules/global/)
+  file; durable fact → memory **supersede** (`source: correction`, today's `updated:`); stale doc →
+  fix the doc. Land each via the GitHub connector or a generated Code prompt.
 
 ## Always-loaded companion
 

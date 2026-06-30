@@ -23,7 +23,7 @@
    **obsidian mcp** (native OAuth). The old standalone "Schnapp Mac" / "Schnapp GitHub" connectors
    are retired — the portal carries those tools now.
 2. **Skills** (Settings > Capabilities): add the must-have core skills first: `session-hygiene`,
-   `surface-check`, `docs-lookup`. They do not auto-sync from the repo, so add the SKILL.md files here.
+   `surface-check`, `notes-lookup`. They do not auto-sync from the repo, so add the SKILL.md files here.
    Add domain skills on demand: `etl-pipeline-build`, `sql-server-patterns`, `quickbase`, `appfolio`,
    plus the available `data:*` / `pq-flat-map-type` / `sports-data-auditor` skills per the preset.
 3. **Always-loaded instructions:** paste [`always-loaded-instructions.md`](always-loaded-instructions.md)

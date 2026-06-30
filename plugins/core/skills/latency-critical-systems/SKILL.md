@@ -1,6 +1,6 @@
 ---
 name: latency-critical-systems
-description: Use when freshness and tail latency matter on a hot path — a realtime dashboard, live sports scoreboard, streaming feed, queue, cache, or API gateway. Triggers on "p95 is too high", "the dashboard lags the source", "stale data showing", "speed up the live feed".
+description: Use when freshness and tail latency matter on a hot path — a realtime dashboard, live sports scoreboard, streaming feed, queue, cache, or API gateway. Triggers on "p95 is too high", "the dashboard lags the source", "stale data showing", "speed up the live feed". Hot-path / tail-latency patterns (not batch throughput — for a backfill or bulk load see data-throughput-accelerator).
 ---
 
 # latency-critical-systems

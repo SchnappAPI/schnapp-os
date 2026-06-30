@@ -1,9 +1,9 @@
 ---
-name: docs-lookup
+name: notes-lookup
 description: Use when the answer likely lives in the owner's OWN notes/knowledge — a past decision, project context, a runbook, a domain fact, or anything captured in the Obsidian vault (which mirrors schnapp-os's memory/handoffs/decisions). Search the owner's knowledge before answering from memory or rebuilding context. For EXTERNAL library/framework/API docs use context7 instead.
 ---
 
-# docs-lookup
+# notes-lookup
 
 Look up the owner's own knowledge in the **Obsidian vault** before answering from training
 memory or re-deriving context. The vault holds the owner's notes plus the mirrored

@@ -12,6 +12,7 @@
   branch — ADR 0017), even when no one opens a session.
 - **Reports:** writes the branch report to the job Step Summary every run.
 - **Acts on its own?** No. It never merges or deletes; it surfaces the list so a human-approved
-  session can merge (via `merge-with-discretion`) or `clean-gone` the stale ones.
+  session can review the unmerged branches and delete the merged residue
+  (`git push origin --delete <branch>`, per ADR 0017 — run from the Mac or an approved session).
 - **Why it exists:** the owner's standing rule is "address unmerged/unpushed before new work"
   (`lang/git.md`, Part 8.2). Off-session, nothing was watching for branches left behind; this does.

@@ -1,6 +1,6 @@
 ---
 name: sql-etl-reviewer
-description: Use to review T-SQL and Python ETL code for correctness — idempotency, partial-write safety, set-based vs row-by-row, fast_executemany / bulk load, SQL injection / parameterization, transaction boundaries, SQL Server naming, secrets-as-references, and input validation at source boundaries. Reach for this when a generic code reviewer is too generic for a SQL Server + ETL diff.
+description: Use to review T-SQL and Python ETL code for correctness — idempotency, partial-write safety, set-based vs row-by-row, fast_executemany / bulk load, SQL injection / parameterization, transaction boundaries, SQL Server naming, secrets-as-references, and input validation at source boundaries. Reach for this when a generic code reviewer is too generic for a SQL Server + ETL diff. Specialized to SQL Server 2022 + Python ETL (not the ORM/Rails-migration reviewers).
 tools: ["Read", "Grep", "Bash"]
 model: sonnet
 ---
