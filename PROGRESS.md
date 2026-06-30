@@ -1110,3 +1110,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   never used on itself. Verified every referenced path exists + every hook named is wired in .claude/settings.json.
   Also captured owner preference (owner-working-preferences #7): commit + push to main automatically by default (no
   per-change ask; overrides the harness "only when asked" default), and never leave open PRs.
+- 2026-06-30 Sharpened rules/global/verify-before-asserting.md: "Read before editing" now names the **Read tool**
+  explicitly — a Bash `cat`/`head`/`tail`/`grep` does NOT register a file as read, so Edit/Write fail with "File has
+  not been read yet." Hit this mid-session editing 3 files (owner-working-preferences, MEMORY, PROGRESS) I had only
+  `cat`'d via Bash. Fix-the-class, not the instance. Also: merged the last org-wide open PR (schnapp-bet #2, the
+  fail-closed secrets security fix, reviewed) and closed two dead ones (schnapp-bet #1 empty, schnapp-kit #29 moot)
+  → 0 open PRs across SchnappAPI, per the new never-leave-open-PRs preference.
