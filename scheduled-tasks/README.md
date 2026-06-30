@@ -64,19 +64,18 @@ after explicit owner approval. Never auto-loaded by CI or a cloud session.
 
 ### Headless auth (one-time prerequisite)
 
-`claude setup-token` stores the Claude OAuth token in the **login Keychain**, which a launchd job
-cannot read — the live run 401s. So store the token in 1Password and let the worker resolve it via
-`op` at runtime (the LaunchAgent inherits `OP_SERVICE_ACCOUNT_TOKEN`). The plist carries the op://
-**reference** (`LEARNING_CLAUDE_TOKEN_REF`); the value is never written to disk.
+launchd cannot read the login Keychain (where interactive `/login` and `claude setup-token` store their
+OAuth credentials), so the worker resolves its credential from **1Password at runtime** instead. The
+LaunchAgent inherits `OP_SERVICE_ACCOUNT_TOKEN`, so `op read` works headless; the plist carries only the
+op:// **reference** (`LEARNING_CLAUDE_TOKEN_REF`), never the value.
 
-```bash
-# Mint a long-lived token (prints an sk-ant-oat... value), then store it in 1Password.
-# Keep the value out of your shell history / any transcript — paste it into the op prompt only.
-claude setup-token
-op item create --category "API Credential" --vault Private \
-  --title "Claude Code OAuth (memory-worker)" "credential[password]=<paste-token>"
-# Your reference is then: op://Private/Claude Code OAuth (memory-worker)/credential
-```
+**Sanctioned credential: `ANTHROPIC_API_KEY`**, the existing vault item
+`op://web-variables/ANTHROPIC_API_KEY/credential` (a `sk-ant-api…` key from platform.claude.com, API
+Keys). It is non-expiring, version-independent, and wins auth precedence over the Keychain; the
+subscription OAuth token is a fallback only (was unreliable on CLI v2.1.112). No `claude setup-token`
+step is needed: the item already exists (see `credentials-map.md`), so just confirm it holds a valid key
+with no trailing newline. The full auth model, precedence order, and 401 decoding are canonical in
+[`docs/headless-claude-auth.md`](../docs/headless-claude-auth.md); read that before changing any of this.
 
 ### Install steps (run on the Mac, after explicit owner OK)
 

@@ -192,11 +192,12 @@ north star and the live production risk.
    `~/Library/LaunchAgents`, and `weekly-backup.sh` still targeted the pre-rename DB name (`sports-modeling`,
    renamed to `schnapp-bet` after 2026-05-03). Fixed both. Separately, host `sqlcmd` is broken
    (`brew install unixodbc`); the backup uses `sqlpackage` and is unaffected. Install commands retained below.
-2. **Reinstall + verify the learning-worker LaunchAgent** (038 #2/#3), and **resolve the auth fork**: the
-   `scheduled-tasks/README.md` install steps contradict themselves — lines 63-77 say mint a *Claude OAuth
-   token* and store it at `op://Private/Claude Code OAuth (memory-worker)/credential`, but line 84 uses
-   `op://web-variables/ANTHROPIC_API_KEY/credential`. Pick one (see `docs/headless-claude-auth.md`) and make
-   the doc internally consistent.
+2. **Reinstall + verify the learning-worker LaunchAgent** (038 #2/#3). Auth is **settled, not a fork**:
+   `docs/headless-claude-auth.md` sanctions `ANTHROPIC_API_KEY` (`op://web-variables/ANTHROPIC_API_KEY/credential`);
+   the contradicting OAuth-minting prose in `scheduled-tasks/README.md` was stale and has been corrected to
+   match it. The remaining work is operational: install the plist with `LEARNING_CLAUDE_TOKEN_REF` set,
+   `launchctl load`, and verify the live `claude -p` run logs `-> ANTHROPIC_API_KEY` then `done`. (Worker
+   runs bill the API key, not the subscription.)
 3. **Refresh the 2 stale memory facts** flagged by the start-gate: `keep-tracker-current`, `obsidian-state`
    (supersede-not-append).
 

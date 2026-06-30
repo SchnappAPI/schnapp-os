@@ -1037,3 +1037,13 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   the 55-day gap. Net: weekly LaunchAgent armed (survives reboots) AND the export works — NOT a credential
   issue. Open follow-ups: P1 infra-health probe (a backup-age alarm catches this regardless of cause);
   `brew install unixodbc`; the worker-auth README contradiction (038 #2).
+- 2026-06-29 Worker-auth "contradiction" RESOLVED as stale doc-drift, not an owner fork (corrects my earlier
+  flag). Canonical, dated docs/headless-claude-auth.md sanctions ANTHROPIC_API_KEY
+  (op://web-variables/ANTHROPIC_API_KEY/credential; non-expiring, wins precedence over the Keychain) for the
+  headless learning-worker; the OAuth-minting prose in scheduled-tasks/README.md was leftover from the
+  abandoned subscription-OAuth path and contradicted both the canonical doc and its own install step. Fixed
+  the README to match + point at the canonical doc; updated review-doc P0 #2. Clarified (owner Q): the worker
+  is a launchd daemon, so its auth is fully decoupled from how the owner runs interactive Claude (global vs
+  local / in-repo) — launchd doesn't source ~/.zshrc, can't read the Keychain, and gets only the plist env +
+  inherited OP_SERVICE_ACCOUNT_TOKEN; repo .claude/settings.json injects no auth vars (verified ANTHROPIC_API_KEY
+  + CLAUDE_CODE_OAUTH_TOKEN both unset this session). Worker reinstall + live-verify (038 #2/#3) still TODO.
