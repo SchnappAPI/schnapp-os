@@ -1166,3 +1166,14 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   LaunchAgent from daily 08:30 to every 30 min (`StartInterval 1800`) so a downed service alerts within ~30 min. The
   probe stays dependency-free (detection only); alerting is best-effort. Tested on the Mac (forced RED opened +
   assigned a `[infra-health]` issue; recovery auto-closed it). infra-health.md + plist updated.
+- 2026-06-30 Session wrap (review + harden + drop iMessage). ce-correctness-reviewer pass on the ops scripts:
+  fixed notify-ops `-d`->`--data-raw` (a leading `@` read a file), a bash-3.2 empty-array abort under the plist's
+  `/bin/bash`, sanitized the jq-interpolated `key`, and anchored the mac-liveness issue dedup to `startswith`.
+  Verified gh works under launchd (a GUI LaunchAgent reads the keyring) and made it explicit + monitored: a
+  `GH_TOKEN` option in ops.env + a **gh-auth self-check** in the probe (REDs via the non-gh channels if the
+  issue/email path can't fire, so the alerter can't die silently). Dropped the **iMessage** channel: self-sent
+  iMessages don't notify (Apple limitation; sends returned rc=0 but no phone ping), so it can't page — removed
+  `imsg` from ops-alert + `OPS_IMESSAGE_TO` from .env.template + the probe comment; unset on the Mac. Phone
+  alerting = GitHub issue -> email (Mail push) + GitHub mobile push (owner has the app). Wrote `handoffs/039`.
+  End state: main, CI green, 0 open issues/PRs. Optional owner task (NOT pending): Cloudflare Tunnel Health Alert
+  (dashboard) as an event-driven complement to mac-liveness.

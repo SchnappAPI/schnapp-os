@@ -105,7 +105,7 @@ done
 printf '\n'
 
 # Self-check the PRIMARY alert channel so a broken issue/email path becomes a detected RED (alerted via
-# the non-gh channels: ntfy/notification/iMessage), instead of silently failing. Sources ops.env for an
+# the non-gh channels: ntfy/notification), instead of silently failing. Sources ops.env for an
 # explicit GH_TOKEN if present, matching what ops-alert uses.
 printf '## GitHub alert channel (gh auth)\n'
 gh_ok=1

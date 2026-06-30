@@ -4,14 +4,14 @@
 # Fires ONCE per incident and resolves on recovery, across channels (all best-effort — detection
 # stays in the caller, which is dependency-free; this layer may use gh/network and must NEVER break
 # the caller):
-#   - GitHub issue, assigned to the owner -> NATIVE email. Open on red / close on green, deduped by
-#     the "[<key>] " title prefix (open-issue-as-state), so a persistent red is one issue, not spam.
-#   - ntfy push (via notify-ops.sh) + macOS notification + (optional) native iMessage, ONLY on the
-#     green->red transition and on recovery, so a frequent probe cadence does not re-alert every run.
+#   - GitHub issue, assigned to the owner -> NATIVE email + GitHub mobile push. Open on red / close on
+#     green, deduped by the "[<key>] " title prefix (open-issue-as-state), so a persistent red is one
+#     issue, not spam.
+#   - ntfy push (via notify-ops.sh) + macOS notification, ONLY on the green->red transition and on
+#     recovery, so a frequent probe cadence does not re-alert every run.
 #
 # State: ~/.config/schnapp-os/state/<key>.state  (overridable via OPS_STATE_DIR).
-# Config (Mac-local ~/.config/schnapp-os/ops.env): NTFY_URL, OPS_IMESSAGE_TO (your iMessage handle:
-#   +15551234567 or an Apple ID email), OPS_GH_REPO, OPS_GH_ASSIGNEE.
+# Config (Mac-local ~/.config/schnapp-os/ops.env): NTFY_URL, GH_TOKEN, OPS_GH_REPO, OPS_GH_ASSIGNEE.
 # Needs gh authenticated for the issue path; without gh it degrades to the push channels only.
 #
 # Usage: ops-alert.sh <red|green> <key> <title> <summary-text>
@@ -22,7 +22,7 @@ status="${1:-}"; key="${2:-}"; title="${3:-schnapp-os alert}"; summary="${4:-}"
 key="$(printf '%s' "$key" | tr -cd 'A-Za-z0-9._-')"   # interpolated into a jq filter + issue title; keep it inert
 [ -n "$key" ] || exit 0
 
-# Mac-local ops config: NTFY_URL, OPS_IMESSAGE_TO, and any OPS_* overrides (best-effort).
+# Mac-local ops config: NTFY_URL, GH_TOKEN, and any OPS_* overrides (best-effort).
 OPS_ENV="${OPS_ENV:-$HOME/.config/schnapp-os/ops.env}"
 # shellcheck disable=SC1090
 [ -r "$OPS_ENV" ] && . "$OPS_ENV"
@@ -40,33 +40,15 @@ now="$(date -u '+%Y-%m-%d %H:%M:%SZ')"
 
 have_gh() { command -v gh >/dev/null 2>&1; }
 
-imsg() { # best-effort iMessage to self. BOUNDED: a blocking Automation/TCC prompt must never hang the
-         # caller (the probe), so the send runs in the background and is hard-killed after 10s.
-  [ -n "${OPS_IMESSAGE_TO:-}" ] || return 0
-  command -v osascript >/dev/null 2>&1 || return 0
-  osascript - "$OPS_IMESSAGE_TO" "$1" >/dev/null 2>&1 <<'APPLESCRIPT' &
-on run {targetHandle, messageText}
-  tell application "Messages"
-    set targetService to 1st service whose service type = iMessage
-    send messageText to buddy targetHandle of targetService
-  end tell
-end run
-APPLESCRIPT
-  imsg_pid=$!
-  ( sleep 10; kill -9 "$imsg_pid" 2>/dev/null ) >/dev/null 2>&1 &
-  wait "$imsg_pid" 2>/dev/null || true
-  return 0
-}
-
 find_open_issue() {
   gh issue list --repo "$REPO" --state open --json number,title \
     --jq '.[] | select(.title|startswith("['"$key"']")) | .number' 2>/dev/null | head -1
 }
 
 if [ "$status" = "red" ]; then
-  # File ONE incident issue (assigned -> native email). A persistent RED keeps this single open issue
-  # as the standing record; we deliberately do NOT comment each run, so a long outage is one email,
-  # not one per probe cycle. It auto-closes on recovery.
+  # File ONE incident issue (assigned -> native email + GitHub mobile push). A persistent RED keeps this
+  # single open issue as the standing record; we deliberately do NOT comment each run, so a long outage is
+  # one notification, not one per probe cycle. It auto-closes on recovery.
   if have_gh && [ -z "$(find_open_issue)" ]; then
     printf '%s\n\nFailing checks at %s:\n\n%s\n\nThis issue auto-closes when the next run is all green.\n' \
       "$title" "$now" "$summary" \
@@ -77,7 +59,6 @@ if [ "$status" = "red" ]; then
     if command -v osascript >/dev/null 2>&1; then
       osascript -e 'display notification "RED signal — see the GitHub issue / log" with title "schnapp-os infra-health"' >/dev/null 2>&1 || true
     fi
-    imsg "$title"
   fi
   echo red > "$state_file" 2>/dev/null || true
 else
@@ -92,7 +73,6 @@ else
       done
     fi
     "$SCRIPT_DIR/notify-ops.sh" "Recovered: $title" "$ISSUE_TITLE" "default" "white_check_mark" >/dev/null 2>&1 || true
-    imsg "Recovered: $title"
   fi
   echo green > "$state_file" 2>/dev/null || true
 fi
