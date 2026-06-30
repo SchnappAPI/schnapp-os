@@ -26,6 +26,15 @@ production, so it stays awake) and is an optional upgrade: have the cron additio
 (`service_status`) each run — that needs `MAC_MCP_AUTH_TOKEN` as a repo secret and the tunnel up, so it is
 left as a documented enhancement, not wired.
 
+## Complementary layer: Cloudflare Tunnel Health Alert (enabled)
+
+The Mac is behind a Cloudflare tunnel, and the owner **enabled** Cloudflare's native **Tunnel Health Alert**
+(2026-06-30; Cloudflare Zero Trust → Notifications; free, email). It is the **event-driven sibling** of this
+cron: it emails within seconds when the Mac's `cloudflared` tunnel drops, where this routine polls every 30 min.
+They overlap by design (defense in depth): Cloudflare catches tunnel-down faster; this routine additionally
+catches **app-down-but-tunnel-up** (a Healthy tunnel can still front a broken `schnapp.bet`), which the Cloudflare
+alert cannot see. Configured + active; no further setup.
+
 ## Owner setup
 
 None to install. The only thing that makes the alert land in your inbox is GitHub's own notification setting —

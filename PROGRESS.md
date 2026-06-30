@@ -1177,3 +1177,6 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   alerting = GitHub issue -> email (Mail push) + GitHub mobile push (owner has the app). Wrote `handoffs/039`.
   End state: main, CI green, 0 open issues/PRs. Optional owner task (NOT pending): Cloudflare Tunnel Health Alert
   (dashboard) as an event-driven complement to mac-liveness.
+- 2026-06-30 Owner ENABLED the Cloudflare Tunnel Health Alert (Cloudflare Zero Trust → Notifications; free, email),
+  the event-driven complement to mac-liveness for Mac-dark. Recorded as active in scheduled-tasks/mac-liveness.md +
+  handoff 039; no longer an open/optional item (supersedes the prior wrap line's "optional owner task").

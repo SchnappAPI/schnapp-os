@@ -17,11 +17,11 @@ review. Everything is on `main`, CI green, **0 open issues / 0 open PRs**.
 ## Alerting architecture (how the owner gets paged)
 Every failure → an owner-assigned **GitHub issue** → **email** (Mail/Gmail app push) **+ GitHub mobile app push**. Two watchers, both every 30 min: **infra-health** (on the Mac — a service/agent/backup down) and **mac-liveness** (in the cloud — the Mac itself dark, the watcher-of-the-watchdog). ntfy + macOS notification are optional, transition-only secondaries.
 
-## Owner-optional (NOT pending — system is complete without it)
-**Cloudflare Tunnel Health Alert** (free, ~2 min): dash.cloudflare.com → Notifications → Add → *Tunnel Health Alert* → Email → the Mac's tunnel. Event-driven (seconds) complement to `mac-liveness` for Mac-dark.
+## Monitoring layers (all enabled — no open items)
+**Cloudflare Tunnel Health Alert** — ENABLED by owner 2026-06-30 (Cloudflare Zero Trust → Notifications; free, email). The event-driven (seconds) complement to `mac-liveness` for Mac-dark; the two overlap by design. Canonical record: [scheduled-tasks/mac-liveness.md](../scheduled-tasks/mac-liveness.md).
 
 ## Mac-local config (not in the repo)
 `~/.config/schnapp-os/ops.env` (chmod 600): `NTFY_URL` (optional ntfy topic) + `GH_TOKEN` (explicit gh auth for the alert path). `OPS_IMESSAGE_TO` removed.
 
 ## Copy-paste primer for a fresh session
-> Resuming schnapp-os after handoff 039. The silent-stop monitoring + alerting stack is live: **infra-health** (on the Mac, every 30 min) and **mac-liveness** (cloud dead-man's-switch, every 30 min) both open auto-closing **GitHub issues → email + GitHub mobile push** on failure. Root `CLAUDE.md` is the front door. Standing rule: auto commit+push to `main`, never leave open PRs. Everything is on main, CI green, 0 open issues/PRs. Only optional item: Cloudflare Tunnel Health Alert (owner dashboard, ~2 min).
+> Resuming schnapp-os after handoff 039. The silent-stop monitoring + alerting stack is live: **infra-health** (on the Mac, every 30 min) and **mac-liveness** (cloud dead-man's-switch, every 30 min) both open auto-closing **GitHub issues → email + GitHub mobile push** on failure. Root `CLAUDE.md` is the front door. Standing rule: auto commit+push to `main`, never leave open PRs. Everything is on main, CI green, 0 open issues/PRs. All monitoring layers are live — infra-health, mac-liveness, and the owner-enabled Cloudflare Tunnel Health Alert. No open items.
