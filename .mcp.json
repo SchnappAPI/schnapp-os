@@ -1,11 +1,25 @@
 {
-  "$comment": "Project-scoped MCP servers (carry over to Claude Code on the web; checked into version control per https://code.claude.com/docs/en/mcp project-scope). The Schnapp_Mac remote server (connectors/mac-mcp/server.py, live at mac-mcp.schnapp.bet/mcp) authorizes a request that carries Authorization: Bearer <MAC_MCP_AUTH_TOKEN> via its _BearerAuthMiddleware; once authorized, ALL tools (incl. shell_exec/op_run) work with no per-call token. The bearer is a REFERENCE to the MAC_MCP_AUTH_TOKEN env var (set in the cloud environment), expanded at connect time — the literal value is never stored here (secrets-as-references). Enabling this grants this surface full Mac tool access: a deliberate, owner-accepted decision recorded in decisions/0014-enable-autonomous-cloud-agent-mac-access.md (refines 0013). New project servers require one-time approval on first use (Claude Code prompts).",
+  "$comment": "Project-scoped MCP servers (carry over to Claude Code on the web; checked into version control per https://code.claude.com/docs/en/mcp project-scope). Bearers are REFERENCES to env vars, expanded at connect time — literal values never stored here (secrets-as-references). Three remote servers: (1) Schnapp_Mac — the Mac shell/SQL/files/services bridge (connectors/mac-mcp/server.py, mac-mcp.schnapp.bet/mcp); its _BearerAuthMiddleware authorizes ALL tools once Authorization: Bearer ${MAC_MCP_AUTH_TOKEN} is presented (no per-call token). Enabling it grants this surface full Mac tool access: a deliberate, owner-accepted decision (decisions/0014, refines 0013). (2) Schnapp_Secrets — the off-Mac 1Password resolver (op-mcp on Render). (3) Schnapp_Memory — the off-Mac git-backed memory lane (memory-mcp on Render). The cloud-only pair (2)+(3) is Mac-INDEPENDENT: off-Mac Code/Cowork keep secret resolution + memory R/W when the Mac is asleep. They activate only where their bearer env var is set — in cloud environments the owner sets OP_MCP_BEARER / MEMORY_MCP_BEARER, and allowlists op-mcp.onrender.com / memory-mcp-rtad.onrender.com per docs/environment-and-access.md §1. On the Mac these two stay disconnected BY DESIGN (their bearers are not in the Mac env; the Mac uses the local op CLI + git instead). claude.ai web + iPhone do NOT read this file — they reach op-mcp/memory-mcp through the Cloudflare OAuth portal mcp.schnapp.bet (claude.ai's connector UI is OAuth-only). New project servers require one-time approval on first use (Claude Code prompts).",
   "mcpServers": {
     "Schnapp_Mac": {
       "type": "http",
       "url": "https://mac-mcp.schnapp.bet/mcp",
       "headers": {
         "Authorization": "Bearer ${MAC_MCP_AUTH_TOKEN}"
+      }
+    },
+    "Schnapp_Secrets": {
+      "type": "http",
+      "url": "https://op-mcp.onrender.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${OP_MCP_BEARER}"
+      }
+    },
+    "Schnapp_Memory": {
+      "type": "http",
+      "url": "https://memory-mcp-rtad.onrender.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${MEMORY_MCP_BEARER}"
       }
     }
   }

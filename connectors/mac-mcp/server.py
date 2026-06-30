@@ -90,10 +90,9 @@ TUNNEL_CHECKS = [
 mcp = FastMCP(
     name="schnapp-mac",
     instructions=(
-        "Operational tools for the Schnapp MacBook Pro: shell access, file read/write, "
+        "Operational tools for the Schnapp Mac host: shell access, file read/write, "
         "SQL queries, service management, tunnel health, Docker/Colima, backups, and "
-        "GitHub Actions. The Mac hosts SQL Server in Docker (Colima), the production "
-        "Next.js site, the Flask live-data runner, and the self-hosted GitHub Actions runner."
+        "GitHub Actions. All tools require the MAC_MCP_AUTH_TOKEN bearer."
     ),
     host="127.0.0.1",
     port=8765,

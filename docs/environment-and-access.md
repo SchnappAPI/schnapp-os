@@ -20,11 +20,11 @@ convenience outweighs egress security — owner's call.
 |---|---|---|
 | `mac-mcp.schnapp.bet` | Mac MCP (shell, SQL, services, backups) | the `.mcp.json` `Schnapp_Mac` server |
 | `obsidian-mcp.schnapp.bet` | Obsidian MCP (notes, off-Mac) | Mac-hosted |
-| `mcp.schnapp.bet` | op-mcp OAuth connector (secrets) | |
+| `mcp.schnapp.bet` | op-mcp **+ memory-mcp** OAuth portal (secrets + memory) | Cloudflare Managed OAuth → Render origins |
 | `github-mcp.schnapp.bet` | self-hosted GitHub MCP | |
 | `mac-flask.schnapp.bet` | Flask live-data runner | |
 | `dev.schnapp.bet`, `schnapp.bet` | production site / dev | |
-| `memory-mcp.onrender.com` | cross-surface memory MCP (Render) | verify still in use |
+| `memory-mcp-rtad.onrender.com` | cross-surface memory MCP (Render) | actual Render origin; also fronted by the `mcp.schnapp.bet` portal |
 | `op-mcp.onrender.com` | op-mcp (Render) | superseded-by-Mac in some paths; keep if any client uses it |
 | `github.com`, `api.github.com` | git + GitHub API | |
 | `api.quickbase.com` | Quickbase integration | |
