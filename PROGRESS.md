@@ -1245,3 +1245,8 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   `CLAUDE_CODE_OAUTH_TOKEN` -> preserves ADR 0019 subscription billing; spawns the `claude` CLI; file-only tools =
   safer than `--dangerously-skip-permissions`), the make-or-break headless-auth proof to run FIRST, and the
   build->verify->cutover order + rollback.
+- 2026-06-30 Owner pref update (superseded `owner-working-preferences` #6): handoffs / "continue in a new session"
+  are now delivered as a **one-click `spawn_task` chip** (`mcp__ccd_session__spawn_task`) + the handoff file,
+  replacing the copy-paste primer as the default. The owner clicks the chip; it opens a fresh session in its own
+  worktree, seeded with a self-contained prompt pointing at the handoff file; it commits+pushes to main so main-only
+  stays intact. Created the Step-3 chip (`task_bbe1f481` -> handoff 040).
