@@ -1072,3 +1072,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   Global-memory fact memory/malformed-stored-secret-401.md (+ MEMORY.md index): the general lesson behind ADR
   0019 — a stored secret with stray whitespace/quotes 401s "Invalid bearer token"; verify raw bytes before
   blaming the tool/CLI. Validations: probe exit 0; test PASS; memory-frontmatter OK (11 facts); freshness OK.
+- 2026-06-30 Pushed the OAuth maintenance note to the canonical credential ledger (credentials-map.md):
+  updated the CLAUDE_CODE_OAUTH_TOKEN row (added the learning-worker consumer + expiry/re-mint maintenance —
+  minted ~2026-05, re-mint ~2027-05 via `claude setup-token`, store clean) and appended a 2026-06-30 changelog
+  row recording the ADR-0019 repoint + the in-place token clean. (The other maintenance note — keep
+  EXPECTED_AGENTS current — was already persisted in scheduled-tasks/infra-health.md + the check-infra-health.sh
+  comment, so not duplicated.)
