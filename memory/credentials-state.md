@@ -4,8 +4,8 @@ metadata:
   node_type: memory
   scope: global
   source: "decisions/0001, decisions/0004; SA rotation 2026-06-22; Phase 3B bearer rotations 2026-06-23; flatten Phase A 2026-06-26"
-  updated: 2026-06-26
-  supersedes: "2026-06-17 outage-resolved note; pre-3B 'Mac MCP client bearer PENDING' framing"
+  updated: 2026-06-30
+  supersedes: "2026-06-17 outage-resolved note; pre-3B 'Mac MCP client bearer PENDING' framing; 2026-06-26 'Owner CLIENT legs still pending' (resolved 2026-06-30 via the Schnapp Portal)"
   originSessionId: 33c726f1-b86d-4a93-8586-061ec9ca3f3e
 ---
 
@@ -85,9 +85,13 @@ redeploy. Else `op_*` keeps failing though `~/.zshrc` is correct.
   authenticated; origin `/mcp` new bearer 200 / bogus 401. (Clients reach the portal over **OAuth** — no
   static client bearer to rotate on Mac/claude.ai/iPhone.)
 
-**Owner CLIENT legs still pending (don't break anything; just refresh the client to the new value):**
-- claude.ai connector `mac-mcp.schnapp.bet` Authorization Bearer = `op://web-variables/MAC_MCP_AUTH_TOKEN/credential`.
-- Copilot / github-mcp client bearer = `op://web-variables/GITHUB_MCP_AUTH_TOKEN/credential`.
+**Owner CLIENT legs — RESOLVED 2026-06-30 via the shared Cloudflare portal (no standalone client bearers).**
+mac-mcp + github-mcp were added to the `mcp.schnapp.bet` MCP-server portal (each as a Custom-header
+`Authorization: Bearer` = the current `op://web-variables/{MAC_MCP_AUTH_TOKEN,GITHUB_MCP_AUTH_TOKEN}/credential`),
+joining op-mcp + memory-mcp. claude.ai/iPhone now reach all four through ONE OAuth connector ("Schnapp Portal"),
+so there is **no static client bearer to maintain** — a future bearer rotation updates only the Mac service env
++ the portal Custom header, never a client. The standalone claude.ai "Schnapp Mac"/"Schnapp GitHub" connectors
+are retired; obsidian-mcp stays a separate native-OAuth connector. See [[mac-cloud-access]]; ADR 0020.
 
 **Found mid-3B (Mac infra, not the SA):** (a) deployed `~/{mac,github,obsidian}-mcp/server.py` symlinked
 the **dead** `~/code/claude-kit/*` path (Phase 2 rename residual) — repointed to `~/code/schnapp-os/*`

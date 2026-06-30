@@ -20,7 +20,7 @@ convenience outweighs egress security — owner's call.
 |---|---|---|
 | `mac-mcp.schnapp.bet` | Mac MCP (shell, SQL, services, backups) | the `.mcp.json` `Schnapp_Mac` server |
 | `obsidian-mcp.schnapp.bet` | Obsidian MCP (notes, off-Mac) | Mac-hosted |
-| `mcp.schnapp.bet` | op-mcp **+ memory-mcp** OAuth portal (secrets + memory) | Cloudflare Managed OAuth → Render origins |
+| `mcp.schnapp.bet` | **Schnapp Portal** — OAuth front for op-mcp + memory-mcp + mac-mcp + github-mcp | Cloudflare Managed OAuth → the four origins (the claude.ai/iPhone path) |
 | `github-mcp.schnapp.bet` | self-hosted GitHub MCP | |
 | `mac-flask.schnapp.bet` | Flask live-data runner | |
 | `dev.schnapp.bet`, `schnapp.bet` | production site / dev | |
