@@ -1026,3 +1026,14 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   (confirmed registered; weekly Sun 05:00, now survives reboots) and triggered an immediate export to backfill
   the 55-day gap. Unresolved (owner call): the scheduled-tasks/README worker-auth contradiction (Claude OAuth
   token vs ANTHROPIC_API_KEY), to settle with the learning-worker reinstall (038 #2).
+- 2026-06-29 Backup RESOLVED + correction to the entry above. The immediate export first FAILED, but the raw
+  error ("Login failed for user 'sa' / Cannot open database 'sports-modeling'") was misleading. Using the
+  container-bundled sqlcmd (the HOST sqlcmd is broken — unixodbc/libodbc.2.dylib missing; `brew install
+  unixodbc` to repair), the canonical vault SA password authenticates fine and the sole user DB is
+  `schnapp-bet`. Real cause: the DB was renamed sports-modeling -> schnapp-bet after the last good backup
+  (2026-05-03) and ~/azure-sql-backups/weekly-backup.sh still targeted the old name. Fixed the script (DB name
+  + output prefix + retention glob -> schnapp-bet; added a justified `# shellcheck disable=SC2012` so it
+  passes the edit-time gate) and re-ran: `schnapp-bet-20260630.bacpac` (344M) verified-exported, backfilling
+  the 55-day gap. Net: weekly LaunchAgent armed (survives reboots) AND the export works — NOT a credential
+  issue. Open follow-ups: P1 infra-health probe (a backup-age alarm catches this regardless of cause);
+  `brew install unixodbc`; the worker-auth README contradiction (038 #2).

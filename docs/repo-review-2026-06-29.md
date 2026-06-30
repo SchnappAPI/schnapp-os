@@ -186,8 +186,12 @@ Merges AUDIT's worklist (Tiers 0-4) with handoff 038's open items. The ordering 
 north star and the live production risk.
 
 **P0 — operational, do first (asks-first where noted):**
-1. **Restore the SQL backup job** (production data at risk, 55 days unbacked). Asks-first. Commands in the
-   box below.
+1. **Restore the SQL backup job** — **RESOLVED 2026-06-29.** Schedule armed (LaunchAgent installed/loaded)
+   and a fresh `schnapp-bet-20260630.bacpac` (344M) verified-exported, backfilling the gap. The failure had
+   two causes, neither the credential issue the raw error implied: the LaunchAgent was never installed into
+   `~/Library/LaunchAgents`, and `weekly-backup.sh` still targeted the pre-rename DB name (`sports-modeling`,
+   renamed to `schnapp-bet` after 2026-05-03). Fixed both. Separately, host `sqlcmd` is broken
+   (`brew install unixodbc`); the backup uses `sqlpackage` and is unaffected. Install commands retained below.
 2. **Reinstall + verify the learning-worker LaunchAgent** (038 #2/#3), and **resolve the auth fork**: the
    `scheduled-tasks/README.md` install steps contradict themselves — lines 63-77 say mint a *Claude OAuth
    token* and store it at `op://Private/Claude Code OAuth (memory-worker)/credential`, but line 84 uses
