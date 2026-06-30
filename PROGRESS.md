@@ -1223,3 +1223,9 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   the "double-load" finding: it was overstated — the session registry shows the agents once, namespaced; the repo is its own
   marketplace. Real items: version mismatch (`marketplace.json` 0.1.0 -> aligned to `plugin.json`'s 0.1.1) + `plugin.json`
   description still references the superseded ADR-0005 hook-delivery (flagged for owner).
+- 2026-06-30 Corrected `plugins/core/.claude-plugin/plugin.json` description (current-state-only): it claimed the
+  plugin delivers the SessionStart/Stop hooks via `hooks.json`/`${CLAUDE_PLUGIN_ROOT}` and cited the superseded
+  decision 0005 — but `hooks.json` is intentionally empty and the hooks are wired in the repo `.claude/settings.json`
+  (ADR 0011 #2). Reworded to match reality + cite 0011 #2. (Owner asked to "execute everything"; the brain-watcher
+  LaunchAgent RESTORE was correctly denied by the Mac persistence guardrail as not specifically authorized by a broad
+  ask — paused pending an explicit owner go; the 3 connector/SDK migrations need an owner-present cutover, see below.)
