@@ -1208,3 +1208,18 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   portal, NOT an official Anthropic server; the real swap target is `github/github-mcp-server`). Records owner decisions
   (Loop->SDK GREENLIT; GitHub + Obsidian CONDITIONAL on a no-functionality-loss parity proof — Obsidian's safe form is
   auth-only, zero loss) and the P0 work shipped this session (62a837c defects + a5f0476 hardening).
+- 2026-06-30 Substrate-rethink autonomous follow-through (owner: "continue at discretion"). (1) GitHub MCP parity diff
+  (source-verified): `github/github-mcp-server` covers **40/43** hand-rolled tools, is a superset (~90+ tools / 23 toolsets),
+  and even implements the dead `download_artifact`; the 3 gaps (compare_commits->list_commits; get_branch->filter
+  list_branches; create_release->`gh release create`) are trivial workarounds = **zero hard loss**. The remote endpoint
+  `api.githubcopilot.com/mcp/` (OAuth 2.1, verified live) connects claude.ai web / iPhone DIRECTLY -> the swap also drops the
+  Cloudflare portal hop + the Mac host for GitHub. Caveat: enable the actions+orgs toolsets via URL path; the SchnappAPI org
+  may gate via the "MCP servers in Copilot" policy. Verdict: net upgrade, greenlight-ready. Updated the assessment doc
+  REPLACE row + parity gate. (2) Found a LIVE silent-stop via read-only Mac inspection: `com.schnapp.brain-watcher` (the
+  Obsidian inbox->brain-agent FSEvents watcher) is installed but **NOT loaded** — dead since 2026-06-22 (the
+  [[op-wrap-token-unquoted]] bug during the SA rotation, then unloaded, never reloaded; explains the ~2-week-stale brain
+  index). infra-health missed it (not in EXPECTED_AGENTS). Restore is near-zero risk (FSEvents watcher, no backlog
+  reprocess). Surfaced to owner for restore-vs-retire; did NOT auto-load (mutation gate + separate system). (3) Corrected
+  the "double-load" finding: it was overstated — the session registry shows the agents once, namespaced; the repo is its own
+  marketplace. Real items: version mismatch (`marketplace.json` 0.1.0 -> aligned to `plugin.json`'s 0.1.1) + `plugin.json`
+  description still references the superseded ADR-0005 hook-delivery (flagged for owner).

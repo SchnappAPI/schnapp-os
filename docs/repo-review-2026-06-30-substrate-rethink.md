@@ -55,17 +55,21 @@ rules) or the portability layer (op-mcp + memory-mcp + portal) — those stay.
 | Swap | From (hand-rolled) | To (off-the-shelf) | Payoff | Decision (2026-06-30) |
 |---|---|---|---|---|
 | **Reflective loop** | `learning-worker.sh`: `claude -p --dangerously-skip-permissions` from a LaunchAgent — no retry/timeout, silent `exit 0` on missing claude | **Agent SDK** scheduled agent; keep `learning-gate.sh` as the gate | structured calls, retries, bounded iteration, heartbeat — biggest fragility win (3 of 5 agents flagged it) | **GREENLIT** (P3). De-risked first by the failure-alert added this session. |
-| **GitHub bridge** | `github-mcp`: 43 tools, ~800 LOC, Mac-bound, own LaunchAgent + tunnel + portal slot | **GitHub official** `github-mcp-server` (remote or self-host) | deletes ~800 LOC + a service + tunnel + sleep-fragility; web/iPhone can connect it directly | **CONDITIONAL** on a parity proof — see gate below. Owner: no functionality loss. |
+| **GitHub bridge** | `github-mcp`: 43 tools, ~800 LOC, Mac-bound, own LaunchAgent + tunnel + portal slot | **GitHub official** `github-mcp-server` (remote or self-host) | deletes ~800 LOC + a service + tunnel + sleep-fragility; web/iPhone can connect it directly | **PARITY PROVEN 2026-06-30 → GREENLIGHT-ready.** 40/43 covered; 3 trivial gaps w/ workarounds (below). |
 | **Obsidian** | `obsidian-mcp`: ~180 LOC hand-rolled OAuth 2.1/PKCE/DCR | **auth-only → bearer via portal** (ADR 0020 pattern). Keep all 7 tools incl. `inbox_drop`→brain-agent + `get_index` | deletes the hardest-to-debug code in the stack | **CONDITIONAL → auth-only is zero-loss** (see gate). The "community MCP for basic tools" variant is **dropped** (it would risk the brain-agent integration). |
 
 **Parity gates (owner's "no functionality loss" condition):**
-- **GitHub:** the hand-rolled 43 tools are all standard GitHub REST ops (no custom logic; one tool,
-  `download_artifact`, is even dead — documented, never implemented). GitHub's official server is a
-  **superset** (repos/issues/PRs/Actions/code-search/releases/orgs/notifications), and being remote-hosted it
-  can be added **directly** as a claude.ai connector — which also *removes* a portal dependency. **Likely
-  zero-loss, but not yet proven.** Pre-greenlight step: diff the official server's current tool list against
-  the 43 in use, confirm hosting/auth fits the multi-surface need, run it alongside, then deregister. The
-  "why it was built this way" reasons (full coverage + portal-fronting for web/iPhone) are both satisfied.
+- **GitHub — PARITY PROVEN (2026-06-30, source-verified):** `github/github-mcp-server` covers **40 of 43**
+  tools; it is a **superset** (~90+ tools, 23 toolsets) and even *implements* the `download_artifact` the
+  hand-rolled one only stubbed. **3 trivial gaps, all with workarounds, 0 hard loss:** `compare_commits`
+  (→ `list_commits` between refs), `get_branch` (→ filter `list_branches`), `create_release` (→ `gh release
+  create`; the only true write gap, rare). The **remote** endpoint `https://api.githubcopilot.com/mcp/`
+  (OAuth 2.1, verified live) can be added **directly** as a claude.ai web / iPhone connector → **drops the
+  Cloudflare portal hop for GitHub *and* the Mac host**. Migration caveats: enable the `actions`+`orgs`
+  toolsets via the URL path (`/mcp/x/repos,issues,actions,orgs`) or Actions/CI parity silently won't load;
+  call sites move to consolidated names (`trigger_workflow`→`actions_run_trigger` with a `method` arg); **if
+  the SchnappAPI org gates it, an admin must enable "MCP servers in Copilot."** For repo-scoped blast radius
+  instead of account-wide OAuth, self-host with a fine-grained PAT. **Verdict: net upgrade — greenlight.**
 - **Obsidian:** the *reason* it is hand-rolled is `inbox_drop`→brain-agent FSEvents + `get_index` — no
   off-the-shelf server has these. **Therefore only the auth mechanism changes** (OAuth→bearer); every tool
   and integration stays. **Zero functionality loss.** Mac-bound either way (ADR 0008).
@@ -104,15 +108,20 @@ rules) or the portability layer (op-mcp + memory-mcp + portal) — those stay.
 |---|---|---|
 | op-mcp + memory-mcp heartbeat | NEW `render-health.yml` cron (30 min, Mac-independent) pings both `/health`, opens/auto-closes a `[render-health]` issue on down, doubles as keep-warm. The only previously-unmonitored surface. | **DONE** `a5f0476` |
 | learning-worker failure alert | `ops-alert.sh` RED on real failures / GREEN on healthy runs — closes the silent-swallow (a failed nightly run had no off-Mac signal). | **DONE** `a5f0476` |
-| `com.schnapp.brain-watcher` | installed LaunchAgent, no repo file, not in `EXPECTED_AGENTS` = unauditable. Document + add to the probe, or retire. | **OPEN** (P1) |
+| `com.schnapp.brain-watcher` | **Found DEAD since 2026-06-22** (Obsidian inbox→brain-agent watcher; killed by the op-wrap unquoted-token bug during the SA rotation, then unloaded, never reloaded — a real silent-stop infra-health missed because it isn't in `EXPECTED_AGENTS`). Restore is near-zero risk (`launchctl load`; no backlog reprocess); then add to `EXPECTED_AGENTS`. | **OPEN — awaiting owner restore/retire** |
 
 ---
 
 ## CUT — dedup / maintenance tax (P1, not yet done)
 
-- **schnapp-os-core double-load:** 3 agents + several skills exist *both* as `plugins/core/` source *and* the
-  installed `schnapp-os-core` marketplace plugin → load twice on the dev machine. Single-source it (repo
-  dogfoods source; other machines consume the marketplace; do not load both).
+- **Plugin manifest hygiene** (the "double-load" was overstated — the session registry shows the agents
+  *once*, namespaced `schnapp-os-core:*`; the repo is its own marketplace via `.claude-plugin/marketplace.json`).
+  Real items: (a) version mismatch — `marketplace.json` said `0.1.0`, `plugin.json` says `0.1.1` (aligned to
+  `0.1.1` this session); (b) `plugin.json`'s description still describes the **superseded** ADR-0005
+  hook-delivery (hooks via `hooks.json`/`${CLAUDE_PLUGIN_ROOT}`) vs the current ADR-0011 #2 (empty `hooks.json`;
+  hooks in repo `.claude/settings.json`) — needs an owner call on whether the Part-10 plugin-delivered-hooks
+  intent still stands before rewording; (c) the known pinned-snapshot staleness ([[plugin-registry-snapshot-gotchas]])
+  — re-pin to HEAD after changes.
 - **Execute the deferred prune** ([`docs/intent-capture-2026-06-23.md §3`](intent-capture-2026-06-23.md);
   its "both loops fire" gate is now met): delete `surfaces/code-work-machines.md` (explicit STUB, zero usage),
   retire orphan `check-op-refs.sh` (warn-only), merge `context/personal`+`context/work` → one file, demote
