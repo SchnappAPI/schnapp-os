@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # learning-worker.sh — nightly learning-loop driver (Phase 4, pre-commit gate, ADR 0016).
 #
-# Reads the local learning queue (git-ignored .learning-queue.tsv), has a headless `claude -p`
+# Reads the local learning queue (git-ignored .learning-queue.tsv), has a headless Agent SDK run
 # distill+classify each capture and WRITE any proposed rule/fact edit to the working tree (no branch,
 # no commit, no PR), then the WORKER gates the working-tree diff (learning-gate.sh): a clean proposal
 # is committed straight to main; anything the gate holds is filed as a GitHub issue. No branches —
@@ -13,13 +13,13 @@
 #   LEARNING_ARCHIVE — archive file (default: alongside queue, .learning-queue.archive.tsv)
 #   LEARNING_CLAUDE_TOKEN_REF — op:// ref to the Claude credential (headless auth; see docs/headless-claude-auth.md)
 #
-# --dry-run: exercises queue/classify/archive plumbing with NO claude call, NO git, NO network.
+# --dry-run: exercises queue/classify/archive plumbing with NO distill call, NO git, NO network.
 #
 # Safety:
 #   - Empty/missing queue → message + exit 0.  Live path needs the `claude` CLI; absent → no-op exit 0.
-#   - Claude runs FULL-CAPABILITY (--dangerously-skip-permissions: all tools incl. Bash, no prompts),
-#     per owner directive (max capability, never blocked). The prompt steers it to the gated flow
-#     (edit the .md; let the worker commit+gate), but it is not hard-sandboxed.
+#   - Distillation runs via the Agent SDK (learning_distill.py): file-edit tools only
+#     (Read/Edit/Write/Grep/Glob, NO Bash/git/network), bounded turns + timeout + retry-once. The
+#     prompt scopes edits to rules/memory; the worker gates+commits the diff (not a hard sandbox).
 #   - Default flow: the worker gates the resulting diff (learning-gate.sh) and pushes only APPROVED
 #     changes to main; held proposals never touch main (→ issue).
 #   - Archiving (not deleting) means a capture is never silently lost.
@@ -72,28 +72,6 @@ if ! command -v claude >/dev/null 2>&1; then
   exit 0
 fi
 
-PROMPT="$(cat <<PROMPT_EOF
-You are the nightly learning worker for this repo (scheduled-tasks/memory-consolidation.md).
-
-For each queued correction below: distill it to a reusable principle and classify it with the
-learn-route procedure (plugins/core/skills/learn-route/SKILL.md):
-  - behavioral / how-to-work principle → sharpen the EXISTING rule in plugins/core/rules/global/
-  - durable fact → supersede in memory/ (one fact, one file; bump updated:, source: correction)
-  - mechanical / already-covered / duplicate → make NO change and say so
-
-To propose a change: EDIT the target .md file in the working tree and BUMP its frontmatter updated:
-to today's date. Do NOT create a branch, commit, open a PR, or run any git/shell command — just leave
-the edited .md in the working tree. The worker gates the diff and commits clean changes to main itself.
-
-DEDUPE first: if the principle is already present in the target file (or anywhere under rules/memory),
-make NO change. Keep each edit SMALL and IN-SCOPE — only .md files under plugins/core/rules/ or
-memory/. Never touch code, CI, or anything else.
-
-Queued corrections:
-$(cat "$Q")
-PROMPT_EOF
-)"
-
 # Run from repo root so the headless session loads CLAUDE.md / .claude/settings.json + relative paths.
 cd "$REPO_ROOT" || { echo "learning-worker: ERROR — cannot cd to repo root '$REPO_ROOT'." >&2; exit 1; }
 
@@ -131,13 +109,16 @@ fi
 git checkout -q main 2>/dev/null || true
 git reset -q --hard origin/main 2>/dev/null || true
 
-echo "learning-worker: processing $(wc -l < "$Q" | tr -d ' ') capture(s) via claude -p ..."
-# Full capability (owner directive): all tools incl. Bash, no permission prompts. The prompt steers
-# it to edit-only and let the worker gate+commit; the gate is the default path, not a hard sandbox.
-if ! printf '%s' "$PROMPT" | claude -p --dangerously-skip-permissions; then
+echo "learning-worker: processing $(wc -l < "$Q" | tr -d ' ') capture(s) via Agent SDK (learning_distill.py) ..."
+# Bounded, file-scoped Agent SDK distillation (no Bash/git/network). The worker gates+commits the diff.
+export LEARNING_QUEUE="$Q"
+DISTILL_PY="$REPO_ROOT/plugins/core/scripts/learning_distill.py"
+DISTILL_PYTHON="${LEARNING_DISTILL_PYTHON:-$HOME/.venvs/learning-distill/bin/python}"
+[ -x "$DISTILL_PYTHON" ] || DISTILL_PYTHON="$(command -v python3)"
+if ! "$DISTILL_PYTHON" "$DISTILL_PY"; then
   git reset -q --hard origin/main 2>/dev/null || true
-  echo "learning-worker: ERROR — claude run failed; queue NOT drained (captures preserved)." >&2
-  alert red learning-worker "Learning worker failed" "claude -p run failed; queue preserved, will retry"
+  echo "learning-worker: ERROR — Agent SDK distillation failed; queue NOT drained (captures preserved)." >&2
+  alert red learning-worker "Learning worker failed" "Agent SDK distillation failed; queue preserved, will retry"
   exit 1
 fi
 

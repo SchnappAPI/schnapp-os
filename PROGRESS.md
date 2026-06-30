@@ -1250,3 +1250,12 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   replacing the copy-paste primer as the default. The owner clicks the chip; it opens a fresh session in its own
   worktree, seeded with a self-contained prompt pointing at the handoff file; it commits+pushes to main so main-only
   stays intact. Created the Step-3 chip (`task_bbe1f481` -> handoff 040).
+- 2026-06-30 **Step 3 cutover — Loop→Agent SDK** (substrate-rethink P3, handoff 040; ADR 0021). `learning-worker.sh`
+  distillation swapped from `claude -p --dangerously-skip-permissions` to the bounded, file-scoped
+  `learning_distill.py` (claude-agent-sdk 0.2.110; allowed_tools=Read/Edit/Write/Grep/Glob, NO Bash/git/network;
+  acceptEdits; max_turns/timeout/retry; fail-loud, never silent exit 0). Make-or-break PROVEN before cutover:
+  subscription OAuth (`CLAUDE_CODE_OAUTH_TOKEN`, `ANTHROPIC_API_KEY` unset) authenticates headless via the SDK +
+  edits a file — ADR 0019 cost model intact. Unit-verified: SDK API fields, `--dry-run`/empty-queue plumbing,
+  shellcheck CLEAN, `test-learning-worker.sh` 7/0 (bash 3.2 + ubuntu CI). `learning-gate.sh` + LaunchAgent
+  UNCHANGED; reversible (revert one block). Header comments refreshed to the file-scoped model (anti-stale).
+  Controlled live e2e runs immediately post-push (result in the next line).
