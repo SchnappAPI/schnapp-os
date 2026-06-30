@@ -25,8 +25,9 @@ metadata:
 > set). Surfaced by the Step-3 Agent-SDK e2e. **Fixed `005da67`** (presence-only `set`/`UNSET`, never the value)
 > + the 1 leaked log line scrubbed (`grep` count 0). The value also reached one Claude Code **transcript** (may
 > sync to Anthropic). By the owner's stated criteria (local/account-only, not public, no third party) this is in
-> the accepted envelope; the transcript-sync vector is the only new wrinkle. **SA-token rotation RECOMMENDED but
-> OWNER-DECISION (pending as of 2026-06-30);** if rotating, follow the ROTATION GOTCHA below + `rotate-secret`.
+> the accepted envelope; the transcript-sync vector is the only new wrinkle. **Owner DECLINED rotation 2026-06-30
+> — NO rotation** (local log [scrubbed] + transcript only = within the accepted-risk envelope; re-open only on
+> public / third-party exposure). If ever rotating, follow the ROTATION GOTCHA below + `rotate-secret`.
 > Live SA unchanged: integration `55TZ…` (rotated 2026-06-22).
 
 **VAULT FLATTEN — Phase A done 2026-06-26 (owner-directed, overrides the 0011 deferral; flatten-only, NO rotation).**
