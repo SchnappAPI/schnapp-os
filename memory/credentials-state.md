@@ -18,6 +18,17 @@ metadata:
 > NOT "nothing exposed" — plaintext in a private pushed repo. Don't re-flag unless it goes public or a
 > third party gains access. See [[credential-leak-2026-06-17]].
 
+> 🟠 **NEW leak 2026-06-30 (runtime, code FIXED + log scrubbed) — distinct from the export dump above.** A
+> `learning-worker.sh` auth-log line printed the **live SA token VALUE** to stdout →
+> `~/Library/Logs/schnapp-os/memory-consolidation.log` on every auth-resolving run — presence-idiom bug
+> `OP_SA:${OP_SERVICE_ACCOUNT_TOKEN:+set}${OP_SERVICE_ACCOUNT_TOKEN:-UNSET}` (the `:-` arm emits the VALUE when
+> set). Surfaced by the Step-3 Agent-SDK e2e. **Fixed `005da67`** (presence-only `set`/`UNSET`, never the value)
+> + the 1 leaked log line scrubbed (`grep` count 0). The value also reached one Claude Code **transcript** (may
+> sync to Anthropic). By the owner's stated criteria (local/account-only, not public, no third party) this is in
+> the accepted envelope; the transcript-sync vector is the only new wrinkle. **SA-token rotation RECOMMENDED but
+> OWNER-DECISION (pending as of 2026-06-30);** if rotating, follow the ROTATION GOTCHA below + `rotate-secret`.
+> Live SA unchanged: integration `55TZ…` (rotated 2026-06-22).
+
 **VAULT FLATTEN — Phase A done 2026-06-26 (owner-directed, overrides the 0011 deferral; flatten-only, NO rotation).**
 Created 10 split items in `web-variables`, values COPIED from the bundles: `ADMIN_PASSCODE`,
 `ADMIN_REFRESH_CODE`, `AUTH_TOKEN_SECRET`, `ODDS_API_KEY`, `RUNNER_API_KEY`, `SQL_CONNECTION_STRING`
