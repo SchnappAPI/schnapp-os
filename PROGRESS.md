@@ -107,3 +107,12 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   06-23 "riskier" deferral. Paused before executing at owner request — folded into a broader
   streamline/simplify brainstorm instead of a standalone migration. Wrote handoffs/042 (full
   scope + context) and a `spawn_task` chip for a fresh Opus 4.8 session.
+- 2026-06-30 Streamline brainstorm (session 042+) → refined plan of action. Verified 5-agent
+  read-only audit (diagnosis: capture works; enforcement + fragmentation are the disease —
+  code/hook fixes stop recurrence, prose does not). Locked design + phased build plan. Key
+  decisions: two-repo split on the atomicity line (new PRIVATE `schnapp-vault` = the Obsidian
+  vault, moved out of OneDrive; memory lane migrates there); ONE flat CI-enforced memory schema
+  (fixes the dead supersede-check + 3-schema drift); enforcement ladder (advisory→memory→hook→CI)
+  with recurrence-as-escalation-trigger; flatten the plugin → native `.claude/` (resolves `#2`,
+  yes). Spec `docs/superpowers/specs/2026-06-30-schnapp-os-streamline-design.md` + plan
+  `docs/superpowers/plans/2026-06-30-schnapp-os-streamline.md`. Not yet executed.
