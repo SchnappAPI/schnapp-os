@@ -14,6 +14,7 @@ fails a push if this file is out of date. Do not hand-edit.
 - **Speed by default** — `rules/global/speed-by-default.md`
 - **Verify before asserting** — `rules/global/verify-before-asserting.md`
 - **Working style** — `rules/global/working-style.md`
+- **Writing style (instruction files)** — `rules/global/writing-style.md`
 
 ## Rule modules (path-scoped reference library; `@import` per project as needed)
 

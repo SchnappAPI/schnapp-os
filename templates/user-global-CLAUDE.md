@@ -6,7 +6,7 @@
   Why @import and not a symlink: ~/.claude/CLAUDE.md @imports the global rules straight from the
   repo, so they load in every project and stay current via the SessionStart `git pull` (Part 2.2).
   A `~/.claude/rules/` symlink was deliberately skipped (that path is itself an auto-load level, so
-  symlink + @import would double-load). @import has no glob support, so the 7 files are listed
+  symlink + @import would double-load). @import has no glob support, so the 8 files are listed
   explicitly — if the global rule set in rules/global/ changes, update this list AND
   every machine's ~/.claude/CLAUDE.md together (the current set is in CATALOG.md).
 -->
@@ -26,3 +26,4 @@ NOT global — they live in `rules/modules/` as a plain reference library; a pro
 @~/code/schnapp-os/rules/global/verify-before-asserting.md
 @~/code/schnapp-os/rules/global/anti-stale.md
 @~/code/schnapp-os/rules/global/speed-by-default.md
+@~/code/schnapp-os/rules/global/writing-style.md
