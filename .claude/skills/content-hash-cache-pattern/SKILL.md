@@ -9,7 +9,7 @@ Cache expensive file-processing results keyed by the SHA-256 of the file's
 *contents*, not its path. A rename or move is a cache hit; an edit
 auto-invalidates. No index file: each entry is `{hash}.json`, an O(1) lookup.
 This composes the read-once / cache-expensive-reads principles in
-[speed-by-default](../../rules/global/speed-by-default.md) for the file-processing
+[speed-by-default](../../../rules/global/speed-by-default.md) for the file-processing
 case; for hot in-memory reads see the `latency-critical-systems` skill.
 
 ## When it fits

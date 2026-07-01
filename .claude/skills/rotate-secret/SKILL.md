@@ -9,7 +9,7 @@ A rotation is not "change the value in 1Password." It is: mint a fresh value, up
 place the value is set**, restart what caches it, and verify resolution — in lockstep, one item at
 a time. Miss a leg and that surface breaks (or keeps serving the dead value). The authoritative
 where-to-update list is the item's **`consumed_by`** column in
-[credentials-map.md](../../../../credentials-map.md); the rotation is logged in that file's
+[credentials-map.md](../../../credentials-map.md); the rotation is logged in that file's
 append-only **changelog**.
 
 > A value that leaked is dead the moment it is exposed. Relocating or redacting it is not enough —
@@ -43,7 +43,7 @@ credential tool once it is built — until then, [session-hygiene](../session-hy
 
 ## Protocol (one item at a time)
 
-1. **List the legs.** Read the item's `consumed_by` in the [map](../../../../credentials-map.md).
+1. **List the legs.** Read the item's `consumed_by` in the [map](../../../credentials-map.md).
    That is the complete checklist for this rotation. If it looks incomplete, fix the map first.
 2. **Mint a fresh value** (never reuse the old one):
    | Kind | How | Who |
@@ -82,7 +82,7 @@ credential tool once it is built — until then, [session-hygiene](../session-hy
 6. **Verify** on each surface: `op whoami` where the SA changed, `op read` the new ref, connector
    `op_health`, the consuming app (HTTP 200 / job runs). Old value must now fail.
 7. **Record** in the map changelog (date · change · every location updated · done ✓) and flip any
-   matching tracker box in the same commit ([anti-stale](../../rules/global/anti-stale.md)).
+   matching tracker box in the same commit ([anti-stale](../../../rules/global/anti-stale.md)).
 
 ## Gotchas (these break rotations)
 

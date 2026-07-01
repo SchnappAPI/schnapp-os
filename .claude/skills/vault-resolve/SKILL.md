@@ -6,10 +6,10 @@ description: Use when you need a secret's actual value at runtime — reading an
 # vault-resolve
 
 The `web-variables` 1Password vault is the **sole source** of secret values
-([secrets-as-references](../../rules/global/secrets-as-references.md)). This skill is how to
+([secrets-as-references](../../../rules/global/secrets-as-references.md)). This skill is how to
 pull a value at runtime on whatever surface you are on, never how to store one in a file. The
 canonical index of what every reference is and where it resolves is
-[credentials-map.md](../../../../credentials-map.md) — read it to find the right item/field.
+[credentials-map.md](../../../credentials-map.md) — read it to find the right item/field.
 
 ## Resolve by surface
 
@@ -30,7 +30,7 @@ The Mac MCP tools (`ec6a9080…` / `e4f92151…`) often return `unauthorized` in
 
 `op://web-variables/<ITEM>/<field>` — `<field>` must match the item's **real field label**, which
 is NOT always `credential`. Verified: `GITHUB_PAT` resolves at `/token`, not `/credential`. The
-[map](../../../../credentials-map.md) records the exact `op_ref` per item — trust it, or discover
+[map](../../../credentials-map.md) records the exact `op_ref` per item — trust it, or discover
 labels with `op item get "<ITEM>" --vault web-variables --format json` (concealed fields stay
 masked without `--reveal`). A wrong label resolves to empty and fails silently downstream.
 
@@ -44,7 +44,7 @@ masked without `--reveal`). A wrong label resolves to empty and fails silently d
 - A value that has appeared in any tracked file, log, or transcript is **compromised** → rotate it
   ([rotate-secret](../rotate-secret/SKILL.md)), do not just relocate it.
 - New env var? Add it to `.env.template` as an `op://` URI, never a literal
-  ([secrets-as-references](../../rules/global/secrets-as-references.md)).
+  ([secrets-as-references](../../../rules/global/secrets-as-references.md)).
 
 ## Quick reference
 

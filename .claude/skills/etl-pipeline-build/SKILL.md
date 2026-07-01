@@ -9,12 +9,12 @@ Build the owner's standard pipeline shape: **extract → validate → transform 
 bulk upsert into SQL Server 2022**, scheduled and unattended. This skill is the workflow;
 the conventions live in the rules it composes — do not restate them here.
 
-Composes: [`activity/etl-pipeline`](../../rules/modules/activity/etl-pipeline.md),
-[`lang/python`](../../rules/modules/lang/python.md),
-[`lang/sql-server`](../../rules/modules/lang/sql-server.md),
-[`lang/env-vars`](../../rules/modules/lang/env-vars.md),
-[`global/speed-by-default`](../../rules/global/speed-by-default.md),
-[`global/secrets-as-references`](../../rules/global/secrets-as-references.md).
+Composes: [`activity/etl-pipeline`](../../../rules/modules/activity/etl-pipeline.md),
+[`lang/python`](../../../rules/modules/lang/python.md),
+[`lang/sql-server`](../../../rules/modules/lang/sql-server.md),
+[`lang/env-vars`](../../../rules/modules/lang/env-vars.md),
+[`global/speed-by-default`](../../../rules/global/speed-by-default.md),
+[`global/secrets-as-references`](../../../rules/global/secrets-as-references.md).
 For T-SQL specifics use the **sql-server-patterns** skill; for source-specific work use the
 **quickbase** / **appfolio** skills.
 

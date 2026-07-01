@@ -8,7 +8,7 @@ description: Use when the user asks "what's loaded here", "what can this surface
 Report what is actually loaded on the **current** surface versus what its profile
 expects, and give the always-complete fallback for anything missing. Never assert a
 capability exists without probing it (see
-[verify-before-asserting](../../rules/global/verify-before-asserting.md)).
+[verify-before-asserting](../../../rules/global/verify-before-asserting.md)).
 
 ## 1. Identify the surface
 
@@ -20,13 +20,13 @@ Infer from observable signals, then state which it is:
 - **iPhone** — most limited; hosted connectors only.
 
 If ambiguous, probe (try a read-only `ls`/shell; list MCP tools) or ask. Read the matching
-[`surfaces/<surface>.md`](../../../../surfaces/) profile for the expected baseline.
+[`surfaces/<surface>.md`](../../../surfaces/) profile for the expected baseline.
 
 ## 2. Probe each capability (don't assume)
 
 | Capability | How to check |
 |---|---|
-| Global rules | Are the [`rules/global/`](../../rules/global/) rules in context this session? |
+| Global rules | Are the [`rules/global/`](../../../rules/global/) rules in context this session? |
 | Memory lane | Is the global `memory/` lane present and is `autoMemoryDirectory` honored (trust dialog accepted)? |
 | Credentials | Does a secret resolve? `op_health` on the 1Password connector, or `op whoami` on Code. |
 | Connectors/MCP | List available MCP tools; compare to the profile (1Password, GitHub, Mac ops, context7, cloudflare). |
@@ -39,7 +39,7 @@ If ambiguous, probe (try a read-only `ls`/shell; list MCP tools) or ask. Read th
 Output a compact table: **Capability | Expected (per profile) | Present now | Fallback if missing**.
 
 For every missing item, give the always-complete path (per
-[`surfaces/README.md`](../../../../surfaces/README.md)): Native → Remote MCP (call the Mac /
+[`surfaces/README.md`](../../../surfaces/README.md)): Native → Remote MCP (call the Mac /
 hosted connector) → Generated prompt. Never leave a gap as a dead end — state the route.
 
 End with a one-line verdict: what works here, what to route elsewhere, and (Code) whether any

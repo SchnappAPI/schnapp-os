@@ -8,8 +8,8 @@ description: Use when parsing structured or semi-structured text (vendor reports
 Default to deterministic parsing; reach for an LLM only where the input is genuinely
 irregular. Deterministic parsing handles the bulk cheaply and reproducibly; reserve LLM
 calls for the low-confidence tail. The cost/latency case for this is
-[speed-by-default](../../rules/global/speed-by-default.md); confirm the parse actually
-matches the source before trusting it ([verify-before-asserting](../../rules/global/verify-before-asserting.md)).
+[speed-by-default](../../../rules/global/speed-by-default.md); confirm the parse actually
+matches the source before trusting it ([verify-before-asserting](../../../rules/global/verify-before-asserting.md)).
 
 ## Pick the tool
 

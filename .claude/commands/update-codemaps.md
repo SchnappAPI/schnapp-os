@@ -7,7 +7,7 @@ argument-hint: "[target-dir]"
 Produce a compact, token-lean map of a repo so a fresh session (or a subagent) can orient
 without reading every file. For the owner's ETL repos the map's spine is the **data flow**:
 source → script → table. A generated projection, not hand-maintained prose (see
-[`global/anti-stale`](../rules/global/anti-stale.md)).
+[`global/anti-stale`](../../rules/global/anti-stale.md)).
 
 Steps Claude follows:
 

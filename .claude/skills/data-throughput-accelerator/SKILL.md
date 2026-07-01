@@ -8,11 +8,11 @@ description: Use when a backfill, bulk ingest, export, warehouse load, manifest 
 For when the bottleneck is moving, transforming, or landing lots of data. Goal:
 faster *correct* data in the right table, with proof. The mechanical primitives
 (read-once, module cache, thread pool, set-based SQL, bulk insert,
-`fast_executemany`) live in [speed-by-default](../../rules/global/speed-by-default.md);
+`fast_executemany`) live in [speed-by-default](../../../rules/global/speed-by-default.md);
 this skill applies them to a throughput problem. Build the pipeline with the
 `etl-pipeline-build` skill, time variants with the `benchmark` skill, profile
 deeply with the `performance-optimizer` agent. See also
-[../../rules/modules/activity/etl-pipeline.md](../../rules/modules/activity/etl-pipeline.md).
+[../../rules/modules/activity/etl-pipeline.md](../../../rules/modules/activity/etl-pipeline.md).
 
 ## Separate the stages before optimizing
 

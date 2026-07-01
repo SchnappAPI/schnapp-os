@@ -20,7 +20,7 @@ This is for the owner's OWN knowledge. For external library/framework/API docs, 
 | **Code on the Mac** | The filesystem `obsidian` (npm) MCP: `mcp__obsidian__search-vault`, `mcp__obsidian__read-note`, `mcp__obsidian__list-available-vaults`. Or read the vault files directly at `~/Documents/Obsidian` (a symlink to the canonical `~/Library/CloudStorage/OneDrive-Schnapp/Obsidian`). |
 | **Off-Mac** (claude.ai, iPhone, Cowork) | The hosted **obsidian** connector at `https://obsidian-mcp.schnapp.bet/mcp` (Mac-hosted FastMCP; full service detail in `schnapp-bet` → `docs/CONNECTIONS.md` → "Obsidian MCP"). Read with `search_notes`, `read_note`, `list_notes` (write tools `write_note`/`append_note`/`inbox_drop` also exist — read-only suffices for lookup). **Mac-dependency caveat:** this connector is hosted on the Mac, so if the Mac is off it is unavailable — fall back to the GitHub copy / this repo's `memory/` + `decisions/`. |
 
-Probe before relying on it (see [`verify-before-asserting`](../../rules/global/verify-before-asserting.md)):
+Probe before relying on it (see [`verify-before-asserting`](../../../rules/global/verify-before-asserting.md)):
 if the obsidian tools are not present (or the Mac is off), say so and fall back to the GitHub copy
 (`SchnappAPI/obsidian-vault`, or schnapp-os's own `memory/`/`decisions/` in this repo).
 
@@ -33,7 +33,7 @@ if the obsidian tools are not present (or the Mac is off), say so and fall back 
 3. **Answer** from what the vault actually says; quote the note/path. If the vault has nothing,
    say so plainly rather than guessing (the fact may not be captured yet).
 4. If you discover the fact was missing and is durable, capture it per
-   [`knowledge-capture`](../../rules/global/knowledge-capture.md) (memory lane / a vault note) so
+   [`knowledge-capture`](../../../rules/global/knowledge-capture.md) (memory lane / a vault note) so
    the next lookup finds it.
 
 ## Notes

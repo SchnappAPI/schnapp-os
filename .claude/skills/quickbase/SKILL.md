@@ -8,9 +8,9 @@ description: Use when integrating Quickbase — calling the Quickbase JSON RESTf
 General Quickbase integration. Quickbase is an external, untrusted data source: validate
 before the DB, keep all IDs in the project lane, secrets as `op://` refs. For loading the
 pulled data, compose the **etl-pipeline-build** skill. Conventions:
-[`tool/quickbase`](../../rules/modules/tool/quickbase.md),
-[`coding/input-validation`](../../rules/modules/coding/input-validation.md),
-[`global/secrets-as-references`](../../rules/global/secrets-as-references.md).
+[`tool/quickbase`](../../../rules/modules/tool/quickbase.md),
+[`coding/input-validation`](../../../rules/modules/coding/input-validation.md),
+[`global/secrets-as-references`](../../../rules/global/secrets-as-references.md).
 
 ## API shape (JSON RESTful API v1)
 

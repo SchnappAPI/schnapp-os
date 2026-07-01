@@ -6,12 +6,12 @@ description: Use to clear open pull requests across the SchnappAPI org on demand
 # pr-sweep
 
 Enforces the owner's standing rule **never leave open PRs** on demand (owner-working-preferences #7;
-`main`-only per [ADR 0016](../../../../decisions/0016-no-branches-precommit-gate.md) /
-[0017](../../../../decisions/0017-web-sessions-target-main.md)). Builds on — does not duplicate —
+`main`-only per [ADR 0016](../../../decisions/0016-no-branches-precommit-gate.md) /
+[0017](../../../decisions/0017-web-sessions-target-main.md)). Builds on — does not duplicate —
 [`status`](../status/SKILL.md) (reports open PRs among other signals) and the read-only
-[`sync/unmerged`](../../../../scheduled-tasks/sync-unmerged-check.md) routine (flags stray **branches**).
+[`sync/unmerged`](../../../scheduled-tasks/sync-unmerged-check.md) routine (flags stray **branches**).
 This skill is the **PR-object** action: classify, then close the dead and merge the clean. Probe every
-signal; never assume ([`verify-before-asserting`](../../rules/global/verify-before-asserting.md)).
+signal; never assume ([`verify-before-asserting`](../../../rules/global/verify-before-asserting.md)).
 
 ## 1. Inventory — one org-wide call (not per-repo poking)
 
@@ -32,7 +32,7 @@ gh pr view <n> --repo SchnappAPI/<repo> --json number,title,isDraft,mergeable,me
 |---|---|---|
 | **Empty / stray** | `additions==0 && deletions==0`; stray `claude/*` branch, no content | **Close** (safe) |
 | **Moot / superseded** | targets a migrated/dead repo, or the change is overtaken by events | **Close** (safe) with a reason |
-| **Mergeable-clean engineering** | `mergeable=CLEAN`, reviewed, low-risk (docs/tooling), CI green | **Merge** per [ADR 0015](../../../../decisions/0015-standing-agent-authority-and-auto-merge.md) (auto-merge *green* work) |
+| **Mergeable-clean engineering** | `mergeable=CLEAN`, reviewed, low-risk (docs/tooling), CI green | **Merge** per [ADR 0015](../../../decisions/0015-standing-agent-authority-and-auto-merge.md) (auto-merge *green* work) |
 | **Needs-review** | touches prod/auth/secrets/migrations, OR no visible CI, OR `CONFLICTING`/`draft` | **Do not auto-merge.** Read the diff (`gh pr diff`), summarize, surface for explicit approval |
 
 ## 3. Act — safe vs asks-first (framework principle F)
@@ -49,7 +49,7 @@ gh pr view <n> --repo SchnappAPI/<repo> --json number,title,isDraft,mergeable,me
 
 - **Code:** `gh` as above.
 - **web / iPhone / Cowork:** no `gh`. Use the **GitHub connector** (github-mcp, fronted by the Schnapp
-  Portal — [ADR 0020](../../../../decisions/0020-portal-front-mac-github-mcp.md)): list PRs, close/merge
+  Portal — [ADR 0020](../../../decisions/0020-portal-front-mac-github-mcp.md)): list PRs, close/merge
   through it. If the connector is absent, **generate a ready-to-run `gh` prompt** for a Code session and
   hand it over (always-complete: never silently skip).
 

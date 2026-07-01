@@ -9,7 +9,7 @@ For systems where the user cares about realtime behavior, freshness, and tail
 latency, not just average throughput. Engineering-focused: this does not authorize
 live trading or financial advice. The mechanical primitives (read-once, caching,
 batching, thread pool) live in
-[speed-by-default](../../rules/global/speed-by-default.md); this skill is the
+[speed-by-default](../../../rules/global/speed-by-default.md); this skill is the
 diagnosis-and-ordering workflow for a hot path. To cache a hot read use the
 `content-hash-cache-pattern` skill; for bulk data, the
 `data-throughput-accelerator` skill; time changes with the `benchmark` skill and

@@ -8,9 +8,9 @@ description: Use when integrating AppFolio — pulling AppFolio custom reports o
 General AppFolio integration: authenticate, pull a custom report, validate, load. AppFolio is
 an external untrusted source: validate before the DB, keep report names / column maps in the
 project lane, secrets as `op://` refs. Compose **etl-pipeline-build** for the load.
-Conventions: [`tool/appfolio`](../../rules/modules/tool/appfolio.md),
-[`coding/input-validation`](../../rules/modules/coding/input-validation.md),
-[`global/secrets-as-references`](../../rules/global/secrets-as-references.md).
+Conventions: [`tool/appfolio`](../../../rules/modules/tool/appfolio.md),
+[`coding/input-validation`](../../../rules/modules/coding/input-validation.md),
+[`global/secrets-as-references`](../../../rules/global/secrets-as-references.md).
 
 ## Scope boundary (important)
 

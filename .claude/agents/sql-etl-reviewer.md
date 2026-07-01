@@ -26,8 +26,8 @@ they miss.
 6. **Boundary validation** — external/vendor data reaching the DB without row-count/column/type
    checks (see `coding/input-validation`).
 7. **Secrets** — any credential literal in code, YAML, or `.env`; must be an `op://` reference
-   (see [`secrets-as-references`](../rules/global/secrets-as-references.md)).
-8. **Naming** — table/column/object names against [`lang/sql-server`](../rules/modules/lang/sql-server.md)
+   (see [`secrets-as-references`](../../rules/global/secrets-as-references.md)).
+8. **Naming** — table/column/object names against [`lang/sql-server`](../../rules/modules/lang/sql-server.md)
    (plural snake_case tables, the LOCKED special cases, `_archive` not `_backup`).
 9. **Dialect** — Postgres/MySQL idioms in SQL Server (`LIMIT`, `SERIAL`, `||`, backticks,
    `ON CONFLICT`) — see the **sql-server-patterns** skill.

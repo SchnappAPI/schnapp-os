@@ -51,4 +51,4 @@ Verbose mode adds per-file counts, heaviest-file breakdown, overlapping lines si
 and per-tool MCP schema sizes — use only when pinpointing a driver, not for routine audits.
 
 Run after adding any agent, skill, or MCP server to catch creep early. General speed
-principles: [speed-by-default](../../rules/global/speed-by-default.md).
+principles: [speed-by-default](../../../rules/global/speed-by-default.md).

@@ -6,7 +6,7 @@ description: Use when measuring a performance baseline, detecting a regression b
 # benchmark
 
 Establish a measured baseline, then re-measure after a change to prove the delta with
-numbers, not feel. Composes [`speed-by-default`](../../rules/global/speed-by-default.md).
+numbers, not feel. Composes [`speed-by-default`](../../../rules/global/speed-by-default.md).
 To act on results, use the **performance-optimizer** agent.
 
 ## What to measure (owner's stack first)

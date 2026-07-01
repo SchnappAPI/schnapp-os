@@ -6,7 +6,7 @@ argument-hint: "[target-dir]"
 
 Regenerate the **derived** docs in the target repo so no doc hand-lists a mutable fact and
 goes stale. This is the generic form of schnapp-os's own `gen-catalog.sh`, run against the
-owner's *other* ETL repos. Honors [`global/anti-stale`](../rules/global/anti-stale.md)
+owner's *other* ETL repos. Honors [`global/anti-stale`](../../rules/global/anti-stale.md)
 ("Doc currency": generate anything derivable; mark output generated).
 
 Steps Claude follows:
@@ -19,7 +19,7 @@ Steps Claude follows:
 3. If none exists, regenerate the common derivable docs from their canonical sources:
    - **Schema doc** from the live DB / migration files (tables, columns, keys).
    - **Env-var list** from `.env.template` / workflow `env:` blocks (names only, `op://`
-     refs, never values — see [`secrets-as-references`](../rules/global/secrets-as-references.md)).
+     refs, never values — see [`secrets-as-references`](../../rules/global/secrets-as-references.md)).
    - **Pipeline / job catalog** from the scheduled scripts (GitHub Actions cron, LaunchAgents).
    - **Route/endpoint index** for a web tool, from the route definitions.
 4. Mark every generated file with a `generated — do not edit` header so it is never hand-edited.
