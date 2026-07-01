@@ -131,3 +131,8 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   `schnapp-vault` — `agents.md` (NARROW; the single definition site for the flat memory
   schema, exact §3.5), `index.md` (pointer-index), `README.md` (references agents.md, does
   not restate). Writing-style standard, no em dashes. Single-source anti-drift fix in place.
+- 2026-07-01 Phase 1 task 5 DONE (vault `6401757`): `scripts/check-frontmatter.sh` (TDD, 9
+  fixtures) — the flat-schema enforcer that FIXES the dead supersede-check. Fails on nested
+  `metadata:`, missing any of the 8 flat keys, bad type/area/date/superseded values, name not
+  matching filename, and orphan `superseded: true` with no `[[successor]]`. Runs before the
+  data it will validate (task 3+4) and before CI wiring (task 6).
