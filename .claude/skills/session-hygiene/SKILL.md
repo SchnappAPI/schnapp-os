@@ -46,6 +46,6 @@ No local git, shell, filesystem, or `backup-archive.sh` here. Same intent, diffe
 
 The freshness gate and on-correction routing should be in context *before* the user asks, not
 only on demand. On claude.ai/Cowork that means adding the global rules + a short pointer to this
-skill as always-loaded project instructions (wired per surface in Part 10; see the
+skill as always-loaded project instructions (wired per surface; see the
 [surface profiles](../../../surfaces/)). This skill is the on-demand workflow; the always-loaded
 instructions are the standing reminder that these procedures exist on a surface with no hooks.

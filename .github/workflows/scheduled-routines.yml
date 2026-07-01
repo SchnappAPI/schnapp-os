@@ -1,6 +1,6 @@
 name: scheduled-routines
 
-# Self-running layer (PLAN Part 11.1): the SAFE, Mac-independent routines run unattended on cron
+# Self-running layer: the SAFE, Mac-independent routines run unattended on cron
 # and report. Logic lives in scheduled-tasks/run-ci-routines.sh (single source); this workflow
 # only schedules it and surfaces the report. Read-only: it never commits. A hard gate (doc
 # freshness) failing makes the run red; informational drift (unmerged branches) does not.

@@ -13,7 +13,7 @@ machine. Map: [README.md](README.md). Durable why: [docs/framework.md](docs/fram
 
 ## Rules in effect
 
-**Global rules** — the 7 always-on rules already load in this repo (and every repo on the machine)
+**Global rules** — the 8 always-on rules already load in this repo (and every repo on the machine)
 via `~/.claude/CLAUDE.md`, which `@import`s them from here. Do **not** re-import them below — that
 double-loads. Canonical source (edit here, never in `~/.claude/`):
 [rules/global/](rules/global/).

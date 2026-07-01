@@ -104,7 +104,7 @@ decision 0011 #2; the scripts in `hooks/` remain the canonical source.)
 - **length-advisory.sh** — PostToolUse soft length nudge for the always-load layer.
 - **no-force-push-guard.sh** — PreToolUse HARD guard against force-push (decisions/0011 #9).
 - **secret-scan-on-write.sh** — PostToolUse shift-left leak guard.
-- **session-end-backup.sh** — schnapp-os end-of-session write, deterministic half (PLAN.md 5.4 / 7.2).
+- **session-end-backup.sh** — schnapp-os end-of-session write, deterministic half.
 - **session-start-gate.sh** — schnapp-os SessionStart freshness gate.
 - **session-stop-push-gate.sh** — schnapp-os Stop gate: never leave unpushed commits
 - **shellcheck-on-write.sh** — PostToolUse shell-lint gate.

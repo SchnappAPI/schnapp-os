@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # session-stop-push-gate.sh — schnapp-os Stop gate: never leave unpushed commits
-# (PLAN.md 7.2 + keep-tracker-current "push immediately").
+# (keep-tracker-current "push immediately").
 #
 # Fires when the agent tries to stop. If commits exist that are not on the upstream branch,
 # it BLOCKS the stop (decision: block) and instructs a push, so committed state never lingers

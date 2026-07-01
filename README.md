@@ -34,13 +34,13 @@ Status lives in one canonical place and is read there:
   [anti-stale rule](rules/global/anti-stale.md) and [[keep-tracker-current]] in memory.
 - Every state-changing commit updates the affected tracker/doc in the same commit and pushes
   immediately, so GitHub mirrors local.
-- A SessionStart hook does `git pull --ff-only` to surface divergence before work (Part 0.3).
+- A SessionStart hook does `git pull --ff-only` to surface divergence before work.
 - A CI freshness gate ([`.github/workflows/freshness.yml`](.github/workflows/freshness.yml)) fails a
   push if a generated doc (`CATALOG.md`) is stale, or a `last-verified` doc's source
   changed afterward. Regenerate with [`scripts/gen-catalog.sh`](scripts/gen-catalog.sh).
 
 ## Install (per surface)
-One repo, used across surfaces. These are the install steps; Part 10 (plugin/hook delivery) is
+One repo, used across surfaces. These are the install steps; the original build (the 11-Part plan) is
 complete, archived in [docs/archive/PLAN-archive-2026-07-01.md](docs/archive/PLAN-archive-2026-07-01.md).
 Per-surface operating detail lives in [surfaces/](surfaces/) and is referenced here, not repeated.
 
@@ -50,7 +50,7 @@ Per-surface operating detail lives in [surfaces/](surfaces/) and is referenced h
    they are the global lane's delivery):
    - Create `~/.claude/CLAUDE.md` by copying the body of
      [templates/user-global-CLAUDE.md](templates/user-global-CLAUDE.md) (that file lives outside the repo,
-     so the template is its canonical copy). It `@import`s the 7 global rules from the repo.
+     so the template is its canonical copy). It `@import`s the 8 global rules from the repo.
    - In `~/.claude/settings.json` set `"autoMemoryDirectory": "~/code/schnapp-vault/memory"` so the global
      **memory** lane (the vault `SchnappAPI/schnapp-vault`) loads in every repo. A plugin cannot deliver
      this key (only `agent`/`subagentStatusLine` are plugin-settable), and a project-scoped setting reaches
@@ -60,11 +60,11 @@ Per-surface operating detail lives in [surfaces/](surfaces/) and is referenced h
    silently do nothing — this is the first thing to check if the SessionStart gate does not print. (The
    user-scope memory lane from step 2 loads regardless of trust; trust gates the *project* hooks/settings.)
 4. Hooks: the repo's `.claude/settings.json` wires the SessionStart freshness gate, the Stop push-gate,
-   and the SessionEnd backup (dev-time dogfood). At Part 10 the marketplace **plugin** delivers the
-   global gate + push-gate everywhere via `${CLAUDE_PLUGIN_ROOT}`, and the project keeps **only** the
-   backup so they do not double-fire — see [decisions/0005](decisions/0005-hook-delivery-split.md).
+   and the SessionEnd backup (dev-time dogfood), plus the edit-time PostToolUse guards (secret-scan,
+   shellcheck, length-advisory). All are wired directly against live `${CLAUDE_PROJECT_DIR}` paths, not
+   delivered by a plugin: the flatten removed the marketplace plugin ([decisions/0024](decisions/0024-flatten-plugin-native-claude.md)).
 5. Backup/Obsidian: mirror target is OneDrive `~/Library/CloudStorage/OneDrive-Schnapp/claude-archive`
-   (override with `CLAUDE_ARCHIVE_DIR`), opened as an Obsidian vault (Part 6).
+   (override with `CLAUDE_ARCHIVE_DIR`), opened as an Obsidian vault.
 6. Credentials: 1Password service-account token in the shell env; the off-Mac op-mcp connector via
    bearer (see below). `op`/`gh` resolve locally.
 

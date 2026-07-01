@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # run-ci-routines.sh — the SAFE, Mac-independent scheduled routines, as one bundle.
 #
-# Single source of truth for the safe, auto-class routines (PLAN Part 11.1): four read-only
+# Single source of truth for the safe, auto-class routines: four read-only
 # passes — the doc-freshness sweep (hard gate), the sync/unmerged check, a memory-freshness
 # sweep (check-stale-facts.sh), and the learning-loop eval (learning-eval.sh). The cron workflow
 # (.github/workflows/scheduled-routines.yml) calls this; nothing here is duplicated in YAML.

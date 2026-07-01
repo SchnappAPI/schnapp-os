@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # backup-archive.sh — mirror schnapp-os knowledge + Claude Code session
-# transcripts into two destinations (PLAN.md Part 6; decisions/0004 is unrelated):
+# transcripts into two destinations (decisions/0004 is unrelated):
 #   1. OneDrive `claude-archive/` — cloud-durable backup (repo md + raw .jsonl sessions).
 #   2. The canonical Obsidian vault `claude-archive/` subfolder — the browsable, searchable
 #      copy Obsidian + the obsidian MCP read; md only (raw transcripts would bloat the
@@ -17,7 +17,7 @@
 #                        ~/Documents/Obsidian is a back-compat symlink to it; the OneDrive
 #                        copy is an inert cold backup; vault mirror skipped if the dir is absent)
 #
-# Run manually now; Part 7 wires it to the Stop/SessionEnd hook (PLAN 5.4).
+# Run manually, or via the SessionEnd hook (.claude/settings.json) which calls it.
 set -euo pipefail
 
 REPO="${CLAUDE_KIT_REPO:-$HOME/code/schnapp-os}"

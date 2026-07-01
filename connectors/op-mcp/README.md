@@ -2,8 +2,7 @@
 
 A small remote MCP server that resolves 1Password secrets through a **Service
 Account**, so claude.ai, the iPhone app, Cowork, and Claude Code can read
-`op://` references **without the Mac being on**. (PLAN.md Part 4.2;
-decisions/0004.)
+`op://` references **without the Mac being on**. (decisions/0004.)
 
 ## Why a Node host (not a Worker)
 
@@ -46,8 +45,7 @@ execution is not safe to expose. This connector only reads.
 Unlike the Mac `op_*` MCP (whose `op_read` returns only proof: length + last4), this
 connector's `op_read` hands back the **raw value** — it must, because off-Mac surfaces
 (claude.ai / iPhone) have no other way to use a secret. Consequence: the value enters that
-surface's **conversation transcript** (which may later sync to the OneDrive/Obsidian backup,
-PLAN Part 6). So:
+surface's **conversation transcript** (which may later sync to the OneDrive/Obsidian backup). So:
 - Use `op_health` / `op_list_vaults` / `op_list_items` for checks — they expose no values.
 - Call `op_read` only when the surface genuinely needs the value in hand.
 - To *run a command* that consumes a secret, prefer the Mac's `op_run` / `op_inject` (value
@@ -82,5 +80,5 @@ accepts only OAuth 2.1, not a static bearer). Claude Code + Cowork need only the
 bearer header and work the moment the host is up. Fly.io stays a drop-in
 alternative (`fly.toml`) if you ever want a no-cold-start host.
 
-The goal (PLAN.md check 7): with the **Mac off**, call `op_read` from claude.ai
+The goal: with the **Mac off**, call `op_read` from claude.ai
 and confirm a secret resolves — see DEPLOY.md Step 6.

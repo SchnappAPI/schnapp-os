@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# check-freshness.sh — documentation freshness gate (PLAN.md Part 9.3). Runs in CI
+# check-freshness.sh — documentation freshness gate. Runs in CI
 # (.github/workflows/freshness.yml) and locally (pre-push). Two checks:
 #
 #   (1) Generated docs — regenerate and FAIL if the committed copy is stale (a component file

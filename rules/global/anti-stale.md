@@ -16,15 +16,16 @@ updated: 2026-06-27
   "generated, do not edit". The source is canonical; the doc is a projection.
 - Memory: supersede, do not append. When a fact changes, replace it; do not leave a
   contradicting copy. Every memory carries `source:` and `updated:`.
-- Tracker currency: every commit that changes state also flips the matching PLAN.md box and
-  appends a PROGRESS.md line in the SAME commit, and is **pushed immediately** so GitHub always
-  mirrors local — never let the remote go stale. Partial work is `[~]`, not `[x]`. Never mark a
-  step done/verified before its verify command has run. See [[keep-tracker-current]] in memory.
+- Tracker currency: every commit that changes state also flips the matching per-initiative
+  plan-doc box (`docs/superpowers/plans/`) and appends a PROGRESS.md line in the SAME commit, and
+  is **pushed immediately** so GitHub always mirrors local — never let the remote go stale. Partial
+  work is `[~]`, not `[x]`. Never mark a step done/verified before its verify command has run. See
+  [[keep-tracker-current]] in memory.
 - Doc currency (applies to ALL docs, not just the tracker): a doc never hardcodes a mutable fact
-  it does not own — it references the canonical source (PLAN.md / PROGRESS.md for status,
+  it does not own — it references the canonical source (PROGRESS.md for status,
   decisions/ for choices, the code/config for behavior). A commit that changes state updates every
   doc whose claim changed, in that same commit. README carries no status string; it points to the
-  live trackers. CI freshness enforcement is wired in Part 9.3.
+  live trackers. CI freshness enforcement is wired in CI.
 - Current-state only: a doc shows what IS, never a layered history of what was. When something
   changes, OVERWRITE it — do not leave the old value struck-through, marked "deprecated/old/deleted",
   or sitting beside the new one. The record of the change belongs in `decisions/` (an ADR) or a

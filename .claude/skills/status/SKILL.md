@@ -5,7 +5,7 @@ description: Use when the user asks "what's the state of everything", "status", 
 
 # status
 
-The control plane (PLAN Part 11.3). One view of the whole schnapp-os system: what is stale,
+The control plane. One view of the whole schnapp-os system: what is stale,
 unmerged, or unpushed; whether the scheduled routines are healthy; whether connectors and services
 are up; when the last backup ran; and which surfaces are enabled. Builds on — does not duplicate —
 [`surface-check`](../surface-check/SKILL.md): surface-check reports the **current** surface;
@@ -23,7 +23,7 @@ could not read on this surface and the route to read them, rather than guessing.
 | **Memory** | duplicate/contradictory/stale facts; supersede-orphans | read `memory/` + the freshness gate's supersede check; the consolidation routine's last proposal |
 | **Backup** | age of the last archive; did a non-Mac session's work reach OneDrive + the vault | Mac connector `backup_status`; obsidian connector searchability probe |
 | **Connectors / services** | op-mcp, GitHub, obsidian, mac (8765/66/67); SQL Server, Flask, site, runner, tunnels | Mac connector `service_status`/`site_health`/`tunnel_status`/`op_health`; else the infra-health routine's last report |
-| **Per-surface enablement** | which of Code / claude.ai / iPhone / Cowork have rules+skills+connectors wired | the `surfaces/*.md` profiles vs what each reports; Part 10.2 state |
+| **Per-surface enablement** | which of Code / claude.ai / iPhone / Cowork have rules+skills+connectors wired | the `surfaces/*.md` profiles vs what each reports |
 
 ## Report
 

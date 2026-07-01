@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# session-end-backup.sh — schnapp-os end-of-session write, deterministic half (PLAN.md 5.4 / 7.2).
+# session-end-backup.sh — schnapp-os end-of-session write, deterministic half.
 #
 # Fires on SessionEnd. Two jobs:
 #   1. BACKUP: run backup-archive.sh — mirror memory/handoffs/decisions/PLAN/PROGRESS +
-#      session transcripts into the OneDrive claude-archive vault (PLAN.md Part 6).
+#      session transcripts into the OneDrive claude-archive vault.
 #      Best-effort, never fatal.
 #   2. REMINDER: surface unpushed / uncommitted state as a closing nudge so the end-of-session
 #      memory + handoff WRITE and commit+push (agent judgment, per docs/memory-lane.md

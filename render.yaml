@@ -2,7 +2,7 @@
 # to a free Render web service. One-click: Render dashboard > New > Blueprint,
 # point at this repo, it reads this file. Then set the two secrets when prompted.
 # Full runbook (host + Cloudflare OAuth front + claude.ai registration):
-#   connectors/op-mcp/DEPLOY.md   (canonical; PLAN.md Part 4.2; decisions/0004)
+#   connectors/op-mcp/DEPLOY.md   (canonical; decisions/0004)
 #
 # Why Render: free tier, no CLI, no Docker knowledge needed (Render builds the
 # Dockerfile straight from the repo). Caveat: the free tier sleeps after ~15 min

@@ -15,4 +15,4 @@
   session can review the unmerged branches and delete the merged residue
   (`git push origin --delete <branch>`, per ADR 0017 — run from the Mac or an approved session).
 - **Why it exists:** the owner's standing rule is "address unmerged/unpushed before new work"
-  (`lang/git.md`, Part 8.2). Off-session, nothing was watching for branches left behind; this does.
+  (`lang/git.md`). Off-session, nothing was watching for branches left behind; this does.

@@ -1,4 +1,4 @@
-# Deploy + register the off-Mac 1Password connector (Part 4.2)
+# Deploy + register the off-Mac 1Password connector
 
 Canonical runbook — **DONE + WORKING (2026-06-05)**, kept as the reproducible record / re-deploy
 reference. Path: **Render** (free host) + **Cloudflare MCP portal** (OAuth front).
@@ -95,7 +95,7 @@ working 2026-06-05 on the owner's account (`schnapp.bet` is a zone in it). Exact
    → approve. Connector connects, 4 `op_*` tools appear (plus Cloudflare `portal_*` tools — ignore).
 4. iPhone uses the same connector automatically.
 
-## Step 6 — Verify the goal (PLAN.md check 7) — op_health PASS
+## Step 6 — Verify the goal — op_health PASS
 
 From claude.ai, `op_health` returned **authenticated** (Integration `claude-kit-op-mcp`, vault
 visible) — the full path resolves with no Mac involvement (connector is on Render). To make 4.4

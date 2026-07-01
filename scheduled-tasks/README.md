@@ -1,4 +1,4 @@
-# scheduled-tasks — the self-running layer (PLAN Part 11.1)
+# scheduled-tasks — the self-running layer
 
 Routines that run **unattended** and report, without anyone opening a session. This directory is
 the single source for *what* runs, *when*, on *which surface*, and *whether it may act on its own*.
@@ -40,7 +40,7 @@ single-source bundle [`run-ci-routines.sh`](run-ci-routines.sh), which runs four
 the doc-freshness sweep (the hard gate), the sync/unmerged check, a memory-freshness sweep
 (`check-stale-facts.sh`), and the learning-loop eval (`learning-eval.sh`). The two that need the Mac or
 judgment are specified here for a LaunchAgent to drive a `claude -p` session (owner installs the
-LaunchAgent; the spec is the agent's instructions). The `status` skill (Part 11.3) reads the same
+LaunchAgent; the spec is the agent's instructions). The `status` skill reads the same
 signals on demand.
 
 ## Why split CI vs LaunchAgent

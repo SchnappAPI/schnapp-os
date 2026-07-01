@@ -15,7 +15,7 @@ Never silently fail because the surface lacks a capability. State which path is 
 ## Credentials (all surfaces)
 Secrets resolve through 1Password, referenced by `op://`, never stored as values. The
 bootstrap is a 1Password Service Account token (rotate per `decisions/0001` if it breaks).
-The hosted **op-mcp connector** (Part 4) resolves secrets off-Mac on every surface when healthy
+The hosted **op-mcp connector** resolves secrets off-Mac on every surface when healthy
 (current status: `memory/credentials-state.md`; runbook: `connectors/op-mcp/DEPLOY.md`). To *use* a
 secret in a command, prefer the Mac's `op_run`/`op_inject` (value stays out of the transcript);
 `op_read` only when the Mac is off and the hosted connector is healthy.
@@ -29,4 +29,4 @@ secret in a command, prefer the Mac's `op_run`/`op_inject` (value stays out of t
 
 `always-loaded-instructions.md` is the canonical hookless always-loaded block (paste into claude.ai **Settings > Profile > Preferences** for account-wide/global coverage incl. iPhone — owner's choice 2026-06-16 — and into Cowork instructions separately).
 
-The `surface-check` skill (Part 7) reports what is loaded vs missing on the current surface.
+The `surface-check` skill reports what is loaded vs missing on the current surface.

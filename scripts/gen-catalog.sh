@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # gen-catalog.sh — generate CATALOG.md, an inventory of the repo's
-# rules, skills, commands, and hooks (PLAN.md Part 9.2).
+# rules, skills, commands, and hooks.
 #
 # The component files (.claude/{skills,commands,agents}, rules/, hooks/) are the single source of truth. This catalog is a
 # PROJECTION of them, so no doc has to hand-list "all modules" / "all skills" and go
 # stale when one is added. Re-run after adding/removing a rule, skill, command, or hook.
-# CI (.github/workflows/freshness.yml, Part 9.3) regenerates and fails the push if the
+# CI (.github/workflows/freshness.yml) regenerates and fails the push if the
 # committed CATALOG.md differs — i.e. someone changed a source file but didn't regenerate.
 #
 # Output is deterministic (C-locale sort, no timestamps) so the CI diff is stable.

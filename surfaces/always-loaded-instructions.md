@@ -3,7 +3,7 @@
 Canonical text to paste into the always-loaded slot of each hookless surface: claude.ai
 (Settings > Profile > Preferences = account-wide/global, owner's choice 2026-06-16 — this also
 covers iPhone on the same account) and Cowork instructions separately (until hooks are confirmed).
-On Code these behaviors are delivered by the plugin + global rules; this block is the hookless
+On Code these behaviors are delivered by the repo's hooks + global rules; this block is the hookless
 equivalent. Authored once here; the surface profiles point to it.
 
 ## Operating model: never silently fail
@@ -35,7 +35,8 @@ On an unfamiliar surface, run surface-check first (loaded vs missing, with the f
 - Naming discipline: spell names out, ISO-8601 dates in filenames, no spaces or special characters in
   identifiers or filenames.
 - Anti-staleness: one fact in one canonical file (import or reference it, do not paraphrase); fix the
-  class, not the instance; memory supersedes; every state-changing commit flips the matching PLAN.md box.
+  class, not the instance; memory supersedes; every state-changing commit flips the matching
+  per-initiative plan-doc box (`docs/superpowers/plans/`).
 
 ## Persist (hookless)
 No local git here. Write repo files through the GitHub connector (create_or_update_file to

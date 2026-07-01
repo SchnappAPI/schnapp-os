@@ -13,8 +13,8 @@ decisions one at a time.
 
 - **One question at a time.** Wait for the answer before the next. No question lists.
 - **Recommend, don't just ask.** For each question give your recommended answer and the one-line why, so the owner reacts to a concrete position instead of starting from blank.
-- **Explore over ask.** If a question is answerable from the codebase, the trackers
-  (PLAN.md / PROGRESS.md), the `decisions/` directory, or the memory lane
+- **Explore over ask.** If a question is answerable from the codebase, PROGRESS.md + the plan docs
+  (`docs/superpowers/plans/`), the `decisions/` directory, or the memory lane
   (`docs/memory-lane.md`; the global lane is the vault), go find the answer instead of asking.
 - **Order by dependency.** Settle the decision other decisions hang on first; let the answer
   prune the branches below it.
