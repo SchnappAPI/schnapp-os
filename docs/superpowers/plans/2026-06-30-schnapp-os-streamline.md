@@ -105,15 +105,18 @@ Recommended order: **1 → (2 ∥ 4) → 3 → 5.** Each phase ends shippable.
 ---
 
 ## Phase 4 — Context / reference discipline
-**Deliverable:** anti-bloat rule in force; `PLAN.md` reconciled; length-advisory live.
+**Deliverable:** anti-bloat writing-style rule in force globally; `PLAN.md` reconciled to a thin pointer + archive; soft length-advisory live; handoffs navigable via a thin index.
 
-**Tasks (outline — detail at execution):**
-1. Add the writing-style standard as `rules/global/writing-style.md`; add to the `~/.claude/CLAUDE.md` `@import` list + `templates/user-global-CLAUDE.md`.
-2. Reconcile `PLAN.md` (677) — archive completed phases to `docs/archive/`, keep active live, record a rotation policy (mirror ADR-0022). Verify: `PLAN.md` < ~150 lines, no active work lost.
-3. Add a soft length-advisory (WARN, exit 0) over always-load + rules files; wire as a PostToolUse or CI advisory.
-4. Light-archive old `handoffs/`; add a thin index. Trackers; push.
+**Owner-action (additive, low-risk — NO hard pause):** one `@import` line added to each machine's `~/.claude/CLAUDE.md` (writing-style.md). Done on this Mac + the canonical template; other machines owe the one-liner (handoff).
 
-**Done when:** writing-style rule loads globally, `PLAN.md` trimmed with policy, length-advisory warns on an over-long fixture.
+**Tasks (checkbox = live tracker; step-level detail generated at execution, 2026-07-01):**
+
+- [ ] **T1. Author + wire the writing-style rule.** Create `rules/global/writing-style.md` codifying the instruction-file writing standard (terse imperative, lead with the point, no em dashes, no preamble/fluff/hedging, reference-don't-restate, one-screen-where-possible) — it is referenced across the plan/spec today but never defined. De-dup (anti-stale): it OWNS file-writing mechanics and REFERENCES `naming-discipline.md` (names) + `anti-stale.md` (one-home) instead of restating; note it governs durable FILES while `working-style.md` governs owner-facing replies. Wire global: add `@~/code/schnapp-os/rules/global/writing-style.md` to `templates/user-global-CLAUDE.md` (bump the "7 files" prose → 8) + this Mac's `~/.claude/CLAUDE.md`. Regenerate `CATALOG.md`. **Verify:** rule exists, terse, zero em dashes; CATALOG lists it; @import present; freshness OK.
+- [ ] **T2. Reconcile PLAN.md (mirror ADR-0022).** Grep PLAN.md for open/pending/deferred/left/TODO (8 hits); verify each is tracked elsewhere (streamline plan / `decisions/` / PROGRESS open-items) or carry it forward explicitly — no active work lost. Snapshot full PLAN.md verbatim → `docs/archive/PLAN-archive-2026-07-01.md` (append-only history, never edited after). Replace PLAN.md with a thin live pointer (<~150 lines): what it was (original 11-Part build, all Parts closed), where live planning is now (`docs/superpowers/plans/`, per-initiative), decisions → `decisions/`, status → `PROGRESS.md`, plus any carried-forward open items. Retarget docs citing PLAN.md AS the status source (`CLAUDE.md`, `README.md`) → `PROGRESS.md` + the plan docs. ADR `decisions/0025` (PLAN.md retired to a pointer; executes 0011's backlog-reframing, mirrors 0022). **Verify:** PLAN.md <~150 lines; archive exists; open-item grep clean or carried; PLAN.md links in live docs still resolve; freshness OK.
+- [ ] **T3. Soft length-advisory (TDD, WARN / exit 0).** `hooks/length-advisory.sh` — on Write|Edit of an always-load or `rules/` file, WARN (never block; always exit 0) when the file exceeds a heuristic line threshold. Write fixtures first (over-long → WARN; normal → silent), then wire PostToolUse in `.claude/settings.json` (Code-time point-of-action nudge). **Verify:** over-long fixture WARNs at exit 0; normal file silent; `bash -n` clean; the settings.json path resolves.
+- [ ] **T4. Thin handoff index (index-in-place, NO physical move).** Add `handoffs/README.md`: a thin index (number → one-line title, newest-first; mark the newest as the resume point) over all 46 handoffs. Do NOT move any handoff file — 30 cross-references point at `handoffs/NNN…md` by path; moving re-breaks the Phase-2 link class for zero navigability the index does not already give. **Verify:** index lists all 46; newest flagged; every `handoffs/NNN` path still resolves (0 broken); freshness OK.
+
+**Done when:** writing-style rule loads globally + is in CATALOG; PLAN.md < ~150 lines with pointer + archive + ADR 0025, no active work lost; length-advisory WARNs on an over-long fixture at exit 0; handoffs have a thin index with 0 broken links.
 
 ---
 
