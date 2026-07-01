@@ -32,6 +32,31 @@ Everything else (schema normalization, CI script, doc updates) proceeds without 
 - **Vault git tree must NOT sit under any cloud-sync path** — git is the only sync engine.
 - Add missing `updated:` = each fact's last git-commit date. Set `source:`, `superseded: false`.
 
+## Current-state map (VERIFIED on the Mac by the Phase-1 probe, 2026-07-01 — VERIFY against this, do NOT reconstruct it)
+Confirm on resume; correct if any line is wrong. Handed to you so you never rebuild the map.
+- **Repos (all `SchnappAPI/`):** `schnapp-os` (this); `schnapp-vault` (created 2026-07-01, PRIVATE, EMPTY, not yet cloned); `obsidian-vault` (the actual git-backed Obsidian content).
+- **Clones of `obsidian-vault`:** OneDrive `~/Library/CloudStorage/OneDrive-Schnapp/Obsidian` (canonical — owner opens this); `~/code/obsidian-vault` (satellite). `~/code/schnapp-vault` does NOT exist yet.
+- **Memory lane:** currently `schnapp-os/memory/`; schema = NESTED `metadata:` (`node_type/scope/source/updated/supersedes`), inconsistent (some miss `description`/`type`/`updated`). Target = FLAT §3.5. This IS the normalization delta.
+- **Services / MCP:**
+  - `memory-mcp` = Render-hosted (`memory-mcp-rtad.onrender.com`), git-backed via GitHub API; code `connectors/memory-mcp/`. Repoint = Render service-config (owner-side), NOT a local edit.
+  - `obsidian-mcp` = LOCAL launchd, `/Users/schnapp/obsidian-mcp/server.py`, port 8767, vault path HARDCODED to the OneDrive folder.
+  - **Obsidian Brain Agent** (inbox watcher) ALSO hardcodes the OneDrive path.
+- `gh` authed as `SchnappAPI`.
+
+## Deltas the probe caught (this plan's Phase-1 task list predates the map — treat it as intent, re-cut the concrete tasks)
+1. The vault ALREADY EXISTS (`obsidian-vault`, 2 clones). "Create schnapp-vault" → really CONSOLIDATE (see OPEN FORK).
+2. OneDrive-exit touches THREE hardcoded consumers together: `obsidian-mcp` (8767), the Brain Agent, the OneDrive clone. Repoint all or break them.
+3. Gate 3 SPLITS: `obsidian-mcp` = local launchd edit; `memory-mcp` = Render config (owner-side).
+
+## OPEN FORK — resolve with owner BEFORE any irreversible step
+Consolidate to ONE vault repo:
+- **(A, recommended)** Rename existing `obsidian-vault` → `schnapp-vault`, delete the empty new one, fold the memory lane in. Preserves content + history + working clones; least migration.
+- **(B)** Migrate `obsidian-vault` content + memory into the new empty `schnapp-vault`, retire `obsidian-vault`. More moving of Obsidian content + clone re-pointing.
+After the owner picks, RE-CUT the Phase-1 tasks against the map above, THEN execute the gates.
+
+## Rule this handoff now honors (the lesson — do not repeat the violation)
+A handoff carries established FACTS (the current-state map), NOT just decisions. VERIFY against the map; never RECONSTRUCT it. Handing decisions without the map forces the exact rediscovery this system exists to kill.
+
 ## Git / operating flow
 - **main-only, commit + push each task.** From a worktree, land via `git push origin HEAD:main` (fast-forward); pull/rebase before push. Every state-changing commit flips a PLAN box + appends a PROGRESS line in the SAME commit.
 - Secrets are `op://` references, never values. Instruction files use the writing-style standard.
