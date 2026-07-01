@@ -10,8 +10,6 @@ trimmed back to the still-relevant window. Full history before this reconciliati
 [docs/archive/PROGRESS-archive-2026-06-03-to-2026-06-30.md](docs/archive/PROGRESS-archive-2026-06-03-to-2026-06-30.md).
 
 ## Open items carried forward (never closed in the archived range)
-- **`#2` repo-flattening** (decisions/0011) — drop the marketplace-plugin packaging
-  (`plugins/core/`). Deliberately deferred 2026-06-23; confirmed still not done 2026-06-30.
 - **`brain-capture` MCP server prune** — the `76d929ef` test-only note-capture server was
   slated for removal 2026-06-23 when memory-mcp shipped as its replacement; confirmed still
   connected 2026-06-30.
@@ -199,3 +197,4 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
 - 2026-07-01 Phase 2 T2: removed .claude-plugin/marketplace.json + plugins/core/.claude-plugin/plugin.json; plugins/ + .claude-plugin/ trees gone — plugin packaging deleted from the repo.
 - 2026-07-01 Phase 2 T3: retargeted ~24 live docs (CLAUDE/README/templates/surfaces/scheduled-tasks/docs + moved SKILL/agent/rule internal refs) off plugins/core/ to the native paths; history (handoffs/decisions/PLAN/PROGRESS/archive/prior plans+specs) left as-is.
 - 2026-07-01 Phase 2 T3b: repaired 50 move-broken ../-relative links across 20 .claude/ files (T1 git-mv depth shift; invisible to the plugins/core residual gate). broken-link re-scan = 0.
+- 2026-07-01 Phase 2 T4: ADR [decisions/0024](decisions/0024-flatten-plugin-native-claude.md) records the flatten (executes 0011 #2); repo work complete (T1-T3b on main). Remaining: per-machine owner gate (~/.claude @import + plugin uninstall + settings + plist reload) then T5 (verify double-load gone + final review + handoff 045).
