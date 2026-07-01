@@ -4,19 +4,25 @@
 Replaces the `claude -p --dangerously-skip-permissions` shell-out in learning-worker.sh with a
 bounded, file-scoped Claude Agent SDK run (ADR 0016 / agentic-OS Phase 4). It reads the local
 capture queue, has a headless Claude Agent SDK session distill+classify each correction
-(learn-route), and EDITS the target .md in the working tree. It does NOT git/commit/push/gate;
-learning-worker.sh does that deterministically around this call (the LLM never touches git).
+(learn-route), and EDITS the target .md in the matching working tree: rule edits in this repo,
+durable-fact edits in the VAULT memory lane via the worker-owned clone at LEARNING_VAULT_DIR
+(ADR 0028; schnapp-os no longer has a memory/ lane). It does NOT git/commit/push/gate;
+learning-worker.sh does that deterministically around this call, per tree (the LLM never
+touches git).
 
 Safety vs the old `claude -p --dangerously-skip-permissions`:
   - allowed_tools = file edits only (Read/Edit/Write/Grep/Glob). NO Bash/network/git.
+  - writable roots = this repo + the vault clone (add_dirs), nothing else.
   - max_turns bounded; per-run asyncio timeout; retry-once on transient failure.
-  - On any hard failure -> non-zero exit (wrapper resets the tree + alerts + keeps the queue).
+  - On any hard failure -> non-zero exit (wrapper resets both trees + alerts + keeps the queue).
     NEVER exits 0 on a real failure (kills the old silent-exit-0 bug).
 Auth (preserves ADR 0019): inherits CLAUDE_CODE_OAUTH_TOKEN (subscription) from the parent env the
   worker sets; ANTHROPIC_API_KEY must NOT be set (would bill the API).
 
 Usage:  learning_distill.py [--dry-run]
 Env:    LEARNING_QUEUE (default <repo>/scheduled-tasks/.learning-queue.tsv),
+        LEARNING_VAULT_DIR (vault clone holding the memory lane; the worker preps it;
+          default ~/.cache/schnapp-os/learning-vault; missing memory/ dir -> exit 4),
         LEARNING_DISTILL_MAX_TURNS (40), LEARNING_DISTILL_TIMEOUT_S (900),
         LEARNING_DISTILL_MODEL (optional; default = inherit the CLI default).
 Exit:   0 = done (edits made or clean no-op); non-zero = failure (queue must be preserved).
@@ -36,23 +42,48 @@ QUEUE = Path(os.environ.get("LEARNING_QUEUE") or REPO_ROOT / "scheduled-tasks" /
 MAX_TURNS = int(os.environ.get("LEARNING_DISTILL_MAX_TURNS", "40"))
 TIMEOUT_S = int(os.environ.get("LEARNING_DISTILL_TIMEOUT_S", "900"))
 MODEL = os.environ.get("LEARNING_DISTILL_MODEL") or None
+# Vault memory lane = a WORKER-OWNED clone of schnapp-vault (ADR 0028; the worker preps it and
+# exports LEARNING_VAULT_DIR). Same empty-means-unset guard as QUEUE above.
+VAULT_DIR = Path(os.environ.get("LEARNING_VAULT_DIR")
+                 or Path.home() / ".cache" / "schnapp-os" / "learning-vault")
 
 # Mirrors the prompt the old `claude -p` used (learning-worker.sh heredoc), minus the captures.
-SYSTEM_PROMPT = """You are the nightly learning worker for this repo (scheduled-tasks/memory-consolidation.md).
+# Routing per ADR 0028: rules stay in this repo; durable facts supersede in the VAULT memory lane
+# (schnapp-os has no memory/ lane anymore - a repo-local memory write would be gated out anyway).
+SYSTEM_PROMPT = f"""You are the nightly learning worker for this repo (scheduled-tasks/memory-consolidation.md).
 
 For each queued correction below: distill it to a reusable principle and classify it with the
 learn-route procedure (.claude/skills/learn-route/SKILL.md):
-  - behavioral / how-to-work principle -> sharpen the EXISTING rule in rules/global/
-  - durable fact -> supersede in memory/ (one fact, one file; bump updated:, source: correction)
+  - behavioral / how-to-work principle -> sharpen the EXISTING rule in rules/global/ (this repo)
+  - durable fact -> supersede the fact file in the VAULT memory lane at {VAULT_DIR}/memory/
+    (the global lane lives in the vault repo, NOT in this repo; one fact, one file; flat
+    frontmatter per the vault's agents.md: bump updated:, set source: correction; a brand-new
+    fact also gets a one-line MEMORY.md index entry)
   - mechanical / already-covered / duplicate -> make NO change and say so
 
-To propose a change: EDIT the target .md file in the working tree and BUMP its frontmatter updated:
-to today's date. Do NOT create a branch, commit, open a PR, or run any git/shell command -- just leave
-the edited .md in the working tree. The worker gates the diff and commits clean changes to main itself.
+To propose a change: EDIT the target .md file in place and BUMP its frontmatter updated: to today's
+date. Do NOT create a branch, commit, open a PR, or run any git/shell command -- just leave the
+edited .md in the tree it belongs to. The worker gates each tree's diff and commits clean changes
+itself (rules -> this repo's main; facts -> the vault's main).
 
-DEDUPE first: if the principle is already present in the target file (or anywhere under rules/memory),
-make NO change. Keep each edit SMALL and IN-SCOPE -- only .md files under rules/ or
-memory/. Never touch code, CI, or anything else."""
+DEDUPE first: if the principle is already present in the target file (or anywhere under rules/ here
+or {VAULT_DIR}/memory/), make NO change. Keep each edit SMALL and IN-SCOPE -- only .md under rules/
+in this repo, or under memory/ in the vault tree. Never touch code, CI, or anything else in either
+tree."""
+
+
+def sdk_option_kwargs() -> dict:
+    """Session options as a plain dict, SDK-free (pinned by test-learning-distill.sh)."""
+    return dict(
+        system_prompt=SYSTEM_PROMPT,
+        allowed_tools=["Read", "Edit", "Write", "Grep", "Glob"],
+        disallowed_tools=["Bash"],
+        permission_mode="acceptEdits",
+        max_turns=MAX_TURNS,
+        cwd=str(REPO_ROOT),
+        add_dirs=[str(VAULT_DIR)],
+        model=MODEL,
+    )
 
 
 def log(msg: str) -> None:
@@ -69,15 +100,7 @@ async def run_once(captures: str) -> bool:
     """One distillation pass. True on clean completion, False on a hard (is_error) failure."""
     from claude_agent_sdk import query, ClaudeAgentOptions
 
-    options = ClaudeAgentOptions(
-        system_prompt=SYSTEM_PROMPT,
-        allowed_tools=["Read", "Edit", "Write", "Grep", "Glob"],
-        disallowed_tools=["Bash"],
-        permission_mode="acceptEdits",
-        max_turns=MAX_TURNS,
-        cwd=str(REPO_ROOT),
-        model=MODEL,
-    )
+    options = ClaudeAgentOptions(**sdk_option_kwargs())
     prompt = f"Queued corrections:\n{captures}"
 
     result_is_error = None
@@ -106,6 +129,14 @@ async def main_async() -> int:
     if dry_run:
         log("--dry-run: skipping the SDK call (no edits, no network).")
         return 0
+
+    # Fail fast BEFORE any SDK/network use: with no vault memory lane to edit, a durable-fact
+    # capture could only be mis-routed (there is no repo-local memory/ anymore) or dropped.
+    # The worker preps this clone; a manual run needs LEARNING_VAULT_DIR pointed at one.
+    if not (VAULT_DIR / "memory").is_dir():
+        log(f"ERROR: vault memory lane not found at {VAULT_DIR}/memory "
+            "(the worker preps this clone; set LEARNING_VAULT_DIR). Queue preserved.")
+        return 4
 
     try:
         import claude_agent_sdk  # noqa: F401  -- fail LOUD, never silent exit 0

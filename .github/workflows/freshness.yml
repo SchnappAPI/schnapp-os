@@ -59,6 +59,12 @@ jobs:
       - name: Learning-gate self-test
         run: bash scripts/tests/test-learning-gate.sh
 
+      - name: Learning-distill routing self-test
+        run: bash scripts/tests/test-learning-distill.sh
+
+      - name: Learning-worker vault-leg live-path self-test
+        run: bash scripts/tests/test-learning-worker-vault-live.sh
+
       - name: Infra-health probe self-test
         run: bash scripts/tests/test-infra-health.sh
 

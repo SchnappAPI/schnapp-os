@@ -2,17 +2,21 @@
 # learning-worker.sh - nightly learning-loop driver (Phase 4, pre-commit gate, ADR 0016).
 #
 # Reads the local learning queue (git-ignored .learning-queue.tsv), has a headless Agent SDK run
-# distill+classify each capture and WRITE any proposed rule/fact edit to the working tree (no branch,
-# no commit, no PR), then the WORKER gates the working-tree diff (learning-gate.sh): a clean proposal
-# is committed straight to main; anything the gate holds is filed as a GitHub issue. No branches:
-# everything that lands goes to main (owner pref 2026-06-27; ADR 0016 refines 0012/0013/0015).
+# distill+classify each capture and WRITE any proposed edit to the matching working tree (no branch,
+# no commit, no PR): RULE edits in this repo, durable-FACT edits in a worker-owned clone of the vault
+# (the global memory lane lives in schnapp-vault; ADR 0028). Then the WORKER gates each tree's diff
+# (learning-gate.sh): a clean rule proposal commits straight to this repo's main, a clean fact
+# proposal commits to the VAULT's main; anything a gate holds is filed as a GitHub issue here. No
+# branches: everything that lands goes to a main (owner pref 2026-06-27; ADR 0016 refines
+# 0012/0013/0015).
 #
 # Recurrence pre-step (Phase 3 T2, spec sec 4.4): BEFORE distillation, learning-recurrence.sh counts
 # error-class frequency over archive+queue. A class that recurs (>= 2) is drafted as a GATE PROPOSAL
 # (a GitHub issue for owner approval) instead of another prose fact, and the class's captures are held
 # OUT of this run's distill input (so the loop does not also write prose for it). A drafted gate NEVER
 # auto-lands: it is only an issue; it is never a working-tree edit/commit/push. learning-gate.sh (the
-# auto-land gate) still admits only .md under rules/memory, so a gate could not route through it anyway.
+# auto-land gate) admits only rule .md here and fact .md in the vault clone, so a gate could not
+# route through it anyway.
 #
 # Usage: learning-worker.sh [--dry-run]
 # Env:
@@ -20,6 +24,11 @@
 #   LEARNING_ARCHIVE - archive file (default: alongside queue, .learning-queue.archive.tsv)
 #   LEARNING_GATE_DRAFTED - recurrence marker (default: alongside queue, .learning-queue.gate-drafted.tsv)
 #   LEARNING_CLAUDE_TOKEN_REF - op:// ref to the Claude credential (headless auth; see docs/headless-claude-auth.md)
+#   LEARNING_VAULT_DIR - worker-owned vault clone the fact leg edits (default: ~/.cache/schnapp-os/learning-vault)
+#   LEARNING_VAULT_REMOTE - vault clone/push remote (default: origin URL of LEARNING_VAULT_LIVE,
+#                           else git@github.com:SchnappAPI/schnapp-vault.git)
+#   LEARNING_VAULT_LIVE - the owner's live vault tree, best-effort ff-pulled after a fact lands
+#                         (default: ~/code/schnapp-vault; never reset, never stashed)
 #
 # --dry-run: exercises queue/recurrence/classify/archive plumbing with NO distill call, NO git, NO
 #   network, NO gh, NO working-tree change (proven by scripts/tests/test-learning-worker.sh).
@@ -28,9 +37,13 @@
 #   - Empty/missing queue → message + exit 0.  Live path needs the `claude` CLI; absent → no-op exit 0.
 #   - Distillation runs via the Agent SDK (learning_distill.py): file-edit tools only
 #     (Read/Edit/Write/Grep/Glob, NO Bash/git/network), bounded turns + timeout + retry-once. The
-#     prompt scopes edits to rules/memory; the worker gates+commits the diff (not a hard sandbox).
-#   - Default flow: the worker gates the resulting diff (learning-gate.sh) and pushes only APPROVED
-#     changes to main; held proposals never touch main (→ issue).
+#     prompt scopes edits to rules/ here + memory/ in the vault clone; the worker gates+commits each
+#     tree's diff (not a hard sandbox).
+#   - Default flow: the worker gates each diff (learning-gate.sh; rules/*.md here, memory/*.md in the
+#     vault clone + the clone's own schema checker) and pushes only APPROVED changes to the matching
+#     main; held proposals never touch either main (→ issue).
+#   - The fact leg touches ONLY the worker-owned clone. The owner's live vault tree is never reset or
+#     stashed; after a fact lands it is fast-forwarded best-effort, and only when clean.
 #   - Recurrence drafting is best-effort (like alert()): a missing/failing `gh` prints a notice and
 #     CONTINUES - it must NEVER fail the worker or lose a capture. Gated captures are STILL archived.
 #   - Archiving (not deleting) means a capture is never silently lost.
@@ -48,6 +61,13 @@ A="${LEARNING_ARCHIVE:-"${Q%.tsv}.archive.tsv"}"
 # recurrence tool only reads it. Never committed.
 DRAFTED="${LEARNING_GATE_DRAFTED:-"${Q%.tsv}.gate-drafted.tsv"}"
 RECURRENCE="$REPO_ROOT/scripts/learning-recurrence.sh"
+# Vault fact leg (ADR 0028): the global memory lane lives in schnapp-vault. The worker owns a
+# dedicated automation clone (VAULT_DIR) so it can apply the same clean-tree/reset discipline it
+# uses on this repo WITHOUT ever touching the owner's live Obsidian tree (VAULT_LIVE), which may
+# be dirty at any moment.
+VAULT_DIR="${LEARNING_VAULT_DIR:-"$HOME/.cache/schnapp-os/learning-vault"}"
+VAULT_LIVE="${LEARNING_VAULT_LIVE:-"$HOME/code/schnapp-vault"}"
+VAULT_REMOTE="${LEARNING_VAULT_REMOTE:-}"
 
 # Best-effort native alerting (incident-managed via ops-alert.sh: opens/auto-closes a GitHub issue +
 # ntfy). Detection stays in this caller; the alert layer must NEVER break the worker, hence `|| true`.
@@ -172,6 +192,42 @@ fi
 git checkout -q main 2>/dev/null || true
 git reset -q --hard origin/main 2>/dev/null || true
 
+# --- vault fact-leg prep (ADR 0028, BEFORE recurrence + distillation) --------------------------------
+# Clone-or-sync the worker-owned vault clone the distill step may write facts into. Prep failure
+# aborts the run BEFORE any side effect (no issue filed, no marker written, queue preserved): with
+# no vault lane to edit, a durable-fact capture could only be mis-routed or dropped.
+if [ -z "$VAULT_REMOTE" ]; then
+  VAULT_REMOTE="$(git -C "$VAULT_LIVE" remote get-url origin 2>/dev/null)" \
+    || VAULT_REMOTE="git@github.com:SchnappAPI/schnapp-vault.git"
+fi
+# The clone must live OUTSIDE this repo: an embedded clone would be swept up by the rules leg's
+# clean-check and `git add -A`. (Note: LEARNING_VAULT_REMOTE only seeds the FIRST clone; an
+# existing clone keeps its own origin until the dir is recreated.)
+case "$VAULT_DIR" in
+  "$REPO_ROOT"|"$REPO_ROOT"/*)
+    echo "learning-worker: ERROR - LEARNING_VAULT_DIR ('$VAULT_DIR') must not live inside this repo; aborting (queue preserved)." >&2
+    alert red learning-worker "Learning worker blocked" "vault clone dir inside the repo; queue preserved"
+    exit 1 ;;
+esac
+vault_prep_ok=true
+if [ -d "$VAULT_DIR/.git" ]; then
+  # checkout -f self-heals a wedged clone (e.g. an untracked collision from a prior partial run).
+  { git -C "$VAULT_DIR" fetch -q origin main \
+      && git -C "$VAULT_DIR" checkout -qf main \
+      && git -C "$VAULT_DIR" reset -q --hard origin/main \
+      && git -C "$VAULT_DIR" clean -qfd; } 2>/dev/null || vault_prep_ok=false
+else
+  { mkdir -p "$(dirname "$VAULT_DIR")" \
+      && git clone -q "$VAULT_REMOTE" "$VAULT_DIR"; } 2>/dev/null || vault_prep_ok=false
+fi
+if ! $vault_prep_ok; then
+  echo "learning-worker: ERROR - vault clone prep failed ('$VAULT_DIR' from '$VAULT_REMOTE'); aborting (queue preserved)." >&2
+  alert red learning-worker "Learning worker blocked" "vault clone prep failed; queue preserved, will retry"
+  exit 1
+fi
+# The distill step edits facts inside this clone (its prompt + add_dirs point here).
+export LEARNING_VAULT_DIR="$VAULT_DIR"
+
 # --- recurrence pre-step (BEFORE distillation): draft a GATE for any newly-recurring class ----------
 # Deterministic count over archive+queue → drafted-gate blocks. For each block: best-effort open a
 # GitHub issue (like alert(): a missing/failing gh prints a notice and CONTINUES - never fails the
@@ -264,18 +320,21 @@ DISTILL_PYTHON="${LEARNING_DISTILL_PYTHON:-$HOME/.venvs/learning-distill/bin/pyt
 [ -x "$DISTILL_PYTHON" ] || DISTILL_PYTHON="$(command -v python3)"
 if ! "$DISTILL_PYTHON" "$DISTILL_PY"; then
   git reset -q --hard origin/main 2>/dev/null || true
+  # A failed run may have half-written a fact: reset the worker-owned clone too (never the live tree).
+  git -C "$VAULT_DIR" reset -q --hard origin/main 2>/dev/null || true
+  git -C "$VAULT_DIR" clean -qfd 2>/dev/null || true
   echo "learning-worker: ERROR - Agent SDK distillation failed; queue NOT drained (captures preserved)." >&2
   alert red learning-worker "Learning worker failed" "Agent SDK distillation failed; queue preserved, will retry"
   exit 1
 fi
 
 if [ -z "$(git status --porcelain)" ]; then
-  echo "learning-worker: no rule/fact change proposed (skipped / duplicate / mechanical)."
+  echo "learning-worker: no rule change proposed in schnapp-os (skipped / duplicate / mechanical)."
 else
   git add -A
   git commit -q -m "self-edit: learning-loop promotion $(date -u +%F)"
   gate_out="$(mktemp)"
-  if bash "$REPO_ROOT/scripts/learning-gate.sh" origin/main > "$gate_out" 2>&1; then
+  if bash "$REPO_ROOT/scripts/learning-gate.sh" origin/main 'rules/*.md' > "$gate_out" 2>&1; then
     if git push -q origin HEAD:main 2>/dev/null; then
       echo "learning-worker: PROMOTED a clean self-edit to main."
     else
@@ -298,6 +357,71 @@ else
     fi
   fi
   rm -f "$gate_out"
+fi
+
+# --- vault fact leg (ADR 0028): gate + land the clone's fact diff on the VAULT's main ----------------
+# Same shape as the rules leg above, but in the worker-owned clone: commit the proposal, gate it with
+# the vault scope, run the clone's OWN schema checker (the same check the vault's CI enforces; running
+# it pre-push keeps a malformed fact from ever landing red), then push to the vault's main. Anything
+# held is reverted in the clone and filed as a review issue HERE (one review queue, in schnapp-os).
+if [ -z "$(git -C "$VAULT_DIR" status --porcelain)" ]; then
+  echo "learning-worker: no fact change proposed in the vault lane."
+else
+  git -C "$VAULT_DIR" add -A
+  git -C "$VAULT_DIR" commit -q -m "self-edit: learning-loop fact promotion $(date -u +%F)"
+  vgate_out="$(mktemp)"
+  vault_ok=true
+  (cd "$VAULT_DIR" && bash "$REPO_ROOT/scripts/learning-gate.sh" origin/main 'memory/*.md') \
+    > "$vgate_out" 2>&1 || vault_ok=false
+  # FLAT-LANE DEPTH CHECK (adv-1): the scope glob crosses '/', and a schema checker may scan only
+  # direct children, so a fact filed in a memory/ SUBDIRECTORY could slip both nets. The lane is
+  # flat by contract (one fact, one file, directly under memory/): HOLD any deeper path.
+  while IFS= read -r vf; do
+    [ -n "$vf" ] || continue
+    case "$vf" in
+      memory/*/*)
+        echo "fact not a direct child of memory/: $vf (flat lane: one fact, one file, no subdirectories)" >> "$vgate_out"
+        vault_ok=false ;;
+    esac
+  done <<< "$(git -C "$VAULT_DIR" diff --name-only origin/main...HEAD 2>/dev/null)"
+  if $vault_ok && [ -f "$VAULT_DIR/scripts/check-frontmatter.sh" ]; then
+    if ! bash "$VAULT_DIR/scripts/check-frontmatter.sh" "$VAULT_DIR/memory/" >> "$vgate_out" 2>&1; then
+      echo "vault schema check failed (the clone's scripts/check-frontmatter.sh)" >> "$vgate_out"
+      vault_ok=false
+    fi
+  fi
+  if $vault_ok; then
+    if git -C "$VAULT_DIR" push -q origin HEAD:main 2>/dev/null; then
+      echo "learning-worker: PROMOTED a clean fact self-edit to the vault lane."
+      # Best-effort: fast-forward the owner's live vault tree so the fact is visible locally now.
+      # Only when that tree is clean AND on main (never advance some other checked-out branch);
+      # NEVER reset or stash the owner's work. Failure is fine - the fact is on the vault's main
+      # and the next session-start sync picks it up.
+      if [ -d "$VAULT_LIVE/.git" ] \
+         && [ "$(git -C "$VAULT_LIVE" rev-parse --abbrev-ref HEAD 2>/dev/null)" = "main" ] \
+         && [ -z "$(git -C "$VAULT_LIVE" status --porcelain 2>/dev/null)" ]; then
+        git -C "$VAULT_LIVE" pull -q --ff-only origin main 2>/dev/null || true
+      fi
+    else
+      git -C "$VAULT_DIR" reset -q --hard origin/main 2>/dev/null || true
+      echo "learning-worker: vault push failed (remote moved?) - fact discarded; capture stays archived." >&2
+    fi
+  else
+    vpatch="$(git -C "$VAULT_DIR" show HEAD --patch --stat 2>/dev/null | head -c 8000)"
+    vreasons="$(cat "$vgate_out")"
+    git -C "$VAULT_DIR" reset -q --hard origin/main 2>/dev/null || true
+    # shellcheck disable=SC2016  # single-quoted printf format is intentional - printf expands %s/\n, not the shell
+    vissue_body="$(printf 'The nightly learning worker proposed a VAULT fact self-edit the gate HELD (nothing landed on the vault).\n\n## Gate reasons\n%s\n\n## Proposed change (vault repo, worker clone)\n```diff\n%s\n```\n' "$vreasons" "$vpatch")"
+    if command -v gh >/dev/null 2>&1 && \
+       gh issue create --title "learning-loop: vault fact self-edit held for review ($(date -u +%F))" \
+         --body "$vissue_body" \
+         >/dev/null 2>&1; then
+      echo "learning-worker: HELD vault fact self-edit - opened a review issue (nothing landed on the vault)."
+    else
+      echo "learning-worker: HELD vault fact self-edit (could not open issue) - $vreasons" >&2
+    fi
+  fi
+  rm -f "$vgate_out"
 fi
 
 archive_and_drain

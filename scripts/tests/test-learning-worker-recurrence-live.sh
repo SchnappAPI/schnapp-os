@@ -88,6 +88,23 @@ chmod +x "$shim_dir/gh" "$shim_dir/claude" "$shim_dir/noop-python"
 
 WORKER="$work/scripts/learning-worker.sh"
 
+# --- vault fixture: the live path preps a worker-owned vault clone BEFORE distillation (ADR 0028) ----
+# These cases write no facts (noop distill), so the vault leg stays a no-op; the fixture only keeps
+# clone prep off the network (every remote local). Fact-leg behavior: test-learning-worker-vault-live.sh.
+vault_origin="$root/vault-origin.git"
+vseed="$root/vault-seed"
+git init -q --bare "$vault_origin"
+git clone -q "$vault_origin" "$vseed" 2>/dev/null
+git -C "$vseed" config user.email test@example.com
+git -C "$vseed" config user.name  test
+git -C "$vseed" config commit.gpgsign false
+mkdir -p "$vseed/memory"
+printf '# MEMORY index\n' > "$vseed/memory/MEMORY.md"
+git -C "$vseed" add -A
+git -C "$vseed" commit -q -m "vault seed"
+git -C "$vseed" push -q origin HEAD:main
+vclone="$root/vclone"
+
 # Seed a repeat class: archive has 1 port-class capture, queue has 1 more matching + 1 unrelated single.
 # The port class recurs (count 2, present this run) → the worker drafts a gate for it.
 seed_queue() { # $1 = queue file, $2 = archive file
@@ -108,6 +125,7 @@ seed_queue "$qA" "$aA"; : > "$mA"
 outA="$(cd "$work" && PATH="$shim_dir:$PATH" GH_MODE=fail DISTILL_INPUT_LOG="$distinA" \
   LEARNING_QUEUE="$qA" LEARNING_ARCHIVE="$aA" LEARNING_GATE_DRAFTED="$mA" \
   LEARNING_DISTILL_PYTHON="$shim_dir/noop-python" \
+  LEARNING_VAULT_DIR="$vclone" LEARNING_VAULT_REMOTE="$vault_origin" LEARNING_VAULT_LIVE="$root/vault-live-unused" \
   bash "$WORKER" 2>&1)"
 rcA=$?
 check "$rcA" 0 "gh-FAIL: worker exits 0 (best-effort, never fails the worker)"
@@ -149,6 +167,7 @@ printf '2026-07-02T00:00:00Z\tcorrection\tthe SQL Server port is 6000 not 6001\n
 outB="$(cd "$work" && PATH="$shim_dir:$PATH" GH_MODE=succeed GH_CALL_LOG="$gh_log" DISTILL_INPUT_LOG="$distinB" \
   LEARNING_QUEUE="$qB" LEARNING_ARCHIVE="$aB" LEARNING_GATE_DRAFTED="$mB" \
   LEARNING_DISTILL_PYTHON="$shim_dir/noop-python" \
+  LEARNING_VAULT_DIR="$vclone" LEARNING_VAULT_REMOTE="$vault_origin" LEARNING_VAULT_LIVE="$root/vault-live-unused" \
   bash "$WORKER" 2>&1)"
 rcB=$?
 check "$rcB" 0 "gh-SUCCEED: worker exits 0"

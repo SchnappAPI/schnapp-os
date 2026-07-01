@@ -38,8 +38,10 @@ by who is acting:
   time. Edit the EXISTING rule (behavioral) or supersede the fact (memory), bump `updated:`, and
   commit **straight to `main`**.
 - **The nightly autonomous worker** (`learning-worker.sh`) is the only self-gated path: it writes a
-  proposed edit, then `learning-gate.sh` vets it - a clean proposal commits to `main`, anything held
-  becomes a GitHub **issue** for review. You never run that by hand.
+  proposed edit, then `learning-gate.sh` vets it - a clean rule proposal commits to this repo's
+  `main`, a clean fact proposal commits to the **vault's** `main` (via the worker-owned clone,
+  [ADR 0028](../../../decisions/0028-learning-loop-vault-fact-routing.md)), anything held becomes a
+  GitHub **issue** for review. You never run that by hand.
 
 ## 3 - Act (in-session)
 

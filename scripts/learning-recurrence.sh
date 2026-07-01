@@ -162,8 +162,8 @@ draft() {
       print "- Staff-engineer test: is a gate justified by THIS evidence? Do not gate what should stay advisory."
       print ""
       print "## Why a draft, not an auto-edit"
-      print "Gates are code/CI/hooks - outside the auto-land path (learning-gate.sh auto-lands only .md under"
-      print "rules/ or memory/). Building enforcement is an owner decision, by design."
+      print "Gates are code/CI/hooks - outside the auto-land path (learning-gate.sh auto-lands only rule .md"
+      print "under rules/ here, plus fact .md in the vault clone). Building enforcement is an owner decision, by design."
       print ""
       print "<<<GATE-DRAFT-END>>>"
     }'
