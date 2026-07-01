@@ -1271,3 +1271,10 @@ Append one line per step: date, step, what changed, why. Newest at the bottom of
   1 leaked occurrence from the log. Token value also reached this session's transcript → **SA-token rotation
   recommended (owner decision)**; see `rotate-secret` skill + `credentials-state` memory. Not public (local log +
   transcript only).
+- 2026-06-30 **Step 3 fully DONE + LIVE; session wrap → handoff 041.** Cutover (`49f79f6`) + security fix (`005da67`)
+  on main; auth proof + dry-run + shellcheck + `test-learning-worker.sh` 7/0 + a controlled e2e + a REAL live
+  LaunchAgent run all PASSED (loop live on the SDK path, `last exit 0`, queue drained, no re-leak). Owner decisions:
+  SA rotation DECLINED, bot stays file-only, user-scope permissions loosened to `bypassPermissions`. Incidental win:
+  the cutover removed the em-dash `PROMPT` heredoc that made the OLD worker syntax-error under launchd's empty locale.
+  Worktree `quizzical-hugle-caf6a0` was a byte-identical duplicate of main (disposable; `~/cleanup-worktree.sh`).
+  Next: substrate-rethink P1/P2/P3.
