@@ -4,19 +4,19 @@ updated: 2026-06-30
 ---
 # Git conventions
 
-- Branch names (manual branches are not part of the workflow — see Workflow; applies only if one
+- Branch names (manual branches are not part of the workflow - see Workflow; applies only if one
   is ever unavoidable, e.g. a harness-created worktree): lowercase, hyphenated, type-prefixed:
   `feat/odds-loader`, `fix/null-handling`, `chore/repo-sync`.
 - Commit messages: Conventional Commits. Start with a type and colon: `feat: add MLB Statcast
   pull`, `fix: handle empty odds response`, `chore: bump dependencies`. Types: feat, fix,
   chore, docs, refactor, test.
 
-## Workflow (main only — ADR 0016 / 0017)
+## Workflow (main only - ADR 0016 / 0017)
 
-- **Everything commits straight to `main`** — directed work and autonomous self-edits alike, no
+- **Everything commits straight to `main`**: directed work and autonomous self-edits alike, no
   feature branches and no PRs (ADR 0016). Commit and push **every** change immediately so local
   and GitHub never diverge (mechanics: the keep-tracker-current memory +
-  `rules/global/anti-stale.md` "Tracker currency" — do not restate them here). Run
+  `rules/global/anti-stale.md` "Tracker currency" - do not restate them here). Run
   tests + a local review pass before pushing; CI runs on the push to `main`.
 - **Autonomous self-edits use a pre-commit gate, not a branch** (`learning-gate.sh`): APPROVE →
   commit to `main`; HOLD → discard and open a review issue (ADR 0016). No `self-edit/*` branches.

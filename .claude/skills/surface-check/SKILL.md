@@ -13,11 +13,11 @@ capability exists without probing it (see
 ## 1. Identify the surface
 
 Infer from observable signals, then state which it is:
-- **Code-Mac** — local filesystem + shell, hooks run, local Mac MCP (`op_*`, `shell_exec`, SQL) present.
-- **Code-work-machine** — local filesystem + shell, but no local Mac MCP; work restrictions.
-- **Cowork** — plugin host, hosted MCP only, no local shell; hook execution unverified.
-- **claude.ai web/chat** — no filesystem/shell/hooks; hosted connectors + skills only.
-- **iPhone** — most limited; hosted connectors only.
+- **Code-Mac**: local filesystem + shell, hooks run, local Mac MCP (`op_*`, `shell_exec`, SQL) present.
+- **Code-work-machine**: local filesystem + shell, but no local Mac MCP; work restrictions.
+- **Cowork**: plugin host, hosted MCP only, no local shell; hook execution unverified.
+- **claude.ai web/chat**: no filesystem/shell/hooks; hosted connectors + skills only.
+- **iPhone**: most limited; hosted connectors only.
 
 If ambiguous, probe (try a read-only `ls`/shell; list MCP tools) or ask. Read the matching
 [`surfaces/<surface>.md`](../../../surfaces/) profile for the expected baseline.
@@ -40,7 +40,7 @@ Output a compact table: **Capability | Expected (per profile) | Present now | Fa
 
 For every missing item, give the always-complete path (per
 [`surfaces/README.md`](../../../surfaces/README.md)): Native → Remote MCP (call the Mac /
-hosted connector) → Generated prompt. Never leave a gap as a dead end — state the route.
+hosted connector) → Generated prompt. Never leave a gap as a dead end - state the route.
 
 End with a one-line verdict: what works here, what to route elsewhere, and (Code) whether any
 git/memory state must be addressed before new work.

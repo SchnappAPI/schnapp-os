@@ -13,21 +13,21 @@ machine. Map: [README.md](README.md). Durable why: [docs/framework.md](docs/fram
 
 ## Rules in effect
 
-**Global rules** — the 8 always-on rules already load in this repo (and every repo on the machine)
-via `~/.claude/CLAUDE.md`, which `@import`s them from here. Do **not** re-import them below — that
+**Global rules**: the 8 always-on rules already load in this repo (and every repo on the machine)
+via `~/.claude/CLAUDE.md`, which `@import`s them from here. Do **not** re-import them below - that
 double-loads. Canonical source (edit here, never in `~/.claude/`):
 [rules/global/](rules/global/).
 
-**Path-scoped modules** — an on-demand reference library at
+**Path-scoped modules**: an on-demand reference library at
 [rules/modules/](rules/modules/) (`lang/ tool/ activity/ coding/
 context/`). Nothing is force-loaded at the repo root; pull a module in only when a task needs it.
 Full inventory + scopes: [CATALOG.md](CATALOG.md) (generated).
 
-**Skills in reach** — schnapp-os's own skills/agents are plugin-global. The ones most relevant when
+**Skills in reach**: schnapp-os's own skills/agents are plugin-global. The ones most relevant when
 working *in this repo*: `status`, `session-hygiene`, `surface-check`, `rules-distill`, `learn-route`,
 `update-docs`, `update-codemaps`. Full set: [CATALOG.md](CATALOG.md).
 
-## Project lane (schnapp-os-specific invariants — the one place they live)
+## Project lane (schnapp-os-specific invariants - the one place they live)
 
 These are the non-obvious rules for working *on the system itself*. All point at the owner; none
 restate mutable state.

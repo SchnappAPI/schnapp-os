@@ -15,7 +15,7 @@ matches the source before trusting it ([verify-before-asserting](../../../rules/
 
 | Input characteristic | Use |
 |---|---|
-| Stable, repeating layout (CSV, fixed-width, consistent report rows) | `csv`/`pandas`, fixed-width slices — no regex needed |
+| Stable, repeating layout (CSV, fixed-width, consistent report rows) | `csv`/`pandas`, fixed-width slices - no regex needed |
 | Well-formed JSON/XML from an API | Native parser + schema/dataclass; never regex structured markup |
 | Mostly-regular text with a clear grammar (labeled fields, "Key: value" lines) | Regex with named groups |
 | Same as above but a small irregular tail (typos, missing fields, merged rows) | Regex first, LLM only on the flagged minority |
@@ -66,7 +66,7 @@ def parse(report: str) -> tuple[list[PlayerLine], list[str]]:
 Then escalate only `leftovers` to an LLM (cheapest model that works), validate its JSON
 against the same `PlayerLine` shape, and tag those rows with a lower `confidence` so the
 SQL Server load (or a review step) can treat them differently. Never mutate parsed rows in
-place — return new instances from each step.
+place - return new instances from each step.
 
 ## Guardrails
 
@@ -76,7 +76,7 @@ place — return new instances from each step.
   text answer is not parsed data.
 - Treat extraction confidence as a column, not a side channel: persist it so downstream SQL
   can filter or flag low-confidence rows.
-- Test the irregular cases (missing field, merged row, encoding noise) first — they are
+- Test the irregular cases (missing field, merged row, encoding noise) first - they are
   where both regex and LLM break.
 
 This is the extraction stage of the `etl-pipeline-build` skill; the load and SQL Server

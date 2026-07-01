@@ -1,6 +1,6 @@
 ---
 name: session-hygiene
-description: Use on surfaces WITHOUT hooks (claude.ai web/chat, iPhone, Cowork until verified) to run the must-happen session procedures that Claude Code does automatically via hooks — at the START of work (freshness/git gate: catch up, surface unmerged/unpushed/stale state before new work), when WRAPPING UP (end-of-session write: persist fresh memory + handoff, commit/push, back up), and right AFTER the owner corrects a mistake (route the fix to a rule/memory/doc so it can't recur). Invoke when starting or ending work on a hookless surface, or whenever a correction lands.
+description: Use on surfaces WITHOUT hooks (claude.ai web/chat, iPhone, Cowork until verified) to run the must-happen session procedures that Claude Code does automatically via hooks - at the START of work (freshness/git gate: catch up, surface unmerged/unpushed/stale state before new work), when WRAPPING UP (end-of-session write: persist fresh memory + handoff, commit/push, back up), and right AFTER the owner corrects a mistake (route the fix to a rule/memory/doc so it can't recur). Invoke when starting or ending work on a hookless surface, or whenever a correction lands.
 ---
 
 # session-hygiene
@@ -9,7 +9,7 @@ The "must happen every time" procedures, for surfaces where **hooks do not run**
 (Mac + work machines) these are enforced deterministically by the Part-7.2 hooks
 ([`hooks/`](../../../hooks/)). Here there is no shell/hooks, so the agent runs the
 **same procedures** by hand. The procedures are authored **once** in
-[docs/memory-lane.md](../../../docs/memory-lane.md) — this skill does not restate them; it points
+[docs/memory-lane.md](../../../docs/memory-lane.md) - this skill does not restate them; it points
 to each and adds the hookless-surface execution notes. Confirm what is actually loaded first
 with [surface-check](../surface-check/SKILL.md).
 
@@ -35,10 +35,10 @@ No local git, shell, filesystem, or `backup-archive.sh` here. Same intent, diffe
   to the owner (always-complete: never silently skip the write).
 - **Back up** (end-of-session write): `backup-archive.sh` needs a shell and cannot run here. The
   repo write above already lands in git (the source of truth); for the chat transcript itself use
-  export or the `live-session-cache` skill. Do not claim the OneDrive/Obsidian mirror ran — it runs
+  export or the `live-session-cache` skill. Do not claim the OneDrive/Obsidian mirror ran - it runs
   from a Code/Mac session (the SessionEnd hook), not from here.
 - **Route a correction** (on-correction update): classify and route per the
-  [`learn-route`](../learn-route/SKILL.md) skill — preference → a [`rules/global/`](../../../rules/global/)
+  [`learn-route`](../learn-route/SKILL.md) skill - preference → a [`rules/global/`](../../../rules/global/)
   file; durable fact → memory **supersede** (`source: correction`, today's `updated:`); stale doc →
   fix the doc. Land each via the GitHub connector or a generated Code prompt.
 

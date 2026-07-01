@@ -1,6 +1,6 @@
 ---
 name: appfolio
-description: Use when integrating AppFolio — pulling AppFolio custom reports or the AppFolio Reporting/Data API (units, residents, occupancy, rent roll, the "fish" export) and loading them into SQL Server. Owner work tool (1st Lake property data). For COMPARING an AppFolio export against another dataset cell-by-cell, use the fish-compare skill instead — do not reimplement reconciliation here.
+description: Use when integrating AppFolio - pulling AppFolio custom reports or the AppFolio Reporting/Data API (units, residents, occupancy, rent roll, the "fish" export) and loading them into SQL Server. Owner work tool (1st Lake property data). For COMPARING an AppFolio export against another dataset cell-by-cell, use the fish-compare skill instead - do not reimplement reconciliation here.
 ---
 
 # appfolio

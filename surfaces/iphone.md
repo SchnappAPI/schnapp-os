@@ -8,7 +8,7 @@ Most limited. Use for capture, quick questions, and triggering remote work.
   (status: [`memory/credentials-state.md`](../memory/credentials-state.md)); to *use* a secret prefer
   the Mac's `op_run`/`op_inject` via the portal's mac-mcp tools when the Mac is on.
 - **Skills:** whatever is enabled on the account.
-- **"Must happen" behavior:** no hooks — the [`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md)
+- **"Must happen" behavior:** no hooks - the [`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md)
   skill applies as on claude.ai, but iPhone is for triggering: prefer firing the procedure on the Mac
   via remote MCP over doing the repo write from the phone.
 - **Best use:** dictate context, fire a routine on the Mac via remote MCP, review status.

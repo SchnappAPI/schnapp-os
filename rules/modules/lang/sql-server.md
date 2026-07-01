@@ -13,7 +13,7 @@ updated: 2026-06-03
 | Reserved keywords | UPPERCASE | SELECT, FROM, JOIN, WHERE |
 | Aliases | short lowercase | p, o |
 
-## Table naming (LOCKED — plural by default)
+## Table naming (LOCKED - plural by default)
 Tables are plural snake_case; a table names the collection it holds: players, teams, games,
 batting_stats, player_props, game_lines, snap_counts, discovered_events.
 

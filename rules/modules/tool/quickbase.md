@@ -9,5 +9,5 @@ Lane discipline for Quickbase projects: treat API responses as untrusted
 project lane, never here. Secrets (user token, realm) are `op://` references.
 
 Integration patterns (JSON API, querying, pagination, rate limits, FID mapping, loading into
-SQL Server) live in the **quickbase** skill — invoke it for the how-to, this module for the
+SQL Server) live in the **quickbase** skill - invoke it for the how-to, this module for the
 always-on conventions.

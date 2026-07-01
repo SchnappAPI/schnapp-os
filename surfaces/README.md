@@ -21,12 +21,12 @@ secret in a command, prefer the Mac's `op_run`/`op_inject` (value stays out of t
 `op_read` only when the Mac is off and the hosted connector is healthy.
 
 ## Profiles
-- `code-mac.md` — primary, most capable.
-- `code-work-machines.md` — work laptop and desktop (restricted).
+- `code-mac.md` - primary, most capable.
+- `code-work-machines.md` - work laptop and desktop (restricted).
 - `cowork.md`
 - `claude-ai-web.md`
 - `iphone.md`
 
-`always-loaded-instructions.md` is the canonical hookless always-loaded block (paste into claude.ai **Settings > Profile > Preferences** for account-wide/global coverage incl. iPhone — owner's choice 2026-06-16 — and into Cowork instructions separately).
+`always-loaded-instructions.md` is the canonical hookless always-loaded block (paste into claude.ai **Settings > Profile > Preferences** for account-wide/global coverage incl. iPhone - owner's choice 2026-06-16 - and into Cowork instructions separately).
 
 The `surface-check` skill reports what is loaded vs missing on the current surface.

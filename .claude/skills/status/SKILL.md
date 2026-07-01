@@ -1,13 +1,13 @@
 ---
 name: status
-description: Use when the user asks "what's the state of everything", "status", "is anything stale/unmerged/unpushed", "are the connectors/services up", "when was the last backup", or wants a whole-system health view across surfaces before planning work. The cross-surface control plane — aggregates git, doc-freshness, memory, backup, connector/service health, and per-surface enablement into one view. Where surface-check answers "what's loaded HERE", status answers "what's the state of the WHOLE system".
+description: Use when the user asks "what's the state of everything", "status", "is anything stale/unmerged/unpushed", "are the connectors/services up", "when was the last backup", or wants a whole-system health view across surfaces before planning work. The cross-surface control plane - aggregates git, doc-freshness, memory, backup, connector/service health, and per-surface enablement into one view. Where surface-check answers "what's loaded HERE", status answers "what's the state of the WHOLE system".
 ---
 
 # status
 
 The control plane. One view of the whole schnapp-os system: what is stale,
 unmerged, or unpushed; whether the scheduled routines are healthy; whether connectors and services
-are up; when the last backup ran; and which surfaces are enabled. Builds on — does not duplicate —
+are up; when the last backup ran; and which surfaces are enabled. Builds on, does not duplicate,
 [`surface-check`](../surface-check/SKILL.md): surface-check reports the **current** surface;
 `status` aggregates across **all** of them. **Probe every signal; never assume** (global rule
 [`verify-before-asserting`](../../../rules/global/verify-before-asserting.md)). State which signals you
@@ -27,15 +27,15 @@ could not read on this surface and the route to read them, rather than guessing.
 
 ## Report
 
-A compact table — **Domain | State | Detail | Action needed** — with a clear OK / WARN / BLOCKED per
-row. Then a one-line verdict and the **single most important next action** (e.g. "1 branch unmerged
-— merge PR #N", "backup 3 days stale — run backup-archive on the Mac", "all green").
+A compact table - **Domain | State | Detail | Action needed**: with a clear OK / WARN / BLOCKED per
+row. Then a one-line verdict and the **single most important next action** (e.g. "1 branch unmerged:
+merge PR #N", "backup 3 days stale - run backup-archive on the Mac", "all green").
 
 Rules:
-- Read-only. `status` never merges, deletes, restarts, or mutates — it reports and points at the
+- Read-only. `status` never merges, deletes, restarts, or mutates - it reports and points at the
   action that would fix each row (delete merged-residue branches per ADR 0017, prune stale
   `[gone]` branches, run the infra-health routine, clear open PRs via [`pr-sweep`](../pr-sweep/SKILL.md)).
-- Distinguish "WARN: real drift" from "could not read on this surface" — never let an unreadable
+- Distinguish "WARN: real drift" from "could not read on this surface" - never let an unreadable
   signal look green. Name the fallback for each gap (same always-complete discipline as
   `surface-check`).
 - Cross-reference the scheduled routines: if the nightly `scheduled-routines` run is green, trust

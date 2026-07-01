@@ -1,7 +1,7 @@
 ---
 module: lang/_reference-why-naming-differs
 composed: false
-note: reference only — not composed into projects, not loaded as a rule
+note: reference only - not composed into projects, not loaded as a rule
 updated: 2026-06-03
 ---
 # Why the naming rules differ (reference)

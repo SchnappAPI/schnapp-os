@@ -1,7 +1,7 @@
 # schnapp-os always-loaded instructions (hookless surfaces)
 
 Canonical text to paste into the always-loaded slot of each hookless surface: claude.ai
-(Settings > Profile > Preferences = account-wide/global, owner's choice 2026-06-16 — this also
+(Settings > Profile > Preferences = account-wide/global, owner's choice 2026-06-16 - this also
 covers iPhone on the same account) and Cowork instructions separately (until hooks are confirmed).
 On Code these behaviors are delivered by the repo's hooks + global rules; this block is the hookless
 equivalent. Authored once here; the surface profiles point to it.

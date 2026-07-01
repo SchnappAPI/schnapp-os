@@ -1,13 +1,13 @@
 ---
 name: etl-pipeline-build
-description: Use when building or changing a Python ETL pipeline that loads SQL Server — extract from an API / file / vendor source, transform, and upsert into SQL Server 2022. Especially when it must run unattended (GitHub Actions or a Mac LaunchAgent), be idempotent and safely re-runnable, resolve secrets from 1Password, and load fast (fast_executemany, bulk insert).
+description: Use when building or changing a Python ETL pipeline that loads SQL Server - extract from an API / file / vendor source, transform, and upsert into SQL Server 2022. Especially when it must run unattended (GitHub Actions or a Mac LaunchAgent), be idempotent and safely re-runnable, resolve secrets from 1Password, and load fast (fast_executemany, bulk insert).
 ---
 
 # etl-pipeline-build
 
 Build the owner's standard pipeline shape: **extract → validate → transform → idempotent
 bulk upsert into SQL Server 2022**, scheduled and unattended. This skill is the workflow;
-the conventions live in the rules it composes — do not restate them here.
+the conventions live in the rules it composes - do not restate them here.
 
 Composes: [`activity/etl-pipeline`](../../../rules/modules/activity/etl-pipeline.md),
 [`lang/python`](../../../rules/modules/lang/python.md),
@@ -27,7 +27,7 @@ For T-SQL specifics use the **sql-server-patterns** skill; for source-specific w
 3. **Validate at the boundary.** External data is untrusted; check shape/types/row counts
    before it reaches the DB (see `coding/input-validation`).
 4. **Fast by default.** Bulk insert with `fast_executemany=True`; set-based SQL over loops.
-5. **Secrets are `op://` references**, resolved at runtime — never literals in code or YAML.
+5. **Secrets are `op://` references**, resolved at runtime - never literals in code or YAML.
 
 ## Workflow
 
@@ -54,7 +54,7 @@ try:
     cur.execute("SELECT TOP 0 * INTO #stage FROM dbo.player_props;")
     cur.executemany(
         "INSERT INTO #stage (event_id, market, line, updated_at) VALUES (?,?,?,?)",
-        rows,  # list[tuple] — already validated upstream
+        rows,  # list[tuple] - already validated upstream
     )
     # 2. Set-based MERGE on the natural key = idempotent, no row-by-row round trips.
     cur.execute("""
@@ -69,7 +69,7 @@ try:
     conn.commit()           # 3. One transaction: all-or-nothing, no partial write.
 except Exception:
     conn.rollback()         # target unchanged on any failure
-    raise                   # fail loud — never swallow in an unattended run
+    raise                   # fail loud - never swallow in an unattended run
 ```
 
 ## GitHub Actions schedule (secrets stay references)

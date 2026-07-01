@@ -1,6 +1,6 @@
 ---
 name: performance-optimizer
-description: Use when something is slow and needs a measured fix: a Python ETL run that takes too long, a SQL Server query or load that drags, high memory, or (occasionally) a web tool's page metrics. Profiles first, finds the real bottleneck, proves the win with numbers. The entry point for perf work — composes the benchmark, data-throughput-accelerator (batch), and latency-critical-systems (hot-path) skills as the workload calls for.
+description: Use when something is slow and needs a measured fix: a Python ETL run that takes too long, a SQL Server query or load that drags, high memory, or (occasionally) a web tool's page metrics. Profiles first, finds the real bottleneck, proves the win with numbers. The entry point for perf work - composes the benchmark, data-throughput-accelerator (batch), and latency-critical-systems (hot-path) skills as the workload calls for.
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: sonnet
 ---

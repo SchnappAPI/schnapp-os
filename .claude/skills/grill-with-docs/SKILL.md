@@ -21,7 +21,7 @@ the answer is already there. Resolve decisions in dependency order.
   how the repo already defines it, call it out: "the glossary uses X for that; you mean Y.
   Which?"
 - **Sharpen fuzzy terms.** Vague or overloaded words get a precise canonical name. "You said
-  'account' — Customer or User? Those differ."
+  'account' - Customer or User? Those differ."
 - **Stress-test with concrete scenarios.** Invent edge cases that force precise boundaries
   between concepts.
 - **Cross-reference the code.** When the owner states how something works, check the code
@@ -29,17 +29,17 @@ the answer is already there. Resolve decisions in dependency order.
 
 ## Capture as you go (single source of truth)
 
-Write resolutions where they belong, the moment they resolve — do not batch. Per
+Write resolutions where they belong, the moment they resolve - do not batch. Per
 ../../rules/global/anti-stale.md, one fact lives in one canonical file.
 
 - **A resolved term** → the project's glossary doc (a `glossary` or `CONTEXT` note in the
   project, or the memory lane if the project has none). Keep it a glossary: definitions only,
   no implementation detail, no spec, no scratch.
 - **A durable decision** → the schnapp-os `decisions/` directory convention (one file per
-  decision). Record it sparingly — only when **all three** hold:
-  1. **Hard to reverse** — changing your mind later costs something real.
-  2. **Surprising without context** — a future reader will ask "why this way?"
-  3. **A genuine trade-off** — real alternatives existed and you picked one for stated
+  decision). Record it sparingly - only when **all three** hold:
+  1. **Hard to reverse**: changing your mind later costs something real.
+  2. **Surprising without context**: a future reader will ask "why this way?"
+  3. **A genuine trade-off**: real alternatives existed and you picked one for stated
      reasons.
   Missing any one: skip it. Note what to record, the alternatives, and why you chose; let the
   `decisions/` file format carry the rest. Create files lazily, only when there is something

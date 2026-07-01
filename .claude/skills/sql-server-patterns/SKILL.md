@@ -1,6 +1,6 @@
 ---
 name: sql-server-patterns
-description: Use when writing or reviewing T-SQL for SQL Server 2022 — upserts/MERGE, idempotent schema changes (CREATE OR ALTER, IF NOT EXISTS), indexing, rewriting cursor/row-by-row logic as set-based, bulk loads, transactions and TRY/CATCH, or SQL Server-specific features (STRING_SPLIT with ordinal, GENERATE_SERIES, JSON, window functions). This is the owner's database — do NOT apply Postgres/MySQL idioms (no SERIAL, no LIMIT, no ILIKE, no backticks).
+description: Use when writing or reviewing T-SQL for SQL Server 2022 - upserts/MERGE, idempotent schema changes (CREATE OR ALTER, IF NOT EXISTS), indexing, rewriting cursor/row-by-row logic as set-based, bulk loads, transactions and TRY/CATCH, or SQL Server-specific features (STRING_SPLIT with ordinal, GENERATE_SERIES, JSON, window functions). This is the owner's database - do NOT apply Postgres/MySQL idioms (no SERIAL, no LIMIT, no ILIKE, no backticks).
 ---
 
 # sql-server-patterns
@@ -31,7 +31,7 @@ This skill is the dialect + pattern reference. For Python-side loading use the
 CREATE OR ALTER VIEW dbo.v_active_props AS
 SELECT event_id, market, line FROM dbo.player_props WHERE updated_at > DATEADD(day,-1,SYSUTCDATETIME());
 GO
--- Tables/columns/indexes have no CREATE OR ALTER — guard with existence checks.
+-- Tables/columns/indexes have no CREATE OR ALTER - guard with existence checks.
 IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='player_props' AND schema_id=SCHEMA_ID('dbo'))
     CREATE TABLE dbo.player_props (event_id INT NOT NULL, market VARCHAR(40) NOT NULL,
         line DECIMAL(6,2) NULL, updated_at DATETIME2 NOT NULL,
@@ -74,11 +74,11 @@ END CATCH;
 
 ## SQL Server 2022 features worth reaching for
 
-- `GENERATE_SERIES(1, @n)` — number/date spines without a tally table.
-- `STRING_SPLIT(@csv, ',', 1)` — the `enable_ordinal` arg (2022+) preserves order.
-- `DATE_BUCKET(day, 1, ts)` — time bucketing for aggregation.
-- `JSON_VALUE` / `OPENJSON` — parse vendor JSON payloads into rows; pair with `WITH` schema.
-- Windowed `SUM() OVER (PARTITION BY … ORDER BY …)` — running totals without self-joins.
+- `GENERATE_SERIES(1, @n)` - number/date spines without a tally table.
+- `STRING_SPLIT(@csv, ',', 1)` - the `enable_ordinal` arg (2022+) preserves order.
+- `DATE_BUCKET(day, 1, ts)` - time bucketing for aggregation.
+- `JSON_VALUE` / `OPENJSON` - parse vendor JSON payloads into rows; pair with `WITH` schema.
+- Windowed `SUM() OVER (PARTITION BY … ORDER BY …)` - running totals without self-joins.
 
 ## Common mistakes
 

@@ -1,4 +1,4 @@
-# schnapp-os — plan pointer
+# schnapp-os - plan pointer
 
 The original build plan (the 11-Part rebuild of this system) is DONE: all Parts closed. Its full text
 is archived verbatim at [docs/archive/PLAN-archive-2026-07-01.md](docs/archive/PLAN-archive-2026-07-01.md)

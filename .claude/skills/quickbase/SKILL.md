@@ -1,6 +1,6 @@
 ---
 name: quickbase
-description: Use when integrating Quickbase — calling the Quickbase JSON RESTful API (query/insert/update records), handling app IDs / table IDs (DBIDs) / numeric field IDs (FIDs), paginating large result sets, respecting rate limits, or loading Quickbase data into SQL Server. Owner work tool (1st Lake).
+description: Use when integrating Quickbase - calling the Quickbase JSON RESTful API (query/insert/update records), handling app IDs / table IDs (DBIDs) / numeric field IDs (FIDs), paginating large result sets, respecting rate limits, or loading Quickbase data into SQL Server. Owner work tool (1st Lake).
 ---
 
 # quickbase
@@ -17,7 +17,7 @@ pulled data, compose the **etl-pipeline-build** skill. Conventions:
 - Base: `https://api.quickbase.com/v1`. Auth header: `Authorization: QB-USER-TOKEN <token>`
   (user token, an `op://` ref) plus `QB-Realm-Hostname: <realm>.quickbase.com`.
 - Identifiers are opaque and brittle: **app ID**, **table ID (DBID)**, and numeric
-  **field IDs (FIDs)** — `3` is always Record ID#. Map FID→meaning in the project lane,
+  **field IDs (FIDs)**: `3` is always Record ID#. Map FID→meaning in the project lane,
   never by guessing.
 - Records query is a POST to `/records/query` with a JSON body, not a GET with query string.
 
@@ -56,6 +56,6 @@ def query_all(table_id: str, select: list[int], where: str = "") -> list[dict]:
 - **Untrusted shape**: every cell is `{"value": ...}` keyed by the FID string; validate
   presence and type before mapping into typed columns (input-validation).
 - **IDs are config, not code**: app/table/field IDs live in the project lane / a config file,
-  never hardcoded across modules — they differ per app and change.
+  never hardcoded across modules - they differ per app and change.
 - **Writes**: `/records` POST upserts by including FID `3` (Record ID#) to update, omit to
   insert. Treat as the same idempotency discipline as any ETL write.

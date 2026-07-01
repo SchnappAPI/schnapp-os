@@ -6,7 +6,7 @@ description: Use when a decision has multiple credible paths and no obvious winn
 # council
 
 Convene four advisors for a decision under ambiguity: the in-context voice (Architect) plus
-three fresh subagents — Skeptic, Pragmatist, Critic. This is for **deciding under ambiguity**,
+three fresh subagents - Skeptic, Pragmatist, Critic. This is for **deciding under ambiguity**,
 not code review, planning, or architecture design.
 
 Examples: monorepo vs polyrepo; ship the ETL rewrite now vs hold for backfill coverage;
@@ -31,7 +31,7 @@ feature flag vs full rollout; narrow scope vs keep strategic breadth.
 | Critic | edge cases, downside risk, failure modes |
 
 The three external voices launch as **fresh subagents with only the question and the minimal
-context** — never the full transcript. That isolation is the anti-anchoring mechanism.
+context**: never the full transcript. That isolation is the anti-anchoring mechanism.
 
 ## Workflow
 
@@ -40,8 +40,8 @@ context** — never the full transcript. That isolation is the anti-anchoring me
 2. **Gather only necessary context.** Codebase-specific: collect the few relevant
    files/snippets/metrics, keep it compact. Strategic: skip repo snippets unless they change
    the answer.
-3. **Form the Architect position first** — your initial call, three strongest reasons, the
-   main risk in your preferred path — *before* reading the others, so the synthesis is not
+3. **Form the Architect position first**: your initial call, three strongest reasons, the
+   main risk in your preferred path - *before* reading the others, so the synthesis is not
    just an echo.
 4. **Launch the three voices in parallel.** Each gets the question, compact context, a strict
    role, no extra history. Prompt shape:
@@ -56,15 +56,15 @@ context** — never the full transcript. That isolation is the anti-anchoring me
    [only the relevant snippets or constraints]
 
    Respond with:
-   1. Position — 1-2 sentences
-   2. Reasoning — 3 concise bullets
-   3. Risk — biggest risk in your recommendation
-   4. Surprise — one thing the other voices may miss
+   1. Position - 1-2 sentences
+   2. Reasoning - 3 concise bullets
+   3. Risk - biggest risk in your recommendation
+   4. Surprise - one thing the other voices may miss
 
    Be direct. No hedging. Under 300 words.
    ```
 
-   Role emphasis — Skeptic: challenge the framing, propose the simplest credible alternative.
+   Role emphasis - Skeptic: challenge the framing, propose the simplest credible alternative.
    Pragmatist: optimize for speed and real-world execution. Critic: surface downside risk and
    why it could fail.
 5. **Synthesize with guardrails.** Do not dismiss an external view without saying why. If one
@@ -76,10 +76,10 @@ context** — never the full transcript. That isolation is the anti-anchoring me
    ```markdown
    ## Council: [short decision title]
 
-   **Architect:** [position] — [why]
-   **Skeptic:** [position] — [why]
-   **Pragmatist:** [position] — [why]
-   **Critic:** [position] — [why]
+   **Architect:** [position] - [why]
+   **Skeptic:** [position] - [why]
+   **Pragmatist:** [position] - [why]
+   **Critic:** [position] - [why]
 
    ### Verdict
    - **Consensus:** [where they align]

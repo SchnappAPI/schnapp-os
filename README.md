@@ -5,12 +5,12 @@ memory, and credential references, usable on Claude Code (all machines), Cowork,
 claude.ai. One source of truth. No duplication. Nothing siloed. References to secrets only,
 never values. Private repo.
 
-## Live status — do not duplicate here
+## Live status - do not duplicate here
 This README states no progress/status (status hardcoded in a README is the classic stale doc).
 Status lives in one canonical place and is read there:
-- **[PLAN.md](PLAN.md)** — pointer to where live planning now lives (per-initiative under
+- **[PLAN.md](PLAN.md)**: pointer to where live planning now lives (per-initiative under
   `docs/superpowers/plans/`, each with its own step boxes) plus the archived original build plan.
-- **[PROGRESS.md](PROGRESS.md)** — running execution log, newest at the bottom of each day.
+- **[PROGRESS.md](PROGRESS.md)**: running execution log, newest at the bottom of each day.
 
 ## Map
 | Path | What |
@@ -20,11 +20,11 @@ Status lives in one canonical place and is read there:
 | [PROGRESS.md](PROGRESS.md) | Execution log |
 | [decisions/](decisions/) | One file per decision (the "why") |
 | [handoffs/](handoffs/) | Dated session handoffs; the newest, highest-numbered is the resume point |
-| [rules/](rules/) | Rules — `global/` (always-on) + `modules/` (path-scoped lang, tool, activity, context — a plain reference library) |
+| [rules/](rules/) | Rules - `global/` (always-on) + `modules/` (path-scoped lang, tool, activity, context - a plain reference library) |
 | [CATALOG.md](CATALOG.md) | Generated inventory of rules/skills/commands/hooks (do not edit; `gen-catalog.sh`) |
 | [templates/](templates/) | `project-CLAUDE.md` (manual project starter) + `user-global-CLAUDE.md` (the `~/.claude/CLAUDE.md` copy) |
 | [surfaces/](surfaces/) | One operating profile per surface (Code, Cowork, claude.ai, iPhone) |
-| [connectors/](connectors/) | Remote MCP connectors — `op-mcp` (1Password resolver), `memory-mcp` (cross-surface memory), `mac`/`github`/`obsidian-mcp` |
+| [connectors/](connectors/) | Remote MCP connectors - `op-mcp` (1Password resolver), `memory-mcp` (cross-surface memory), `mac`/`github`/`obsidian-mcp` |
 | [docs/memory-lane.md](docs/memory-lane.md) | Memory procedures (freshness gate, end-of-session write, on-correction routing). Global lane lives in the vault `SchnappAPI/schnapp-vault`, not here; schema in the vault's `agents.md` |
 | [credentials-map.md](credentials-map.md) | `op://` reference map (references only) |
 | [docs/environment-and-access.md](docs/environment-and-access.md) | Never-blocked config: required network allowlist, git-write path, per-surface delivery (ADR 0018) |
@@ -44,20 +44,20 @@ One repo, used across surfaces. These are the install steps; the original build 
 complete, archived in [docs/archive/PLAN-archive-2026-07-01.md](docs/archive/PLAN-archive-2026-07-01.md).
 Per-surface operating detail lives in [surfaces/](surfaces/) and is referenced here, not repeated.
 
-### Code — primary Mac
+### Code - primary Mac
 1. Clone to `~/code/schnapp-os` (the path the hooks, `~/.claude/CLAUDE.md`, and the backup all assume).
-2. **User-global setup in `~/.claude/`** (these load in *every* repo on the machine, not just this one —
-   they are the global lane's delivery):
+2. **User-global setup in `~/.claude/`** (these load in *every* repo on the machine, not just this one.
+   They are the global lane's delivery):
    - Create `~/.claude/CLAUDE.md` by copying the body of
      [templates/user-global-CLAUDE.md](templates/user-global-CLAUDE.md) (that file lives outside the repo,
      so the template is its canonical copy). It `@import`s the 8 global rules from the repo.
    - In `~/.claude/settings.json` set `"autoMemoryDirectory": "~/code/schnapp-vault/memory"` so the global
      **memory** lane (the vault `SchnappAPI/schnapp-vault`) loads in every repo. A plugin cannot deliver
      this key (only `agent`/`subagentStatusLine` are plugin-settable), and a project-scoped setting reaches
-     only that project — so user scope is the only global delivery. Requires the vault cloned to
+     only that project - so user scope is the only global delivery. Requires the vault cloned to
      `~/code/schnapp-vault`. Procedures: [docs/memory-lane.md](docs/memory-lane.md).
 3. **Accept the workspace-trust dialog** on first open of the repo. Until accepted, the project hooks
-   silently do nothing — this is the first thing to check if the SessionStart gate does not print. (The
+   silently do nothing - this is the first thing to check if the SessionStart gate does not print. (The
    user-scope memory lane from step 2 loads regardless of trust; trust gates the *project* hooks/settings.)
 4. Hooks: the repo's `.claude/settings.json` wires the SessionStart freshness gate, the Stop push-gate,
    and the SessionEnd backup (dev-time dogfood), plus the edit-time PostToolUse guards (secret-scan,
@@ -68,7 +68,7 @@ Per-surface operating detail lives in [surfaces/](surfaces/) and is referenced h
 6. Credentials: 1Password service-account token in the shell env; the off-Mac op-mcp connector via
    bearer (see below). `op`/`gh` resolve locally.
 
-### Code — other machines (work laptop/desktop)
+### Code - other machines (work laptop/desktop)
 Same as the primary Mac; put per-machine overrides (paths, `CLAUDE_KIT_REPO`) in
 `.claude/settings.local.json` (gitignored). See [surfaces/code-work-machines.md](surfaces/code-work-machines.md).
 
