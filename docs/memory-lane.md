@@ -36,6 +36,14 @@ separate repo holds cross-surface knowledge (its contract is the vault's `agents
   is set at USER scope in `~/.claude/settings.json` so the lane is active in every repo on
   the machine. A machine that clones the vault elsewhere overrides the path in its own
   `.claude/settings.local.json`.
+- The auto-memory layer is a SECOND WRITER on the lane: it re-serializes fact files its
+  Edit/Write tools touch into a nested house form within seconds (key-preserving). The lane's
+  contract stays the flat schema; the vault contains the nested form deterministically (its
+  `flatten-frontmatter.sh` + pre-commit hook + CI backstop; bootstrap per machine:
+  `git -C ~/code/schnapp-vault config core.hooksPath scripts/git-hooks`). Details live in the
+  vault's `agents.md` "Second writer" section, not here. Byte-exact writes into the lane use a
+  shell redirect, never Edit/Write. Decision:
+  [decisions/0029](../decisions/0029-vault-flat-schema-harness-writer-containment.md).
 
 ## Schema
 
