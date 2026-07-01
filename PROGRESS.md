@@ -116,3 +116,6 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   with recurrence-as-escalation-trigger; flatten the plugin → native `.claude/` (resolves `#2`,
   yes). Spec `docs/superpowers/specs/2026-06-30-schnapp-os-streamline-design.md` + plan
   `docs/superpowers/plans/2026-06-30-schnapp-os-streamline.md`. Not yet executed.
+- 2026-06-30 Wrote handoff 043 (`handoffs/043-execute-phase-1-vault-standup.md`) as the resume
+  point for Phase 1 (vault stand-up), execution model = subagent-driven with the orchestrator
+  driving; dropped a `spawn_task` chip for a fresh Opus 4.8 session. Design session ends here.
