@@ -5,7 +5,8 @@ system is built on, and the **issues it exists to prevent**. Every principle tra
 failure; every failure is generalized to its class, not the one instance that exposed it.
 
 This document states design intent only. It hardcodes no mutable facts (status lives in
-[PLAN.md](../PLAN.md) / [PROGRESS.md](../PROGRESS.md), rules in
+[PROGRESS.md](../PROGRESS.md) and the live plan docs under [docs/superpowers/plans/](superpowers/plans/),
+[PLAN.md](../PLAN.md) is a pointer to those plus the archived original plan, rules live in
 [rules/](../rules/), decisions in [decisions/](../decisions/)). It
 references those; it does not copy them.
 

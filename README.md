@@ -8,14 +8,15 @@ never values. Private repo.
 ## Live status — do not duplicate here
 This README states no progress/status (status hardcoded in a README is the classic stale doc).
 Status lives in one canonical place and is read there:
-- **[PLAN.md](PLAN.md)** — master plan; per-step boxes (`[x]` done, `[~]` partial, `[ ]` not started).
+- **[PLAN.md](PLAN.md)** — pointer to where live planning now lives (per-initiative under
+  `docs/superpowers/plans/`, each with its own step boxes) plus the archived original build plan.
 - **[PROGRESS.md](PROGRESS.md)** — running execution log, newest at the bottom of each day.
 
 ## Map
 | Path | What |
 |---|---|
 | [CLAUDE.md](CLAUDE.md) | Agent front door for working in this repo (thin, reference-only; global rules load separately) |
-| [PLAN.md](PLAN.md) | Master plan + live step status |
+| [PLAN.md](PLAN.md) | Pointer to the archived build plan + where live planning now lives |
 | [PROGRESS.md](PROGRESS.md) | Execution log |
 | [decisions/](decisions/) | One file per decision (the "why") |
 | [handoffs/](handoffs/) | Dated session handoffs; the newest, highest-numbered is the resume point |
@@ -39,9 +40,9 @@ Status lives in one canonical place and is read there:
   changed afterward. Regenerate with [`scripts/gen-catalog.sh`](scripts/gen-catalog.sh).
 
 ## Install (per surface)
-One repo, used across surfaces. These are the install steps; what is already live vs wired at
-Part 10 is tracked in [PLAN.md](PLAN.md). Per-surface operating detail lives in
-[surfaces/](surfaces/) and is referenced here, not repeated.
+One repo, used across surfaces. These are the install steps; Part 10 (plugin/hook delivery) is
+complete, archived in [docs/archive/PLAN-archive-2026-07-01.md](docs/archive/PLAN-archive-2026-07-01.md).
+Per-surface operating detail lives in [surfaces/](surfaces/) and is referenced here, not repeated.
 
 ### Code — primary Mac
 1. Clone to `~/code/schnapp-os` (the path the hooks, `~/.claude/CLAUDE.md`, and the backup all assume).

@@ -36,12 +36,14 @@ restate mutable state.
   [rules/global/](rules/global/), never in `~/.claude/CLAUDE.md`. If the
   global rule *set* changes, update [templates/user-global-CLAUDE.md](templates/user-global-CLAUDE.md)
   and every machine's `~/.claude/CLAUDE.md` together (the `@import` list is explicit, no globs).
-- **State-change discipline (anti-stale).** Every state-changing commit flips the matching
-  [PLAN.md](PLAN.md) box **and** appends a [PROGRESS.md](PROGRESS.md) line in the **same commit**,
-  then pushes immediately so GitHub mirrors local. Partial work is `[~]`, never `[x]`. See
+- **State-change discipline (anti-stale).** Every state-changing commit flips the matching box in
+  the live per-initiative plan doc (under [docs/superpowers/plans/](docs/superpowers/plans/)) **and**
+  appends a [PROGRESS.md](PROGRESS.md) line in the **same commit**, then pushes immediately so
+  GitHub mirrors local. Partial work is `[~]`, never `[x]`. See
   [anti-stale.md](rules/global/anti-stale.md) and `[[keep-tracker-current]]` in memory.
 - **Status lives in the trackers, not in prose.** Never hardcode progress/counts into a doc; read
-  [PLAN.md](PLAN.md) / [PROGRESS.md](PROGRESS.md). The README and this file carry no status string.
+  [PROGRESS.md](PROGRESS.md) plus the live plan doc. ([PLAN.md](PLAN.md) is a retired pointer, not
+  status.) The README and this file carry no status string.
 - **Main only.** No feature branches or PRs for directed work, on any surface including web
   ([decisions/0016](decisions/0016-no-branches-precommit-gate.md),
   [decisions/0017](decisions/0017-web-sessions-target-main.md)). Run a local review pass, then push.
