@@ -127,3 +127,7 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   handoff `dd2ba64` exactly. Re-cut tasks in the plan doc (exec order 1→2→5→3+4→6→7→8→9→10;
   memory stays in schnapp-os until task 8 repoints memory-mcp, then task 9 removes it). Full
   rationale → Phase-1 ADR at task 10.
+- 2026-07-01 Phase 1 task 2 DONE (vault `718f9be`): authored the vault contract in
+  `schnapp-vault` — `agents.md` (NARROW; the single definition site for the flat memory
+  schema, exact §3.5), `index.md` (pointer-index), `README.md` (references agents.md, does
+  not restate). Writing-style standard, no em dashes. Single-source anti-drift fix in place.
