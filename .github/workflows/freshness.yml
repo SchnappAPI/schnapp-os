@@ -47,6 +47,9 @@ jobs:
       - name: Learning-worker self-test
         run: bash scripts/tests/test-learning-worker.sh
 
+      - name: Learning-recurrence self-test
+        run: bash scripts/tests/test-learning-recurrence.sh
+
       - name: Learning-eval self-test
         run: bash scripts/tests/test-learning-eval.sh
 

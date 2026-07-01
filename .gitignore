@@ -32,3 +32,7 @@ __pycache__/
 # Local learning-loop capture queue (per-machine; distilled+reviewed output is what's durable)
 scheduled-tasks/.learning-queue.tsv
 scheduled-tasks/.learning-queue.archive.tsv
+# Recurrence-gate marker (per-machine): signatures already drafted as a gate proposal, so a class
+# drafts at most once. MUST stay ignored — an untracked marker would show in `git status --porcelain`
+# and corrupt the worker's post-distill clean-check (learning-worker.sh).
+scheduled-tasks/.learning-queue.gate-drafted.tsv
