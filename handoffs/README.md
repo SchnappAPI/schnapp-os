@@ -8,7 +8,8 @@ or renames a handoff. Regenerate with `scripts/gen-handoff-index.sh` after addin
 CI ([`.github/workflows/freshness.yml`](../.github/workflows/freshness.yml)) fails a push
 if this file is out of date.
 
-- [`045`](045-phase-2-flatten-complete.md) Handoff 045 — Phase 2 (flatten plugin → native `.claude/`) COMPLETE; resume = Phase 3, 4, or 5 (resume point)
+- [`046`](046-phase-4-context-discipline-complete.md) Handoff 046 — Phase 4 (context / reference discipline) COMPLETE; resume = Phase 3 (resume point)
+- [`045`](045-phase-2-flatten-complete.md) Handoff 045 — Phase 2 (flatten plugin → native `.claude/`) COMPLETE; resume = Phase 3, 4, or 5
 - [`044`](044-phase-1-vault-standup-complete.md) Handoff 044 — Phase 1 (vault stand-up) COMPLETE; resume point = Phase 2 or 4
 - [`043`](043-execute-phase-1-vault-standup.md) Handoff 043 — Execute Phase 1 (vault stand-up), subagent-driven
 - [`042`](042-streamline-brainstorm-kickoff.md) Handoff 042 — Broad brainstorm: streamline schnapp-os (repo-flattening as one checkpoint)

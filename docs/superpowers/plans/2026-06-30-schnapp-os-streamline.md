@@ -116,7 +116,7 @@ Recommended order: **1 → (2 ∥ 4) → 3 → 5.** Each phase ends shippable.
 - [x] **T3. Soft length-advisory (TDD, WARN / exit 0).** `hooks/length-advisory.sh` — on Write|Edit of an always-load or `rules/` file, WARN (never block; always exit 0) when the file exceeds a heuristic line threshold. Write fixtures first (over-long → WARN; normal → silent), then wire PostToolUse in `.claude/settings.json` (Code-time point-of-action nudge). **Verify:** over-long fixture WARNs at exit 0; normal file silent; `bash -n` clean; the settings.json path resolves.
 - [x] **T4. Thin handoff index (index-in-place, NO physical move).** Add `handoffs/README.md`: a thin index (number → one-line title, newest-first; mark the newest as the resume point) over all 46 handoffs. Do NOT move any handoff file — 30 cross-references point at `handoffs/NNN…md` by path; moving re-breaks the Phase-2 link class for zero navigability the index does not already give. **Verify:** index lists all 46; newest flagged; every `handoffs/NNN` path still resolves (0 broken); freshness OK.
 
-**Done when:** writing-style rule loads globally + is in CATALOG; PLAN.md < ~150 lines with pointer + archive + ADR 0025, no active work lost; length-advisory WARNs on an over-long fixture at exit 0; handoffs have a thin index with 0 broken links.
+**Done when:** writing-style rule loads globally + is in CATALOG; PLAN.md < ~150 lines with pointer + archive + ADR 0025, no active work lost; length-advisory WARNs on an over-long fixture at exit 0; handoffs have a thin index with 0 broken links. ✅ **ALL MET 2026-07-01 — PHASE 4 COMPLETE** (handoff 046; Opus whole-branch review + stale-reference-class fix `9ceb382`).
 
 ---
 
