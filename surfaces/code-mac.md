@@ -12,5 +12,6 @@ Most capable. No work restrictions. Run the full automation here.
 - **Hooks:** run here, after the workspace-trust dialog is accepted (the same gate enables the
   memory lane). This is where "must happen every time" happens - the Part-7 hooks in
   [`hooks/`](../hooks/hooks.json) (SessionStart freshness/git gate, Stop
-  push-gate, SessionEnd backup). Procedures: [docs/memory-lane.md](../docs/memory-lane.md). Delivery
-  (plugin-wide vs project): [decisions/0005](../decisions/0005-hook-delivery-split.md).
+  push-gate, SessionEnd backup). Procedures: [docs/memory-lane.md](../docs/memory-lane.md). Delivery:
+  the repo's `.claude/settings.json` (post-flatten, [decisions/0024](../decisions/0024-flatten-plugin-native-claude.md);
+  history: [decisions/0005](../decisions/0005-hook-delivery-split.md)).

@@ -98,6 +98,28 @@ Implemented on Code as the Stop/SessionEnd hooks
 only the deterministic half; authoring memory/handoff prose stays the agent's procedure. On
 hookless surfaces, run it via `session-hygiene`.
 
+## Handoff packet (cross-surface resume)
+
+The named unit of cross-surface state (streamline spec section 7): whoever stops writes the
+packet and pushes; whoever starts reads it. Both halves are the two procedures above, so this
+section adds no new work, only the cross-surface contract:
+
+- **Write on stop** = the [end-of-session write](#end-of-session-write-stop--sessionend):
+  1. **Working-memory**: fresh durable facts into the vault `memory/` lane (schema + supersede
+     rule: the vault's `agents.md`) plus their `MEMORY.md` index lines.
+  2. **Newest handoff**: `handoffs/NNN-*.md` (next number = the new resume point) plus the
+     regenerated `handoffs/README.md`, the `PROGRESS.md` line, and the plan-doc box flip.
+  3. **Indexes current, both repos pushed** (`schnapp-os` + `schnapp-vault`). The vault root
+     `index.md` changes only when the vault layout changed.
+- **Read on start** = the [freshness gate](#freshness-gate-sessionstart): newest `handoffs/NNN`
+  (via `handoffs/README.md`, marked "resume point"), then `MEMORY.md` and the facts the task
+  needs, then surface unpushed/unmerged state before new work.
+
+Transport differs; the packet does not. Code = local git + the hooks (automatic). Hookless
+surfaces (Cowork, claude.ai) = the GitHub connector, run by hand via
+[`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md), which owns the connector
+mechanics. Decision + rationale: [decisions/0027](../decisions/0027-cowork-handoff-packet-over-git.md).
+
 ## On-correction update (any surface)
 
 When the owner corrects a mistake, or a wrong assumption surfaces, capture the fix

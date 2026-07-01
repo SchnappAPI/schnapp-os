@@ -8,7 +8,8 @@ or renames a handoff. Regenerate with `scripts/gen-handoff-index.sh` after addin
 CI ([`.github/workflows/freshness.yml`](../.github/workflows/freshness.yml)) fails a push
 if this file is out of date.
 
-- [`048`](048-phase-3-enforcement-gates-complete.md) Handoff 048: Phase 3 COMPLETE (enforcement gates); resume = Phase 5 (Cowork two-way handoff) (resume point)
+- [`049`](049-phase-5-cowork-packet-repo-side.md) Handoff 049: Phase 5 repo-side complete (handoff packet live); resume = owner Cowork legs (round-trip) (resume point)
+- [`048`](048-phase-3-enforcement-gates-complete.md) Handoff 048: Phase 3 COMPLETE (enforcement gates); resume = Phase 5 (Cowork two-way handoff)
 - [`047`](047-phase-3-t1-secret-gate-done.md) Handoff 047 — Phase 3 T1 (malformed-secret byte-check gate) DONE + hardened; resume = Phase 3 T2-T4
 - [`046`](046-phase-4-context-discipline-complete.md) Handoff 046 — Phase 4 (context / reference discipline) COMPLETE; resume = Phase 3
 - [`045`](045-phase-2-flatten-complete.md) Handoff 045 — Phase 2 (flatten plugin → native `.claude/`) COMPLETE; resume = Phase 3, 4, or 5

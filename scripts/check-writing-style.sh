@@ -42,7 +42,14 @@ if [ "$#" -gt 0 ]; then
   for f in "$@"; do
     rel="${f#"$REPO"/}"
     [ -f "$rel" ] || continue
-    is_frozen "$rel" && continue
+    # An absolute path that survived the prefix-strip lives in ANOTHER checkout (e.g. a
+    # worktree-session hook checking the main checkout). Map it to ITS repo-relative path so
+    # the frozen-history patterns still match; untracked/unmappable stays as-is (checked live).
+    case "$rel" in
+      /*) frozen_key="$(git -C "$(dirname "$rel")" ls-files --full-name -- "$rel" 2>/dev/null | head -1)" ;;
+      *)  frozen_key="$rel" ;;
+    esac
+    is_frozen "${frozen_key:-$rel}" && continue
     hits="$(check_file "$rel")"
     [ -n "$hits" ] && { printf '%s\n' "$hits" >&2; fail=1; }
   done

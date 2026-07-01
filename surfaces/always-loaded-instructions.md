@@ -39,6 +39,8 @@ On an unfamiliar surface, run surface-check first (loaded vs missing, with the f
   per-initiative plan-doc box (`docs/superpowers/plans/`).
 
 ## Persist (hookless)
-No local git here. Write repo files through the GitHub connector (create_or_update_file to
-SchnappAPI/schnapp-os commits and pushes in one step), or hand the owner a ready-to-run Code prompt.
+No local git here. Write repo files through the GitHub connector (create_or_update_file commits and
+pushes in one step), or hand the owner a ready-to-run Code prompt. Stopping or resuming work = the
+handoff packet, which spans BOTH repos (SchnappAPI/schnapp-os + SchnappAPI/schnapp-vault); pieces and
+connector mechanics: the session-hygiene skill.
 The OneDrive/Obsidian backup mirror runs from a Code/Mac SessionEnd hook, not from here: do not claim it ran.

@@ -124,20 +124,23 @@ Recommended order: **1 → (2 ∥ 4) → 3 → 5.** Each phase ends shippable.
 ## Phase 5 - Cowork two-way handoff
 **Deliverable:** Code ↔ Cowork hand off through the shared git repos.
 
-**Tasks (outline - detail at execution):**
-1. Ensure the GitHub connector has `schnapp-vault` access (Cowork's vault read/write path - the vault is not a plugin, so no auto-sync). Verify: a Cowork session reads a vault fact + writes one via the connector.
-2. Define the handoff-packet convention (newest handoff + working-memory + `index.md`) both surfaces read on start / write on stop; fold into `session-hygiene`.
-3. *(optional, owner probe)* Confirm whether Cowork reaches `memory-mcp` / `.mcp.json` servers → if yes, add validated-writes as the front-line.
-4. Round-trip test: start work in Code → stop → resume in Cowork → stop → resume in Code, no lost state. ADR; trackers; push.
+**Owner-action legs (run in Cowork - cannot run from Code; exact runbook: [handoff 049](../../../handoffs/049-phase-5-cowork-packet-repo-side.md)):** the T1 verify, the T3 probe, and the Cowork + return halves of the T4 round-trip.
 
-**Done when:** a Code→Cowork→Code round-trip preserves state end-to-end.
+**Tasks (checkbox = live tracker; step-level detail generated at execution, 2026-07-01):**
+
+- [~] **T1. Connector vault access** *(outline 1)*. No grant to add: the connector's github leg (github-mcp) authenticates with `GITHUB_PAT`, all-repos ([credentials-map](../../../credentials-map.md)), so `SchnappAPI/schnapp-vault` is already in scope. Remaining = the VERIFY: a Cowork session reads a vault fact + writes one through the connector, scripted as [surfaces/cowork.md](../../../surfaces/cowork.md) enablement 3 + handoff 049 Cowork leg. *(repo-side done 2026-07-01: probe scripted, PAT scope confirmed; owner verify pending)*
+- [x] **T2. Handoff-packet convention, folded into `session-hygiene`** *(outline 2)*. Canonical home: [docs/memory-lane.md](../../../docs/memory-lane.md) "Handoff packet" (write-on-stop = the end-of-session write: working-memory facts + newest handoff + indexes, BOTH repos pushed; read-on-start = the freshness gate). `session-hygiene` carries the hookless transport (connector read-modify-write file commits, byte-exact `handoffs/README.md` emulation with CI verifying equivalence next push); `surfaces/cowork.md` de-staled (dead plugin-install path dropped per decisions/0024) + points at the packet. **Verify:** freshness + ci-lint + writing-style gates green; the packet defined in exactly one home, referenced elsewhere. *(done 2026-07-01)*
+- [~] **T3. (optional, owner probe) memory-mcp from Cowork** *(outline 3)*. Probe scripted (cowork.md enablement 4 + handoff 049 Cowork leg): `memory_health`/`memory_list` in a Cowork session; healthy = schema-validated `memory_*` writes become the memory-leg front-line per the [decisions/0027](../../../decisions/0027-cowork-handoff-packet-over-git.md) upgrade path. *(scripted; owner probe pending)*
+- [~] **T4. Round-trip + ADR + trackers** *(outline 4)*. ADR [decisions/0027](../../../decisions/0027-cowork-handoff-packet-over-git.md) (packet over git; connector transport; generated-index emulation; memory-mcp as upgrade). Trackers flipped + pushed. Round-trip = Code (this session wrote packet 049) → Cowork (resume from 049, work, write packet 050) → Code (verify nothing lost, close). *(repo-side + the Code leg done 2026-07-01; Cowork + return legs pending owner - runbook in handoff 049)*
+
+**Done when:** a Code→Cowork→Code round-trip preserves state end-to-end. *(Pending the owner legs. When the return leg verifies clean: flip T1/T3/T4 to `[x]`, mark this line met, append the PROGRESS close line per handoff 049.)*
 
 ---
 
 ## Owner action items (consolidated)
 1. **Phase 1:** confirm repo creation, OneDrive exit, MCP repoint.
 2. **Phase 2:** per-machine `~/.claude/CLAUDE.md` `@import` edit; uninstall cached plugin.
-3. **Phase 5:** connector vault access; optional Cowork memory-mcp probe.
+3. **Phase 5:** connector vault-access verify + optional memory-mcp probe + the Cowork/return round-trip legs; runbook = [handoff 049](../../../handoffs/049-phase-5-cowork-packet-repo-side.md).
 4. **Anytime:** prune the dead `brain-capture` claude.ai connector.
 
 ## Self-review - spec coverage
