@@ -94,13 +94,14 @@ Recommended order: **1 → (2 ∥ 4) → 3 → 5.** Each phase ends shippable.
 ## Phase 3 — Enforcement gates
 **Deliverable:** the recurring deterministic classes are gated; the learning loop emits gates.
 
-**Tasks (outline — detail at execution):**
-1. **Malformed-secret byte-check** (TDD) — a gate in the rotate/store path: `op read <ref> | head -c N | xxd` compares stored bytes to expected; fails on whitespace/quote/truncation. `rotate-secret` grows a verify step. Test with a deliberately-quoted/truncated fixture.
-2. **Loop rewire** — `learning-worker` counts error-class frequency; on ≥2 same-class it drafts a gate (a check) as a PR/issue for approval instead of another prose fact. Verify with a seeded repeat class.
-3. **Extend `last-verified`** coverage to more deterministic docs in `freshness.yml`.
-4. ADR (enforcement ladder + recurrence-escalation). Trackers; push.
+**Tasks (checkbox = live tracker; step-level detail generated at execution, 2026-07-01):**
 
-**Done when:** malformed-secret is gated + tested; a seeded repeat class produces a drafted-gate PR, not a note.
+- [ ] **T1. Malformed-secret byte-check gate (TDD, security).** Build `scripts/check-secret-bytes.sh`: validate a secret value's RAW BYTES without EVER printing the value. Input via `--ref op://...` (live: it `op read`s) OR on stdin (tests). Fail (exit 1) on: empty; leading/trailing whitespace, newline, or CR; wrapping single/double quotes; length below `--min-len N` (truncation); `--expect-prefix S` mismatch. Report only the DEFECT CATEGORY, never any bytes of the value. TDD first: `scripts/tests/test-check-secret-bytes.sh` with stdin fixtures (clean passes; leading-space / wrapped-quotes / trailing-newline / too-short / prefix-mismatch each fail with the right category; a fixture asserts the value is NEVER echoed). Gate the test in `freshness.yml`. Grow `rotate-secret` SKILL step 6 (Verify) with a byte-check line invoking the gate on the new ref ([[malformed-stored-secret-401]]). Regenerate CATALOG. **Verify:** test pass=N/0; output never contains the fixture value; `bash -n` + shellcheck clean; freshness OK; rotate-secret cites the gate.
+- [ ] **T2. Loop rewire: recurrence drafts a gate, not prose.** The nightly `learning-worker` counts error-class frequency over the capture archive; when a class recurs (>= 2), it drafts a GATE proposal (a check, as a GitHub issue for owner approval) instead of another prose fact, and NEVER auto-lands the gate. Design the class signature (deterministic), the archive count, and the drafted-issue body. TDD with a seeded repeat class in dry-run (no real gh/network): >= 2 same-class captures produce a drafted-gate issue body; a single occurrence does not. **Verify:** seeded repeat-class fixture yields a drafted-gate proposal (not a rule/fact edit); single-occurrence does not; test green; nothing autonomous lands a gate on main. *(design-heavy: touches the autonomous self-editing loop.)*
+- [ ] **T3. Extend `last-verified` coverage.** The mechanism already exists in `check-freshness.sh` (a doc opts in with `last-verified: DATE` + a source list; CI fails if a source changed after the date). Add `last-verified` frontmatter to deterministic docs whose accuracy tracks a specific checkable source (candidates: `credentials-map.md`, `connectors/*/README.md`, surface profiles). Pick only docs with a clear source. **Verify:** each added doc names a real source; `check-freshness.sh` passes today; a deliberately-stale fixture (source newer than the date) FAILS.
+- [ ] **T4. ADR + trackers + close.** ADR `decisions/0026` (enforcement ladder advisory -> memory -> Code hook -> CI gate; recurrence >= 2 escalates; deterministic -> gate, judgment -> stay advisory; do not gate the un-recurred). Flip boxes; PROGRESS; push. Final whole-branch review + handoff.
+
+**Done when:** malformed-secret is gated + TDD-tested + wired into `rotate-secret`; a seeded repeat class produces a drafted-gate issue (not a prose fact); `last-verified` covers more deterministic docs with a proven stale-fail; ADR 0026 records the ladder.
 
 ---
 
