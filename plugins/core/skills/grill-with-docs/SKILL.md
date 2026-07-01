@@ -12,7 +12,7 @@ happen.
 ## Interview the same way as grill-me
 
 One question at a time, wait for each answer, recommend an answer for each, and explore the
-codebase / trackers / `decisions/` / memory lane (`memory/README.md`) instead of asking when
+codebase / trackers / `decisions/` / memory lane (`docs/memory-lane.md`) instead of asking when
 the answer is already there. Resolve decisions in dependency order.
 
 ## Plus, during the session
