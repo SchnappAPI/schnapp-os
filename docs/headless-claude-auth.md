@@ -1,7 +1,7 @@
 # Headless Claude Code auth for the learning-worker
 
 How `claude -p` authenticates when run from the macOS **launchd** LaunchAgent
-(`scheduled-tasks/com.schnapp.memory-consolidation.plist` → `plugins/core/scripts/learning-worker.sh`),
+(`scheduled-tasks/com.schnapp.memory-consolidation.plist` → `scripts/learning-worker.sh`),
 and how to fix it when it 401s. Written after a long debugging arc (2026-06-27) so it never recurs.
 
 > **Correction (2026-06-29, ADR 0019):** an earlier version sanctioned `ANTHROPIC_API_KEY` and blamed CLI

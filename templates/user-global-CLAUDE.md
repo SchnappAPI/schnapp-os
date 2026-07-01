@@ -7,22 +7,22 @@
   repo, so they load in every project and stay current via the SessionStart `git pull` (Part 2.2).
   A `~/.claude/rules/` symlink was deliberately skipped (that path is itself an auto-load level, so
   symlink + @import would double-load). @import has no glob support, so the 7 files are listed
-  explicitly — if the global rule set in plugins/core/rules/global/ changes, update this list AND
-  every machine's ~/.claude/CLAUDE.md together (the current set is in plugins/core/CATALOG.md).
+  explicitly — if the global rule set in rules/global/ changes, update this list AND
+  every machine's ~/.claude/CLAUDE.md together (the current set is in CATALOG.md).
 -->
 # Global instructions (this machine)
 
 Single source of truth for the always-on global rules is the schnapp-os repo:
-`~/code/schnapp-os/plugins/core/rules/global/`. These load in every project on this
+`~/code/schnapp-os/rules/global/`. These load in every project on this
 machine and stay current via the repo's SessionStart `git pull` (PLAN.md Part 0.3 / 2.2).
 Edit the files in the repo, never here. Path-scoped language/tool/activity modules are
-NOT global — they live in `plugins/core/rules/modules/` as a plain reference library; a project
+NOT global — they live in `rules/modules/` as a plain reference library; a project
 `@import`s only the ones it needs (no gallery/preset/composer — removed per decisions/0011 #4).
 
-@~/code/schnapp-os/plugins/core/rules/global/working-style.md
-@~/code/schnapp-os/plugins/core/rules/global/knowledge-capture.md
-@~/code/schnapp-os/plugins/core/rules/global/naming-discipline.md
-@~/code/schnapp-os/plugins/core/rules/global/secrets-as-references.md
-@~/code/schnapp-os/plugins/core/rules/global/verify-before-asserting.md
-@~/code/schnapp-os/plugins/core/rules/global/anti-stale.md
-@~/code/schnapp-os/plugins/core/rules/global/speed-by-default.md
+@~/code/schnapp-os/rules/global/working-style.md
+@~/code/schnapp-os/rules/global/knowledge-capture.md
+@~/code/schnapp-os/rules/global/naming-discipline.md
+@~/code/schnapp-os/rules/global/secrets-as-references.md
+@~/code/schnapp-os/rules/global/verify-before-asserting.md
+@~/code/schnapp-os/rules/global/anti-stale.md
+@~/code/schnapp-os/rules/global/speed-by-default.md

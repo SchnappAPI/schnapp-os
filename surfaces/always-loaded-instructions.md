@@ -20,7 +20,7 @@ for a Code session. State which path you used. Do not claim a capability exists 
   to memory (supersede, do not append); a stale doc gets fixed (and its siblings, not just the one).
 On an unfamiliar surface, run surface-check first (loaded vs missing, with the fallback for each gap).
 
-## Standing rules (full text in plugins/core/rules/global/)
+## Standing rules (full text in rules/global/)
 - Working style: direct, terse but complete, no preamble, no em dashes. Never guess: flag uncertainty
   before stating. Plan work of 3+ steps. Production-ready by default, verify before "done". Think in
   systems: trace and update every sibling a change touches in the same change.

@@ -197,3 +197,4 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   rules/scripts/hooks + root CATALOG.md; rewired settings.json hooks, gen-catalog, both CI workflows,
   learning-loop scripts, hooks, tests, plists (c96783b). CI green.
 - 2026-07-01 Phase 2 T2: removed .claude-plugin/marketplace.json + plugins/core/.claude-plugin/plugin.json; plugins/ + .claude-plugin/ trees gone — plugin packaging deleted from the repo.
+- 2026-07-01 Phase 2 T3: retargeted ~24 live docs (CLAUDE/README/templates/surfaces/scheduled-tasks/docs + moved SKILL/agent/rule internal refs) off plugins/core/ to the native paths; history (handoffs/decisions/PLAN/PROGRESS/archive/prior plans+specs) left as-is.

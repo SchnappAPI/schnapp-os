@@ -16,16 +16,16 @@ machine. Map: [README.md](README.md). Durable why: [docs/framework.md](docs/fram
 **Global rules** — the 7 always-on rules already load in this repo (and every repo on the machine)
 via `~/.claude/CLAUDE.md`, which `@import`s them from here. Do **not** re-import them below — that
 double-loads. Canonical source (edit here, never in `~/.claude/`):
-[plugins/core/rules/global/](plugins/core/rules/global/).
+[rules/global/](rules/global/).
 
 **Path-scoped modules** — an on-demand reference library at
-[plugins/core/rules/modules/](plugins/core/rules/modules/) (`lang/ tool/ activity/ coding/
+[rules/modules/](rules/modules/) (`lang/ tool/ activity/ coding/
 context/`). Nothing is force-loaded at the repo root; pull a module in only when a task needs it.
-Full inventory + scopes: [plugins/core/CATALOG.md](plugins/core/CATALOG.md) (generated).
+Full inventory + scopes: [CATALOG.md](CATALOG.md) (generated).
 
 **Skills in reach** — schnapp-os's own skills/agents are plugin-global. The ones most relevant when
 working *in this repo*: `status`, `session-hygiene`, `surface-check`, `rules-distill`, `learn-route`,
-`update-docs`, `update-codemaps`. Full set: [CATALOG.md](plugins/core/CATALOG.md).
+`update-docs`, `update-codemaps`. Full set: [CATALOG.md](CATALOG.md).
 
 ## Project lane (schnapp-os-specific invariants — the one place they live)
 
@@ -33,20 +33,20 @@ These are the non-obvious rules for working *on the system itself*. All point at
 restate mutable state.
 
 - **This repo IS the global lane's source.** Edit rules in
-  [plugins/core/rules/global/](plugins/core/rules/global/), never in `~/.claude/CLAUDE.md`. If the
+  [rules/global/](rules/global/), never in `~/.claude/CLAUDE.md`. If the
   global rule *set* changes, update [templates/user-global-CLAUDE.md](templates/user-global-CLAUDE.md)
   and every machine's `~/.claude/CLAUDE.md` together (the `@import` list is explicit, no globs).
 - **State-change discipline (anti-stale).** Every state-changing commit flips the matching
   [PLAN.md](PLAN.md) box **and** appends a [PROGRESS.md](PROGRESS.md) line in the **same commit**,
   then pushes immediately so GitHub mirrors local. Partial work is `[~]`, never `[x]`. See
-  [anti-stale.md](plugins/core/rules/global/anti-stale.md) and `[[keep-tracker-current]]` in memory.
+  [anti-stale.md](rules/global/anti-stale.md) and `[[keep-tracker-current]]` in memory.
 - **Status lives in the trackers, not in prose.** Never hardcode progress/counts into a doc; read
   [PLAN.md](PLAN.md) / [PROGRESS.md](PROGRESS.md). The README and this file carry no status string.
 - **Main only.** No feature branches or PRs for directed work, on any surface including web
   ([decisions/0016](decisions/0016-no-branches-precommit-gate.md),
   [decisions/0017](decisions/0017-web-sessions-target-main.md)). Run a local review pass, then push.
-- **Generated docs are regenerated, never hand-edited.** [plugins/core/CATALOG.md](plugins/core/CATALOG.md)
-  comes from [plugins/core/scripts/gen-catalog.sh](plugins/core/scripts/gen-catalog.sh). A CI gate
+- **Generated docs are regenerated, never hand-edited.** [CATALOG.md](CATALOG.md)
+  comes from [scripts/gen-catalog.sh](scripts/gen-catalog.sh). A CI gate
   ([.github/workflows/freshness.yml](.github/workflows/freshness.yml)) fails the push if it is stale
   or a `last-verified` doc's source changed after it.
 - **Global memory lane lives in the vault** (`~/code/schnapp-vault`, repo `SchnappAPI/schnapp-vault`),
@@ -54,7 +54,7 @@ restate mutable state.
   [docs/memory-lane.md](docs/memory-lane.md). Schema: the vault's `agents.md`. **Supersede, do not
   append:** when a fact changes, replace it; never leave a contradicting copy. Personal/debugging notes
   go to the vault memory lane, not into project files.
-- **Secrets are `op://` references, never values** ([secrets-as-references.md](plugins/core/rules/global/secrets-as-references.md)).
+- **Secrets are `op://` references, never values** ([secrets-as-references.md](rules/global/secrets-as-references.md)).
   New env vars go in [.env.template](.env.template) as `op://` URIs. Reference map (refs only):
   [credentials-map.md](credentials-map.md). Spot a hardcoded credential: stop and flag it.
 - **Hooks** are wired in [.claude/settings.json](.claude/settings.json) (SessionStart freshness gate,

@@ -8,17 +8,17 @@ description: Use immediately after a correction or capture lands — to classify
 The authored classifier for the learning loop's capture-and-route step. Run this after any
 correction arrives (hook fires on hookless surfaces, or invoke manually). It does three things:
 classify → route → act. The classification taxonomy lives in
-[docs/memory-lane.md](../../../../docs/memory-lane.md) ("On-correction update" section); the routing policy lives
-in [ADR 0016](../../../../decisions/0016-no-branches-precommit-gate.md) (refines 0012/0013/0015 —
+[docs/memory-lane.md](../../../docs/memory-lane.md) ("On-correction update" section); the routing policy lives
+in [ADR 0016](../../../decisions/0016-no-branches-precommit-gate.md) (refines 0012/0013/0015 —
 no branches, everything to main). This skill does not restate either — it points to each and adds
 the execution notes.
 
 ## 1 — Classify
 
-Follow the "On-correction update" routing in [docs/memory-lane.md](../../../../docs/memory-lane.md):
+Follow the "On-correction update" routing in [docs/memory-lane.md](../../../docs/memory-lane.md):
 
 - **Behavioral / how-to-work** → sharpen the EXISTING rule in
-  [`plugins/core/rules/global/`](../../rules/global/) (add a new file only if there is no home;
+  [`rules/global/`](../../../rules/global/) (add a new file only if there is no home;
   never duplicate an existing rule).
 - **Durable fact** (a value, name, or location that must be remembered across sessions) →
   `memory/` supersede: write the corrected fact, set `source: correction`, set today's `updated:`,
@@ -26,12 +26,12 @@ Follow the "On-correction update" routing in [docs/memory-lane.md](../../../../d
 - **Stale doc or stale claim** → fix the doc in the same change.
 
 When unsure of the type, apply the "one fact, one canonical home" principle from
-[ADR 0011 #4](../../../../decisions/0011-plan-review-ten-redecisions.md): pick the single most
+[ADR 0011 #4](../../../decisions/0011-plan-review-ten-redecisions.md): pick the single most
 appropriate place; do not scatter copies.
 
 ## 2 — Route it (everything to main, no branches)
 
-Per [ADR 0016](../../../../decisions/0016-no-branches-precommit-gate.md): **no branches.** Two paths,
+Per [ADR 0016](../../../decisions/0016-no-branches-precommit-gate.md): **no branches.** Two paths,
 by who is acting:
 
 - **In-session, acting on a correction the owner just made** — the owner is the reviewer in real

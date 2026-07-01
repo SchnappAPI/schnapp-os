@@ -6,7 +6,7 @@ failure; every failure is generalized to its class, not the one instance that ex
 
 This document states design intent only. It hardcodes no mutable facts (status lives in
 [PLAN.md](../PLAN.md) / [PROGRESS.md](../PROGRESS.md), rules in
-[plugins/core/rules/](../plugins/core/rules/), decisions in [decisions/](../decisions/)). It
+[rules/](../rules/), decisions in [decisions/](../decisions/)). It
 references those; it does not copy them.
 
 ---

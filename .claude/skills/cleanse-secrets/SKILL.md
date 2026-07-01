@@ -6,9 +6,9 @@ description: Use when files may contain literal secret VALUES that must be found
 # cleanse-secrets
 
 Invariant: **no secret value in any tracked file — references (`op://`) only**
-([secrets-as-references](../../rules/global/secrets-as-references.md)). This skill finds violations
+([secrets-as-references](../../../rules/global/secrets-as-references.md)). This skill finds violations
 and removes them. Detection is delegated to one canonical scanner so CI and this skill can never
-drift apart: [`scan-secrets.sh`](../../scripts/scan-secrets.sh). For *diff-level* review during
+drift apart: [`scan-secrets.sh`](../../../scripts/scan-secrets.sh). For *diff-level* review during
 normal edits, the `secrets-leak-reviewer` agent is the lighter tool; use this skill for
 whole-file / whole-repo scans and for the redact step.
 
@@ -16,12 +16,12 @@ whole-file / whole-repo scans and for the redact step.
 
 ```bash
 # absolute path — agent Bash resets cwd between calls (adjust to your schnapp-os clone)
-~/code/schnapp-os/plugins/core/scripts/scan-secrets.sh [--strict] [--exclude GLOB]... [PATH...]
+~/code/schnapp-os/scripts/scan-secrets.sh [--strict] [--exclude GLOB]... [PATH...]
 ```
 
 - No `PATH` → scans this repo's git-tracked files (the CI default; run from inside the repo).
 - `PATH` a dir → scans every file under it, cross-repo. For the leak scrub:
-  `~/code/schnapp-os/plugins/core/scripts/scan-secrets.sh --strict ~/path/to/obsidian-vault/"Claude Export"`.
+  `~/code/schnapp-os/scripts/scan-secrets.sh --strict ~/path/to/obsidian-vault/"Claude Export"`.
 - `BLOCK` = exact token formats (a match IS a leaked value: `ops_`, `sk-ant-`, `github_pat_`,
   GitHub/AWS/Slack/SendGrid/JWT/DB-URL, private keys). `WARN` = heuristics (64-hex bearers,
   `name: value` assignments, private IPs) for human review. Values print **masked** (prefix +
@@ -47,7 +47,7 @@ perl -i -pe 's/\Q$ENV{LEAK}\E/[REDACTED:onepassword]/g if $. == 42' file.md   # 
 ```
 
 Picking the right `op://` ref for a config value: **do not guess**. Match the value to its item by
-its consumer/context in [credentials-map.md](../../../../credentials-map.md) `consumed_by` — a wrong
+its consumer/context in [credentials-map.md](../../../credentials-map.md) `consumed_by` — a wrong
 ref resolves to empty and fails silently ([vault-resolve](../vault-resolve/SKILL.md) field-label gotcha).
 
 Then:
@@ -72,5 +72,5 @@ redacted item is on the rotate list. That repo is separate from schnapp-os; comm
 - Adding a new pattern here instead of in `scan-secrets.sh` — there is **one** pattern source; edit
   the scanner (and its `tests/` fixture), never re-list patterns in this doc.
 
-Related: [`scan-secrets.sh`](../../scripts/scan-secrets.sh) · `secrets-leak-reviewer` agent
+Related: [`scan-secrets.sh`](../../../scripts/scan-secrets.sh) · `secrets-leak-reviewer` agent
 (diff-level) · [vault-resolve](../vault-resolve/SKILL.md) · [rotate-secret](../rotate-secret/SKILL.md).

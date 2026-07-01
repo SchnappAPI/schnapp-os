@@ -10,9 +10,9 @@ Desktop app on the Claude Agent SDK. Consumes plugins.
 - **Hooks:** Cowork does **NOT** run schnapp-os's hooks — RESOLVED by `surface-check` on two
   Cowork sessions (Mac + HP) 2026-06-16: neither saw the SessionStart gate fire automatically; both
   fell back to manual session-hygiene. So treat Cowork as hookless: rely on the
-  [`session-hygiene`](../plugins/core/skills/session-hygiene/SKILL.md) skill + always-loaded
+  [`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md) skill + always-loaded
   instructions for "must happen" behavior, and persist via the GitHub connector. The plugin's
-  [`hooks/hooks.json`](../plugins/core/hooks/hooks.json) is inert here; the SessionEnd backup never
+  [`hooks/hooks.json`](../hooks/hooks.json) is inert here; the SessionEnd backup never
   fires from Cowork regardless (project-scoped, decision 0005).
 - **Fallback:** for anything Cowork cannot do natively, call the Mac via remote MCP, or
   generate a prompt for a Code session.

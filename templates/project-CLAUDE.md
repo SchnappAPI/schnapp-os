@@ -14,16 +14,16 @@
 **Global rules** — always on in every project on this machine. They load via `~/.claude/CLAUDE.md`,
 which `@import`s schnapp-os's lean global lane (working-style, knowledge-capture, naming-discipline,
 secrets-as-references, verify-before-asserting, anti-stale, speed-by-default). Do **not** re-import
-them here — that double-loads. Canonical source: `~/code/schnapp-os/plugins/core/rules/global/`.
+them here — that double-loads. Canonical source: `~/code/schnapp-os/rules/global/`.
 
 **Path-scoped modules** — `@import` only the modules this project needs, directly, from the reference
-library `~/code/schnapp-os/plugins/core/rules/modules/`. They are plain rule files; pick by relevance.
-Full inventory + scopes: `~/code/schnapp-os/plugins/core/CATALOG.md` (generated). Example:
+library `~/code/schnapp-os/rules/modules/`. They are plain rule files; pick by relevance.
+Full inventory + scopes: `~/code/schnapp-os/CATALOG.md` (generated). Example:
 
 <!-- Replace with the modules this project actually uses. -->
-@~/code/schnapp-os/plugins/core/rules/modules/lang/python.md
-@~/code/schnapp-os/plugins/core/rules/modules/lang/sql-server.md
-@~/code/schnapp-os/plugins/core/rules/modules/activity/etl-pipeline.md
+@~/code/schnapp-os/rules/modules/lang/python.md
+@~/code/schnapp-os/rules/modules/lang/sql-server.md
+@~/code/schnapp-os/rules/modules/activity/etl-pipeline.md
 
 **Skills in reach** — schnapp-os skills/agents are plugin-global (available everywhere it is
 installed); reach for them by name. See `CATALOG.md` for the inventory; name the few most relevant

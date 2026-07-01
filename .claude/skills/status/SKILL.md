@@ -10,7 +10,7 @@ unmerged, or unpushed; whether the scheduled routines are healthy; whether conne
 are up; when the last backup ran; and which surfaces are enabled. Builds on — does not duplicate —
 [`surface-check`](../surface-check/SKILL.md): surface-check reports the **current** surface;
 `status` aggregates across **all** of them. **Probe every signal; never assume** (global rule
-[`verify-before-asserting`](../../rules/global/verify-before-asserting.md)). State which signals you
+[`verify-before-asserting`](../../../rules/global/verify-before-asserting.md)). State which signals you
 could not read on this surface and the route to read them, rather than guessing.
 
 ## Signals to gather (probe each; skip-with-reason if the surface can't)
@@ -18,7 +18,7 @@ could not read on this surface and the route to read them, rather than guessing.
 | Domain | What to read | How (this surface → fallback) |
 |---|---|---|
 | **Git / unmerged** | branches ahead of `main`, unpushed commits, dirty tree | Code: `scheduled-tasks/run-ci-routines.sh` (sync section) or `git`; web/iPhone: GitHub connector (list branches, compare to main) |
-| **Doc freshness** | is `CATALOG.md` current; any stale `last-verified:` | Code: `plugins/core/scripts/check-freshness.sh`; else last `freshness` + `scheduled-routines` workflow run |
+| **Doc freshness** | is `CATALOG.md` current; any stale `last-verified:` | Code: `scripts/check-freshness.sh`; else last `freshness` + `scheduled-routines` workflow run |
 | **Scheduled routines** | did the nightly `scheduled-routines` run pass | GitHub Actions: latest run of `.github/workflows/scheduled-routines.yml` (Step Summary) |
 | **Memory** | duplicate/contradictory/stale facts; supersede-orphans | read `memory/` + the freshness gate's supersede check; the consolidation routine's last proposal |
 | **Backup** | age of the last archive; did a non-Mac session's work reach OneDrive + the vault | Mac connector `backup_status`; obsidian connector searchability probe |

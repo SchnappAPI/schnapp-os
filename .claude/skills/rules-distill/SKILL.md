@@ -5,22 +5,22 @@ description: Use when reusable lessons have piled up uncaptured: after a stockta
 
 # rules-distill
 
-Cross-read a corpus (skills under [`plugins/core/skills/`](../) and/or recent
-[`handoffs/`](../../../../handoffs/)), extract principles that recur, and route each to its
+Cross-read a corpus (skills under [`.claude/skills/`](../) and/or recent
+[`handoffs/`](../../../handoffs/)), extract principles that recur, and route each to its
 canonical home. List every source first, *then* judge what is a repeated principle vs a one-off.
 
-Routing follows the standing rules, not this skill: [knowledge-capture](../../rules/global/knowledge-capture.md)
-(general lesson → global lane; project fact → project lane) and [anti-stale](../../rules/global/anti-stale.md)
+Routing follows the standing rules, not this skill: [knowledge-capture](../../../rules/global/knowledge-capture.md)
+(general lesson → global lane; project fact → project lane) and [anti-stale](../../../rules/global/anti-stale.md)
 (one fact, one file; supersede, never append a contradiction). Never invent a rule the corpus
-does not support: [verify-before-asserting](../../rules/global/verify-before-asserting.md).
+does not support: [verify-before-asserting](../../../rules/global/verify-before-asserting.md).
 
 ## Phase 1: Inventory
 
 List the corpus before reading any of it, so nothing is skipped:
 
-- Skills: `ls plugins/core/skills/*/SKILL.md`. Note each `name` + `description`.
-- Existing rules: `ls plugins/core/rules/global/ plugins/core/rules/modules/*/`.
-- Recent sessions: newest files in [`handoffs/`](../../../../handoffs/).
+- Skills: `ls .claude/skills/*/SKILL.md`. Note each `name` + `description`.
+- Existing rules: `ls rules/global/ rules/modules/*/`.
+- Recent sessions: newest files in [`handoffs/`](../../../handoffs/).
 
 ## Phase 2: Extract and route
 
@@ -35,10 +35,10 @@ Assign each survivor a **destination** and a **verdict**:
 
 | Destination | What lives there | Pick when |
 |---|---|---|
-| [`rules/global/`](../../rules/global/) | always-on, language-neutral behavior | a general lesson all projects need |
-| [`rules/modules/`](../../rules/modules/) | path-scoped lang/tool/activity rules | the lesson only applies to a language, tool, or activity |
-| [`memory/`](../../../../memory/) | durable cross-surface facts/context | a fact to recall, not a behavior to enforce |
-| [`decisions/`](../../../../decisions/) | the *why* behind a locked choice | a tradeoff was settled and the reasoning must persist |
+| [`rules/global/`](../../../rules/global/) | always-on, language-neutral behavior | a general lesson all projects need |
+| [`rules/modules/`](../../../rules/modules/) | path-scoped lang/tool/activity rules | the lesson only applies to a language, tool, or activity |
+| [vault memory lane](../../../docs/memory-lane.md) | durable cross-surface facts/context (`~/code/schnapp-vault/memory/`) | a fact to recall, not a behavior to enforce |
+| [`decisions/`](../../../decisions/) | the *why* behind a locked choice | a tradeoff was settled and the reasoning must persist |
 
 | Verdict | Meaning |
 |---|---|

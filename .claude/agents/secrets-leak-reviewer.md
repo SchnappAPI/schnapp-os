@@ -15,8 +15,8 @@ secret-scan hook) catches exact token formats; you catch what high-precision reg
 
 Start from the canonical scanner's findings, then reason past them:
 
-- a diff/branch: `git diff --name-only main...HEAD`, then `bash plugins/core/scripts/scan-secrets.sh <files>`
-- a file or tree: `bash plugins/core/scripts/scan-secrets.sh [--strict] PATH`
+- a diff/branch: `git diff --name-only main...HEAD`, then `bash scripts/scan-secrets.sh <files>`
+- a file or tree: `bash scripts/scan-secrets.sh [--strict] PATH`
 - `--strict` also surfaces WARN heuristics (assignment-secret, hex-bearer, private-ip) the gate
   leaves out by default — use it, and you triage the false positives.
 

@@ -53,7 +53,7 @@ headless Claude session, reusing the existing connectors and skills.
 
 ## LaunchAgent install — learning-worker (Phase 4)
 
-The nightly learning worker (`plugins/core/scripts/learning-worker.sh`) is scheduled via
+The nightly learning worker (`scripts/learning-worker.sh`) is scheduled via
 [`com.schnapp.memory-consolidation.plist`](com.schnapp.memory-consolidation.plist). The plist uses
 a `__REPO__` placeholder for the repo's absolute path (also its `WorkingDirectory`) and a `__HOME__`
 placeholder for the log paths, so it can be committed without hard-coding the Mac's directory layout

@@ -2,8 +2,8 @@
 
 Canonical home for the memory SYSTEM PROCEDURES: the freshness gate, the
 end-of-session write, on-correction routing, and dual-altitude promotion. The hooks
-([`plugins/core/hooks/`](../plugins/core/hooks/)) and the
-[`session-hygiene`](../plugins/core/skills/session-hygiene/SKILL.md) skill reference this
+([`hooks/`](../hooks/)) and the
+[`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md) skill reference this
 file; do not restate its content elsewhere.
 
 This file owns the PROCEDURES only. The memory SCHEMA (frontmatter, supersede rule) is
@@ -48,18 +48,18 @@ block; nothing here duplicates it. (Cross-repo, so it is referenced by path, not
 
 Anti-stale discipline that applies to both lanes:
 1. **One fact, one file.** Each per-fact file holds a single fact; `MEMORY.md` is a thin
-   index (one line per fact). See [anti-stale](../plugins/core/rules/global/anti-stale.md).
+   index (one line per fact). See [anti-stale](../rules/global/anti-stale.md).
 2. **Supersede, do not append.** When a fact changes, replace the file's body; never leave
    a contradicting copy.
 3. **No secrets.** References only (`op://...`), never secret values. See
-   [secrets-as-references](../plugins/core/rules/global/secrets-as-references.md).
+   [secrets-as-references](../rules/global/secrets-as-references.md).
 
 ## Dual-altitude promotion (nothing moved, nothing lost)
 
 When a lesson has BOTH a general principle and a specific instance, write it in **both**
 lanes and link them. Never move:
 - The **general principle** goes to the matching global rule (e.g. perf →
-  [speed-by-default](../plugins/core/rules/global/speed-by-default.md), already seeded with:
+  [speed-by-default](../rules/global/speed-by-default.md), already seeded with:
   read-once, module-level cache, ThreadPoolExecutor, set-based SQL/CTE, bulk insert,
   `fast_executemany=True`).
 - The **specific instance** (which table, which endpoint, which repo) goes to that project's
@@ -75,14 +75,14 @@ At session start, before new work:
 2. **Skip / quarantine** any fact that is superseded or older than a fact that contradicts
    it. A superseded fact is never presented as current.
 3. Verify any fact that names a file/function/flag/table still exists before acting on it
-   (see [verify-before-asserting](../plugins/core/rules/global/verify-before-asserting.md)).
+   (see [verify-before-asserting](../rules/global/verify-before-asserting.md)).
 4. Surface **unmerged or unpushed work first** (git gate) before starting new work.
 
 Implemented on Code as the SessionStart hook
-[`session-start-gate.sh`](../plugins/core/hooks/session-start-gate.sh) (scans the vault's
+[`session-start-gate.sh`](../hooks/session-start-gate.sh) (scans the vault's
 memory for supersede-orphans and stale facts via the dir-arg check scripts). This section
 is the authored procedure; the reasoning over memory stays the agent's job. On hookless
-surfaces, run it via [`session-hygiene`](../plugins/core/skills/session-hygiene/SKILL.md).
+surfaces, run it via [`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md).
 
 ## End-of-session write (Stop / SessionEnd)
 
@@ -93,8 +93,8 @@ On stop / session end, deterministically:
 4. Commit + push.
 
 Implemented on Code as the Stop/SessionEnd hooks
-([`session-stop-push-gate.sh`](../plugins/core/hooks/session-stop-push-gate.sh),
-[`session-end-backup.sh`](../plugins/core/hooks/session-end-backup.sh)). The hook automates
+([`session-stop-push-gate.sh`](../hooks/session-stop-push-gate.sh),
+[`session-end-backup.sh`](../hooks/session-end-backup.sh)). The hook automates
 only the deterministic half; authoring memory/handoff prose stays the agent's procedure. On
 hookless surfaces, run it via `session-hygiene`.
 
@@ -103,19 +103,19 @@ hookless surfaces, run it via `session-hygiene`.
 When the owner corrects a mistake, or a wrong assumption surfaces, capture the fix
 immediately so it is never repeated. Route by what kind of thing was corrected:
 1. **Behavioral preference / how-to-work** → a rule, not memory. Update the matching file in
-   [`rules/global/`](../plugins/core/rules/global/) (e.g. working-style). Rules load every
+   [`rules/global/`](../rules/global/) (e.g. working-style). Rules load every
    session; memory is recall. See
-   [knowledge-capture](../plugins/core/rules/global/knowledge-capture.md).
+   [knowledge-capture](../rules/global/knowledge-capture.md).
 2. **Durable fact** (a value, a name, who/what/where) → memory, **supersede** the old fact
    (don't append a contradiction); set `source: correction` + today's `updated:`. Global lane
    (the vault) if cross-everything, project lane if repo-specific; link with `[[slug]]`.
 3. **Doc-relevant** (a doc stated the wrong thing) → fix the doc in the same change; never
-   leave the stale claim (see [anti-stale](../plugins/core/rules/global/anti-stale.md) "Doc
+   leave the stale claim (see [anti-stale](../rules/global/anti-stale.md) "Doc
    currency").
 
 Goal: the correction changes the always-loaded layer (rule) or the recall layer (memory) so
 the same mistake cannot recur on any surface. Classification + routing detail lives in the
-[`learn-route`](../plugins/core/skills/learn-route/SKILL.md) skill, which points back here.
+[`learn-route`](../.claude/skills/learn-route/SKILL.md) skill, which points back here.
 
 ## Verification
 - Cross-repo: a global-lane fact written to the vault appears in a fresh session on another

@@ -1,7 +1,7 @@
 # Routine: infra / pipeline health probe
 
 - **Class:** safe (probe) — read-only health checks; no remediation without approval.
-- **Implementation:** [`plugins/core/scripts/check-infra-health.sh`](../plugins/core/scripts/check-infra-health.sh)
+- **Implementation:** [`scripts/check-infra-health.sh`](../scripts/check-infra-health.sh)
   — **pure bash**, deterministic, read-only. No LLM, no MCP, no auth dependency.
 - **Scheduler:** the [`com.schnapp.infra-health`](com.schnapp.infra-health.plist) Mac LaunchAgent (every 30 min + once at load). Also runnable on demand and surfaced by the `status` skill.
 - **What it checks** (green/red; exits non-zero on any RED):
@@ -11,7 +11,7 @@
   - the `mssql` Docker container is running;
   - the three local MCP ports (8765 mac, 8766 github, 8767 obsidian) are LISTENing.
 - **On a RED signal:** prints the failing detail, posts a macOS notification, **pages off-Mac via
-  [`notify-ops.sh`](../plugins/core/scripts/notify-ops.sh) (ntfy) when `NTFY_URL` is set**, exits non-zero, and
+  [`notify-ops.sh`](../scripts/notify-ops.sh) (ntfy) when `NTFY_URL` is set**, exits non-zero, and
   logs the report to `~/Library/Logs/schnapp-os/infra-health.log`. It NEVER restarts or remediates — a fix is an
   approved-session action (and never foreground-restart `com.schnapp.macmcp`; use the detached daemon, per
   handoff 020/021).

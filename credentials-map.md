@@ -2,7 +2,7 @@
 
 The single source of truth for what every credential is, where it resolves, and everywhere
 its value is set. **References only** — no secret value ever lands here
-([secrets-as-references](plugins/core/rules/global/secrets-as-references.md)). Verified against
+([secrets-as-references](rules/global/secrets-as-references.md)). Verified against
 `op item list` on 2026-06-17.
 
 - **History:** [docs/credentials-archaeology-2026-06-17.md](docs/credentials-archaeology-2026-06-17.md)

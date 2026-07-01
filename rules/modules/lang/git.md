@@ -16,7 +16,7 @@ updated: 2026-06-30
 - **Everything commits straight to `main`** — directed work and autonomous self-edits alike, no
   feature branches and no PRs (ADR 0016). Commit and push **every** change immediately so local
   and GitHub never diverge (mechanics: the keep-tracker-current memory +
-  `plugins/core/rules/global/anti-stale.md` "Tracker currency" — do not restate them here). Run
+  `rules/global/anti-stale.md` "Tracker currency" — do not restate them here). Run
   tests + a local review pass before pushing; CI runs on the push to `main`.
 - **Autonomous self-edits use a pre-commit gate, not a branch** (`learning-gate.sh`): APPROVE →
   commit to `main`; HOLD → discard and open a review issue (ADR 0016). No `self-edit/*` branches.
@@ -26,6 +26,6 @@ updated: 2026-06-30
   (`git push origin --delete <branch>`, run from the Mac or an approved session).
 - Sync: `git pull --ff-only` at session start, and **address unmerged or unpushed work before any
   new work** (surfaced deterministically by the SessionStart gate,
-  `plugins/core/hooks/session-start-gate.sh`; never left unpushed past a turn by the Stop push-gate,
-  `plugins/core/hooks/session-stop-push-gate.sh`).
+  `hooks/session-start-gate.sh`; never left unpushed past a turn by the Stop push-gate,
+  `hooks/session-stop-push-gate.sh`).
 - Log decisions to `decisions/` and progress to `PROGRESS.md` as you go.

@@ -7,9 +7,9 @@ description: Use on surfaces WITHOUT hooks (claude.ai web/chat, iPhone, Cowork u
 
 The "must happen every time" procedures, for surfaces where **hooks do not run**. On Code
 (Mac + work machines) these are enforced deterministically by the Part-7.2 hooks
-([`plugins/core/hooks/`](../../hooks/)). Here there is no shell/hooks, so the agent runs the
+([`hooks/`](../../../hooks/)). Here there is no shell/hooks, so the agent runs the
 **same procedures** by hand. The procedures are authored **once** in
-[docs/memory-lane.md](../../../../docs/memory-lane.md) — this skill does not restate them; it points
+[docs/memory-lane.md](../../../docs/memory-lane.md) — this skill does not restate them; it points
 to each and adds the hookless-surface execution notes. Confirm what is actually loaded first
 with [surface-check](../surface-check/SKILL.md).
 
@@ -17,9 +17,9 @@ with [surface-check](../surface-check/SKILL.md).
 
 | Moment | Procedure (canonical) | Hook equivalent on Code |
 |---|---|---|
-| Start of work | [Freshness gate](../../../../docs/memory-lane.md#freshness-gate-sessionstart) | `session-start-gate.sh` |
-| Wrapping up | [End-of-session write](../../../../docs/memory-lane.md#end-of-session-write-stop--sessionend) | `session-end-backup.sh` |
-| Owner corrects a mistake | [On-correction update](../../../../docs/memory-lane.md#on-correction-update-any-surface) | `session-stop-push-gate.sh` + the others |
+| Start of work | [Freshness gate](../../../docs/memory-lane.md#freshness-gate-sessionstart) | `session-start-gate.sh` |
+| Wrapping up | [End-of-session write](../../../docs/memory-lane.md#end-of-session-write-stop--sessionend) | `session-end-backup.sh` |
+| Owner corrects a mistake | [On-correction update](../../../docs/memory-lane.md#on-correction-update-any-surface) | `session-stop-push-gate.sh` + the others |
 
 ## Hookless-surface execution notes (what differs from Code)
 
@@ -38,7 +38,7 @@ No local git, shell, filesystem, or `backup-archive.sh` here. Same intent, diffe
   export or the `live-session-cache` skill. Do not claim the OneDrive/Obsidian mirror ran — it runs
   from a Code/Mac session (the SessionEnd hook), not from here.
 - **Route a correction** (on-correction update): classify and route per the
-  [`learn-route`](../learn-route/SKILL.md) skill — preference → a [`rules/global/`](../../rules/global/)
+  [`learn-route`](../learn-route/SKILL.md) skill — preference → a [`rules/global/`](../../../rules/global/)
   file; durable fact → memory **supersede** (`source: correction`, today's `updated:`); stale doc →
   fix the doc. Land each via the GitHub connector or a generated Code prompt.
 
@@ -47,5 +47,5 @@ No local git, shell, filesystem, or `backup-archive.sh` here. Same intent, diffe
 The freshness gate and on-correction routing should be in context *before* the user asks, not
 only on demand. On claude.ai/Cowork that means adding the global rules + a short pointer to this
 skill as always-loaded project instructions (wired per surface in Part 10; see the
-[surface profiles](../../../../surfaces/)). This skill is the on-demand workflow; the always-loaded
+[surface profiles](../../../surfaces/)). This skill is the on-demand workflow; the always-loaded
 instructions are the standing reminder that these procedures exist on a surface with no hooks.

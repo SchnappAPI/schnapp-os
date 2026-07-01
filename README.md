@@ -19,8 +19,8 @@ Status lives in one canonical place and is read there:
 | [PROGRESS.md](PROGRESS.md) | Execution log |
 | [decisions/](decisions/) | One file per decision (the "why") |
 | [handoffs/](handoffs/) | Dated session handoffs; the newest, highest-numbered is the resume point |
-| [plugins/core/rules/](plugins/core/rules/) | Rules — `global/` (always-on) + `modules/` (path-scoped lang, tool, activity, context — a plain reference library) |
-| [plugins/core/CATALOG.md](plugins/core/CATALOG.md) | Generated inventory of rules/skills/commands/hooks (do not edit; `gen-catalog.sh`) |
+| [rules/](rules/) | Rules — `global/` (always-on) + `modules/` (path-scoped lang, tool, activity, context — a plain reference library) |
+| [CATALOG.md](CATALOG.md) | Generated inventory of rules/skills/commands/hooks (do not edit; `gen-catalog.sh`) |
 | [templates/](templates/) | `project-CLAUDE.md` (manual project starter) + `user-global-CLAUDE.md` (the `~/.claude/CLAUDE.md` copy) |
 | [surfaces/](surfaces/) | One operating profile per surface (Code, Cowork, claude.ai, iPhone) |
 | [connectors/](connectors/) | Remote MCP connectors — `op-mcp` (1Password resolver), `memory-mcp` (cross-surface memory), `mac`/`github`/`obsidian-mcp` |
@@ -30,13 +30,13 @@ Status lives in one canonical place and is read there:
 
 ## Staying current (anti-stale)
 - Docs reference canonical sources for mutable facts; they never copy them. See the
-  [anti-stale rule](plugins/core/rules/global/anti-stale.md) and [[keep-tracker-current]] in memory.
+  [anti-stale rule](rules/global/anti-stale.md) and [[keep-tracker-current]] in memory.
 - Every state-changing commit updates the affected tracker/doc in the same commit and pushes
   immediately, so GitHub mirrors local.
 - A SessionStart hook does `git pull --ff-only` to surface divergence before work (Part 0.3).
 - A CI freshness gate ([`.github/workflows/freshness.yml`](.github/workflows/freshness.yml)) fails a
-  push if a generated doc (`plugins/core/CATALOG.md`) is stale, or a `last-verified` doc's source
-  changed afterward. Regenerate with [`plugins/core/scripts/gen-catalog.sh`](plugins/core/scripts/gen-catalog.sh).
+  push if a generated doc (`CATALOG.md`) is stale, or a `last-verified` doc's source
+  changed afterward. Regenerate with [`scripts/gen-catalog.sh`](scripts/gen-catalog.sh).
 
 ## Install (per surface)
 One repo, used across surfaces. These are the install steps; what is already live vs wired at

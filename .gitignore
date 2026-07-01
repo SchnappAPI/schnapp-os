@@ -18,7 +18,7 @@ secrets/
 # scan-secrets.sh, skills/cleanse-secrets, skills/rotate-secret, rules/secrets-as-references.md all
 # legitimately carry "secret" in the name and MUST be tracked. A broad `**/*secret*` ignore silently
 # dropped them (and once dropped secrets-as-references.md, the always-loaded rule). The value-level
-# guard is plugins/core/scripts/scan-secrets.sh, run in CI: it BLOCKS any literal secret value in a
+# guard is scripts/scan-secrets.sh, run in CI: it BLOCKS any literal secret value in a
 # tracked file regardless of filename — that, not the filename, is what keeps values out.
 *.key
 *.pem
