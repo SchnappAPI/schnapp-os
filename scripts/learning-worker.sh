@@ -371,7 +371,11 @@ if [ -z "$(git -C "$VAULT_DIR" status --porcelain)" ]; then
   echo "learning-worker: no fact change proposed in the vault lane."
 else
   git -C "$VAULT_DIR" add -A
-  git -C "$VAULT_DIR" commit -q -m "self-edit: learning-loop fact promotion $(date -u +%F)"
+  # Explicit bot identity: the worker owns this clone, so its commits must not depend on host
+  # git config (a host without a derivable ident, e.g. a CI runner, would fail the commit and
+  # the leg would degrade into a confusing no-changes HOLD).
+  git -C "$VAULT_DIR" -c user.name="learning-worker" -c user.email="learning-worker@schnapp.bet" \
+    commit -q -m "self-edit: learning-loop fact promotion $(date -u +%F)"
   vgate_out="$(mktemp)"
   vault_ok=true
   (cd "$VAULT_DIR" && bash "$REPO_ROOT/scripts/learning-gate.sh" origin/main 'memory/*.md') \
