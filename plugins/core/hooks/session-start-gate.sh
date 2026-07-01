@@ -59,10 +59,11 @@ else
   echo "[git] no upstream tracking branch set"
 fi
 
-# 3. Memory freshness scan (deterministic signals; reasoning stays the agent's per memory/README.md).
+# 3. Memory freshness scan (deterministic signals; reasoning stays the agent's per docs/memory-lane.md).
+#    The global memory lane lives in the vault (SchnappAPI/schnapp-vault), not schnapp-os; scan it there.
 #    Detection logic + its unit test live in plugins/core/scripts/check-supersede-orphans.sh so the
 #    column-0-vs-indented-frontmatter bug (which made this a silent no-op) cannot regress unnoticed.
-MEM="$REPO/memory"
+MEM="$HOME/code/schnapp-vault/memory"
 if [ -d "$MEM" ]; then
   orphans="$(bash "$REPO/plugins/core/scripts/check-supersede-orphans.sh" "$MEM" 2>/dev/null)"
   if [ -n "$orphans" ]; then
@@ -80,12 +81,12 @@ if [ -d "$MEM" ]; then
     echo "[memory] no stale facts (<7d)"
   fi
 else
-  echo "[memory] no memory/ dir"
+  echo "[memory] no vault memory/ dir at $MEM (global lane is SchnappAPI/schnapp-vault)"
 fi
 
 # 4. Satellite repos (owner Mac): surface unpushed state so cross-repo work is not lost
 #    (decisions/0008). Existence-guarded, so this no-ops on machines that lack these checkouts.
-for sat in "$HOME/code/schnapp-bet" "$HOME/Library/CloudStorage/OneDrive-Schnapp/Obsidian"; do
+for sat in "$HOME/code/schnapp-bet" "$HOME/code/schnapp-vault"; do
   [ -d "$sat/.git" ] || continue
   name="$(basename "$sat")"
   sa="$(git -C "$sat" rev-list --count '@{u}'..HEAD 2>/dev/null || echo 0)"

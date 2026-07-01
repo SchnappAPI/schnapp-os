@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Fail if any memory fact file lacks provenance (name + source + ISO updated).
-# Required by memory/README.md. Accepts keys top-level OR under a `metadata:` block.
+# Required by docs/memory-lane.md (schema owned by the vault agents.md). Accepts keys
+# top-level OR under a `metadata:` block.
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$HERE/lib-frontmatter.sh"

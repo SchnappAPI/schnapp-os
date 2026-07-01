@@ -49,9 +49,11 @@ restate mutable state.
   comes from [plugins/core/scripts/gen-catalog.sh](plugins/core/scripts/gen-catalog.sh). A CI gate
   ([.github/workflows/freshness.yml](.github/workflows/freshness.yml)) fails the push if it is stale
   or a `last-verified` doc's source changed after it.
-- **Memory lane = [memory/](memory/)** (index [MEMORY.md](memory/MEMORY.md), conventions
-  [memory/README.md](memory/README.md)). **Supersede, do not append:** when a fact changes, replace
-  it; never leave a contradicting copy. Personal/debugging notes go here, not into project files.
+- **Global memory lane lives in the vault** (`~/code/schnapp-vault`, repo `SchnappAPI/schnapp-vault`),
+  not schnapp-os. Procedures (freshness gate, end-of-session write, on-correction routing):
+  [docs/memory-lane.md](docs/memory-lane.md). Schema: the vault's `agents.md`. **Supersede, do not
+  append:** when a fact changes, replace it; never leave a contradicting copy. Personal/debugging notes
+  go to the vault memory lane, not into project files.
 - **Secrets are `op://` references, never values** ([secrets-as-references.md](plugins/core/rules/global/secrets-as-references.md)).
   New env vars go in [.env.template](.env.template) as `op://` URIs. Reference map (refs only):
   [credentials-map.md](credentials-map.md). Spot a hardcoded credential: stop and flag it.

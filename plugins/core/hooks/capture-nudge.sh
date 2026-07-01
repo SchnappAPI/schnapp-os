@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # capture-nudge.sh — UserPromptSubmit. The learning loop's CAPTURE trigger (correction half).
 #
-# Why: the routing procedures already exist (memory/README "on-correction": behavioral->rule,
+# Why: the routing procedures already exist (docs/memory-lane.md "On-correction update": behavioral->rule,
 # fact->memory-supersede, stale-doc->doc-fix). What was missing is the TRIGGER — capture relied on
 # the agent remembering, so corrections got fixed locally and lost by the next session (the exact
 # "fixes don't stick" failure). This fires capture at the moment a correction arrives.
@@ -24,9 +24,9 @@ if printf '%s' "$INPUT" | grep -qiE "you'?re wrong|that'?s wrong|that is wrong|i
   { printf '%s\tcorrection\t%s\n' "$ts" "$line" >> "$q"; } 2>/dev/null || true
 
   cat <<'EOF'
-[capture] This reads like a correction. Route it now (memory/README "on-correction") so it can't recur:
+[capture] This reads like a correction. Route it now (docs/memory-lane.md "On-correction update") so it can't recur:
   - behavioral / how-to-work -> sharpen the EXISTING rule in rules/global/ (add a new file only if there is no home; never duplicate)
-  - durable fact (a value/name/where) -> memory/ (supersede the old fact; source: correction; today's updated:)
+  - durable fact (a value/name/where) -> the vault memory lane (supersede the old fact; source: correction; today's updated:)
   - stale doc or claim -> fix the doc in the SAME change
   Route via the learn-route skill. In-session: edit the rule/fact + commit straight to main (no
   branches — owner pref 2026-06-27 / ADR 0016). The nightly learning-worker gates its OWN autonomous

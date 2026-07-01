@@ -15,7 +15,7 @@ decisions one at a time.
 - **Recommend, don't just ask.** For each question give your recommended answer and the one-line why, so the owner reacts to a concrete position instead of starting from blank.
 - **Explore over ask.** If a question is answerable from the codebase, the trackers
   (PLAN.md / PROGRESS.md), the `decisions/` directory, or the memory lane
-  (`memory/README.md`), go find the answer instead of asking.
+  (`docs/memory-lane.md`; the global lane is the vault), go find the answer instead of asking.
 - **Order by dependency.** Settle the decision other decisions hang on first; let the answer
   prune the branches below it.
 - **Surface the gap, not just the literal ask** (see

@@ -62,8 +62,9 @@ Personal (non-system): `Elgato`, `Obsidian`, `MacbookPro` (owner renamed from `S
 
 ## Status — see the canonical source (do not hardcode mutable status here)
 Live credential / rotation status goes stale if pinned in this doc, so it is NOT kept here.
-Canonical, supersede-on-change: [`memory/credentials-state.md`](memory/credentials-state.md)
-(SA + MCP-bearer rotation state, what is verified, what is owner-pending). The append-only
+Canonical, supersede-on-change: the `credentials-state` fact in the vault memory lane
+(`~/code/schnapp-vault/memory/credentials-state.md`, `SchnappAPI/schnapp-vault`; reachable off-Mac via
+memory-mcp) — SA + MCP-bearer rotation state, what is verified, what is owner-pending. The append-only
 **Changelog** below is the where-to-change record for every rename/rotation.
 
 ## Changelog (append-only; the where-to-change log for every rename/rotation)

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # check-supersede-orphans.sh — detect memory facts whose `supersedes:` names a fact
 # file that STILL EXISTS (the old fact was appended-around, not replaced — the exact
-# "supersede, do not append" violation memory/README.md warns about).
+# "supersede, do not append" violation docs/memory-lane.md warns about).
 #
 # RED (the bug this closes): the prior inline scan in session-start-gate.sh matched
 # `supersedes:` only at column 0, but every on-disk fact nests it INDENTED under a

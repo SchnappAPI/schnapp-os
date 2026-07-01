@@ -6,7 +6,7 @@
 #      session transcripts into the OneDrive claude-archive vault (PLAN.md Part 6).
 #      Best-effort, never fatal.
 #   2. REMINDER: surface unpushed / uncommitted state as a closing nudge so the end-of-session
-#      memory + handoff WRITE and commit+push (agent judgment, per memory/README.md
+#      memory + handoff WRITE and commit+push (agent judgment, per docs/memory-lane.md
 #      "End-of-session write" + keep-tracker-current) is not skipped.
 #
 # The hook automates only the deterministic backup; it cannot author memory/handoff prose —

@@ -39,7 +39,8 @@ if the obsidian tools are not present (or the Mac is off), say so and fall back 
 ## Notes
 
 - The vault is read-mostly here: search/read to answer. Writing durable knowledge goes through
-  the memory lane (`memory/README.md`) or a deliberate vault note, not ad-hoc scattering.
+  the memory lane (`docs/memory-lane.md`; the global lane is the vault) or a deliberate vault note,
+  not ad-hoc scattering.
 - Decisions live in `decisions/` (this repo) and mirror into the vault — for "why did we
   choose X", search both.
 - The live server's canonical **source** is in this repo at `connectors/obsidian-mcp/server.py`

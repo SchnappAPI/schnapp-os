@@ -16,12 +16,13 @@ dependency: the Mac can be asleep and the memory is still live everywhere.
 | `memory_list` | List fact slugs (excludes MEMORY.md / README.md). | no |
 | `memory_read` | Read one fact `memory/<slug>.md`. | no |
 | `memory_search` | Case-insensitive substring scan across facts. | no |
-| `memory_write` | Create/replace a fact + update the index. Enforces `memory/README` discipline. | commits ×2 |
+| `memory_write` | Create/replace a fact + update the index. Enforces the vault memory discipline (`agents.md`). | commits ×2 |
 | `memory_delete` | Remove a fact + de-index it (git keeps history). | commits ×2 |
 
 `memory_write` enforces the lane's rules: **one fact per file**, **supersede not append** (writing an
-existing slug replaces its body), and the `source` / `updated` / `scope` frontmatter the freshness
-gate keys off. See [`memory/README.md`](../../memory/README.md) for the canonical spec.
+existing slug replaces its body), and the `source` / `updated` frontmatter the freshness gate keys
+off. The lane it serves is the vault (`SchnappAPI/schnapp-vault`); the canonical frontmatter schema is
+the vault's `agents.md`, and the schnapp-os-side procedures are [`docs/memory-lane.md`](../../docs/memory-lane.md).
 
 ## Security model
 

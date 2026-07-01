@@ -34,7 +34,7 @@ function todayUTC(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-/** Build a per-fact file body to the memory/README frontmatter convention. */
+/** Build a per-fact file body to the vault agents.md frontmatter convention. */
 function buildFact(opts: {
   slug: string;
   scope: string;
@@ -244,7 +244,7 @@ Best for small/medium lanes; for the whole index just read memory_index.`,
     {
       title: "Write or supersede a memory fact",
       description: `Create or replace a fact file and update the MEMORY.md index — in two commits to ${REPO}@${BRANCH}.
-Enforces the memory/README discipline: ONE fact per file; SUPERSEDE, don't append (writing an existing
+Enforces the vault agents.md discipline: ONE fact per file; SUPERSEDE, don't append (writing an existing
 slug REPLACES its body — never leave a contradicting copy); frontmatter carries source + updated.
 
 Args:

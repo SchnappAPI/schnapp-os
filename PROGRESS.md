@@ -167,3 +167,20 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   repo=SchnappAPI/schnapp-vault, 14 files; `memory_read obsidian-state` returns the normalized
   flat-schema fact. ALL 3 gates + all consumers now on the vault. Remaining: task 9 (relocate memory
   procedures + retarget refs + repoint hooks + `git rm schnapp-os/memory/`), task 10 (ADR + trackers).
+- 2026-07-01 Phase 1 (task 9) DONE + VERIFIED: schnapp-os no longer owns `memory/`. Relocated the memory
+  SYSTEM PROCEDURES (freshness gate, end-of-session write, on-correction routing, dual-altitude promotion)
+  to `docs/memory-lane.md` — the canonical schnapp-os-side doc; schema is NOT restated, it references the
+  vault `agents.md` "Memory frontmatter schema" (single definition site). Repointed LIVE hooks:
+  `session-start-gate.sh` MEM `$REPO/memory` → `$HOME/code/schnapp-vault/memory` + satellite loop
+  OneDrive-Obsidian → `~/code/schnapp-vault`; `capture-nudge.sh` + `session-end-backup.sh` comment/output
+  refs → `docs/memory-lane.md`; `backup-archive.sh` `OBSIDIAN_VAULT_DIR` default → `~/code/schnapp-vault`.
+  `.claude/settings.json` `autoMemoryDirectory` `~/code/schnapp-os/memory` → `~/code/schnapp-vault/memory`
+  (+ `$comment` refs). Retargeted README, CLAUDE.md, `session-hygiene`/`learn-route`/`grill-me`/`notes-lookup`
+  SKILLs, `scheduled-tasks/memory-consolidation.md`, `connectors/memory-mcp/README.md`+`src/tools.ts`,
+  `credentials-map.md`, `surfaces/code-mac.md`, `templates/project-CLAUDE.md`, the 3 check-script comments.
+  `git rm -r memory/` (12 facts + MEMORY.md + README.md; canonical copy now in the vault). VERIFIED:
+  `session-start-gate.sh` exit 0, its `[memory]` scan now hits the vault's 14 facts (no supersede-orphans,
+  no stale) — not a no-op; freshness CI green (CATALOG current); secret scan 0 BLOCK; grep sweep clean of
+  LIVE `schnapp-os/memory`/`memory/README.md` refs (only append-only history + a log-path false positive
+  remain). PENDING (owner, outside repo): USER-scope `~/.claude/settings.json` `autoMemoryDirectory` →
+  `~/code/schnapp-vault/memory` on this + every machine. Next: task 10 (ADR + final trackers).

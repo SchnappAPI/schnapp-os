@@ -8,14 +8,14 @@ description: Use immediately after a correction or capture lands — to classify
 The authored classifier for the learning loop's capture-and-route step. Run this after any
 correction arrives (hook fires on hookless surfaces, or invoke manually). It does three things:
 classify → route → act. The classification taxonomy lives in
-[memory/README.md](../../../../memory/README.md) ("on-correction" section); the routing policy lives
+[docs/memory-lane.md](../../../../docs/memory-lane.md) ("On-correction update" section); the routing policy lives
 in [ADR 0016](../../../../decisions/0016-no-branches-precommit-gate.md) (refines 0012/0013/0015 —
 no branches, everything to main). This skill does not restate either — it points to each and adds
 the execution notes.
 
 ## 1 — Classify
 
-Follow the "on-correction" routing in [memory/README.md](../../../../memory/README.md):
+Follow the "On-correction update" routing in [docs/memory-lane.md](../../../../docs/memory-lane.md):
 
 - **Behavioral / how-to-work** → sharpen the EXISTING rule in
   [`plugins/core/rules/global/`](../../rules/global/) (add a new file only if there is no home;
@@ -58,5 +58,5 @@ why it is correct, what triggered it, and — for a fact supersede — what valu
 ## Companion skills
 
 - [session-hygiene](../session-hygiene/SKILL.md) — on hookless surfaces, run this skill by hand as
-  the "route the correction" step of the on-correction procedure. It points to `memory/README.md`
+  the "route the correction" step of the on-correction procedure. It points to `docs/memory-lane.md`
   for the canonical on-correction flow; `learn-route` adds the classification + the commit-to-main step.

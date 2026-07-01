@@ -12,9 +12,10 @@
 # Config (env overrides, machine-portable):
 #   CLAUDE_KIT_REPO     default ~/code/schnapp-os
 #   CLAUDE_ARCHIVE_DIR  default ~/Library/CloudStorage/OneDrive-Schnapp/claude-archive
-#   OBSIDIAN_VAULT_DIR  default ~/Library/CloudStorage/OneDrive-Schnapp/Obsidian
-#                       (canonical vault, OneDrive-synced; ~/Documents/Obsidian is a back-compat
-#                        symlink to it; vault mirror skipped if the dir is absent)
+#   OBSIDIAN_VAULT_DIR  default ~/code/schnapp-vault
+#                       (canonical vault, git-tracked repo SchnappAPI/schnapp-vault;
+#                        ~/Documents/Obsidian is a back-compat symlink to it; the OneDrive
+#                        copy is an inert cold backup; vault mirror skipped if the dir is absent)
 #
 # Run manually now; Part 7 wires it to the Stop/SessionEnd hook (PLAN 5.4).
 set -euo pipefail
@@ -55,11 +56,13 @@ OneDrive-synced, Obsidian-mirrored backup of the schnapp-os knowledge base.
 Refreshed by \`plugins/core/scripts/backup-archive.sh\`. The live source of truth
 is the git repo; this is a browsable, cross-device copy.
 
-- \`repo/memory/\` — global memory lane (per-fact files)
 - \`repo/handoffs/\` — session handoffs
 - \`repo/decisions/\` — decision log
 - \`repo/PLAN.md\`, \`repo/PROGRESS.md\` — live trackers
 - \`sessions/\` — raw Claude Code transcripts (.jsonl), $SESSION_COUNT archived
+
+The global memory lane is no longer in schnapp-os; it lives in the vault
+(\`SchnappAPI/schnapp-vault\`), which git-syncs independently.
 
 Do not edit here — changes belong in the repo, then re-run the backup. claude.ai
 chats are not on the Mac filesystem; back those up via export / live-session-cache.
@@ -70,7 +73,7 @@ echo "backup-archive: mirrored repo md + $SESSION_COUNT transcript(s) -> $ARCHIV
 # 4. Mirror the browsable knowledge md into the canonical Obsidian vault (optional).
 #    Reuses the just-built OneDrive copy. Sessions (.jsonl) stay OneDrive-only so the
 #    git-synced vault does not bloat. obsidian-git pushes this to GitHub on next sync.
-VAULT="${OBSIDIAN_VAULT_DIR:-$HOME/Library/CloudStorage/OneDrive-Schnapp/Obsidian}"
+VAULT="${OBSIDIAN_VAULT_DIR:-$HOME/code/schnapp-vault}"
 if [ -d "$VAULT" ]; then
   mkdir -p "$VAULT/claude-archive"
   rsync -a --delete "$ARCHIVE/repo/" "$VAULT/claude-archive/repo/"

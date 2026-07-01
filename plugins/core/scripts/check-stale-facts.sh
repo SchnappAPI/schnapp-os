@@ -2,7 +2,7 @@
 # check-stale-facts.sh — read-only memory freshness flag (agentic-OS loops Phase 2).
 # Flags facts whose `updated:` crosses 7/30/90-day age thresholds vs today. READ-ONLY:
 # prints flags, never edits, ALWAYS exits 0 (staleness is informational, not a hard gate —
-# surfacing is the point; the agent decides what to refresh, supersede-not-append per memory/README.md).
+# surfacing is the point; the agent decides what to refresh, supersede-not-append per docs/memory-lane.md).
 #
 # Usage: check-stale-facts.sh [dir] [today]
 #   dir   — memory dir (default: memory). Skips MEMORY.md/README.md.

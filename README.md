@@ -24,7 +24,7 @@ Status lives in one canonical place and is read there:
 | [templates/](templates/) | `project-CLAUDE.md` (manual project starter) + `user-global-CLAUDE.md` (the `~/.claude/CLAUDE.md` copy) |
 | [surfaces/](surfaces/) | One operating profile per surface (Code, Cowork, claude.ai, iPhone) |
 | [connectors/](connectors/) | Remote MCP connectors — `op-mcp` (1Password resolver), `memory-mcp` (cross-surface memory), `mac`/`github`/`obsidian-mcp` |
-| [memory/](memory/) | Global memory lane — `MEMORY.md` index + per-fact files ([conventions](memory/README.md)) |
+| [docs/memory-lane.md](docs/memory-lane.md) | Memory procedures (freshness gate, end-of-session write, on-correction routing). Global lane lives in the vault `SchnappAPI/schnapp-vault`, not here; schema in the vault's `agents.md` |
 | [credentials-map.md](credentials-map.md) | `op://` reference map (references only) |
 | [docs/environment-and-access.md](docs/environment-and-access.md) | Never-blocked config: required network allowlist, git-write path, per-surface delivery (ADR 0018) |
 
@@ -50,10 +50,11 @@ Part 10 is tracked in [PLAN.md](PLAN.md). Per-surface operating detail lives in
    - Create `~/.claude/CLAUDE.md` by copying the body of
      [templates/user-global-CLAUDE.md](templates/user-global-CLAUDE.md) (that file lives outside the repo,
      so the template is its canonical copy). It `@import`s the 7 global rules from the repo.
-   - In `~/.claude/settings.json` set `"autoMemoryDirectory": "~/code/schnapp-os/memory"` so the global
-     **memory** lane loads in every repo (the sibling of the `@import`ed rules). A plugin cannot deliver
+   - In `~/.claude/settings.json` set `"autoMemoryDirectory": "~/code/schnapp-vault/memory"` so the global
+     **memory** lane (the vault `SchnappAPI/schnapp-vault`) loads in every repo. A plugin cannot deliver
      this key (only `agent`/`subagentStatusLine` are plugin-settable), and a project-scoped setting reaches
-     only that project — so user scope is the only global delivery. Verified by 5.6.
+     only that project — so user scope is the only global delivery. Requires the vault cloned to
+     `~/code/schnapp-vault`. Procedures: [docs/memory-lane.md](docs/memory-lane.md).
 3. **Accept the workspace-trust dialog** on first open of the repo. Until accepted, the project hooks
    silently do nothing — this is the first thing to check if the SessionStart gate does not print. (The
    user-scope memory lane from step 2 loads regardless of trust; trust gates the *project* hooks/settings.)

@@ -45,5 +45,6 @@ to this project here.
 - **Gotchas:** <...>
 
 <!-- Secrets are `op://` references, never values (global/secrets-as-references.md). New env vars
-     go in `.env.template` as `op://` URIs. Project auto-memory writes to the repo memory lane if
-     this project is schnapp-os; other projects use their own configured memory directory. -->
+     go in `.env.template` as `op://` URIs. The GLOBAL memory lane is the vault
+     (`~/code/schnapp-vault/memory`, set via user-scope `autoMemoryDirectory`); a project sets its
+     own `autoMemoryDirectory` only for a PROJECT lane it wants git-tracked in its own repo. -->

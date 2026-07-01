@@ -9,7 +9,7 @@ The "must happen every time" procedures, for surfaces where **hooks do not run**
 (Mac + work machines) these are enforced deterministically by the Part-7.2 hooks
 ([`plugins/core/hooks/`](../../hooks/)). Here there is no shell/hooks, so the agent runs the
 **same procedures** by hand. The procedures are authored **once** in
-[memory/README.md](../../../../memory/README.md) — this skill does not restate them; it points
+[docs/memory-lane.md](../../../../docs/memory-lane.md) — this skill does not restate them; it points
 to each and adds the hookless-surface execution notes. Confirm what is actually loaded first
 with [surface-check](../surface-check/SKILL.md).
 
@@ -17,9 +17,9 @@ with [surface-check](../surface-check/SKILL.md).
 
 | Moment | Procedure (canonical) | Hook equivalent on Code |
 |---|---|---|
-| Start of work | [Freshness gate](../../../../memory/README.md) | `session-start-gate.sh` |
-| Wrapping up | [End-of-session write](../../../../memory/README.md) | `session-end-backup.sh` |
-| Owner corrects a mistake | [On-correction update](../../../../memory/README.md) | `session-stop-push-gate.sh` + the others |
+| Start of work | [Freshness gate](../../../../docs/memory-lane.md#freshness-gate-sessionstart) | `session-start-gate.sh` |
+| Wrapping up | [End-of-session write](../../../../docs/memory-lane.md#end-of-session-write-stop--sessionend) | `session-end-backup.sh` |
+| Owner corrects a mistake | [On-correction update](../../../../docs/memory-lane.md#on-correction-update-any-surface) | `session-stop-push-gate.sh` + the others |
 
 ## Hookless-surface execution notes (what differs from Code)
 
