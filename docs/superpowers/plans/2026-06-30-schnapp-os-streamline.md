@@ -40,17 +40,20 @@ Recommended order: **1 → (2 ∥ 4) → 3 → 5.** Each phase ends shippable.
 - Move: `schnapp-os/memory/*` → `~/code/schnapp-vault/memory/`
 - Modify: `schnapp-os` references to `memory/` (CLAUDE.md, README, session-hygiene, memory-mcp/obsidian-mcp config)
 
-**Tasks:**
-1. **Create `schnapp-vault` repo** — `gh repo create <owner>/schnapp-vault --private`; clone to `~/code/schnapp-vault`. Verify: `git -C ~/code/schnapp-vault rev-parse --show-toplevel`. *(owner-confirm)*
-2. **Author `agents.md`** — the narrow vault contract: the §3.5 flat schema (single definition site), supersede rule, capture-here, area rules, `/memory /areas /knowledge /reviews` layout. Verify: a human read + it names every schema field.
-3. **Migrate `memory/`** — `git mv` each fact from schnapp-os into the vault; scaffold `/areas/{work,personal,_adhoc}`, `/knowledge/{raw,raw/processed,wiki}`, `/reviews`. Verify: fact count matches; MEMORY.md index regenerated.
-4. **Normalize every fact to the one schema** — convert nested `metadata:` → flat keys; add missing `updated:` (= file's last git-commit date); set `source:`, `superseded: false`. Verify: `check-frontmatter.sh` passes on all facts.
-5. **Write `check-frontmatter.sh`** (TDD) — fails on: nested `metadata:`, missing any required flat key, missing `updated:`, orphan `superseded: true` with no `[[successor]]`. This FIXES the dead check (greps the flat top-level key, not an indented one). Test with fixtures (good + each bad case) before wiring.
-6. **Wire `vault-freshness.yml`** — runs `check-frontmatter.sh` on push/PR; blocks on failure. Verify: a deliberately-bad fact fails CI; a good tree passes.
-7. **Exit OneDrive** — make `~/code/schnapp-vault` the canonical Obsidian vault; retire the OneDrive copy from the write path; open the folder in Obsidian. Verify: Obsidian reads it; `~/code/schnapp-vault/.git` is NOT under any cloud-sync path. *(owner-confirm)*
-8. **Repoint MCPs** — `memory-mcp` + `obsidian-mcp` point at `~/code/schnapp-vault` (or its GitHub repo). Verify: `memory_read`/`memory_list` return vault facts; `obsidian` tools read the same tree. *(owner-confirm)*
-9. **Update schnapp-os references** — CLAUDE.md, README, `session-hygiene`, backup script stop pointing at `schnapp-os/memory/`; point at the vault. Verify: freshness CI green; grep finds no live `schnapp-os/memory/` references.
-10. **Write ADR** — two-repo split + git=one-truth + vault-out-of-OneDrive. Flip PLAN/PROGRESS. Commit + push both repos.
+**Tasks:** (checkbox = live tracker; **Re-cut Fork A, 2026-07-01** — see note below)
+
+> **Re-cut (Fork A, owner-approved 2026-07-01):** the vault already existed as `SchnappAPI/obsidian-vault` (2 clones). Task 1 became CONSOLIDATE-by-rename, not create-fresh. Also: gate 3 repoints a THIRD consumer the plan missed — the Obsidian **Brain Agent** (OneDrive-path-hardcoded, code lives in-vault at `.github/scripts/`) — and SPLITS (obsidian-mcp = local launchd; memory-mcp = Render config, owner-side). **Execution order:** 1 → 2 → 5 → 3+4 → 6 → 7 → 8 → 9 → 10 (checker before the data it verifies; memory stays in schnapp-os until task 8 repoints memory-mcp, then task 9 removes it — no empty-lane window, ACCURATE #1). Full rationale → ADR (task 10).
+
+- [x] 1. **Consolidate the vault repo** *(Fork A)* — deleted empty `schnapp-vault`; renamed `obsidian-vault` → `schnapp-vault`; cloned to `~/code/schnapp-vault` (git-native, out of OneDrive). Verified: `rev-parse --show-toplevel` + non-cloud path. *(owner-confirmed)*
+- [ ] 2. **Author `agents.md` + `index.md`** — the narrow vault contract: the §3.5 flat schema (single definition site), supersede rule, capture-here, area rules, `/memory /areas /knowledge /reviews` layout. Verify: a human read + it names every schema field.
+- [ ] 3. **Fold `memory/` into the vault** — copy each fact schnapp-os → vault `/memory` (do NOT remove from schnapp-os yet); scaffold `/areas/{work,personal,_adhoc}`, `/knowledge/{raw,raw/processed,wiki}`, `/reviews`. Verify: 12 facts present; MEMORY.md index regenerated.
+- [ ] 4. **Normalize every fact to the one schema** — un-nest `metadata:` → flat keys; drop `node_type`/`supersedes`-text; `scope`→`area`; add `description`/`type` where missing; `created:` = first git-commit date, `updated:` = last git-commit date; `superseded: false`. Verify: `check-frontmatter.sh` passes on all facts.
+- [ ] 5. **Write `check-frontmatter.sh`** (TDD) — fails on: nested `metadata:`, missing any required flat key, missing `updated:`, orphan `superseded: true` with no `[[successor]]`. FIXES the dead check (greps the flat top-level key, not an indented one). Test with fixtures (good + each bad case) before wiring.
+- [ ] 6. **Wire `vault-freshness.yml`** — runs `check-frontmatter.sh` on push/PR; blocks on failure. Verify: a deliberately-bad fact fails CI; a good tree passes.
+- [ ] 7. **Exit OneDrive** — make `~/code/schnapp-vault` the canonical Obsidian vault; retire the OneDrive + `~/code/obsidian-vault` copies from the write path; repoint the `~/Documents/Obsidian` symlink; open the folder in Obsidian. Verify: Obsidian reads it; `.git` NOT under any cloud-sync path. *(owner-confirm)*
+- [ ] 8. **Repoint consumers** — obsidian-mcp (local launchd, vault path) + Brain Agent (in-vault `.github/scripts` paths) + memory-mcp (Render `MEMORY_REPO`→schnapp-vault, token scope; owner-side). Verify: `memory_read`/`memory_list` return vault facts; `obsidian` tools read the same tree. *(owner-confirm)*
+- [ ] 9. **Update schnapp-os references + remove `memory/`** — CLAUDE.md, README, `session-hygiene`, backup script stop pointing at `schnapp-os/memory/`; `git rm` the lane. Verify: freshness CI green; grep finds no live `schnapp-os/memory/` references.
+- [ ] 10. **Write ADR** — two-repo split + git=one-truth + vault-out-of-OneDrive + Fork-A consolidation. Flip PLAN/PROGRESS. Commit + push both repos.
 
 **Done when:** vault CI green, all facts one-schema, MCPs serve the vault, schnapp-os no longer owns `memory/`.
 

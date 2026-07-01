@@ -119,3 +119,11 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
 - 2026-06-30 Wrote handoff 043 (`handoffs/043-execute-phase-1-vault-standup.md`) as the resume
   point for Phase 1 (vault stand-up), execution model = subagent-driven with the orchestrator
   driving; dropped a `spawn_task` chip for a fresh Opus 4.8 session. Design session ends here.
+- 2026-07-01 Phase 1 (vault stand-up) EXECUTION START, subagent-driven. Owner resolved the open
+  fork → **Fork A**: consolidate to ONE vault repo by repurposing the existing `obsidian-vault`.
+  **Task 1 (gate 1) DONE:** deleted the empty `SchnappAPI/schnapp-vault`, renamed
+  `obsidian-vault` → `schnapp-vault` (private, 25MB, history+clones preserved), cloned to
+  `~/code/schnapp-vault` (git-native, out of OneDrive). Probe-verified current-state map matched
+  handoff `dd2ba64` exactly. Re-cut tasks in the plan doc (exec order 1→2→5→3+4→6→7→8→9→10;
+  memory stays in schnapp-os until task 8 repoints memory-mcp, then task 9 removes it). Full
+  rationale → Phase-1 ADR at task 10.
