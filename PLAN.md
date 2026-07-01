@@ -180,7 +180,9 @@ personal); `policy-procedure` (global + activity/policy-procedure + context/work
 
 # Execution plan (small steps; one Part per sitting; handoff at each boundary)
 
-After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`.
+After each step append one line to `PROGRESS.md`. Log decisions to `decisions/`. `PROGRESS.md`
+rotates per [decisions/0022](decisions/0022-progress-md-rotation-policy.md) — old entries move
+to `docs/archive/` verbatim; never deleted, only archived.
 
 ## Part 0: Tracker, repo, and sync routine (start here, ~20 min)
 - [x] 0.1 Create empty GitHub repo `claude-kit`; clone locally.

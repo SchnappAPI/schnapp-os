@@ -25,3 +25,7 @@ PROGRESS.md (one line), automatically, without being asked, and is **pushed imme
 GitHub remote always reflects local state (never let the remote go stale). `[x]` only after the
 verify command ran and passed; `[~]` for built-but-unverified or partially-done; quote the verify
 result in the PROGRESS line. See [anti-stale](../plugins/core/rules/global/anti-stale.md).
+
+"One line" means one line — not a paragraph. PROGRESS.md hit 1281 unreadable lines by 2026-06-30
+because this drifted; reconciled and rotation policy recorded in `decisions/0022`. When
+PROGRESS.md next crosses ~600 lines, rotate per that ADR — don't let it happen again silently.
