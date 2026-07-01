@@ -67,14 +67,24 @@ Recommended order: **1 → (2 ∥ 4) → 3 → 5.** Each phase ends shippable.
 ## Phase 2 — Flatten the plugin
 **Deliverable:** native `.claude/` layout; marketplace + plugin.json gone; all references retargeted; hooks still fire.
 
-**Owner-action gate:** one-line `~/.claude/CLAUDE.md` `@import`-path edit PER MACHINE (supplied exact); uninstall cached plugin locally.
+**Target layout:** `plugins/core/{skills,commands,agents}` → `.claude/{skills,commands,agents}` (native discovery); `plugins/core/{rules,scripts,hooks}` → top-level `rules/ scripts/ hooks/`; `plugins/core/CATALOG.md` → root `CATALOG.md`. Delete `.claude-plugin/marketplace.json` + `plugins/core/.claude-plugin/plugin.json`.
 
-**Tasks (outline — detail at execution):**
-1. Move `plugins/core/{skills,commands,agents}` → `.claude/{skills,commands,agents}`; verify native discovery lists all 23 skills / 3 commands / 3 agents.
-2. Move `plugins/core/{rules,scripts,hooks}` → top-level `rules/ scripts/ hooks/`; update `.claude/settings.json` hook paths; verify each hook fires (force-push guard, secret-scan, shellcheck, Stop push-gate, SessionStart/End).
-3. Delete `.claude-plugin/marketplace.json` + `plugins/core/.claude-plugin/plugin.json`; uninstall cached `schnapp-os-core@schnapp-os`. *(owner: per-machine)*
-4. Retarget the ~20 live docs + `gen-catalog.sh` + 2 CI workflows off `plugins/core/` paths; leave ~40 historical `handoffs/`/`decisions/` untouched (they describe the past).
-5. Verify the `schnapp-os-core` double-load is gone (§ from substrate review). ADR (executes 0011 #2); flip trackers; push.
+**Execution constraint (why the grouping below):** gen-catalog + `freshness.yml` + `ci-lint.yml` + all 6 hooks reference `plugins/core/` paths, and every pushed commit must keep CI green and hooks firing. So a move is atomic with the executable references that point at it; pure-doc references sweep after. **PLAN.md is left untouched** — already stale post-Phase-1 (`claude-kit/`/`memory/`/`presets/`); Phase 4 reconciles it wholesale, a partial retarget here would be incoherent half-work.
+
+**Owner-action gate (hard-to-reverse — PAUSE for explicit owner confirmation before running):**
+1. `~/.claude/CLAUDE.md` PER MACHINE: the 7 `@~/code/schnapp-os/plugins/core/rules/global/*.md` lines + the prose path → `rules/global/`.
+2. `claude plugin uninstall schnapp-os-core@schnapp-os` (matches by NAME — confirm target; [[plugin-registry-snapshot-gotchas]]).
+3. `~/.claude/settings.json` (user scope): remove `"schnapp-os-core@schnapp-os": true` from `enabledPlugins` and the `extraKnownMarketplaces.schnapp-os` block.
+4. Re-render + reload the 2 launchd plists (`__REPO__/plugins/core/scripts/` bakes into the installed copy) per `scheduled-tasks/README.md`.
+
+**Tasks (checkbox = live tracker; step-level detail generated at execution, 2026-07-01):**
+
+- [ ] **T1. Atomic flatten + rewire executables** *(covers outline 1, 2, and the executable half of 4)*. `git mv` the 6 dirs + `plugins/core/CATALOG.md`→`CATALOG.md`. Rewrite `scripts/gen-catalog.sh` (REPO depth `../../..`→`..`; drop `CORE`; scan `$REPO/rules`, `$REPO/.claude/{skills,commands,agents}`, `$REPO/hooks`; `OUT=$REPO/CATALOG.md`; header text + `freshness.yml` link). Repoint every executable/config ref off `plugins/core/`: `.claude/settings.json` (6 hook paths + `$comment`), `scripts/check-freshness.sh`, `.github/workflows/{freshness,ci-lint}.yml`, `scripts/{learning-worker,learning-gate,scan-secrets,backup-archive,learning_distill.py}`, `hooks/{session-start-gate,shellcheck-on-write}.sh` + `hooks/hooks.json`, `scripts/tests/{test-learning-gate,test-learning-worker}.sh` + `secret-fixtures.txt`, both `scheduled-tasks/*.plist` (`__REPO__/plugins/core/scripts/`→`__REPO__/scripts/`), `scheduled-tasks/run-ci-routines.sh`. Regenerate `CATALOG.md`. **Verify:** `git grep -n plugins/core -- scripts hooks .github/workflows .claude/settings.json 'scheduled-tasks/*.plist' scheduled-tasks/run-ci-routines.sh` = 0; `bash scripts/check-freshness.sh` = ok; `bash -n` all `hooks/*.sh scripts/*.sh`; each `.claude/settings.json` hook path resolves; plists load (`plistlib`). Commit + push; CI green.
+- [ ] **T2. Delete plugin manifests** *(outline 3, repo half)*. `git rm .claude-plugin/marketplace.json plugins/core/.claude-plugin/plugin.json`; drop now-empty `plugins/`, `.claude-plugin/`. **Verify:** no `marketplace.json`/`plugin.json`; `plugins/` gone; CI green. Commit + push.
+- [ ] **T3. Retarget live docs** *(outline 4, doc half)*. Sweep `plugins/core/`→new paths in LIVE files only: `CLAUDE.md`, `README.md`, `docs/{framework,memory-lane,headless-claude-auth}.md`, `surfaces/*.md`, `templates/{project-CLAUDE,user-global-CLAUDE}.md`, `scheduled-tasks/{README,doc-freshness-sweep,infra-health}.md`, `credentials-map.md`, `AUDIT.md`, `.gitignore` (comment), moved `.claude/skills/*/SKILL.md` (cleanse-secrets, learn-route, rules-distill, session-hygiene, status) + `.claude/agents/secrets-leak-reviewer.md` + `rules/modules/lang/git.md`; `plugins/core/CATALOG.md`→`CATALOG.md`. **Leave untouched:** `handoffs/*`, `decisions/*`, `docs/archive/*`, `docs/repo-review-*`, `docs/intent-capture-*`, `docs/superpowers/plans/2026-06-27-*`, `docs/superpowers/specs/2026-06-17-*`, `PROGRESS.md` past lines, `PLAN.md`. **Verify:** `git grep -l plugins/core` returns only the leave-list. Commit + push.
+- [ ] **T4. ADR + trackers** *(outline 5, repo half)*. Write `decisions/0024-flatten-plugin-native-claude.md` (executes 0011 #2; native discovery replaces the plugin; moots stale-plugin-pin + the double-load). Flip these boxes; close the `PROGRESS.md` open item `#2 repo-flattening`; append the Phase-2 bullet. Commit + push.
+- [ ] **OWNER GATE — PAUSE.** Present the 4 exact commands above; owner confirms/runs (per machine).
+- [ ] **T5. Verify double-load gone + final review + handoff** *(outline 5, verify half)*. After the owner uninstall: a fresh in-repo session lists each skill/command/agent ONCE (native, un-namespaced) — no `schnapp-os-core:*`. Live-fire hooks (`claude -p --include-hook-events "exit"`). Final whole-branch review. Write handoff 045.
 
 **Done when:** no plugin/marketplace remains, native discovery + hooks verified, freshness CI green, double-load resolved.
 
