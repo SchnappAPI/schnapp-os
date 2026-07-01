@@ -25,6 +25,9 @@ secrets/
 .DS_Store
 scratch/
 tmp/
+# Python bytecode (build artifact; never track)
+__pycache__/
+*.pyc
 
 # Local learning-loop capture queue (per-machine; distilled+reviewed output is what's durable)
 scheduled-tasks/.learning-queue.tsv

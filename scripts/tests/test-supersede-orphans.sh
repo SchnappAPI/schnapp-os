@@ -10,7 +10,7 @@
 set -uo pipefail
 export LC_ALL=C
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-repo="$(cd "$here/../../../.." && pwd)"
+repo="$(cd "$here/../.." && pwd)"
 detector="$here/../check-supersede-orphans.sh"
 fail=0
 

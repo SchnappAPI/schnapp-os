@@ -14,7 +14,7 @@
 # Usage: learning-eval.sh [archive]   (default: scheduled-tasks/.learning-queue.archive.tsv)
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ARCHIVE="${1:-"$HERE/../../../scheduled-tasks/.learning-queue.archive.tsv"}"
+ARCHIVE="${1:-"$HERE/../scheduled-tasks/.learning-queue.archive.tsv"}"
 
 if [ ! -s "$ARCHIVE" ]; then
   echo "learning-eval: no learning history yet (no processed captures)."
