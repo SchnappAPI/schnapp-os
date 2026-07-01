@@ -136,3 +136,10 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   `metadata:`, missing any of the 8 flat keys, bad type/area/date/superseded values, name not
   matching filename, and orphan `superseded: true` with no `[[successor]]`. Runs before the
   data it will validate (task 3+4) and before CI wiring (task 6).
+- 2026-07-01 Phase 1 tasks 3+4 DONE (vault `167ecaa` + link fix `f402248`): folded all 12
+  memory facts from schnapp-os into `schnapp-vault/memory/` and normalized each to the flat
+  8-key schema (un-nested `metadata:`, added `created:` from git first-commit dates,
+  `area: global`, `superseded: false`; kept the 5 existing `type:` values). `check-frontmatter.sh`
+  passes 12/12. Scaffolded `areas/knowledge/reviews` (`.gitkeep`). MEMORY.md index regenerated,
+  README slimmed to point at `agents.md`. Fixed 4 cross-repo `../` links (§10) to path-free plain
+  text. schnapp-os `memory/` LEFT LIVE (memory-mcp still serves it until task 8 repoint).
