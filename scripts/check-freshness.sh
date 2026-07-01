@@ -3,7 +3,7 @@
 # (.github/workflows/freshness.yml) and locally (pre-push). Two checks:
 #
 #   (1) Generated docs — regenerate and FAIL if the committed copy is stale (a component file
-#       changed but the generator was not re-run). Today: CATALOG.md.
+#       changed but the generator was not re-run). Today: CATALOG.md, handoffs/README.md.
 #
 #   (2) last-verified docs — a doc opts in with frontmatter:
 #           last-verified: 2026-06-05
@@ -51,6 +51,23 @@ else
   fail=1
 fi
 rm -f "$tmp"
+
+tmp2="$(mktemp)"
+if bash scripts/gen-handoff-index.sh "$tmp2" >/dev/null 2>&1; then
+  if diff -q "$tmp2" handoffs/README.md >/dev/null 2>&1; then
+    echo "ok: handoffs/README.md is current"
+  else
+    echo "STALE generated doc: handoffs/README.md" >&2
+    echo "  fix: bash scripts/gen-handoff-index.sh  (then commit handoffs/README.md)" >&2
+    echo "  --- committed (<) vs regenerated (>): ---" >&2
+    diff handoffs/README.md "$tmp2" | sed 's/^/    /' >&2 || true
+    fail=1
+  fi
+else
+  echo "ERROR: gen-handoff-index.sh failed to run" >&2
+  fail=1
+fi
+rm -f "$tmp2"
 
 # (2) last-verified docs ------------------------------------------------------
 found_lv=0
