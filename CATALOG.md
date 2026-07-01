@@ -101,6 +101,7 @@ against live project paths. (`hooks/hooks.json` intentionally delivers none —
 decision 0011 #2; the scripts in `hooks/` remain the canonical source.)
 
 - **capture-nudge.sh** — UserPromptSubmit. The learning loop's CAPTURE trigger (correction half).
+- **length-advisory.sh** — PostToolUse soft length nudge for the always-load layer.
 - **no-force-push-guard.sh** — PreToolUse HARD guard against force-push (decisions/0011 #9).
 - **secret-scan-on-write.sh** — PostToolUse shift-left leak guard.
 - **session-end-backup.sh** — schnapp-os end-of-session write, deterministic half (PLAN.md 5.4 / 7.2).

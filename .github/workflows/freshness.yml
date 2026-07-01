@@ -56,6 +56,9 @@ jobs:
       - name: Infra-health probe self-test
         run: bash scripts/tests/test-infra-health.sh
 
+      - name: Length-advisory self-test
+        run: bash scripts/tests/test-length-advisory.sh
+
       - name: LaunchAgent plists are valid
         run: python3 -c "import plistlib; [plistlib.load(open(p,'rb')) for p in ['scheduled-tasks/com.schnapp.memory-consolidation.plist','scheduled-tasks/com.schnapp.infra-health.plist']]; print('plists OK')"
 
