@@ -3,9 +3,11 @@ on:
   push: { branches: [main] }
   pull_request:
 jobs:
-  memory-frontmatter:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: memory frontmatter provenance
-        run: bash scripts/check-memory-frontmatter.sh memory
+      # Memory-schema lint moved to the vault repo (SchnappAPI/schnapp-vault
+      # vault-freshness.yml) when the memory lane moved there; this repo lints style.
+      - name: writing-style gate (no em dashes in live files)
+        run: bash scripts/check-writing-style.sh

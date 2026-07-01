@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# length-advisory.sh — PostToolUse soft length nudge for the always-load layer.
+# length-advisory.sh - PostToolUse soft length nudge for the always-load layer.
 #
 # WARNs to stderr (never blocks) when a Write/Edit'd rules/global/*.md, other rules/**/*.md, or
 # top-level CLAUDE.md grows past a heuristic line-count threshold. Line count is a proxy, not a

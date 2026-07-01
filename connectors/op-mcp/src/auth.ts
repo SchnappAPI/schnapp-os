@@ -11,7 +11,7 @@ import type { Request, Response, NextFunction } from "express";
  *     (Claude Code / Cowork mcp config support this).
  *
  * Set OP_MCP_BEARER in the host environment. If it is unset the server
- * refuses to start (see index.ts) — we never run an open secrets endpoint.
+ * refuses to start (see index.ts) - we never run an open secrets endpoint.
  */
 export function bearerAuth(expectedToken: string) {
   return (req: Request, res: Response, next: NextFunction): void => {

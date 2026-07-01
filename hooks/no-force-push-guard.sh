@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# no-force-push-guard.sh — PreToolUse HARD guard against force-push (decisions/0011 #9).
+# no-force-push-guard.sh - PreToolUse HARD guard against force-push (decisions/0011 #9).
 #
 # Workflow is main-only. A force-push (--force / -f / --force-with-lease / a `+refspec`) can
-# irrecoverably rewrite protected history — exactly the operation used for the history cleanse,
+# irrecoverably rewrite protected history - exactly the operation used for the history cleanse,
 # and exactly the one you never want an agent to run by accident. PreToolUse fires BEFORE the
 # permission-mode check, so exit 2 here blocks the command even under --dangerously-skip-permissions
 # (the only reliable hard-policy gate; research doc §4). Replaces the removed, buggy schnapp-kit

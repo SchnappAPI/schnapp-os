@@ -2,7 +2,7 @@
 github-mcp/server.py
 
 Remote MCP server exposing the GitHub REST API to Claude.
-Covers all repos the PAT has access to — not scoped to any single repo.
+Covers all repos the PAT has access to - not scoped to any single repo.
 
 Auth: Bearer token in the Authorization header, validated on every request.
       Set GITHUB_MCP_AUTH_TOKEN in the launchd plist.
@@ -56,7 +56,7 @@ mcp = FastMCP(
         "Full GitHub API access across all SchnappAPI repositories. "
         "Tools cover repos, branches, files, commits, issues, pull requests, "
         "GitHub Actions workflows, releases, and org membership. "
-        "Pass owner and repo explicitly on every call — this server is not "
+        "Pass owner and repo explicitly on every call - this server is not "
         "scoped to any single repository."
     ),
     host="127.0.0.1",
@@ -360,10 +360,10 @@ def create_or_update_file(owner: str, repo: str, path: str, content: str,
                            message: str, branch: str = "main", sha: str = "") -> Any:
     """
     Create or update a file in a repository.
-    content is the raw text to write (not base64 — this tool handles encoding).
+    content is the raw text to write (not base64 - this tool handles encoding).
     sha is required when updating an existing file; omit to create a new file.
     Get the current sha with get_file first if updating.
-    NEVER use this for .py files with literal \\n in content — pass real newlines.
+    NEVER use this for .py files with literal \\n in content - pass real newlines.
     """
     body: dict[str, Any] = {
         "message": message,
@@ -380,7 +380,7 @@ def delete_file(owner: str, repo: str, path: str, message: str,
                 sha: str, branch: str = "main") -> Any:
     """
     Delete a file from a repository.
-    sha is required — get it from get_file first.
+    sha is required - get it from get_file first.
     """
     return _gh("DELETE", f"/repos/{owner}/{repo}/contents/{path}",
                json={"message": message, "sha": sha, "branch": branch})

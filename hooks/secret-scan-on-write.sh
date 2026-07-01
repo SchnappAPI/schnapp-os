@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# secret-scan-on-write.sh — PostToolUse shift-left leak guard.
+# secret-scan-on-write.sh - PostToolUse shift-left leak guard.
 #
 # Runs the canonical literal-secret scanner (scan-secrets.sh) on each file the agent Writes/Edits,
-# the moment it is written — not at push/PR time. Rationale: secrets-as-references is a cardinal rule
-# and a real value already leaked once (memory/credential-leak-2026-06-17.md). The CI gate
+# the moment it is written - not at push/PR time. Rationale: secrets-as-references is a cardinal rule
+# and a real value already leaked once (vault memory/credential-leak-2026-06-17.md). The CI gate
 # (.github/workflows/freshness.yml) is the backstop; this catches a leaked value in-session, while
 # the agent can still fix it, instead of letting it sit in the working tree until a push.
 #
-# Single source of patterns: delegates to scan-secrets.sh — no rules duplicated here (anti-stale).
+# Single source of patterns: delegates to scan-secrets.sh - no rules duplicated here (anti-stale).
 # Fires only on BLOCK findings (exact token formats); WARN heuristics are NOT enforced here so the
 # always-on hook stays false-positive-free. PostToolUse exit 2 surfaces the finding to Claude (the
 # write already happened) so it remediates immediately. Mirrors the no-force-push-guard.sh pattern.

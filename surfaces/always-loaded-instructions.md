@@ -13,7 +13,7 @@ for a Code session. State which path you used. Do not claim a capability exists 
 
 ## Must-happen procedures (no hooks here): run the session-hygiene skill
 - Start of work: the freshness/git gate. Catch up, then surface unmerged, unpushed, or stale state
-  (schnapp-os plus the satellite repos schnapp-bet and obsidian-vault) before starting new work.
+  (schnapp-os plus the satellite repos schnapp-bet and schnapp-vault) before starting new work.
 - Wrapping up: the end-of-session write. Persist memory, a handoff, and PROGRESS, then commit/push
   via the GitHub connector or a generated Code prompt. Never skip the write.
 - After the owner corrects something: route it. Preference goes to a rules/global file; durable fact

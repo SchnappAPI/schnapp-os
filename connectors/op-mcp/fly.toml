@@ -1,8 +1,8 @@
 # Fly.io deploy config (recommended Node host: simplest persistent HTTPS URL,
 # off-Mac, free-tier friendly). Alternatives: Render, Railway, Cloudflare
-# Containers, Cloud Run — all work from the Dockerfile.
+# Containers, Cloud Run - all work from the Dockerfile.
 #
-# Deploy (owner step — needs your Fly account):
+# Deploy (owner step - needs your Fly account):
 #   fly launch --no-deploy --copy-config --name op-mcp-<suffix>
 #   fly secrets set OP_SERVICE_ACCOUNT_TOKEN="$(op read op://<vault>/claude-kit-op-mcp/service-account-token)"
 #   fly secrets set OP_MCP_BEARER="$(openssl rand -hex 32)"   # then save it to 1Password

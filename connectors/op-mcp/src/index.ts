@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * op-mcp-server — off-Mac remote MCP that resolves 1Password secrets.
+ * op-mcp-server - off-Mac remote MCP that resolves 1Password secrets.
  *
  * Transport: streamable HTTP (stateless JSON), so claude.ai / Cowork / Code can
  * reach it as a remote connector. Runs on a Node host (not Workers; see
@@ -42,7 +42,7 @@ async function main(): Promise<void> {
     res.json({ status: "ok", server: SERVER_NAME, version: SERVER_VERSION });
   });
 
-  // MCP endpoint — bearer-protected, stateless (new transport per request).
+  // MCP endpoint - bearer-protected, stateless (new transport per request).
   app.post("/mcp", bearerAuth(authToken), async (req: Request, res: Response) => {
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined,

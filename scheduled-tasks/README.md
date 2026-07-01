@@ -1,9 +1,9 @@
-# scheduled-tasks — the self-running layer
+# scheduled-tasks - the self-running layer
 
 Routines that run **unattended** and report, without anyone opening a session. This directory is
 the single source for *what* runs, *when*, on *which surface*, and *whether it may act on its own*.
-The actual scheduling primitives are the owner's existing ones — GitHub Actions `cron` (cloud,
-Mac-independent) and Mac LaunchAgents — not a new daemon. Anti-sprawl: reuse, don't rebuild.
+The actual scheduling primitives are the owner's existing ones - GitHub Actions `cron` (cloud,
+Mac-independent) and Mac LaunchAgents - not a new daemon. Anti-sprawl: reuse, don't rebuild.
 
 ## Safety policy (non-negotiable)
 Every routine is classified, and the classification decides whether it may run on its own:
@@ -44,14 +44,14 @@ LaunchAgent; the spec is the agent's instructions). The `status` skill reads the
 signals on demand.
 
 ## Why split CI vs LaunchAgent
-GitHub Actions is the right host for repo-only, Mac-independent routines — it is the whole point of
+GitHub Actions is the right host for repo-only, Mac-independent routines - it is the whole point of
 schnapp-os that these do not depend on the Mac being awake. Anything that needs the Mac's MCP
 (SQL Server, Flask, Docker, services) or LLM judgment runs from a Mac LaunchAgent that launches a
 headless Claude session, reusing the existing connectors and skills.
 
 ---
 
-## LaunchAgent install — learning-worker (Phase 4)
+## LaunchAgent install - learning-worker (Phase 4)
 
 The nightly learning worker (`scripts/learning-worker.sh`) is scheduled via
 [`com.schnapp.memory-consolidation.plist`](com.schnapp.memory-consolidation.plist). The plist uses
@@ -92,7 +92,7 @@ sed -e "s|__REPO__|$REPO|g" -e "s|__HOME__|$HOME|g" -e "s|__CLAUDE_TOKEN_REF__|$
 mkdir -p ~/Library/Logs/schnapp-os
 touch "$REPO/scheduled-tasks/.learning-queue.tsv"
 
-# 3. Load the agent. RunAtLoad false — it fires WHEN the queue file changes (a capture is enqueued)
+# 3. Load the agent. RunAtLoad false - it fires WHEN the queue file changes (a capture is enqueued)
 #    and every 30 min as a backstop. Re-run unload+load after any plist change.
 launchctl load ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
 ```
@@ -114,7 +114,7 @@ rm ~/Library/LaunchAgents/com.schnapp.memory-consolidation.plist
 
 The worker reads the local git-ignored queue (`scheduled-tasks/.learning-queue.tsv`), has a headless
 `claude -p` distill each correction and write any proposed rule/fact edit to the working tree, then
-GATES that diff with `learning-gate.sh` (no branches — ADR 0016): a clean self-edit is committed
+GATES that diff with `learning-gate.sh` (no branches - ADR 0016): a clean self-edit is committed
 straight to `main`; anything the gate holds is filed as a GitHub issue for review, never landing on
 main. See
 [memory-consolidation.md](memory-consolidation.md) for the asks-first consolidation policy and the

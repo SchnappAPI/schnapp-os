@@ -4,7 +4,7 @@ sources:
   - connectors/obsidian-mcp/server.py
 ---
 
-# obsidian-mcp — vault MCP (canonical source)
+# obsidian-mcp - vault MCP (canonical source)
 
 This is the **source of truth** for the live Obsidian MCP. It is a Python FastMCP server that
 serves the owner's Obsidian vault to every surface (claude.ai, iPhone, Cowork, Code).
@@ -15,12 +15,12 @@ serves the owner's Obsidian vault to every surface (claude.ai, iPhone, Cowork, C
 - **The Mac runs it from here**: `~/obsidian-mcp/server.py` is a **symlink** to this file, launched by
   launchd agent `com.schnapp.obsidian-mcp` via `op-wrap.sh` (secrets injected from `.env.template`).
   Edit `server.py` here, push, then restart the service to deploy:
-  `launchctl kill TERM gui/$(id -u)/com.schnapp.obsidian-mcp` (graceful: KeepAlive relaunches; pre-bound SO_REUSEADDR socket — decision 0010). Do not use `kickstart -k`.
+  `launchctl kill TERM gui/$(id -u)/com.schnapp.obsidian-mcp` (graceful: KeepAlive relaunches; pre-bound SO_REUSEADDR socket - decision 0010). Do not use `kickstart -k`.
 - **Authoritative runtime/infra detail** (port, OAuth, tunnel, recovery): `schnapp-bet`
   `docs/CONNECTIONS.md` → "Obsidian MCP" / "Obsidian Brain Agent". Do not duplicate it here.
 
 Local-only runtime artifacts (`venv/`, `oauth_state.json`, `*.log`, `__pycache__/`) stay on the Mac
-and are gitignored — they are not source.
+and are gitignored - they are not source.
 
 ## Tools (7)
 
@@ -33,7 +33,7 @@ and are gitignored — they are not source.
 The server is **Mac-hosted**, so off-Mac vault access requires the Mac powered on. This was a
 deliberate, logged choice (`decisions/0008`): the brain/inbox integration is inherently Mac-resident,
 and the plan permits "always-complete via fallback" for knowledge. **Fallback when the Mac is off**:
-the GitHub `obsidian-vault` mirror (kept current by obsidian-git) and this repo's own
+the GitHub `schnapp-vault` mirror (kept current by obsidian-git) and this repo's own
 `memory/` + `decisions/`. See the `notes-lookup` skill for the usage entry point.
 
 ## Secrets

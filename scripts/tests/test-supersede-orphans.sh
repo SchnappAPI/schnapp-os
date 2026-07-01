@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# test-supersede-orphans.sh — proves check-supersede-orphans.sh detects supersede-orphans
+# test-supersede-orphans.sh - proves check-supersede-orphans.sh detects supersede-orphans
 # across the on-disk frontmatter shapes, and does NOT false-flag.
 #
 # RED (the gap this closes): the old inline scan matched `supersedes:` only at column 0, so
 # the INDENTED key used by every real fact file (nested under `metadata:`, e.g.
-# memory/credentials-state.md) was never read — supersession was a silent no-op. The critical
+# memory/credentials-state.md) was never read - supersession was a silent no-op. The critical
 # assertion below is `nested-orphan` (an indented supersedes pointing at an existing file): the
 # old code missed it; the fix must catch it.
 set -uo pipefail
@@ -95,10 +95,10 @@ cat >"$tmp/MEMORY.md" <<'EOF'
 ---
 supersedes: superseded-slug
 ---
-index file — never scanned
+index file - never scanned
 EOF
 cat >"$tmp/README.md" <<'EOF'
-spec doc — never scanned
+spec doc - never scanned
 EOF
 
 # --- the REAL on-disk file: exercises the actual nested `metadata:` schema; its prose
@@ -114,7 +114,7 @@ assert_has()  { if echo "$out" | grep -q "$1"; then echo "ok   flagged   $2"; el
 assert_lacks(){ if echo "$out" | grep -q "$1"; then echo "FAIL flagged   $2" >&2; fail=1; else echo "ok   skipped   $2"; fi; }
 
 # CRITICAL regression: an indented supersedes pointing at an existing file is caught.
-assert_has  "nested-orphan.md supersedes 'superseded-slug'"  "nested (indented) orphan — the regression case"
+assert_has  "nested-orphan.md supersedes 'superseded-slug'"  "nested (indented) orphan - the regression case"
 assert_has  "flat-orphan.md supersedes 'legacy-slug'"        "flat (column-0) orphan"
 assert_has  "wikilink-orphan.md supersedes 'bracket-slug'"   "[[wikilink]]/quoted orphan"
 

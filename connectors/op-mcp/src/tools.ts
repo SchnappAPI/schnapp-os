@@ -39,20 +39,20 @@ export function registerTools(server: McpServer): void {
       title: "Read a 1Password secret",
       description: `Resolve a single 1Password secret reference to its value via the Service Account.
 
-SECRET HYGIENE — read before using: this returns the RAW secret value into THIS conversation
+SECRET HYGIENE - read before using: this returns the RAW secret value into THIS conversation
 transcript. Prefer NOT to. To *use* a secret in a command, use the Mac's op_run / op_inject tools
 (they inject the secret and scrub its value from the output) instead of op_read. Call op_read ONLY
 when the Mac is unavailable and a surface genuinely needs the value in hand. Rotate any sensitive
 value that did transit a transcript.
 
 COLD START: this connector's host sleeps when idle (no keep-alive by design). The FIRST call after
-idle can take ~50s or return one transient connection/timeout error — wait and retry once before
+idle can take ~50s or return one transient connection/timeout error - wait and retry once before
 treating it as a real failure. This is expected, not an outage.
 
 Args:
   - reference (string): an op://vault/item/field reference (sections allowed: op://vault/item/section/field).
 
-Returns: { "reference": string, "value": string } — the resolved secret value.
+Returns: { "reference": string, "value": string } - the resolved secret value.
 
 Examples:
   - Use when: the Mac is off and a surface needs a value, e.g. reference="op://web-variables/<item>/<field>".
@@ -95,7 +95,7 @@ Errors:
 Returns: { "count": number, "vaults": [{ "id": string, "title": string }] }
 
 Use this first to discover vault names before calling op_list_items or op_read.
-COLD START: the host sleeps when idle; the first call after idle can take ~50s or error once — retry before treating as failure.`,
+COLD START: the host sleeps when idle; the first call after idle can take ~50s or error once - retry before treating as failure.`,
       inputSchema: ListVaultsInput.shape,
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
@@ -134,7 +134,7 @@ Args:
 Returns: { "count": number, "items": [{ "id": string, "title": string, "category": string }] }
 
 Build an op:// reference from a returned title to read a field with op_read.
-COLD START: the host sleeps when idle; the first call after idle can take ~50s or error once — retry before treating as failure.`,
+COLD START: the host sleeps when idle; the first call after idle can take ~50s or error once - retry before treating as failure.`,
       inputSchema: ListItemsInput.shape,
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
@@ -173,7 +173,7 @@ COLD START: the host sleeps when idle; the first call after idle can take ~50s o
 Good first call to wake the host and confirm the chain before op_read.
 
 Returns: { "authenticated": true, "integration": string, "vaultCount": number }
-COLD START: the host sleeps when idle; the first call after idle can take ~50s or error once — retry before treating as failure.`,
+COLD START: the host sleeps when idle; the first call after idle can take ~50s or error once - retry before treating as failure.`,
       inputSchema: z.object({}).strict().shape,
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },

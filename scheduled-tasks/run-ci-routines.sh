@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# run-ci-routines.sh — the SAFE, Mac-independent scheduled routines, as one bundle.
+# run-ci-routines.sh - the SAFE, Mac-independent scheduled routines, as one bundle.
 #
 # Single source of truth for the safe, auto-class routines: four read-only
-# passes — the doc-freshness sweep (hard gate), the sync/unmerged check, a memory-freshness
+# passes - the doc-freshness sweep (hard gate), the sync/unmerged check, a memory-freshness
 # sweep (check-stale-facts.sh), and the learning-loop eval (learning-eval.sh). The cron workflow
 # (.github/workflows/scheduled-routines.yml) calls this; nothing here is duplicated in YAML.
 # Read-only except for the freshness generator's temp file. Exit non-zero ONLY when a hard gate
@@ -18,7 +18,7 @@ cd "$REPO" || { echo "FATAL: repo not found: $REPO" >&2; exit 1; }
 
 rc=0
 
-echo "# Scheduled routines — $(date -u '+%Y-%m-%d %H:%M:%SZ')"
+echo "# Scheduled routines - $(date -u '+%Y-%m-%d %H:%M:%SZ')"
 echo
 
 # --- Routine 1: doc-freshness sweep (hard gate) ---
@@ -28,12 +28,12 @@ echo '```'
 if bash scripts/check-freshness.sh 2>&1; then
   echo '```'
   echo
-  echo "**Result: OK** — generated docs current."
+  echo "**Result: OK** - generated docs current."
 else
   rc=1
   echo '```'
   echo
-  echo "**Result: DRIFT (gate failed)** — a component/source file changed without"
+  echo "**Result: DRIFT (gate failed)** - a component/source file changed without"
   echo "regenerating \`CATALOG.md\`, or a \`last-verified:\` doc is stale. Fix: re-run"
   echo "\`scripts/gen-catalog.sh\`, commit, in an approved session."
 fi
@@ -42,7 +42,7 @@ echo
 # --- Routine 2: sync / unmerged + stray-branch reconcile (informational) ---
 # Under ADR 0016/0017 `main` is the only long-lived branch on any surface, so EVERY other remote
 # branch is session residue. Surface both kinds: unmerged (review before retiring) and merged
-# (orphaned session litter, safe to delete). Read-only — never merges or deletes.
+# (orphaned session litter, safe to delete). Read-only - never merges or deletes.
 echo "## Sync / unmerged check"
 echo
 # Best-effort: ensure we can see all remote branches (CI may have fetched only one ref).
@@ -68,14 +68,14 @@ else
     fi
   done <<< "$strays"
   if [ -n "$unmerged_rows" ]; then
-    echo "### Unmerged work — review before retiring"
+    echo "### Unmerged work - review before retiring"
     echo "| Branch | Ahead of main | Behind main | Last commit |"
     echo "|---|---|---|---|"
     printf '%s' "$unmerged_rows"
     echo
   fi
   if [ -n "$merged_rows" ]; then
-    echo "### Merged residue — orphaned session branches, safe to retire"
+    echo "### Merged residue - orphaned session branches, safe to retire"
     echo "| Branch | Behind main | Last commit |"
     echo "|---|---|---|"
     printf '%s' "$merged_rows"
@@ -84,7 +84,7 @@ else
   echo "_Every branch above is session residue (ADR 0016/0017: \`main\` is the only live branch)."
   echo "Merged ones are safe to delete; unmerged ones need a review pass first. Retire via"
   echo "\`git push origin --delete <branch>\` on the Mac (the cloud env's git proxy 403s pushes), or"
-  echo "\`/clean-gone\` in an approved session — this routine never merges or deletes._"
+  echo "\`/clean-gone\` in an approved session - this routine never merges or deletes._"
 fi
 echo
 
@@ -96,7 +96,7 @@ bash scripts/check-stale-facts.sh memory 2>&1 || true
 echo '```'
 echo
 echo "_Read-only: flags facts crossing 7/30/90-day \`updated:\` thresholds. Refresh via supersede"
-echo "in an approved session — this routine never edits._"
+echo "in an approved session - this routine never edits._"
 echo
 
 # --- Routine 4: learning-loop eval (informational) ---
@@ -106,7 +106,7 @@ echo '```'
 bash scripts/learning-eval.sh 2>&1 || true
 echo '```'
 echo
-echo "_Read-only: flags corrections that recurred after promotion (the rule may not have stuck) —"
+echo "_Read-only: flags corrections that recurred after promotion (the rule may not have stuck) - "
 echo "the signal for revisiting a promoted rule. This routine never edits._"
 echo
 

@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# test-learning-worker-recurrence-live.sh — LIVE-path regression test for the recurrence gate.
+# test-learning-worker-recurrence-live.sh - LIVE-path regression test for the recurrence gate.
 #
 # Guards the A1 invariant (the highest-stakes bug on the autonomous loop): a recurring error-class is
 # marked "drafted" (and held out of distillation) ONLY when its `gh issue create` actually SUCCEEDED.
 # On a gh FAILURE the class must NOT be marked (so it retries next run) and must NOT be filtered (so it
-# still flows to prose distillation THIS run) — better a prose fact than a lesson orphaned into a gate
+# still flows to prose distillation THIS run) - better a prose fact than a lesson orphaned into a gate
 # that was never filed. And in EVERY case nothing lands on main (the cardinal safety invariant).
 #
 # RED (the defect this locks down): the pre-fix worker appended the drafted SIG to the marker and set
-# the distill filter UNCONDITIONALLY after the gh loop — so a gh failure still marked the class drafted
+# the distill filter UNCONDITIONALLY after the gh loop - so a gh failure still marked the class drafted
 # (idempotency then suppresses re-draft forever) AND held its capture out of distillation. The lesson
 # could then never become an issue OR prose; only the raw archive row survived.
 #
 # Harness: a throwaway git repo (bare origin + working clone) holding the REAL scripts/, with PATH
-# shims for the two external commands the live path calls — a flippable `gh` (GH_MODE=fail|succeed) and
-# a no-op `claude` (so `command -v claude` passes) — and a no-op distill python (LEARNING_DISTILL_PYTHON)
+# shims for the two external commands the live path calls - a flippable `gh` (GH_MODE=fail|succeed) and
+# a no-op `claude` (so `command -v claude` passes) - and a no-op distill python (LEARNING_DISTILL_PYTHON)
 # so no .md is edited. NO network; the only git remote is the local bare origin. This runs the actual
 # learning-worker.sh live path end to end.
 set -uo pipefail
@@ -53,7 +53,7 @@ cp "$SRC_SCRIPTS/learning-gate.sh"       "$work/scripts/"
 printf '#!/usr/bin/env bash\nexit 0\n' > "$work/scripts/ops-alert.sh"
 # learning_distill.py must exist (the worker execs it), but we point LEARNING_DISTILL_PYTHON at a no-op
 # python below, so its contents never run. A placeholder file is enough.
-printf '# stub — never executed (LEARNING_DISTILL_PYTHON is a no-op)\n' > "$work/scripts/learning_distill.py"
+printf '# stub - never executed (LEARNING_DISTILL_PYTHON is a no-op)\n' > "$work/scripts/learning_distill.py"
 chmod +x "$work/scripts/"*.sh
 printf 'placeholder\n' > "$work/rules/placeholder.md"
 git -C "$work" add -A
@@ -63,7 +63,7 @@ git -C "$work" branch -q -M main 2>/dev/null || true
 
 # --- PATH shims: flippable gh + no-op claude + no-op distill python ----------------------------------
 shim_dir="$root/bin"; mkdir -p "$shim_dir"
-# gh: honors GH_MODE — 'fail' exits non-zero WITHOUT filing; 'succeed' records the call and exits 0.
+# gh: honors GH_MODE - 'fail' exits non-zero WITHOUT filing; 'succeed' records the call and exits 0.
 cat > "$shim_dir/gh" <<'EOF'
 #!/usr/bin/env bash
 if [ "${GH_MODE:-fail}" = "succeed" ]; then
@@ -77,7 +77,7 @@ EOF
 printf '#!/usr/bin/env bash\nexit 0\n' > "$shim_dir/claude"
 # no-op distill "python": accepts the distill-script path arg, edits nothing, exits 0. It records the
 # distill INPUT it was handed (the worker exports LEARNING_QUEUE=the filtered queue) so the test can
-# prove a filed class's captures are held out — and an unfiled (gh-failed) class's captures are NOT.
+# prove a filed class's captures are held out - and an unfiled (gh-failed) class's captures are NOT.
 cat > "$shim_dir/noop-python" <<'EOF'
 #!/usr/bin/env bash
 [ -n "${DISTILL_INPUT_LOG:-}" ] && [ -n "${LEARNING_QUEUE:-}" ] && [ -f "$LEARNING_QUEUE" ] \
@@ -101,7 +101,7 @@ PORTSIG="$(bash "$SRC_SCRIPTS/learning-recurrence.sh" signature 'the SQL Server 
 head_before_fail="$(git -C "$work" rev-parse HEAD)"
 main_before_fail="$(git -C "$work" rev-parse origin/main)"
 
-# ============ CASE A — gh FAILS: not marked, not filtered, all archived, nothing landed ============
+# ============ CASE A - gh FAILS: not marked, not filtered, all archived, nothing landed ============
 qA="$root/qA.tsv"; aA="$root/qA.archive.tsv"; mA="$root/qA.gate-drafted.tsv"
 distinA="$root/distill-in-A.tsv"; : > "$distinA"
 seed_queue "$qA" "$aA"; : > "$mA"
@@ -111,7 +111,7 @@ outA="$(cd "$work" && PATH="$shim_dir:$PATH" GH_MODE=fail DISTILL_INPUT_LOG="$di
   bash "$WORKER" 2>&1)"
 rcA=$?
 check "$rcA" 0 "gh-FAIL: worker exits 0 (best-effort, never fails the worker)"
-# The marker must NOT contain the class signature — so the class re-drafts on a later run.
+# The marker must NOT contain the class signature - so the class re-drafts on a later run.
 if [ -s "$mA" ] && grep -qxF "$PORTSIG" "$mA"; then
   echo "FAIL gh-FAIL: class was marked drafted despite gh failure (would suppress retry forever)" >&2; fail=$((fail+1))
 else
@@ -127,7 +127,7 @@ else pass=$((pass+1)); echo "ok   gh-FAIL: did not claim a draft succeeded"; fi
 if [ -s "$distinA" ] && grep -qF 'the SQL Server port is 5432 not 5433' "$distinA"; then
   pass=$((pass+1)); echo "ok   gh-FAIL: the unfiled class's capture flows to distillation (prose fallback)"
 else echo "FAIL gh-FAIL: the unfiled class's capture was wrongly held out of distillation" >&2; fail=$((fail+1)); fi
-# All captures archived (never silently lose a capture) — the full original queue, unfiltered:
+# All captures archived (never silently lose a capture) - the full original queue, unfiltered:
 # 1 pre-seeded archive row + the 2 queue rows this run = 3.
 check "$([ -f "$aA" ] && wc -l < "$aA" | tr -d ' ' || echo 0)" "3" "gh-FAIL: all captures archived (1 seed + 2 queue)"
 check "$([ -s "$qA" ] && echo nonempty || echo empty)" "empty" "gh-FAIL: queue drained after archiving"
@@ -135,7 +135,7 @@ check "$([ -s "$qA" ] && echo nonempty || echo empty)" "empty" "gh-FAIL: queue d
 check "$(git -C "$work" rev-parse HEAD)"        "$head_before_fail" "gh-FAIL: local HEAD unchanged (nothing committed/landed)"
 check "$(git -C "$work" rev-parse origin/main)" "$main_before_fail" "gh-FAIL: origin/main unchanged (nothing pushed)"
 
-# ============ CASE B — gh SUCCEEDS (same class recurs): marked, filtered, still nothing landed ======
+# ============ CASE B - gh SUCCEEDS (same class recurs): marked, filtered, still nothing landed ======
 # Fresh marker (empty) so the class is eligible again; the CASE-A archive now holds the earlier port
 # captures, so the class still recurs. A brand-new queue supplies this run's matching capture.
 head_before_ok="$(git -C "$work" rev-parse HEAD)"

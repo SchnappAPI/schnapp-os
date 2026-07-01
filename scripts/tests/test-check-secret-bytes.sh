@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-check-secret-bytes.sh — proves check-secret-bytes.sh catches every malformed-secret
+# test-check-secret-bytes.sh - proves check-secret-bytes.sh catches every malformed-secret
 # class WITHOUT ever printing the value, incl. dedicated value-leak guards (cases 8 and 10).
 #
 # RED (the gap this closes): a secret stored with stray whitespace, wrapping quotes, or
@@ -28,8 +28,8 @@ contains() { # $1=haystack $2=needle -> 0 if present
 }
 
 # 1. clean value, 40+ chars -> exit 0, no MALFORMED
-# (fixture value is deliberately NOT a real-looking token format — see the "not a leaked value"
-# note below — so it never trips the on-write scan-secrets.sh leak guard on this test file itself.)
+# (fixture value is deliberately NOT a real-looking token format - see the "not a leaked value"
+# note below - so it never trips the on-write scan-secrets.sh leak guard on this test file itself.)
 clean="TESTVALUE_abcDEFghiJKLmnoPQRstuVWXyz0123456789zzzzzzz"
 out="$(printf '%s' "$clean" | bash "$gate" 2>&1)"; rc=$?
 check "$rc" 0 "clean value exits 0"

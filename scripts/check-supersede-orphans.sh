@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# check-supersede-orphans.sh — detect memory facts whose `supersedes:` names a fact
-# file that STILL EXISTS (the old fact was appended-around, not replaced — the exact
+# check-supersede-orphans.sh - detect memory facts whose `supersedes:` names a fact
+# file that STILL EXISTS (the old fact was appended-around, not replaced - the exact
 # "supersede, do not append" violation docs/memory-lane.md warns about).
 #
 # RED (the bug this closes): the prior inline scan in session-start-gate.sh matched
 # `supersedes:` only at column 0, but every on-disk fact nests it INDENTED under a
-# `metadata:` block (e.g. memory/credentials-state.md), so the scan matched ZERO real
+# `metadata:` block (e.g. the vault's memory/credentials-state.md), so the scan matched ZERO real
 # files and supersession was effectively unchecked. This detector is frontmatter-aware
 # and indentation-tolerant, and is unit-tested (tests/test-supersede-orphans.sh) so the
 # regression cannot return silently.
@@ -24,7 +24,7 @@ for f in "$MEM"/*.md; do
   case "$(basename "$f")" in MEMORY.md|README.md) continue;; esac
 
   # Read `supersedes:` from the YAML frontmatter ONLY (the first ---...--- block), at any
-  # indentation — so a key nested under `metadata:` is found, and a `---` rule or the word
+  # indentation - so a key nested under `metadata:` is found, and a `---` rule or the word
   # "supersedes:" in the body can never false-match.
   sup="$(awk '
     NR==1 && /^---[ \t]*$/ { infm=1; next }

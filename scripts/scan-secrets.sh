@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# scan-secrets.sh — single-source literal-secret scanner.
+# scan-secrets.sh - single-source literal-secret scanner.
 #
 # One pattern set, two consumers (anti-stale: never duplicate the patterns):
-#   (1) CI       — .github/workflows/freshness.yml runs it over tracked files; any BLOCK = fail.
-#   (2) Skill    — .claude/skills/cleanse-secrets wraps it for report + retro-scrub.
+#   (1) CI - .github/workflows/freshness.yml runs it over tracked files; any BLOCK = fail.
+#   (2) Skill - .claude/skills/cleanse-secrets wraps it for report + retro-scrub.
 #
-# Catches the exact value classes that leaked 2026-06-17 (memory/credential-leak-2026-06-17.md):
+# Catches the exact value classes that leaked 2026-06-17 (vault memory/credential-leak-2026-06-17.md):
 # the 1Password SA token (ops_…), Anthropic api/oauth keys (sk-ant-…), GitHub PATs, the openssl
 # bearers, private keys, DB/connection URLs. The reused opensource-sanitizer lib alone MISSES
-# ops_ and sk-ant-* — the master-token classes — so those are added here as first-class BLOCK rules.
+# ops_ and sk-ant-* - the master-token classes - so those are added here as first-class BLOCK rules.
 #
 # Output: one finding per line  ->  file:line  SEV  label  <masked>   (values are NEVER printed
 # in full; masked to prefix + length). Exit 1 if any BLOCK finding (with --strict, WARN too).
@@ -16,7 +16,7 @@
 # Usage:
 #   scan-secrets.sh [--strict] [--exclude GLOB]... [PATH...]
 #     no PATH    -> scans this repo's git-tracked files (the CI default)
-#     PATH dir   -> scans every file under it (cross-repo: e.g. the obsidian-vault export scrub)
+#     PATH dir   -> scans every file under it (cross-repo: e.g. the schnapp-vault export scrub)
 #     PATH file  -> scans that file
 #     --strict   -> WARN findings also fail (exit 1)
 #     --exclude  -> skip files whose path matches GLOB (repeatable)

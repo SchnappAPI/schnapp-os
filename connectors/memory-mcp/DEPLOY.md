@@ -1,6 +1,6 @@
 # Deploy memory-mcp
 
-**DONE + LIVE 2026-06-23** — origin `memory-mcp-rtad.onrender.com`, behind the shared Cloudflare portal
+**DONE + LIVE 2026-06-23**: origin `memory-mcp-rtad.onrender.com`, behind the shared Cloudflare portal
 `mcp.schnapp.bet`. Verified from claude.ai web: `memory_health` authenticated, `memory_index` returned the
 lane. Kept below as the reproducible runbook / re-deploy reference.
 
@@ -10,31 +10,31 @@ vs **🤖 / terminal** (runnable). Effects: a deployed Render service + a custom
 
 ## 1. Mint the two secrets
 
-**GitHub token** (`GITHUB_TOKEN`) — least privilege beats reuse:
+**GitHub token** (`GITHUB_TOKEN`) - least privilege beats reuse:
 - 🖐️ **Recommended:** github.com → Settings → Developer settings → **Fine-grained PAT** → repository
   access = *Only* `SchnappAPI/schnapp-os` → Repository permissions → **Contents: Read and write** →
   Metadata stays Read. Generate. Store in 1Password as a new item named `SCHNAPP_OS_PAT`, ref
   `op://web-variables/SCHNAPP_OS_PAT/token`. (That is the credential's name; the Render env var that
-  HOLDS it stays `GITHUB_TOKEN` — the name the server code reads.)
-- Or reuse the existing `op://web-variables/GITHUB_PAT/token` (broader scope — all repos/perms;
+  HOLDS it stays `GITHUB_TOKEN` - the name the server code reads.)
+- Or reuse the existing `op://web-variables/GITHUB_PAT/token` (broader scope - all repos/perms;
   simpler, but a bigger blast radius if the server is compromised). The map's `consumed_by` must then
   list memory-mcp so a `GITHUB_PAT` rotation updates it.
 
-**Bearer gate** (`MEMORY_MCP_BEARER`) — generate and store without echoing:
+**Bearer gate** (`MEMORY_MCP_BEARER`) - generate and store without echoing:
 ```bash
 val=$(openssl rand -hex 32)
 op item create --category "API Credential" --title "MEMORY_MCP_BEARER" --vault web-variables "credential=$val"
 unset val   # ref: op://web-variables/MEMORY_MCP_BEARER/credential
 ```
 
-## 2. Deploy on Render (🖐️ YOU — no Render API key on the Mac)
+## 2. Deploy on Render (🖐️ YOU - no Render API key on the Mac)
 
 - New **Web Service** from the `SchnappAPI/schnapp-os` repo, **Root Directory** `connectors/memory-mcp`,
   runtime **Docker** (the `Dockerfile` is self-contained).
 - Environment variables:
   - `GITHUB_TOKEN` = the PAT value from step 1 (paste the value; Render env is the value boundary).
   - `MEMORY_MCP_BEARER` = the bearer value from step 1.
-  - (optional) `MEMORY_REPO` / `MEMORY_BRANCH` / `MEMORY_DIR` — defaults `SchnappAPI/schnapp-os` / `main` / `memory`.
+  - (optional) `MEMORY_REPO` / `MEMORY_BRANCH` / `MEMORY_DIR` - defaults `SchnappAPI/schnapp-os` / `main` / `memory`.
 - Deploy. Note the service URL, e.g. `https://memory-mcp.onrender.com`.
 
 ## 3. Verify
@@ -68,5 +68,5 @@ inventory wherever surfaces are tracked.
 
 - Each `memory_write` is **two commits** (the fact file, then the `MEMORY.md` index). A web/iPhone write
   lands on origin; the next Code-on-Mac session's freshness gate pulls it. Concurrent writes use the
-  blob sha — a stale-sha conflict returns a clear "re-read and retry" error.
+  blob sha - a stale-sha conflict returns a clear "re-read and retry" error.
 - Cold start: Render free tier sleeps when idle; the first call after idle can take ~50s. Expected.

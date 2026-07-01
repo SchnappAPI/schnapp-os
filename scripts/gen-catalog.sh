@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-# gen-catalog.sh — generate CATALOG.md, an inventory of the repo's
+# gen-catalog.sh - generate CATALOG.md, an inventory of the repo's
 # rules, skills, commands, and hooks.
 #
 # The component files (.claude/{skills,commands,agents}, rules/, hooks/) are the single source of truth. This catalog is a
 # PROJECTION of them, so no doc has to hand-list "all modules" / "all skills" and go
 # stale when one is added. Re-run after adding/removing a rule, skill, command, or hook.
 # CI (.github/workflows/freshness.yml) regenerates and fails the push if the
-# committed CATALOG.md differs — i.e. someone changed a source file but didn't regenerate.
+# committed CATALOG.md differs - i.e. someone changed a source file but didn't regenerate.
 #
 # Output is deterministic (C-locale sort, no timestamps) so the CI diff is stable.
 # "update-codemaps" from the plan does not apply here: this is a docs/config repo with no
 # code graph to map (the only code, connectors/op-mcp/, is self-contained); the catalog IS
 # the relevant generator. "update-docs" = this script today; add generators here as needed.
 #
-# Config: CLAUDE_KIT_REPO (default: derived from this script's location, so it runs anywhere —
+# Config: CLAUDE_KIT_REPO (default: derived from this script's location, so it runs anywhere -
 # locally and in CI where the checkout is not at ~/code/schnapp-os).
 set -euo pipefail
 export LC_ALL=C
@@ -139,9 +139,10 @@ trap 'rm -f "$TMP"' EXIT
   echo
   for f in "$REPO"/hooks/*.sh; do
     [ -e "$f" ] || continue
-    # second line of each hook script is a `# <basename> — purpose` summary;
-    # drop the leading `# ` and the redundant `<basename> — ` prefix.
-    summary="$(sed -n '2p' "$f" | sed 's/^# *//; s/^[^—]*—[[:space:]]*//')"
+    # second line of each hook script is a `# <basename> - purpose` summary;
+    # drop the leading `# ` and everything through the first ` - ` separator
+    # (awk index() = first occurrence, so hyphens inside basenames stay intact).
+    summary="$(sed -n '2p' "$f" | sed 's/^# *//' | awk '{ i = index($0, " - "); if (i) print substr($0, i + 3); else print }')"
     echo "- **$(basename "$f")**: $summary"
   done
   echo

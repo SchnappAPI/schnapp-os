@@ -2,9 +2,9 @@ name: mac-liveness
 
 # Dead-man's-switch for the watchdog. GitHub-hosted (so it is Mac-INDEPENDENT) cron that proves the
 # Mac platform is alive. If schnapp.bet (served by the Mac's web-prod LaunchAgent) stops responding,
-# the Mac is off/asleep/tunnel-down and the on-Mac infra-health probe is NOT running either — the one
+# the Mac is off/asleep/tunnel-down and the on-Mac infra-health probe is NOT running either - the one
 # thing infra-health cannot catch about itself. On DOWN it opens a GitHub issue assigned to the owner
-# (a NATIVE email alert — no app to install) and auto-closes it on recovery. Free, no secrets: uses
+# (a NATIVE email alert - no app to install) and auto-closes it on recovery. Free, no secrets: uses
 # the built-in GITHUB_TOKEN. Closes infra-health residual #1. See scheduled-tasks/mac-liveness.md.
 
 on:
@@ -57,7 +57,7 @@ jobs:
 
           DOWN=0; DETAIL=""
           if [ "${SIMULATE:-}" = "down" ]; then
-            DOWN=1; DETAIL="SIMULATED via workflow_dispatch (simulate=down). Not a real outage — this is an alert-path test."
+            DOWN=1; DETAIL="SIMULATED via workflow_dispatch (simulate=down). Not a real outage - this is an alert-path test."
           elif is_up "$PRIMARY"; then
             echo "primary up: $PRIMARY"
           elif is_up "$SECONDARY"; then

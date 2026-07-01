@@ -16,5 +16,5 @@ headers (Code/Cowork, Copilot) can also hit the origin directly with the bearer 
 - Service: launchd `com.schnapp.githubmcp` (RunAtLoad, KeepAlive)
 - **Single source of truth: this repo.** The Mac runs it via symlink
   `~/github-mcp/server.py -> connectors/github-mcp/server.py`. Edit here, then restart:
-  `launchctl kill TERM gui/$(id -u)/com.schnapp.githubmcp` (graceful: KeepAlive relaunches; pre-bound SO_REUSEADDR socket — decision 0010). Do not use `kickstart -k`.
+  `launchctl kill TERM gui/$(id -u)/com.schnapp.githubmcp` (graceful: KeepAlive relaunches; pre-bound SO_REUSEADDR socket - decision 0010). Do not use `kickstart -k`.
 - Deps pinned (requirements.txt) + locked (requirements.lock.txt). Bump only after smoke-testing.

@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
-# learning-worker.sh — nightly learning-loop driver (Phase 4, pre-commit gate, ADR 0016).
+# learning-worker.sh - nightly learning-loop driver (Phase 4, pre-commit gate, ADR 0016).
 #
 # Reads the local learning queue (git-ignored .learning-queue.tsv), has a headless Agent SDK run
 # distill+classify each capture and WRITE any proposed rule/fact edit to the working tree (no branch,
 # no commit, no PR), then the WORKER gates the working-tree diff (learning-gate.sh): a clean proposal
-# is committed straight to main; anything the gate holds is filed as a GitHub issue. No branches —
+# is committed straight to main; anything the gate holds is filed as a GitHub issue. No branches:
 # everything that lands goes to main (owner pref 2026-06-27; ADR 0016 refines 0012/0013/0015).
 #
 # Recurrence pre-step (Phase 3 T2, spec sec 4.4): BEFORE distillation, learning-recurrence.sh counts
-# error-class frequency over archive+queue. A class that recurs (>= 2) is drafted as a GATE PROPOSAL —
-# a GitHub issue for owner approval — instead of another prose fact, and the class's captures are held
+# error-class frequency over archive+queue. A class that recurs (>= 2) is drafted as a GATE PROPOSAL
+# (a GitHub issue for owner approval) instead of another prose fact, and the class's captures are held
 # OUT of this run's distill input (so the loop does not also write prose for it). A drafted gate NEVER
 # auto-lands: it is only an issue; it is never a working-tree edit/commit/push. learning-gate.sh (the
 # auto-land gate) still admits only .md under rules/memory, so a gate could not route through it anyway.
 #
 # Usage: learning-worker.sh [--dry-run]
 # Env:
-#   LEARNING_QUEUE   — queue file (default: scheduled-tasks/.learning-queue.tsv)
-#   LEARNING_ARCHIVE — archive file (default: alongside queue, .learning-queue.archive.tsv)
-#   LEARNING_GATE_DRAFTED — recurrence marker (default: alongside queue, .learning-queue.gate-drafted.tsv)
-#   LEARNING_CLAUDE_TOKEN_REF — op:// ref to the Claude credential (headless auth; see docs/headless-claude-auth.md)
+#   LEARNING_QUEUE - queue file (default: scheduled-tasks/.learning-queue.tsv)
+#   LEARNING_ARCHIVE - archive file (default: alongside queue, .learning-queue.archive.tsv)
+#   LEARNING_GATE_DRAFTED - recurrence marker (default: alongside queue, .learning-queue.gate-drafted.tsv)
+#   LEARNING_CLAUDE_TOKEN_REF - op:// ref to the Claude credential (headless auth; see docs/headless-claude-auth.md)
 #
 # --dry-run: exercises queue/recurrence/classify/archive plumbing with NO distill call, NO git, NO
 #   network, NO gh, NO working-tree change (proven by scripts/tests/test-learning-worker.sh).
@@ -32,7 +32,7 @@
 #   - Default flow: the worker gates the resulting diff (learning-gate.sh) and pushes only APPROVED
 #     changes to main; held proposals never touch main (→ issue).
 #   - Recurrence drafting is best-effort (like alert()): a missing/failing `gh` prints a notice and
-#     CONTINUES — it must NEVER fail the worker or lose a capture. Gated captures are STILL archived.
+#     CONTINUES - it must NEVER fail the worker or lose a capture. Gated captures are STILL archived.
 #   - Archiving (not deleting) means a capture is never silently lost.
 set -uo pipefail
 
@@ -43,7 +43,7 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 Q="${LEARNING_QUEUE:-"$REPO_ROOT/scheduled-tasks/.learning-queue.tsv"}"
 A="${LEARNING_ARCHIVE:-"${Q%.tsv}.archive.tsv"}"
 # Recurrence-gate marker: signatures of error-classes already drafted as a gate proposal (one per
-# line) so a class drafts at most once. GIT-IGNORED (see .gitignore) — an untracked marker would show
+# line) so a class drafts at most once. GIT-IGNORED (see .gitignore) - an untracked marker would show
 # in `git status --porcelain` and corrupt the post-distill clean-check. The worker appends to it; the
 # recurrence tool only reads it. Never committed.
 DRAFTED="${LEARNING_GATE_DRAFTED:-"${Q%.tsv}.gate-drafted.tsv"}"
@@ -56,8 +56,8 @@ RECURRENCE="$REPO_ROOT/scripts/learning-recurrence.sh"
 alert() { $DRY_RUN && return 0; "$REPO_ROOT/scripts/ops-alert.sh" "$@" >/dev/null 2>&1 || true; }
 
 if [ ! -f "$Q" ] || [ ! -s "$Q" ]; then
-  echo "learning-worker: queue empty — nothing to consolidate"
-  alert green learning-worker "Learning worker healthy" "queue empty — nothing to consolidate"
+  echo "learning-worker: queue empty - nothing to consolidate"
+  alert green learning-worker "Learning worker healthy" "queue empty - nothing to consolidate"
   exit 0
 fi
 
@@ -81,8 +81,8 @@ capture_is_drafted() { # $1 = capture text ; 0 if its class was drafted, 1 other
 }
 
 # Run the deterministic draft over archive+queue and write its block output to $1 (a temp file).
-# Sets DRAFTED_SIGS to the CANDIDATE set — every emitted block's SIG: line (the classes that recurred
-# this run). Pure/read-only (no gh, no git, no marker write) — the caller decides what to do with the
+# Sets DRAFTED_SIGS to the CANDIDATE set - every emitted block's SIG: line (the classes that recurred
+# this run). Pure/read-only (no gh, no git, no marker write) - the caller decides what to do with the
 # blocks. In the LIVE path the candidate set is later NARROWED to only the classes whose `gh issue
 # create` actually SUCCEEDED (see below), because a class is marked drafted + held out of distillation
 # ONLY once its gate issue is truly filed. The DRY-RUN path (no gh) uses the candidate set as-is.
@@ -94,12 +94,12 @@ run_recurrence_draft() { # $1 = output file for the raw draft blocks
   DRAFTED_SIGS="$(grep '^SIG: ' "$1" 2>/dev/null | sed 's/^SIG: //' || true)"
 }
 
-# Archive processed captures, THEN drain — never drain if the archive write failed (no captures lost).
+# Archive processed captures, THEN drain - never drain if the archive write failed (no captures lost).
 # Archives the FULL original queue (gated captures included) so a drafted class keeps being counted on
 # later runs; only the DISTILL INPUT is ever filtered, never the archive.
 archive_and_drain() {
   if ! cat "$Q" >> "$A" 2>/dev/null; then
-    echo "learning-worker: ERROR — could not write archive '$A'; queue NOT drained (no captures lost)." >&2
+    echo "learning-worker: ERROR - could not write archive '$A'; queue NOT drained (no captures lost)." >&2
     exit 1
   fi
   : > "$Q"
@@ -128,36 +128,36 @@ if $DRY_RUN; then
   exit 0
 fi
 
-# Live path — require the claude CLI
+# Live path - require the claude CLI
 if ! command -v claude >/dev/null 2>&1; then
-  echo "learning-worker: 'claude' CLI not found — install it to run the live learning worker. Exiting (no-op)."
+  echo "learning-worker: 'claude' CLI not found - install it to run the live learning worker. Exiting (no-op)."
   exit 0
 fi
 
 # Run from repo root so the headless session loads CLAUDE.md / .claude/settings.json + relative paths.
-cd "$REPO_ROOT" || { echo "learning-worker: ERROR — cannot cd to repo root '$REPO_ROOT'." >&2; exit 1; }
+cd "$REPO_ROOT" || { echo "learning-worker: ERROR - cannot cd to repo root '$REPO_ROOT'." >&2; exit 1; }
 
 # Headless auth: launchd can't read the login Keychain, so inject the credential from 1Password at
 # runtime (the LaunchAgent inherits OP_SERVICE_ACCOUNT_TOKEN). LEARNING_CLAUDE_TOKEN_REF is an op://
 # REFERENCE; the item may hold an Anthropic API key (sk-ant-api…) or a Claude OAuth token (sk-ant-oat…)
-# — export under the matching env var. No-op if a credential is already set or no ref is configured.
+# - export under the matching env var. No-op if a credential is already set or no ref is configured.
 if [ -z "${ANTHROPIC_API_KEY:-}" ] && [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ] && [ -n "${LEARNING_CLAUDE_TOKEN_REF:-}" ]; then
   op_sa_state="set"; [ -n "${OP_SERVICE_ACCOUNT_TOKEN:-}" ] || op_sa_state="UNSET"
-  echo "learning-worker: auth — op:$(command -v op || echo MISSING) OP_SA:${op_sa_state} ref:${LEARNING_CLAUDE_TOKEN_REF}"
+  echo "learning-worker: auth - op:$(command -v op || echo MISSING) OP_SA:${op_sa_state} ref:${LEARNING_CLAUDE_TOKEN_REF}"
   if command -v op >/dev/null 2>&1; then
     if _tok="$(op read "$LEARNING_CLAUDE_TOKEN_REF" 2>&1)"; then
       case "$_tok" in
         sk-ant-api*) export ANTHROPIC_API_KEY="$_tok";       _kind=ANTHROPIC_API_KEY ;;
         *)           export CLAUDE_CODE_OAUTH_TOKEN="$_tok"; _kind=CLAUDE_CODE_OAUTH_TOKEN ;;
       esac
-      echo "learning-worker: auth — resolved credential via op (${#_tok} chars) -> $_kind."
+      echo "learning-worker: auth - resolved credential via op (${#_tok} chars) -> $_kind."
       unset _kind
     else
-      echo "learning-worker: auth — ERROR: op read failed: $_tok" >&2
+      echo "learning-worker: auth - ERROR: op read failed: $_tok" >&2
     fi
     unset _tok
   else
-    echo "learning-worker: auth — ERROR: op not on PATH; cannot resolve headless credential." >&2
+    echo "learning-worker: auth - ERROR: op not on PATH; cannot resolve headless credential." >&2
   fi
 fi
 
@@ -165,8 +165,8 @@ fi
 # diff after the run is the worker's proposal.
 git fetch -q origin main 2>/dev/null || true
 if [ -n "$(git status --porcelain)" ]; then
-  echo "learning-worker: working tree not clean — aborting (queue preserved)." >&2
-  alert red learning-worker "Learning worker blocked" "working tree not clean — aborted; queue preserved"
+  echo "learning-worker: working tree not clean - aborting (queue preserved)." >&2
+  alert red learning-worker "Learning worker blocked" "working tree not clean - aborted; queue preserved"
   exit 1
 fi
 git checkout -q main 2>/dev/null || true
@@ -174,16 +174,16 @@ git reset -q --hard origin/main 2>/dev/null || true
 
 # --- recurrence pre-step (BEFORE distillation): draft a GATE for any newly-recurring class ----------
 # Deterministic count over archive+queue → drafted-gate blocks. For each block: best-effort open a
-# GitHub issue (like alert(): a missing/failing gh prints a notice and CONTINUES — never fails the
+# GitHub issue (like alert(): a missing/failing gh prints a notice and CONTINUES - never fails the
 # worker, never loses a capture). A class is marked drafted (idempotency marker) AND held OUT of
-# distillation ONLY once its `gh issue create` actually SUCCEEDED — so a class whose gh FAILED is not
+# distillation ONLY once its `gh issue create` actually SUCCEEDED - so a class whose gh FAILED is not
 # marked (it re-drafts next run) and is not filtered (it still flows to prose distillation THIS run,
 # better than being orphaned into a gate that was never filed). A drafted gate is ONLY an issue: NO
 # working-tree edit, commit, or push happens here. NOTE: this runs AFTER the clean-tree reset and BEFORE
 # distillation, and writes only to the git-ignored marker + temp files, so it does not dirty the tree
 # the distill clean-check reads.
 # Single EXIT trap cleans up every live-path temp artifact (draft_out / blocks_dir / filtered), mirroring
-# learning-gate.sh's one-trap pattern — no leaked tmp per drafted-class run in this nightly script.
+# learning-gate.sh's one-trap pattern - no leaked tmp per drafted-class run in this nightly script.
 draft_out=""; blocks_dir=""; filtered=""
 cleanup_recurrence() { rm -f "$draft_out" "$filtered" 2>/dev/null; [ -n "$blocks_dir" ] && rm -rf "$blocks_dir" 2>/dev/null; }
 trap cleanup_recurrence EXIT
@@ -195,7 +195,7 @@ if [ -n "$DRAFTED_SIGS" ]; then
   # owns the block boundaries it emitted.
   blocks_dir="$(mktemp -d)"
   bidx=0
-  filed_sigs=""   # SIGs whose gate issue was ACTUALLY filed — only these get marked + filtered
+  filed_sigs=""   # SIGs whose gate issue was ACTUALLY filed - only these get marked + filtered
   nl=$'\n'        # real newline for accumulating one filed SIG per line ($'\n' does not expand inside ${:+})
   # shellcheck disable=SC2016  # awk program is single-quoted on purpose; $0/$1 are awk fields
   awk -v dir="$blocks_dir" '
@@ -216,7 +216,7 @@ if [ -n "$DRAFTED_SIGS" ]; then
       filed_sigs="${filed_sigs:+$filed_sigs$nl}$sig"
       echo "learning-worker: DRAFTED a gate proposal issue (owner approval required; nothing landed)."
     else
-      echo "learning-worker: recurrence — could not open gate-proposal issue (gh absent/failed); continuing (class not marked; will retry; its captures flow to distillation this run)." >&2
+      echo "learning-worker: recurrence - could not open gate-proposal issue (gh absent/failed); continuing (class not marked; will retry; its captures flow to distillation this run)." >&2
     fi
   done < "$blocks_dir/index.tsv"
   # Narrow the held-out set to the FILED classes (a gh failure leaves that class unmarked + unfiltered).
@@ -225,9 +225,9 @@ if [ -n "$DRAFTED_SIGS" ]; then
     # Idempotency: record only successfully-filed SIGs so a filed class never re-drafts. Marker git-ignored.
     printf '%s\n' "$filed_sigs" >> "$DRAFTED"
     filed_count="$(printf '%s\n' "$filed_sigs" | grep -c .)"
-    echo "learning-worker: recurrence — filed $filed_count of $bidx gate proposal(s); the filed classes' captures are held out of distillation."
+    echo "learning-worker: recurrence - filed $filed_count of $bidx gate proposal(s); the filed classes' captures are held out of distillation."
   else
-    echo "learning-worker: recurrence — $bidx gate proposal(s) drafted but none filed (gh absent/failed); no class marked, all captures flow to distillation." >&2
+    echo "learning-worker: recurrence - $bidx gate proposal(s) drafted but none filed (gh absent/failed); no class marked, all captures flow to distillation." >&2
   fi
   rm -rf "$blocks_dir"; blocks_dir=""
 fi
@@ -241,7 +241,7 @@ if [ -n "$DRAFTED_SIGS" ]; then
   # Guard the mktemp: under `set -uo pipefail` (no -e) a failed mktemp would leave filtered="" →
   # export LEARNING_QUEUE="" → distill treats an empty-but-SET var as a path of "." and silently
   # no-ops ALL captures. On mktemp failure, fall back to the full queue (distill everything) rather
-  # than skip — better a redundant prose pass for a filed class than dropping every capture.
+  # than skip - better a redundant prose pass for a filed class than dropping every capture.
   if filtered="$(mktemp)"; then
     while IFS= read -r line || [ -n "$line" ]; do
       text="${line#*$'\t'}"; text="${text#*$'\t'}"   # column 3 = after the second TAB
@@ -250,7 +250,7 @@ if [ -n "$DRAFTED_SIGS" ]; then
     done < "$Q"
     DISTILL_QUEUE="$filtered"
   else
-    echo "learning-worker: recurrence — mktemp for the filtered queue failed; distilling the full queue." >&2
+    echo "learning-worker: recurrence - mktemp for the filtered queue failed; distilling the full queue." >&2
     filtered=""
     DISTILL_QUEUE="$Q"
   fi
@@ -264,7 +264,7 @@ DISTILL_PYTHON="${LEARNING_DISTILL_PYTHON:-$HOME/.venvs/learning-distill/bin/pyt
 [ -x "$DISTILL_PYTHON" ] || DISTILL_PYTHON="$(command -v python3)"
 if ! "$DISTILL_PYTHON" "$DISTILL_PY"; then
   git reset -q --hard origin/main 2>/dev/null || true
-  echo "learning-worker: ERROR — Agent SDK distillation failed; queue NOT drained (captures preserved)." >&2
+  echo "learning-worker: ERROR - Agent SDK distillation failed; queue NOT drained (captures preserved)." >&2
   alert red learning-worker "Learning worker failed" "Agent SDK distillation failed; queue preserved, will retry"
   exit 1
 fi
@@ -280,21 +280,21 @@ else
       echo "learning-worker: PROMOTED a clean self-edit to main."
     else
       git reset -q --hard origin/main 2>/dev/null || true
-      echo "learning-worker: push to main failed (remote moved?) — discarded; will recapture." >&2
+      echo "learning-worker: push to main failed (remote moved?) - discarded; will recapture." >&2
     fi
   else
     patch="$(git show HEAD --patch --stat 2>/dev/null | head -c 8000)"
     reasons="$(cat "$gate_out")"
     git reset -q --hard origin/main 2>/dev/null || true
-    # shellcheck disable=SC2016  # single-quoted printf format is intentional — printf expands %s/\n, not the shell
+    # shellcheck disable=SC2016  # single-quoted printf format is intentional - printf expands %s/\n, not the shell
     issue_body="$(printf 'The nightly learning worker proposed a self-edit the eval gate HELD (no branch, nothing landed on main).\n\n## Gate reasons\n%s\n\n## Proposed change\n```diff\n%s\n```\n' "$reasons" "$patch")"
     if command -v gh >/dev/null 2>&1 && \
        gh issue create --title "learning-loop: self-edit held for review ($(date -u +%F))" \
          --body "$issue_body" \
          >/dev/null 2>&1; then
-      echo "learning-worker: HELD self-edit — opened a review issue (nothing on main)."
+      echo "learning-worker: HELD self-edit - opened a review issue (nothing on main)."
     else
-      echo "learning-worker: HELD self-edit (could not open issue) — $reasons" >&2
+      echo "learning-worker: HELD self-edit (could not open issue) - $reasons" >&2
     fi
   fi
   rm -f "$gate_out"
@@ -302,4 +302,4 @@ fi
 
 archive_and_drain
 alert green learning-worker "Learning worker healthy" "run completed; $(wc -l < "$A" | tr -d ' ') total archived captures"
-echo "learning-worker: done — $(wc -l < "$A" | tr -d ' ') total archived captures."
+echo "learning-worker: done - $(wc -l < "$A" | tr -d ' ') total archived captures."

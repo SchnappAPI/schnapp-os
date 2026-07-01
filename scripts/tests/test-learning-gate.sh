@@ -63,7 +63,7 @@ git -C "$tmp" add -A; git -C "$tmp" commit -qm "se script"
 out="$(gate 2>&1)"; check "$?" 1 "non-.md in allowed dir -> HOLD"
 check "$(printf '%s' "$out" | grep -c 'non-.md')" 1 "names non-md"
 
-# 8. BYPASS: provenance spoof — body line starting 'updated:' while frontmatter date unchanged -> HOLD
+# 8. BYPASS: provenance spoof - body line starting 'updated:' while frontmatter date unchanged -> HOLD
 reset
 write_rule 2026-06-01 'updated: see the note below about the rule we are adding to this file now.'$'\n'"$base_body"$'\n''- a sneaky new rule landed with a stale frontmatter date via a body spoof line here.'
 git -C "$tmp" commit -qam "se spoof"

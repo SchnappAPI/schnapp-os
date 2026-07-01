@@ -1,4 +1,4 @@
-# Render Blueprint — deploys the off-Mac 1Password connector (connectors/op-mcp/)
+# Render Blueprint - deploys the off-Mac 1Password connector (connectors/op-mcp/)
 # to a free Render web service. One-click: Render dashboard > New > Blueprint,
 # point at this repo, it reads this file. Then set the two secrets when prompted.
 # Full runbook (host + Cloudflare OAuth front + claude.ai registration):
@@ -14,7 +14,7 @@ services:
     runtime: docker
     plan: free
     # rootDir scopes the build to the connector dir; with it set, dockerfilePath
-    # and dockerContext are relative to rootDir (NOT the repo root — a doubled
+    # and dockerContext are relative to rootDir (NOT the repo root - a doubled
     # path like connectors/op-mcp/connectors/op-mcp fails the build).
     rootDir: connectors/op-mcp
     dockerfilePath: Dockerfile

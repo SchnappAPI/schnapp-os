@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# check-op-refs.sh — flag op:// references that point at an item NOT documented in the map.
+# check-op-refs.sh - flag op:// references that point at an item NOT documented in the map.
 #
 # Single source of truth for "what items exist" is credentials-map.md. Every
 # op://web-variables/<ITEM>/<field> in a tracked file should name an <ITEM> that appears there;
 # one that doesn't is a stale/typo'd reference (renamed item, wrong title) that will resolve to
-# nothing at runtime. Offline + deterministic (no vault access) — safe for CI.
+# nothing at runtime. Offline + deterministic (no vault access) - safe for CI.
 #
 # WARN-only by default (exit 0) so a lagging map never blocks a push; pass --strict to fail.
 # Usage: check-op-refs.sh [--strict]

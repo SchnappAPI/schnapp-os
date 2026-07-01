@@ -1,4 +1,4 @@
-# Local-only and secrets — never commit
+# Local-only and secrets - never commit
 *.local
 *.local.md
 CLAUDE.local.md
@@ -14,12 +14,12 @@ credentials.json
 *.secret
 .secrets/
 secrets/
-# Filenames containing "secret" are NOT blanket-ignored. This repo is a secrets *toolkit* —
+# Filenames containing "secret" are NOT blanket-ignored. This repo is a secrets *toolkit*:
 # scan-secrets.sh, skills/cleanse-secrets, skills/rotate-secret, rules/secrets-as-references.md all
 # legitimately carry "secret" in the name and MUST be tracked. A broad `**/*secret*` ignore silently
 # dropped them (and once dropped secrets-as-references.md, the always-loaded rule). The value-level
 # guard is scripts/scan-secrets.sh, run in CI: it BLOCKS any literal secret value in a
-# tracked file regardless of filename — that, not the filename, is what keeps values out.
+# tracked file regardless of filename - that, not the filename, is what keeps values out.
 *.key
 *.pem
 .DS_Store
@@ -33,6 +33,6 @@ __pycache__/
 scheduled-tasks/.learning-queue.tsv
 scheduled-tasks/.learning-queue.archive.tsv
 # Recurrence-gate marker (per-machine): signatures already drafted as a gate proposal, so a class
-# drafts at most once. MUST stay ignored — an untracked marker would show in `git status --porcelain`
+# drafts at most once. MUST stay ignored - an untracked marker would show in `git status --porcelain`
 # and corrupt the worker's post-distill clean-check (learning-worker.sh).
 scheduled-tasks/.learning-queue.gate-drafted.tsv

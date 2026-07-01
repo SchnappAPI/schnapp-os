@@ -60,7 +60,8 @@ restate mutable state.
   New env vars go in [.env.template](.env.template) as `op://` URIs. Reference map (refs only):
   [credentials-map.md](credentials-map.md). Spot a hardcoded credential: stop and flag it.
 - **Hooks** are wired in [.claude/settings.json](.claude/settings.json) (SessionStart freshness gate,
-  Stop push-gate, SessionEnd backup, force-push guard, secret-scan-on-write, capture-nudge). Treat a
+  Stop push-gate, SessionEnd backup, force-push guard, secret-scan-on-write, shellcheck-on-write,
+  em-dash-on-write, length-advisory, capture-nudge). Treat a
   non-Code surface as hookless until verified; run the must-happen steps via `session-hygiene`.
 - **Decisions are append-only history** in [decisions/](decisions/) (one ADR per choice). Resume
   point for any session is the newest, highest-numbered file in [handoffs/](handoffs/).

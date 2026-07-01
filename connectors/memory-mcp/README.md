@@ -3,7 +3,7 @@
 Remote MCP server that fronts the git-tracked **memory lane** (`memory/` in this repo) via the
 GitHub Contents API. It is the cross-surface half of the freshness loop: the Code-on-Mac
 SessionStart gate reconciles memory through git + hooks, but **hookless surfaces** (claude.ai web,
-iPhone, Cowork) have no such path. This server gives them one — every read and write goes straight
+iPhone, Cowork) have no such path. This server gives them one - every read and write goes straight
 to **GitHub origin, the single source of truth** (decisions/0011 #5/#6). No local clone, no Mac
 dependency: the Mac can be asleep and the memory is still live everywhere.
 
@@ -12,7 +12,7 @@ dependency: the Mac can be asleep and the memory is still live everywhere.
 | Tool | Does | Writes? |
 |---|---|---|
 | `memory_health` | Wake + verify the GitHub chain (no secrets). | no |
-| `memory_index` | Read `MEMORY.md` (the index — read this first). | no |
+| `memory_index` | Read `MEMORY.md` (the index - read this first). | no |
 | `memory_list` | List fact slugs (excludes MEMORY.md / README.md). | no |
 | `memory_read` | Read one fact `memory/<slug>.md`. | no |
 | `memory_search` | Case-insensitive substring scan across facts. | no |
@@ -28,7 +28,7 @@ the vault's `agents.md`, and the schnapp-os-side procedures are [`docs/memory-la
 
 - **The endpoint can write to the repo**, so `/mcp` is bearer-gated (`MEMORY_MCP_BEARER`); the server
   refuses to start without it. `/health` is open and touches nothing.
-- **Secrets are host env vars, never baked into the image** and never in tracked files — only
+- **Secrets are host env vars, never baked into the image** and never in tracked files - only
   `op://` references appear here (`.env.template`). The GitHub token wants least privilege: a
   fine-grained PAT scoped to *only this repo's contents*. See [DEPLOY.md](./DEPLOY.md).
 - Stateless Streamable HTTP (new transport per request), same shape as the `op-mcp` connector.

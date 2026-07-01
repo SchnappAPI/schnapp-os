@@ -6,7 +6,7 @@ import { INTEGRATION_NAME, INTEGRATION_VERSION } from "./constants.js";
  *
  * The SDK loads a WASM core via `fs.readFileSync` + synchronous WebAssembly
  * compile (see @1password/sdk-core/nodejs/core.js). That is why this connector
- * MUST run on a Node host, not the Cloudflare Workers edge runtime — Workers has
+ * MUST run on a Node host, not the Cloudflare Workers edge runtime - Workers has
  * no runtime filesystem and blocks sync wasm compilation. (decisions/0004.)
  *
  * The client is created once and reused (auth + WASM init are not free).

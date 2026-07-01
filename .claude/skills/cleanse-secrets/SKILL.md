@@ -1,6 +1,6 @@
 ---
 name: cleanse-secrets
-description: Use when files may contain literal secret VALUES that must be found and removed - auditing a repo/diff before commit or sharing, retro-scrubbing leaked exports (e.g. the obsidian-vault Claude-export dump), or confirming a tree holds references not values. Symptoms include "did a secret leak", "scrub the credentials out", hardcoded api_key/token/password, "is this safe to push/open-source". This skill finds AND removes (scrub/redact); for a read-only review pass that only flags without editing, use the secrets-leak-reviewer agent.
+description: Use when files may contain literal secret VALUES that must be found and removed - auditing a repo/diff before commit or sharing, retro-scrubbing leaked exports (e.g. the schnapp-vault Claude-export dump), or confirming a tree holds references not values. Symptoms include "did a secret leak", "scrub the credentials out", hardcoded api_key/token/password, "is this safe to push/open-source". This skill finds AND removes (scrub/redact); for a read-only review pass that only flags without editing, use the secrets-leak-reviewer agent.
 ---
 
 # cleanse-secrets
@@ -21,7 +21,7 @@ whole-file / whole-repo scans and for the redact step.
 
 - No `PATH` → scans this repo's git-tracked files (the CI default; run from inside the repo).
 - `PATH` a dir → scans every file under it, cross-repo. For the leak scrub:
-  `~/code/schnapp-os/scripts/scan-secrets.sh --strict ~/path/to/obsidian-vault/"Claude Export"`.
+  `~/code/schnapp-os/scripts/scan-secrets.sh --strict ~/code/schnapp-vault/"Claude Export"`.
 - `BLOCK` = exact token formats (a match IS a leaked value: `ops_`, `sk-ant-`, `github_pat_`,
   GitHub/AWS/Slack/SendGrid/JWT/DB-URL, private keys). `WARN` = heuristics (64-hex bearers,
   `name: value` assignments, private IPs) for human review. Values print **masked** (prefix +
@@ -60,7 +60,7 @@ Then:
 
 ## The leak-scrub case (the ~28 export files)
 
-`obsidian-vault/Claude Export/Conversations/*.md` + `Notes/Credentials CLAUDE.md` hold dumped
+`schnapp-vault/Claude Export/Conversations/*.md` + `Notes/Credentials CLAUDE.md` hold dumped
 values ([[credential-leak-2026-06-17]]). Procedure: report-scan the export dir → redact each hit
 to `[REDACTED:<class>]` (keep the conversations) → re-scan to zero `BLOCK` → confirm every
 redacted item is on the rotate list. That repo is separate from schnapp-os; commit the scrub there.

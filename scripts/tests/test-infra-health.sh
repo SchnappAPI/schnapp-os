@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-infra-health.sh — smoke test for check-infra-health.sh.
+# test-infra-health.sh - smoke test for check-infra-health.sh.
 # The probe is Mac-only (launchctl/docker/stat -f/nc), so on non-Darwin (e.g. Linux CI) this skips.
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

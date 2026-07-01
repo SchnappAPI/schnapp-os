@@ -1,11 +1,11 @@
 # Routine: nightly memory consolidation
 
-- **Class:** asks-first (queued) — proposes, does not rewrite memory on its own.
+- **Class:** asks-first (queued) - proposes, does not rewrite memory on its own.
 - **Scheduler:** Mac LaunchAgent → headless `claude -p` session (repo-only; no Mac services needed,
   but a Claude session is needed for the judgment).
 - **What it does:** reviews the global memory lane (the vault `~/code/schnapp-vault/memory`,
   `SchnappAPI/schnapp-vault`) for: duplicate facts across files, facts that contradict a newer one
-  (should be **superseded**, not appended — see `docs/memory-lane.md`), stale `updated:` dates, and
+  (should be **superseded**, not appended - see `docs/memory-lane.md`), stale `updated:` dates, and
   index/file drift. Produces a consolidation proposal.
 - **Acts on its own?** No. A memory *rewrite* is a judgment call (which fact wins, what supersedes
   what), so the routine writes the proposal to a memory note / handoff and notifies. An

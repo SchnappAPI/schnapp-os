@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-# check-stale-facts.sh — read-only memory freshness flag (agentic-OS loops Phase 2).
+# check-stale-facts.sh - read-only memory freshness flag (agentic-OS loops Phase 2).
 # Flags facts whose `updated:` crosses 7/30/90-day age thresholds vs today. READ-ONLY:
-# prints flags, never edits, ALWAYS exits 0 (staleness is informational, not a hard gate —
+# prints flags, never edits, ALWAYS exits 0 (staleness is informational, not a hard gate:
 # surfacing is the point; the agent decides what to refresh, supersede-not-append per docs/memory-lane.md).
 #
 # Usage: check-stale-facts.sh [dir] [today]
-#   dir   — memory dir (default: memory). Skips MEMORY.md/README.md.
-#   today — ISO date to measure against (default: date -u +%F). Injectable for tests.
+#   dir - memory dir (default: memory). Skips MEMORY.md/README.md.
+#   today - ISO date to measure against (default: date -u +%F). Injectable for tests.
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$HERE/lib-frontmatter.sh"
 DIR="${1:-memory}"
 TODAY="${2:-$(date -u +%F)}"
 
-# iso_to_days <YYYY-MM-DD> — days since the civil epoch (Hinnant days_from_civil).
+# iso_to_days <YYYY-MM-DD> - days since the civil epoch (Hinnant days_from_civil).
 # Pure integer arithmetic → portable across BSD/GNU, deterministic, unit-testable.
 iso_to_days() {
   local y m d rest era yoe doy doe

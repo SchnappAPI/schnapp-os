@@ -1,26 +1,26 @@
-# Environment & access — the never-blocked configuration
+# Environment & access - the never-blocked configuration
 
 Single source of truth for **what every surface must be allowed to reach** so neither the owner nor
 Claude is ever blocked from doing the requested job. Born from the 2026-06-29 session where a removed
 connector + an unallowlisted host + a read-only git relay each blocked work in turn (handoff 038).
 
 Principle (from `surfaces/README.md`): *always-complete, never degraded.* A capability gap must be a
-config fix here, not a silent failure. If a host/tool is blocked, the fix is to allow it — globally —
+config fix here, not a silent failure. If a host/tool is blocked, the fix is to allow it, globally,
 not to route around it.
 
-## 1. Network egress allowlist (per-environment — the main thing to replicate)
+## 1. Network egress allowlist (per-environment - the main thing to replicate)
 
 Every outbound HTTPS host is **denied unless allowlisted** by the environment's network policy. This
 is the one piece of config that is NOT global (it is set per web environment), so it must be applied
 to **every** environment identically. Recommended: an **explicit allowlist** of exactly these hosts
 (tightest security, never blocks a known service). A broad/unrestricted policy is the alternative if
-convenience outweighs egress security — owner's call.
+convenience outweighs egress security - owner's call.
 
 | Host | Purpose | Notes |
 |---|---|---|
 | `mac-mcp.schnapp.bet` | Mac MCP (shell, SQL, services, backups) | the `.mcp.json` `Schnapp_Mac` server |
 | `obsidian-mcp.schnapp.bet` | Obsidian MCP (notes, off-Mac) | Mac-hosted |
-| `mcp.schnapp.bet` | **Schnapp Portal** — OAuth front for op-mcp + memory-mcp + mac-mcp + github-mcp | Cloudflare Managed OAuth → the four origins (the claude.ai/iPhone path) |
+| `mcp.schnapp.bet` | **Schnapp Portal**: OAuth front for op-mcp + memory-mcp + mac-mcp + github-mcp | Cloudflare Managed OAuth → the four origins (the claude.ai/iPhone path) |
 | `github-mcp.schnapp.bet` | self-hosted GitHub MCP | |
 | `mac-flask.schnapp.bet` | Flask live-data runner | |
 | `dev.schnapp.bet`, `schnapp.bet` | production site / dev | |
@@ -40,13 +40,13 @@ The cloud session's git remote is a **read-only relay** (`127.0.0.1:<port>/git/.
 `push` returns **403**. Three ways to write, in preference order:
 
 1. **Writable git for the environment (preferred).** If the platform supports granting the environment
-   a push-capable token, local `git push` works directly — preserves file modes, supports branch
+   a push-capable token, local `git push` works directly - preserves file modes, supports branch
    deletes, no API gymnastics. This is the streamlined target.
 2. **The Mac as the write node.** The Mac clone (`~/code/schnapp-os`) has full push creds. Route
    `git push` / `git push origin --delete <branch>` / `chmod` commits through `Schnapp_Mac` `shell_exec`.
    Works today; depends on the Mac being reachable.
 3. **GitHub MCP (`push_files` / `create_or_update_file`).** Commits to `main` via the API without the
-   Mac. **Limits:** drops the executable bit on files (re-`chmod` on the Mac after — see handoff 038),
+   Mac. **Limits:** drops the executable bit on files (re-`chmod` on the Mac after - see handoff 038),
    and has **no branch-delete** capability.
 
 ## 3. Known platform limitations + standing workarounds
@@ -74,5 +74,5 @@ To keep every surface working off the same data + tools: one repo (done), `.mcp.
 
 ## Owner steps (cannot be done from inside the repo)
 1. Apply the §1 allowlist to the network policy of **every** web environment (recommended: explicit list).
-2. Decide the git-write model (§2) — grant writable git if possible; else the Mac stays the write node.
+2. Decide the git-write model (§2) - grant writable git if possible; else the Mac stays the write node.
 3. Optional: keep the Mac MCP warm (disable idle sleep) to reduce reconnect flaps.

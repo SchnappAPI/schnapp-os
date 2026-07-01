@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# backup-archive.sh — mirror schnapp-os knowledge + Claude Code session
+# backup-archive.sh - mirror schnapp-os knowledge + Claude Code session
 # transcripts into two destinations (decisions/0004 is unrelated):
-#   1. OneDrive `claude-archive/` — cloud-durable backup (repo md + raw .jsonl sessions).
-#   2. The canonical Obsidian vault `claude-archive/` subfolder — the browsable, searchable
+#   1. OneDrive `claude-archive/` - cloud-durable backup (repo md + raw .jsonl sessions).
+#   2. The canonical Obsidian vault `claude-archive/` subfolder - the browsable, searchable
 #      copy Obsidian + the obsidian MCP read; md only (raw transcripts would bloat the
 #      git-synced vault). The vault auto-syncs to GitHub via the obsidian-git plugin.
 #
 # Markdown is mirrored (current truth; git holds history). Transcripts accumulate in
-# OneDrive (each session is a distinct artifact). The repo is never modified — read-only source.
+# OneDrive (each session is a distinct artifact). The repo is never modified - read-only source.
 #
 # Config (env overrides, machine-portable):
 #   CLAUDE_KIT_REPO     default ~/code/schnapp-os
@@ -34,7 +34,7 @@ mkdir -p "$ARCHIVE/repo" "$ARCHIVE/sessions"
 
 # 1. Mirror git-tracked markdown knowledge (readable + searchable in Obsidian).
 #    --delete keeps the mirror current (supersede-not-append); git keeps history.
-for sub in memory handoffs decisions; do
+for sub in handoffs decisions; do  # memory lane lives in the vault repo now (self-synced via git)
   [ -d "$REPO/$sub" ] && rsync -a --delete \
     --include="*/" --include="*.md" --exclude="*" \
     "$REPO/$sub/" "$ARCHIVE/repo/$sub/"
@@ -50,21 +50,21 @@ fi
 # 3. Refresh the vault home note (generated; do not hand-edit).
 SESSION_COUNT="$(find "$ARCHIVE/sessions" -name '*.jsonl' 2>/dev/null | wc -l | tr -d ' ')"
 cat > "$ARCHIVE/README.md" <<EOF
-# claude-archive (generated — do not edit)
+# claude-archive (generated - do not edit)
 
 OneDrive-synced, Obsidian-mirrored backup of the schnapp-os knowledge base.
 Refreshed by \`scripts/backup-archive.sh\`. The live source of truth
 is the git repo; this is a browsable, cross-device copy.
 
-- \`repo/handoffs/\` — session handoffs
-- \`repo/decisions/\` — decision log
-- \`repo/PLAN.md\`, \`repo/PROGRESS.md\` — live trackers
-- \`sessions/\` — raw Claude Code transcripts (.jsonl), $SESSION_COUNT archived
+- \`repo/handoffs/\` - session handoffs
+- \`repo/decisions/\` - decision log
+- \`repo/PLAN.md\`, \`repo/PROGRESS.md\` - live trackers
+- \`sessions/\` - raw Claude Code transcripts (.jsonl), $SESSION_COUNT archived
 
 The global memory lane is no longer in schnapp-os; it lives in the vault
 (\`SchnappAPI/schnapp-vault\`), which git-syncs independently.
 
-Do not edit here — changes belong in the repo, then re-run the backup. claude.ai
+Do not edit here - changes belong in the repo, then re-run the backup. claude.ai
 chats are not on the Mac filesystem; back those up via export / live-session-cache.
 EOF
 
@@ -80,5 +80,5 @@ if [ -d "$VAULT" ]; then
   cp -f "$ARCHIVE/README.md" "$VAULT/claude-archive/README.md"
   echo "backup-archive: mirrored knowledge md -> $VAULT/claude-archive"
 else
-  echo "backup-archive: OBSIDIAN_VAULT_DIR not found ($VAULT) — vault mirror skipped"
+  echo "backup-archive: OBSIDIAN_VAULT_DIR not found ($VAULT) - vault mirror skipped"
 fi

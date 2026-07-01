@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# notify-ops.sh — best-effort off-Mac page for schnapp-os routines (ntfy).
+# notify-ops.sh - best-effort off-Mac page for schnapp-os routines (ntfy).
 #
 # Sends a message to an ntfy topic when NTFY_URL is set; a silent no-op (exit 0) otherwise,
 # so ANY routine can call it unconditionally without guarding. Pure bash + curl, short timeout,
-# never blocks or fails the caller — a liveness probe must not die on its own alerting, the same
+# never blocks or fails the caller - a liveness probe must not die on its own alerting, the same
 # reason check-infra-health.sh is dependency-free (no LLM/MCP/auth in the watch path).
 #
 # Config (the topic is obscurity, never a tracked value): NTFY_URL=https://ntfy.sh/<topic>, read

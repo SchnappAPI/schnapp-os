@@ -1,6 +1,6 @@
 /**
  * Thin GitHub Contents API client. The memory lane lives in a git repo and GitHub
- * origin is the source of truth, so every read/write goes straight to the API — no
+ * origin is the source of truth, so every read/write goes straight to the API - no
  * local clone, no Mac dependency. Reads return decoded text + blob sha; writes are
  * single commits on the configured branch. Uses Node's global fetch (Node >= 18).
  *

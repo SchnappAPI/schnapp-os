@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-length-advisory.sh — proves length-advisory.sh WARNs on an over-long always-load/rules
+# test-length-advisory.sh - proves length-advisory.sh WARNs on an over-long always-load/rules
 # file, stays silent on a normal or out-of-scope file, and NEVER blocks (always exit 0).
 #
 # RED (the gap this closes): the streamline keeps rules/global/*.md lean by convention only.

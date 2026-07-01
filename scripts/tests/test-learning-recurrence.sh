@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-learning-recurrence.sh — proves learning-recurrence.sh classifies captures deterministically
+# test-learning-recurrence.sh - proves learning-recurrence.sh classifies captures deterministically
 # and drafts a GATE proposal (stdout only) when a class recurs (>= 2), never on a single occurrence,
 # and never as a working-tree/git side effect.
 #
@@ -7,7 +7,7 @@
 # prose. Spec sec 2/4.4: a class that recurs should escalate to ENFORCEMENT (a drafted gate for owner
 # approval), not another doc line. This tool computes the deterministic class signature + archive count
 # and emits the drafted-gate body; the WORKER (not this tool) files it as a GitHub issue. Nothing here
-# may edit the tree, commit, or push — a drafted gate is only a proposal.
+# may edit the tree, commit, or push - a drafted gate is only a proposal.
 set -uo pipefail
 export LC_ALL=C
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -51,7 +51,7 @@ check "$o1" "$o2" "signature is order-independent"
 # 4. a trivial text -> EMPTY signature (too little signal to classify)
 check "$(sig 'ok')" "" "trivial text yields empty signature"
 
-# extra: determinism — same input twice -> identical output
+# extra: determinism - same input twice -> identical output
 r1="$(sig 'the SQL Server port is 1433 not 1533')"
 r2="$(sig 'the SQL Server port is 1433 not 1533')"
 check "$r1" "$r2" "signature is deterministic across runs"

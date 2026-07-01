@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# ops-alert.sh — incident-managed, native alerting for schnapp-os Mac routines.
+# ops-alert.sh - incident-managed, native alerting for schnapp-os Mac routines.
 #
-# Fires ONCE per incident and resolves on recovery, across channels (all best-effort — detection
+# Fires ONCE per incident and resolves on recovery, across channels (all best-effort - detection
 # stays in the caller, which is dependency-free; this layer may use gh/network and must NEVER break
 # the caller):
 #   - GitHub issue, assigned to the owner -> NATIVE email + GitHub mobile push. Open on red / close on
@@ -57,7 +57,7 @@ if [ "$status" = "red" ]; then
   if [ "$last" != "red" ]; then
     "$SCRIPT_DIR/notify-ops.sh" "$title (see GitHub issue). $summary" "$ISSUE_TITLE" "high" "rotating_light" >/dev/null 2>&1 || true
     if command -v osascript >/dev/null 2>&1; then
-      osascript -e 'display notification "RED signal — see the GitHub issue / log" with title "schnapp-os infra-health"' >/dev/null 2>&1 || true
+      osascript -e 'display notification "RED signal - see the GitHub issue / log" with title "schnapp-os infra-health"' >/dev/null 2>&1 || true
     fi
   fi
   echo red > "$state_file" 2>/dev/null || true

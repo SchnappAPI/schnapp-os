@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# session-start-gate.sh — schnapp-os SessionStart freshness gate.
+# session-start-gate.sh - schnapp-os SessionStart freshness gate.
 #
 # Fires at session start (matcher: startup). Reconciles local state against ground truth
 # BEFORE any work, because GitHub origin is the source of truth (you may have edited it from
 # the web / another surface) and the 1Password store is the source of truth for credentials.
 #
 # Jobs (all deterministic; the agent's reasoning stays the agent's job):
-#   1. SYNC: fast-forward local to origin (explicit refspec — the bare `git pull --ff-only`
+#   1. SYNC: fast-forward local to origin (explicit refspec - the bare `git pull --ff-only`
 #      form once failed with "Cannot fast-forward to multiple branches" and silently left the
 #      repo stale). Never clobbers local work; surfaces divergence loudly.
 #   2. GIT STATE: surface dirty / unpushed / behind so it is addressed before new work.
@@ -35,7 +35,7 @@ branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'HEAD')"
 if sync_out="$(git pull --ff-only origin "$branch" 2>&1)"; then
   echo "[sync] origin/$branch: $(echo "$sync_out" | tail -1)"
 else
-  echo "[sync] could NOT fast-forward origin/$branch — diverged, dirty, or offline. Reconcile before work:"
+  echo "[sync] could NOT fast-forward origin/$branch - diverged, dirty, or offline. Reconcile before work:"
   echo "$sync_out" | sed 's/^/        /'
 fi
 
@@ -43,7 +43,7 @@ fi
 echo "[git] branch: $branch"
 dirty="$(git status --porcelain 2>/dev/null)"
 if [ -n "$dirty" ]; then
-  echo "[git] UNCOMMITTED changes — commit state-changing work before new work:"
+  echo "[git] UNCOMMITTED changes - commit state-changing work before new work:"
   echo "$dirty" | sed 's/^/        /'
 else
   echo "[git] working tree clean"
@@ -52,8 +52,8 @@ upstream="$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null |
 if [ -n "$upstream" ]; then
   ahead="$(git rev-list --count '@{u}'..HEAD 2>/dev/null || echo 0)"
   behind="$(git rev-list --count HEAD..'@{u}' 2>/dev/null || echo 0)"
-  [ "$ahead" != "0" ]  && echo "[git] UNPUSHED: $ahead commit(s) ahead of $upstream — push now (keep-tracker-current)."
-  [ "$behind" != "0" ] && echo "[git] BEHIND: $behind commit(s) behind $upstream — pull/rebase before work."
+  [ "$ahead" != "0" ]  && echo "[git] UNPUSHED: $ahead commit(s) ahead of $upstream - push now (keep-tracker-current)."
+  [ "$behind" != "0" ] && echo "[git] BEHIND: $behind commit(s) behind $upstream - pull/rebase before work."
   [ "$ahead" = "0" ] && [ "$behind" = "0" ] && echo "[git] in sync with $upstream"
 else
   echo "[git] no upstream tracking branch set"
@@ -67,7 +67,7 @@ MEM="$HOME/code/schnapp-vault/memory"
 if [ -d "$MEM" ]; then
   orphans="$(bash "$REPO/scripts/check-supersede-orphans.sh" "$MEM" 2>/dev/null)"
   if [ -n "$orphans" ]; then
-    echo "[memory] SUPERSEDE-ORPHANS — replace/remove the old fact (supersede-not-append):"
+    echo "[memory] SUPERSEDE-ORPHANS - replace/remove the old fact (supersede-not-append):"
     printf '%s\n' "$orphans" | sed 's/^/        - /'
   else
     echo "[memory] no supersede-orphans"
@@ -75,7 +75,7 @@ if [ -d "$MEM" ]; then
   stale="$(bash "$REPO/scripts/check-stale-facts.sh" "$MEM" 2>/dev/null \
             | grep -v '^memory freshness OK')"
   if [ -n "$stale" ]; then
-    echo "[memory] STALE FACTS — review/refresh (read-only flag; supersede-not-append):"
+    echo "[memory] STALE FACTS - review/refresh (read-only flag; supersede-not-append):"
     printf '%s\n' "$stale" | sed 's/^/        - /'
   else
     echo "[memory] no stale facts (<7d)"
@@ -90,7 +90,7 @@ for sat in "$HOME/code/schnapp-bet" "$HOME/code/schnapp-vault"; do
   [ -d "$sat/.git" ] || continue
   name="$(basename "$sat")"
   sa="$(git -C "$sat" rev-list --count '@{u}'..HEAD 2>/dev/null || echo 0)"
-  if [ "$sa" != "0" ]; then echo "[satellite:$name] UNPUSHED: $sa commit(s) not on origin — push (decisions/0008)."; else echo "[satellite:$name] pushed"; fi
+  if [ "$sa" != "0" ]; then echo "[satellite:$name] UNPUSHED: $sa commit(s) not on origin - push (decisions/0008)."; else echo "[satellite:$name] pushed"; fi
 done
 
 # 5. Credential reconcile (light; the authoritative deep check is the remote op-mcp op_health tool).
@@ -99,12 +99,12 @@ if [ -n "${OP_SERVICE_ACCOUNT_TOKEN:-}" ] && command -v op >/dev/null 2>&1; then
   if op whoami >/dev/null 2>&1; then
     echo "[creds] 1Password SA resolves (op whoami ok)"
   else
-    echo "[creds] SA token set but 'op whoami' FAILED — may be rotated/invalid; fix before secret-dependent work."
+    echo "[creds] SA token set but 'op whoami' FAILED - may be rotated/invalid; fix before secret-dependent work."
   fi
 elif command -v op >/dev/null 2>&1; then
   echo "[creds] op CLI present; SA token not in hook env (per-command 'op run' resolves it). Deep check = remote op-mcp health."
 else
-  echo "[creds] no local op — this surface resolves secrets via the remote op-mcp tool."
+  echo "[creds] no local op - this surface resolves secrets via the remote op-mcp tool."
 fi
 
 echo "[next] Address sync/unpushed/dirty + stale memory + creds above BEFORE new work."

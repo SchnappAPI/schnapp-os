@@ -66,7 +66,7 @@ GITHUB_REPO = "SchnappAPI/schnapp-bet"
 GITHUB_API = "https://api.github.com"
 FLASK_LABEL = "bet.schnapp.flask"
 
-# SQL connection — env-driven, populated by op run --env-file=.env.template
+# SQL connection - env-driven, populated by op run --env-file=.env.template
 # via services/launchd/op-wrap.sh in the schnapp-bet repo (ADR-20260517-5).
 SQL_SERVER = os.environ.get("SQL_SERVER", "localhost,1433")
 SQL_DB = os.environ.get("SQL_DATABASE", "")
@@ -198,7 +198,7 @@ def shell_exec(command: str, token: str = "", timeout: int = 60) -> dict:
     """Run a shell command on the Mac as the logged-in user. Requires MAC_MCP_AUTH_TOKEN.
 
     The 1Password identity is stripped from this subprocess, so `op` cannot read
-    secrets here — route any credential-bearing command through op_run instead."""
+    secrets here - route any credential-bearing command through op_run instead."""
     if not _check_token(token):
         return {"error": "unauthorized"}
     try:
@@ -520,7 +520,7 @@ def workflow_list_runs(workflow_filename: str, limit: int = 10) -> dict:
 def sql_query(query: str, token: str = "", timeout: int = 30) -> dict:
     """
     Run a SQL query against the local SQL Server container (schnapp-bet DB, sa user).
-    Read-only queries only — SELECT, sp_help, sys.* views etc.
+    Read-only queries only - SELECT, sp_help, sys.* views etc.
     Requires MAC_MCP_AUTH_TOKEN. timeout defaults to 30s, max 120s.
     Examples: 'SELECT TOP 5 * FROM nba.player_props ORDER BY game_date DESC'
               'SELECT COUNT(*) FROM nba.player_props'
@@ -635,15 +635,15 @@ def service_restart(label: str, mode: str = "graceful", token: str = "") -> dict
     """
     Restart a launchd user agent by label.
     mode='graceful' (default): SIGTERM via `launchctl kill TERM` so the process shuts
-      down cleanly (closes its listen socket) and KeepAlive relaunches it — avoids the
+      down cleanly (closes its listen socket) and KeepAlive relaunches it - avoids the
       SIGKILL bind race (decision 0010). Use for the MCP socket servers
       (com.schnapp.macmcp/githubmcp/obsidian-mcp) and any KeepAlive agent. If the agent
       is NOT KeepAlive and does not return within ~4s, this falls back to a kickstart so
       it is left running.
-    mode='hard': `launchctl kickstart -k` — immediate kill+restart; use only if graceful
+    mode='hard': `launchctl kickstart -k` - immediate kill+restart; use only if graceful
       will not bring the agent back and an abrupt stop is acceptable.
     Requires MAC_MCP_AUTH_TOKEN.
-    Note: restarting 'com.schnapp.macmcp' restarts THIS MCP server — the call will not return.
+    Note: restarting 'com.schnapp.macmcp' restarts THIS MCP server - the call will not return.
     """
     if not _check_token(token):
         return {"error": "unauthorized"}
@@ -682,7 +682,7 @@ def service_restart(label: str, mode: str = "graceful", token: str = "") -> dict
     return {"success": True, "label": label, "mode": "graceful",
             "fell_back_to_kickstart": fell_back,
             "message": (f"TERM sent to gui/{uid}/{label}; "
-                        + ("not KeepAlive — kickstarted to ensure running."
+                        + ("not KeepAlive - kickstarted to ensure running."
                            if fell_back else "relaunched by KeepAlive."))}
 
 
@@ -952,7 +952,7 @@ def site_health() -> dict:
 # MAC, and every secret VALUE is scrubbed from tool output before returning.
 # Prefer op_run over shell_exec for anything secret-bearing so raw credentials
 # never enter the model context. Because these live in this remote connector,
-# they are available wherever the Schnapp Mac connector is — web, mobile, CLI —
+# they are available wherever the Schnapp Mac connector is (web, mobile, CLI)
 # without the token ever leaving the Mac.
 # ---------------------------------------------------------------------------
 
@@ -981,11 +981,11 @@ def _scrub(text: str, secrets: list[str]) -> str:
 
 # 1Password identity neutralization for subprocesses that must NOT read secrets
 # on their own (shell_exec, and the command run by op_run). Only the op_* tools
-# resolve secrets — via this parent process. A general shell is handed no usable
+# resolve secrets - via this parent process. A general shell is handed no usable
 # 1Password identity, so the JIT guarantee holds.
 #
 # NOTE: simply unsetting OP_SERVICE_ACCOUNT_TOKEN is NOT enough on a Mac running
-# the 1Password desktop app — `op` falls back to the desktop/CLI integration and
+# the 1Password desktop app - `op` falls back to the desktop/CLI integration and
 # still authenticates (verified). Setting a deliberately INVALID service-account
 # token forces op into service-account mode and it refuses outright, with no
 # desktop or keychain fallback (verified: "unrecognized auth type").
@@ -1032,7 +1032,7 @@ def op_whoami(token: str = "") -> dict:
 
 @mcp.tool()
 def op_list_items(vault: str = "", token: str = "") -> dict:
-    """List 1Password item titles/ids (and vault). Metadata only — no field values.
+    """List 1Password item titles/ids (and vault). Metadata only - no field values.
     Optionally scope to one vault. Requires MAC_MCP_AUTH_TOKEN."""
     if not _check_token(token):
         return {"error": "unauthorized"}
@@ -1074,10 +1074,10 @@ def op_run(
     then return the result with all secret VALUES scrubbed to ***.
 
     env_refs: mapping of ENV_NAME -> op:// reference, resolved and injected.
-    env_file: path to an op-style env template (NAME="op://...") — each ref is resolved
+    env_file: path to an op-style env template (NAME="op://...") - each ref is resolved
               in this process and injected (no `op run`; the child gets no op identity).
 
-    Prefer this over shell_exec for anything that needs credentials — raw secrets never
+    Prefer this over shell_exec for anything that needs credentials - raw secrets never
     enter the response, and the command cannot read any secret beyond what is injected.
     Requires MAC_MCP_AUTH_TOKEN."""
     if not _check_token(token):
@@ -1093,7 +1093,7 @@ def op_run(
             extra[name] = val
             resolved.append(val)
             injected.append(name)
-        # op-style env-file (NAME="op://..."), also resolved here — not via `op run`.
+        # op-style env-file (NAME="op://..."), also resolved here - not via `op run`.
         if env_file:
             for line in Path(env_file).expanduser().read_text().splitlines():
                 line = line.strip()
@@ -1107,7 +1107,7 @@ def op_run(
                     extra[name] = val
                     resolved.append(val)
                     injected.append(name)
-        # Child runs with NO 1Password identity — only the injected values.
+        # Child runs with NO 1Password identity - only the injected values.
         r = subprocess.run(
             ["/bin/bash", "-c", command],
             capture_output=True,
@@ -1130,7 +1130,7 @@ def op_run(
 @mcp.tool()
 def op_inject(template_path: str, out_path: str, token: str = "") -> dict:
     """Fill a `{{ op://... }}` template file with 1Password secrets and write the result to
-    out_path ON THE MAC. Returns only the path and byte count — never the rendered content.
+    out_path ON THE MAC. Returns only the path and byte count - never the rendered content.
     Use for materializing config/.env files server-side. Requires MAC_MCP_AUTH_TOKEN."""
     if not _check_token(token):
         return {"error": "unauthorized"}
@@ -1154,7 +1154,7 @@ def op_inject(template_path: str, out_path: str, token: str = "") -> dict:
 @mcp.tool()
 def op_read(ref: str, token: str = "") -> dict:
     """Resolve a single op:// reference and return proof-of-resolution only
-    (length + last4) — the raw value never enters the model context. There is no
+    (length + last4) - the raw value never enters the model context. There is no
     reveal option by design; use op_run to consume a secret without exposing it.
     Requires MAC_MCP_AUTH_TOKEN."""
     if not _check_token(token):

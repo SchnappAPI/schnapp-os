@@ -2,7 +2,7 @@ name: render-health
 
 # Heartbeat + keep-warm for the two Render-hosted MCP connectors (op-mcp, memory-mcp). These are the
 # off-Mac credential + memory paths for claude.ai web / iPhone / Cowork; on the free tier they sleep
-# after ~15 min idle and a crash/sleep is otherwise SILENT (nothing pings them — the on-Mac infra-health
+# after ~15 min idle and a crash/sleep is otherwise SILENT (nothing pings them - the on-Mac infra-health
 # probe only watches Mac-local services). This GitHub-hosted cron (Mac-INDEPENDENT, free, built-in
 # GITHUB_TOKEN, no secrets) pings each /health every 30 min: it doubles as a keep-warm (kills the
 # ~30-60s cold start) and a liveness alarm. On DOWN it opens a GitHub issue assigned to the owner
@@ -39,7 +39,7 @@ jobs:
           SIMULATE: ${{ github.event.inputs.simulate }}
         run: |
           set -uo pipefail
-          # "name|url" pairs (no internal spaces — word-split on the space between pairs is intentional).
+          # "name|url" pairs (no internal spaces - word-split on the space between pairs is intentional).
           # Each /health returns 200 {"status":"ok",...} when the service is up.
           TARGETS="op-mcp|https://op-mcp.onrender.com/health memory-mcp|https://memory-mcp-rtad.onrender.com/health"
           TITLE="[render-health] schnapp Render MCP connector(s) unhealthy"
@@ -61,7 +61,7 @@ jobs:
 
           DOWN=0; DETAIL=""
           if [ "${SIMULATE:-}" = "down" ]; then
-            DOWN=1; DETAIL="SIMULATED via workflow_dispatch (simulate=down). Not a real outage — this is an alert-path test."
+            DOWN=1; DETAIL="SIMULATED via workflow_dispatch (simulate=down). Not a real outage - this is an alert-path test."
           else
             # shellcheck disable=SC2086  # TARGETS is intentionally word-split into name|url pairs
             for pair in $TARGETS; do

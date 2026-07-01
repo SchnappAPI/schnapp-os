@@ -3,7 +3,7 @@ name: freshness
 # Freshness + secrets gate. Fails the push/PR on any of:
 #  - a generated doc is out of date (a component/source file changed but the generator was
 #    not re-run), or a `last-verified:` doc points at a source that changed after its date;
-#  - a literal secret value appears in a tracked file (scan-secrets.sh — the leak guard);
+#  - a literal secret value appears in a tracked file (scan-secrets.sh - the leak guard);
 #  - the secret scanner regresses (its fixture self-test fails);
 #  - an op:// reference names an item not documented in credentials-map.md (WARN-only for now).
 # Runs on GitHub-hosted ubuntu (Mac-independent, the whole point of schnapp-os).
@@ -35,8 +35,8 @@ jobs:
       - name: Frontmatter lib self-test
         run: bash scripts/tests/test-lib-frontmatter.sh
 
-      - name: Memory frontmatter detector self-test
-        run: bash scripts/tests/test-memory-frontmatter.sh
+      - name: Writing-style gate self-test
+        run: bash scripts/tests/test-check-writing-style.sh
 
       - name: Stale-facts detector self-test
         run: bash scripts/tests/test-stale-facts.sh

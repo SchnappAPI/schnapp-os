@@ -101,7 +101,7 @@ class ObsidianOAuthProvider(OAuthAuthorizationServerProvider):
         _save(state)
 
     async def authorize(self, client: OAuthClientInformationFull, params: AuthorizationParams) -> str:
-        """Return URL of our consent page — FastMCP redirects the user there."""
+        """Return URL of our consent page - FastMCP redirects the user there."""
         qs = urlencode({
             "client_id":             client.client_id,
             "redirect_uri":          str(params.redirect_uri),
@@ -268,7 +268,7 @@ async def consent_get(request: Request) -> HTMLResponse:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Obsidian MCP — Authorize</title>
+  <title>Obsidian MCP - Authorize</title>
   <style>
     body{{font-family:-apple-system,sans-serif;max-width:440px;margin:80px auto;padding:0 24px;color:#111}}
     h1{{font-size:20px;margin-bottom:6px}}
@@ -470,7 +470,7 @@ def inbox_drop(title: str, content: str) -> dict:
 def get_index() -> dict:
     """Return the brain agent index: notes, clusters, and pending actions."""
     if not INDEX.exists():
-        return {"error": "Index not found — brain agent may not have run yet"}
+        return {"error": "Index not found - brain agent may not have run yet"}
     idx = json.loads(INDEX.read_text(encoding="utf-8"))
     return {
         "note_count": len(idx.get("notes", [])),

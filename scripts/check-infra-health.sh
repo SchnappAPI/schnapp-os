@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# check-infra-health.sh — deterministic, read-only liveness probe for the Mac platform.
+# check-infra-health.sh - deterministic, read-only liveness probe for the Mac platform.
 #
 # Catches the SILENT-STOP class: a scheduled job that quietly stopped being armed, a dead service,
-# an aging backup. Pure bash — no LLM, no MCP, no auth dependency — so the probe cannot itself
+# an aging backup. Pure bash - no LLM, no MCP, no auth dependency - so the probe cannot itself
 # silently fail on the very things it watches. This is a deliberate divergence from the original
 # infra-health.md `claude -p` design: a liveness probe must NOT depend on the connector/credential
-# it is meant to check (the 2026-06-29 lesson — a backup, a worker, and a credential all silently
+# it is meant to check (the 2026-06-29 lesson - a backup, a worker, and a credential all silently
 # stopped). Mac-only (launchctl/docker/ports). READ-ONLY: never restarts or remediates; a RED signal
 # is reported + (best-effort) notified, for an approved session to act on.
 #
@@ -21,7 +21,7 @@ if [ -n "${INFRA_EXPECTED_AGENTS:-}" ]; then
   read -r -a EXPECTED_AGENTS <<< "$INFRA_EXPECTED_AGENTS"
 else
   # LaunchAgents that must stay loaded (label present in `launchctl list`). Maintain this list as the
-  # platform changes — a label missing here is exactly how the bacpac backup silently lapsed.
+  # platform changes - a label missing here is exactly how the bacpac backup silently lapsed.
   EXPECTED_AGENTS=(
     com.schnapp.macmcp
     com.schnapp.githubmcp
@@ -46,7 +46,7 @@ red()  { rc=1; RED_SUMMARY+="• $1"$'\n'; printf -- '- 🔴 %s\n' "$1"; }
 grn()  { printf -- '- 🟢 %s\n' "$1"; }
 warn() { printf -- '- 🟡 %s\n' "$1"; }
 
-printf '# infra-health — %s\n\n' "$(date -u '+%Y-%m-%d %H:%M:%SZ')"
+printf '# infra-health - %s\n\n' "$(date -u '+%Y-%m-%d %H:%M:%SZ')"
 
 printf '## LaunchAgents loaded\n'
 loaded="$(launchctl list 2>/dev/null | awk 'NR>1{print $3}')"
@@ -59,7 +59,7 @@ if [ "${#EXPECTED_AGENTS[@]}" -gt 0 ]; then
     fi
   done
 else
-  red "EXPECTED_AGENTS is empty (malformed INFRA_EXPECTED_AGENTS override) — no agents checked"
+  red "EXPECTED_AGENTS is empty (malformed INFRA_EXPECTED_AGENTS override) - no agents checked"
 fi
 printf '\n'
 
@@ -86,7 +86,7 @@ printf '\n'
 
 printf '## SQL Server container\n'
 if ! command -v docker >/dev/null 2>&1; then
-  warn "docker CLI not found — cannot check the mssql container"
+  warn "docker CLI not found - cannot check the mssql container"
 elif [ -n "$(docker ps --filter name=mssql --filter status=running --format '{{.Names}}' 2>/dev/null)" ]; then
   grn "mssql container running"
 else
@@ -113,19 +113,19 @@ gh_ok=1
 # shellcheck disable=SC1090,SC1091
 ( [ -r "$HOME/.config/schnapp-os/ops.env" ] && . "$HOME/.config/schnapp-os/ops.env"; command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1 ) || gh_ok=0
 if [ "$gh_ok" -eq 1 ]; then
-  grn "gh authenticated — issue/email alerts can fire"
+  grn "gh authenticated - issue/email alerts can fire"
 else
-  red "gh NOT authenticated — GitHub issue/email alerts will NOT fire (fix gh auth or set GH_TOKEN in ops.env)"
+  red "gh NOT authenticated - GitHub issue/email alerts will NOT fire (fix gh auth or set GH_TOKEN in ops.env)"
 fi
 printf '\n'
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 if [ "$rc" -eq 0 ]; then
-  printf '**infra-health: OK** — all checks green.\n'
+  printf '**infra-health: OK** - all checks green.\n'
   # Resolve any open incident (best-effort): closes the GitHub issue + clears state on recovery.
   "$DIR/ops-alert.sh" green infra-health "schnapp infra-health" "" >/dev/null 2>&1 || true
 else
-  printf '**infra-health: RED** — a watched signal failed (read-only; nothing was restarted).\n'
+  printf '**infra-health: RED** - a watched signal failed (read-only; nothing was restarted).\n'
   # Native alert (best-effort): opens/updates an owner-assigned GitHub issue (email) for the incident,
   # plus a one-shot ntfy/macOS notification on the green->red transition. See ops-alert.sh.
   "$DIR/ops-alert.sh" red infra-health "schnapp infra-health RED" \

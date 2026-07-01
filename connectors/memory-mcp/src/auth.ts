@@ -7,11 +7,11 @@ import type { Request, Response, NextFunction } from "express";
  * be protected. The simplest portable gate is a static bearer (a long random string)
  * checked in constant time. For claude.ai registration either:
  *   - put this server behind the Cloudflare One MCP portal / an OAuth proxy (recommended,
- *     same pattern as op-mcp — mcp.schnapp.bet), or
+ *     same pattern as op-mcp - mcp.schnapp.bet), or
  *   - pass `Authorization: Bearer <token>` from clients that allow custom headers.
  *
  * Set MEMORY_MCP_BEARER in the host environment. If it is unset the server refuses to
- * start (see index.ts) — we never run an open, writable endpoint.
+ * start (see index.ts) - we never run an open, writable endpoint.
  */
 export function bearerAuth(expectedToken: string) {
   return (req: Request, res: Response, next: NextFunction): void => {

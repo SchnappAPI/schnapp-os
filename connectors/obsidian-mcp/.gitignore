@@ -1,4 +1,4 @@
-# runtime / local deployment artifacts — never source
+# runtime / local deployment artifacts - never source
 oauth_state.json
 *.log
 __pycache__/

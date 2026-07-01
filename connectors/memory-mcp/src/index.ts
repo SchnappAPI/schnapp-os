@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * memory-mcp-server — remote MCP fronting the git-tracked memory lane.
+ * memory-mcp-server - remote MCP fronting the git-tracked memory lane.
  *
  * Makes the schnapp-os memory/ lane reachable from every surface (claude.ai web,
  * iPhone, Cowork, Code) with GitHub origin as the single source of truth: reads and
@@ -46,7 +46,7 @@ async function main(): Promise<void> {
     res.json({ status: "ok", server: SERVER_NAME, version: SERVER_VERSION });
   });
 
-  // MCP endpoint — bearer-protected, stateless (new transport per request).
+  // MCP endpoint - bearer-protected, stateless (new transport per request).
   app.post("/mcp", bearerAuth(authToken), async (req: Request, res: Response) => {
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined,

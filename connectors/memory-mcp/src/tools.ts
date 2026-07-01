@@ -72,7 +72,7 @@ function upsertIndexLine(indexText: string, slug: string, line: string): string 
     lines.splice(header + 1, 0, line);
     return lines.join("\n");
   }
-  // No index header — append at end.
+  // No index header - append at end.
   return `${indexText.trimEnd()}\n${line}\n`;
 }
 
@@ -86,7 +86,7 @@ export function registerTools(server: McpServer): void {
 Good first call to wake the host and confirm the chain before reads/writes.
 
 Returns: { "authenticated": true, "repo": string, "branch": string, "memoryFileCount": number }
-COLD START: the host sleeps when idle; the first call after idle can take ~50s or error once — retry before treating as failure.`,
+COLD START: the host sleeps when idle; the first call after idle can take ~50s or error once - retry before treating as failure.`,
       inputSchema: z.object({}).strict().shape,
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
@@ -105,11 +105,11 @@ COLD START: the host sleeps when idle; the first call after idle can take ~50s o
     "memory_index",
     {
       title: "Read the memory index (MEMORY.md)",
-      description: `Read MEMORY.md — the thin index of every fact in the lane (one line per fact).
+      description: `Read MEMORY.md - the thin index of every fact in the lane (one line per fact).
 ALWAYS read this first: it is the map. Pick a slug from it, then memory_read that slug for the full fact.
 
-Returns: { "path": string, "text": string } — the raw MEMORY.md.
-COLD START: the host sleeps when idle; the first call after idle can take ~50s or error once — retry before treating as failure.`,
+Returns: { "path": string, "text": string } - the raw MEMORY.md.
+COLD START: the host sleeps when idle; the first call after idle can take ~50s or error once - retry before treating as failure.`,
       inputSchema: z.object({}).strict().shape,
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
@@ -215,7 +215,7 @@ Best for small/medium lanes; for the whole index just read memory_index.`,
         const output = { count: matches.length, matches };
         let text = JSON.stringify(output, null, 2);
         if (text.length > CHARACTER_LIMIT) {
-          text = text.slice(0, CHARACTER_LIMIT) + "\n\n[truncated — narrow the query]";
+          text = text.slice(0, CHARACTER_LIMIT) + "\n\n[truncated - narrow the query]";
         }
         return { content: [{ type: "text", text }], structuredContent: output };
       } catch (error) {
@@ -228,7 +228,7 @@ Best for small/medium lanes; for the whole index just read memory_index.`,
   const WriteInput = z
     .object({
       slug: slugField,
-      body: z.string().min(1).describe("The fact, terse. Markdown. Link related facts with [[other-slug]]. No frontmatter — the server writes it."),
+      body: z.string().min(1).describe("The fact, terse. Markdown. Link related facts with [[other-slug]]. No frontmatter - the server writes it."),
       index_line: z
         .string()
         .regex(/^- \[.+\]\(.+\.md\)/, "Must be a MEMORY.md index bullet: '- [Title](slug.md) — hook'.")
@@ -243,19 +243,19 @@ Best for small/medium lanes; for the whole index just read memory_index.`,
     "memory_write",
     {
       title: "Write or supersede a memory fact",
-      description: `Create or replace a fact file and update the MEMORY.md index — in two commits to ${REPO}@${BRANCH}.
+      description: `Create or replace a fact file and update the MEMORY.md index - in two commits to ${REPO}@${BRANCH}.
 Enforces the vault agents.md discipline: ONE fact per file; SUPERSEDE, don't append (writing an existing
-slug REPLACES its body — never leave a contradicting copy); frontmatter carries source + updated.
+slug REPLACES its body - never leave a contradicting copy); frontmatter carries source + updated.
 
 Args:
   - slug (string): kebab slug = filename. Writing an existing slug overwrites it (supersede).
-  - body (string): the fact (markdown, no frontmatter — the server adds it).
+  - body (string): the fact (markdown, no frontmatter - the server adds it).
   - index_line (string): the MEMORY.md bullet, '- [Title](<slug>.md) — hook'.
   - source (string), scope ('global'|'project', default global), supersedes (slug, optional), updated (ISO, optional).
 
 Returns: { "slug": string, "factCommit": string, "indexCommit": string|null, "path": string }
 On a cross-slug supersede, also call memory_delete on the old slug (supersede-not-append).
-COLD START: first call after idle may take ~50s — retry once.`,
+COLD START: first call after idle may take ~50s - retry once.`,
       inputSchema: WriteInput.shape,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
@@ -293,7 +293,7 @@ COLD START: first call after idle may take ~50s — retry once.`,
         };
         return { content: [{ type: "text", text: JSON.stringify(output) }], structuredContent: output };
       } catch (error) {
-        return errorResult(error, "If a 'stale blob sha' conflict, another write landed first — retry.");
+        return errorResult(error, "If a 'stale blob sha' conflict, another write landed first - retry.");
       }
     },
   );
@@ -304,7 +304,7 @@ COLD START: first call after idle may take ~50s — retry once.`,
     "memory_delete",
     {
       title: "Delete a memory fact",
-      description: `Delete a fact file and remove its MEMORY.md index line — in two commits to ${REPO}@${BRANCH}.
+      description: `Delete a fact file and remove its MEMORY.md index line - in two commits to ${REPO}@${BRANCH}.
 Use for a fact that turned out wrong, or the OLD slug after a cross-slug supersede. Git history retains it.
 
 Args:

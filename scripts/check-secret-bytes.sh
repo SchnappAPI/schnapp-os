@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# check-secret-bytes.sh — byte-check gate for a stored secret value (never prints the value).
+# check-secret-bytes.sh - byte-check gate for a stored secret value (never prints the value).
 #
 # A recurring class (a secret stored with stray whitespace / wrapping quotes / truncation) 401s
 # in production, indistinguishable from a bad token, and has cost multi-day misdiagnoses
 # ([[malformed-stored-secret-401]], ADR 0019). This gate checks the RAW BYTES of a value at
-# rotate/store time and reports only a DEFECT CATEGORY — never the value, never any of its bytes.
+# rotate/store time and reports only a DEFECT CATEGORY - never the value, never any of its bytes.
 #
 # SECURITY INVARIANT: this script must NEVER print, log, or echo the secret value or any bytes of
 # it. Length is reportable (a count, not the value); the actual bytes, actual prefix, actual quoted
@@ -14,13 +14,13 @@
 #   check-secret-bytes.sh [--ref op://vault/item/field] [--min-len N] [--expect-prefix S]
 #     no --ref   -> reads the value from stdin (tests, piping a freshly minted value)
 #     --ref REF  -> `op read REF` resolves the value (live rotate/store path); op absent or the
-#                   read failing is an ERROR (exit 2), distinct from a MALFORMED value (exit 1) —
+#                   read failing is an ERROR (exit 2), distinct from a MALFORMED value (exit 1);
 #                   the ref's value is never printed even when the read itself fails.
 #     --min-len N       -> fail if the value is shorter than N bytes (catches truncation)
 #     --expect-prefix S -> fail if the value does not start with S (catches the wrong-secret class)
 #
 # Exit codes: 0 = clean; 1 = MALFORMED (defect category on stdout); 2 = cannot check (op missing /
-# read failed / bad args) — never a malformed-value verdict, since the value was never obtained.
+# read failed / bad args) - never a malformed-value verdict, since the value was never obtained.
 unset SHELLOPTS BASH_XTRACEFD 2>/dev/null || true   # never trace secret bytes (fail closed on inherited xtrace)
 set +x
 set -uo pipefail
@@ -47,7 +47,7 @@ while [ $# -gt 0 ]; do
 done
 
 # --min-len must be a non-negative integer; a non-numeric value would make the length
-# comparison below error and fall through as if clean (fail OPEN) — reject it up front instead.
+# comparison below error and fall through as if clean (fail OPEN) - reject it up front instead.
 if [ -n "$min_len" ] && ! [[ "$min_len" =~ ^[0-9]+$ ]]; then
   echo "ERROR: --min-len must be a non-negative integer" >&2
   exit 2
@@ -60,7 +60,7 @@ if [ -n "$expect_prefix" ] && { [ -z "$min_len" ] || [ "$min_len" -eq 0 ]; }; th
   min_len=$((${#expect_prefix} + 1))
 fi
 
-fail() { # $1=message (category only — caller must never pass value bytes)
+fail() { # $1=message (category only - caller must never pass value bytes)
   echo "MALFORMED: $1"
   exit 1
 }
@@ -69,7 +69,7 @@ fail() { # $1=message (category only — caller must never pass value bytes)
 # Command substitution strips ALL trailing newlines, which would HIDE a trailing-whitespace
 # defect (the exact class this gate exists to catch). The sentinel trick defeats that: append a
 # known non-newline byte ('x') inside the substitution, then strip exactly that one trailing byte
-# afterward — any trailing newline(s) that were part of the real value survive in between.
+# afterward - any trailing newline(s) that were part of the real value survive in between.
 status_marker="___CHECK_SECRET_BYTES_STATUS:"
 if [ -n "$ref" ]; then
   if ! command -v op >/dev/null 2>&1; then
@@ -77,10 +77,10 @@ if [ -n "$ref" ]; then
     exit 2
   fi
   # A plain `val="$(op read ...; printf x)"` would capture printf's exit status (always 0), not
-  # op read's — masking a failed read as an empty/malformed value instead of an ERROR. So op
+  # op read's - masking a failed read as an empty/malformed value instead of an ERROR. So op
   # read's own $? is appended as a status marker in the SAME substitution as the sentinel (both
   # must be in one substitution, since a second, separate substitution would strip the real
-  # value's trailing newline before the sentinel ever sees it — destroying the exact defect this
+  # value's trailing newline before the sentinel ever sees it - destroying the exact defect this
   # gate exists to catch).
   raw="$(op read "$ref" 2>/dev/null; printf '%s%d' "$status_marker" "$?"; printf x)"
   raw="${raw%x}"
@@ -113,7 +113,7 @@ case "$val" in
 esac
 
 # 3. quote at either end: a real secret never starts or ends with a " or ' byte. Fail if
-#    EITHER side is a quote, not only when both sides match the same quote character — a
+#    EITHER side is a quote, not only when both sides match the same quote character - a
 #    single leading quote (or a mismatched pair) is just as much evidence of a stored quoted
 #    literal, and the both-must-match form let it through.
 first_char="${val:0:1}"

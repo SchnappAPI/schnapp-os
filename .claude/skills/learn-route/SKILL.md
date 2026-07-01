@@ -21,7 +21,7 @@ Follow the "On-correction update" routing in [docs/memory-lane.md](../../../docs
   [`rules/global/`](../../../rules/global/) (add a new file only if there is no home;
   never duplicate an existing rule).
 - **Durable fact** (a value, name, or location that must be remembered across sessions) →
-  `memory/` supersede: write the corrected fact, set `source: correction`, set today's `updated:`,
+  the vault memory lane (`~/code/schnapp-vault/memory/`) supersede: write the corrected fact, set `source: correction`, set today's `updated:`,
   mark the old fact as superseded.
 - **Stale doc or stale claim** → fix the doc in the same change.
 

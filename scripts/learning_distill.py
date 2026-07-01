@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""learning_distill.py — Agent-SDK distillation step for the nightly learning loop.
+"""learning_distill.py - Agent-SDK distillation step for the nightly learning loop.
 
 Replaces the `claude -p --dangerously-skip-permissions` shell-out in learning-worker.sh with a
 bounded, file-scoped Claude Agent SDK run (ADR 0016 / agentic-OS Phase 4). It reads the local
 capture queue, has a headless Claude Agent SDK session distill+classify each correction
-(learn-route), and EDITS the target .md in the working tree. It does NOT git/commit/push/gate —
+(learn-route), and EDITS the target .md in the working tree. It does NOT git/commit/push/gate;
 learning-worker.sh does that deterministically around this call (the LLM never touches git).
 
 Safety vs the old `claude -p --dangerously-skip-permissions`:

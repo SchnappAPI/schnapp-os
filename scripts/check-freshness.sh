@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# check-freshness.sh — documentation freshness gate. Runs in CI
+# check-freshness.sh - documentation freshness gate. Runs in CI
 # (.github/workflows/freshness.yml) and locally (pre-push). Two checks:
 #
-#   (1) Generated docs — regenerate and FAIL if the committed copy is stale (a component file
+#   (1) Generated docs - regenerate and FAIL if the committed copy is stale (a component file
 #       changed but the generator was not re-run). Today: CATALOG.md, handoffs/README.md.
 #
-#   (2) last-verified docs — a doc opts in with frontmatter:
+#   (2) last-verified docs - a doc opts in with frontmatter:
 #           last-verified: 2026-06-05
 #           sources:
 #             - relative/path/to/source
@@ -84,7 +84,7 @@ while IFS= read -r doc; do
     fi
     sdate="$(git log -1 --format=%cs -- "$src" 2>/dev/null || true)"
     if [ -n "$sdate" ] && [[ "$sdate" > "$lv" ]]; then
-      echo "STALE: $doc is last-verified $lv but source $src changed $sdate — re-verify and bump last-verified" >&2
+      echo "STALE: $doc is last-verified $lv but source $src changed $sdate - re-verify and bump last-verified" >&2
       fail=1
     fi
   done < <(fm_list "$doc" sources)

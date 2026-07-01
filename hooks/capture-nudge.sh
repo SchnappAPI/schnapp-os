@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# capture-nudge.sh — UserPromptSubmit. The learning loop's CAPTURE trigger (correction half).
+# capture-nudge.sh - UserPromptSubmit. The learning loop's CAPTURE trigger (correction half).
 #
 # Why: the routing procedures already exist (docs/memory-lane.md "On-correction update": behavioral->rule,
-# fact->memory-supersede, stale-doc->doc-fix). What was missing is the TRIGGER — capture relied on
+# fact->memory-supersede, stale-doc->doc-fix). What was missing is the TRIGGER - capture relied on
 # the agent remembering, so corrections got fixed locally and lost by the next session (the exact
 # "fixes don't stick" failure). This fires capture at the moment a correction arrives.
 #
 # Deterministic + fast: a single grep over stdin, no interpreter spawn. Non-blocking; always exits 0
-# (UserPromptSubmit exit 2 would suppress the prompt — never do that here). Stdout is injected into
+# (UserPromptSubmit exit 2 would suppress the prompt - never do that here). Stdout is injected into
 # the session context by Claude Code, so the nudge primes routing as the agent answers.
 #
 # Precision over recall: high-confidence correction phrases only. Missed-but-real corrections are
@@ -29,7 +29,7 @@ if printf '%s' "$INPUT" | grep -qiE "you'?re wrong|that'?s wrong|that is wrong|i
   - durable fact (a value/name/where) -> the vault memory lane (supersede the old fact; source: correction; today's updated:)
   - stale doc or claim -> fix the doc in the SAME change
   Route via the learn-route skill. In-session: edit the rule/fact + commit straight to main (no
-  branches — owner pref 2026-06-27 / ADR 0016). The nightly learning-worker gates its OWN autonomous
+  branches - owner pref 2026-06-27 / ADR 0016). The nightly learning-worker gates its OWN autonomous
   proposals (learning-gate.sh): clean ones land on main, held ones become a review issue.
   If the lesson maps to an existing rule, the fix is adherence, not a new file.
 EOF

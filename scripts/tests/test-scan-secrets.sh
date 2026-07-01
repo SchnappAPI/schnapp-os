@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# test-scan-secrets.sh — proves scan-secrets.sh catches every leaked value class.
+# test-scan-secrets.sh - proves scan-secrets.sh catches every leaked value class.
 #
 # RED (the gap this closes): the reused opensource-sanitizer pattern lib has NO rule for the
-# 1Password SA token (ops_…) or the Anthropic/Claude keys (sk-ant-…) — the exact master-token
+# 1Password SA token (ops_…) or the Anthropic/Claude keys (sk-ant-…) - the exact master-token
 # classes that leaked 2026-06-17. A naive reuse would pass them through. This test asserts the
 # scanner BLOCKs them (GREEN), plus the rest of the registry, and that op:// pointers are skipped.
 set -uo pipefail

@@ -27,7 +27,7 @@ If ambiguous, probe (try a read-only `ls`/shell; list MCP tools) or ask. Read th
 | Capability | How to check |
 |---|---|
 | Global rules | Are the [`rules/global/`](../../../rules/global/) rules in context this session? |
-| Memory lane | Is the global `memory/` lane present and is `autoMemoryDirectory` honored (trust dialog accepted)? |
+| Memory lane | Is the vault memory lane (`~/code/schnapp-vault/memory/`) present and is `autoMemoryDirectory` honored (trust dialog accepted)? |
 | Credentials | Does a secret resolve? `op_health` on the 1Password connector, or `op whoami` on Code. |
 | Connectors/MCP | List available MCP tools; compare to the profile (1Password, GitHub, Mac ops, context7, cloudflare). |
 | Hooks | Code/Cowork only: is the SessionStart sync + any Part-7 hooks active? (claude.ai/iPhone: never.) |
