@@ -37,7 +37,10 @@ root="$(mktemp -d)"; trap 'rm -rf "$root"' EXIT
 origin="$root/origin.git"
 work="$root/work"
 export GIT_CONFIG_GLOBAL="$root/.gitconfig"
-git init -q --bare "$origin"
+# -b main on every bare init: without it the bare HEAD points at the host default branch
+# (master on CI), the seeded refs/heads/main never becomes HEAD, and fresh clones check out an
+# unborn branch (broke case 1 on ubuntu CI while passing on the Mac's git).
+git init -q --bare -b main "$origin"
 git clone -q "$origin" "$work" 2>/dev/null
 git -C "$work" config user.email test@example.com
 git -C "$work" config user.name  test
@@ -59,7 +62,7 @@ git -C "$work" branch -q -M main 2>/dev/null || true
 # --- vault side: bare origin seeded with an index, one schema'd fact, and a stub schema checker ------
 vault_origin="$root/vault-origin.git"
 vseed="$root/vault-seed"
-git init -q --bare "$vault_origin"
+git init -q --bare -b main "$vault_origin"
 git clone -q "$vault_origin" "$vseed" 2>/dev/null
 git -C "$vseed" config user.email test@example.com
 git -C "$vseed" config user.name  test
@@ -210,7 +213,6 @@ else echo "FAIL fact-ok: vault main did not advance" >&2; fail=$((fail+1)); fi
 check "$(git -C "$vclone" show --name-only --format= "$v_after" 2>/dev/null | grep -c 'memory/sql-port.md')" 1 \
   "fact-ok: landed commit touches the fact file"
 check "$(git -C "$vclone" status --porcelain 2>/dev/null | grep -c .)" 0 "fact-ok: clone left clean"
-git -C "$vlive" rev-parse HEAD >/dev/null 2>&1
 check "$(git -C "$vlive" rev-parse HEAD)" "$v_after" "fact-ok: live vault tree ff-pulled to the landed fact"
 check "$(git -C "$work" rev-parse origin/main)" "$os_main_before" "fact-ok: schnapp-os main untouched"
 check "$([ -s "$root/q-c1.tsv" ] && echo nonempty || echo empty)" "empty" "fact-ok: queue drained"

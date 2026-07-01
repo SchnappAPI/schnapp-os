@@ -35,7 +35,9 @@ root="$(mktemp -d)"; trap 'rm -rf "$root"' EXIT
 origin="$root/origin.git"
 work="$root/work"
 export GIT_CONFIG_GLOBAL="$root/.gitconfig"    # isolate from the user's real git identity/hooks
-git init -q --bare "$origin"
+# -b main: pin the bare HEAD so clones are deterministic across host git defaults (see the
+# vault-live harness for the CI failure this prevents).
+git init -q --bare -b main "$origin"
 git clone -q "$origin" "$work" 2>/dev/null   # 2>/dev/null: silence the benign empty-repo clone notice
 git -C "$work" config user.email test@example.com
 git -C "$work" config user.name  test
@@ -93,7 +95,7 @@ WORKER="$work/scripts/learning-worker.sh"
 # clone prep off the network (every remote local). Fact-leg behavior: test-learning-worker-vault-live.sh.
 vault_origin="$root/vault-origin.git"
 vseed="$root/vault-seed"
-git init -q --bare "$vault_origin"
+git init -q --bare -b main "$vault_origin"
 git clone -q "$vault_origin" "$vseed" 2>/dev/null
 git -C "$vseed" config user.email test@example.com
 git -C "$vseed" config user.name  test

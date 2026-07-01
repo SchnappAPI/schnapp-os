@@ -217,8 +217,11 @@ if [ -d "$VAULT_DIR/.git" ]; then
       && git -C "$VAULT_DIR" reset -q --hard origin/main \
       && git -C "$VAULT_DIR" clean -qfd; } 2>/dev/null || vault_prep_ok=false
 else
+  # Explicit checkout after clone: never trust the remote's HEAD to be main (a host/remote
+  # default-branch mismatch would leave the fresh clone on an unborn branch).
   { mkdir -p "$(dirname "$VAULT_DIR")" \
-      && git clone -q "$VAULT_REMOTE" "$VAULT_DIR"; } 2>/dev/null || vault_prep_ok=false
+      && git clone -q "$VAULT_REMOTE" "$VAULT_DIR" \
+      && git -C "$VAULT_DIR" checkout -qf main; } 2>/dev/null || vault_prep_ok=false
 fi
 if ! $vault_prep_ok; then
   echo "learning-worker: ERROR - vault clone prep failed ('$VAULT_DIR' from '$VAULT_REMOTE'); aborting (queue preserved)." >&2
