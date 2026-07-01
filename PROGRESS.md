@@ -143,3 +143,8 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   passes 12/12. Scaffolded `areas/knowledge/reviews` (`.gitkeep`). MEMORY.md index regenerated,
   README slimmed to point at `agents.md`. Fixed 4 cross-repo `../` links (§10) to path-free plain
   text. schnapp-os `memory/` LEFT LIVE (memory-mcp still serves it until task 8 repoint).
+- 2026-07-01 Phase 1 task 6 DONE (vault `3137688`): wired `vault-freshness.yml` CI gate — runs
+  `check-frontmatter.sh` over `memory/` on push/PR (path-scoped, read-only perms). Real GitHub
+  Actions run `28496925200` concluded SUCCESS on the good tree; bad-fact fail-path proven locally.
+  The surface-independent enforcement point (spec §3.6) is live. **VAULT BUILD (tasks 1-6) COMPLETE.**
+  Next: Gate 2 (OneDrive exit) + Gate 3 (repoint) — owner-confirm.
