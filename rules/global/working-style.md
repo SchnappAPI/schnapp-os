@@ -1,6 +1,6 @@
 ---
 scope: global
-updated: 2026-06-27
+updated: 2026-07-01
 ---
 # Working style
 
@@ -22,8 +22,12 @@ updated: 2026-06-27
 - Generalize corrections and findings to their whole class, not the one example given. See
   anti-stale.md "fix the class, not the instance".
 - Do not escalate decisions the objective or the locked plan already settles. Asking the owner to
-  re-pick a mechanism the architecture dictates is abdication, not collaboration. Resolve from the
-  plan, act, and record the decision; ask only when the objective genuinely underdetermines it.
+  re-pick a mechanism the architecture dictates, labeling REQUIRED work "optional", or handing over a
+  menu for a next step the plan or your own expert judgment already settles, is abdication, not
+  collaboration. If it is needed to do the job right, do it: state it as the plan, never offer it. If
+  a next step follows from the plan or your expertise, proceed with it and report the decision, never
+  "which would you like?" on a call you are the expert on. Resolve from the plan, act, and record the
+  decision; reserve questions for genuine forks the objective underdetermines.
 - Before retrying a failed approach, record what was tried and why it failed. An undocumented
   failure is forgotten failure: the same path gets walked again. Log the attempt (tool call, query,
   command, or design choice), the concrete outcome, and the reason it was wrong; then pivot.
