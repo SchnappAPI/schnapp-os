@@ -160,3 +160,10 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   Sweep = ZERO live OneDrive hardcodes. OneDrive + `~/code/obsidian-vault` left as cold backups
   (nothing deleted). PENDING for Gate 3: memory-mcp Render `MEMORY_REPO`→schnapp-vault (owner) + remove
   `schnapp-os/memory/` (task 9). ADR consolidated at task 10.
+- 2026-07-01 Phase 1 GATE 3 (task 8) DONE + VERIFIED: memory-mcp (Render `memory-mcp-rtad`) repointed
+  `MEMORY_REPO` `SchnappAPI/schnapp-os` → `SchnappAPI/schnapp-vault` (owner). Fine-grained PAT
+  `SCHNAPP_OS_PAT` (Render env `GITHUB_TOKEN`) granted Contents R/W on the private schnapp-vault (was
+  schnapp-os-only → "Directory not found" until fixed). `memory_health` = authenticated,
+  repo=SchnappAPI/schnapp-vault, 14 files; `memory_read obsidian-state` returns the normalized
+  flat-schema fact. ALL 3 gates + all consumers now on the vault. Remaining: task 9 (relocate memory
+  procedures + retarget refs + repoint hooks + `git rm schnapp-os/memory/`), task 10 (ADR + trackers).
