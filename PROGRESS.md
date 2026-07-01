@@ -148,3 +148,15 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   Actions run `28496925200` concluded SUCCESS on the good tree; bad-fact fail-path proven locally.
   The surface-independent enforcement point (spec §3.6) is live. **VAULT BUILD (tasks 1-6) COMPLETE.**
   Next: Gate 2 (OneDrive exit) + Gate 3 (repoint) — owner-confirm.
+- 2026-07-01 Phase 1 GATE 2 (task 7) DONE + task 8 local parts DONE, per the verified gate-2 spec
+  (`docs/superpowers/plans/2026-07-01-gate-2-onedrive-exit.md`). Owner-confirmed; Obsidian closed for
+  the cutover. Repointed all 7 live OneDrive consumers: obsidian-mcp `connectors/obsidian-mcp/server.py`
+  (schnapp-os `6ca6bae`, main checkout ff'd so the live symlink target updated), Brain Agent
+  `inbox_watcher.py`+`brain_agent.py` → dynamic `parents[2]` (vault `521e6c9`),
+  `com.schnapp.brain-watcher.plist` (ProgramArguments+WorkingDirectory), the `~/Documents/Obsidian`
+  symlink → `~/code/schnapp-vault`, `obsidian-state` fact superseded (vault `9bd1756`), schnapp-bet
+  `CONNECTIONS.md` (`37b07b0`). Stopped→repointed→reloaded both launchd services; brain-watcher logs
+  `Watching: ~/code/schnapp-vault/Inbox`, obsidian-mcp up on :8767. vault CI green on the memory edit.
+  Sweep = ZERO live OneDrive hardcodes. OneDrive + `~/code/obsidian-vault` left as cold backups
+  (nothing deleted). PENDING for Gate 3: memory-mcp Render `MEMORY_REPO`→schnapp-vault (owner) + remove
+  `schnapp-os/memory/` (task 9). ADR consolidated at task 10.
