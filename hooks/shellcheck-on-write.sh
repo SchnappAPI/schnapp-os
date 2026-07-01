@@ -4,7 +4,7 @@
 #  keyword is read as an in-file directive and self-errors with SC1072/SC1073.)
 #
 # Lints each *.sh file the agent Writes/Edits, the moment it is written. The repo's bash surface
-# (session hooks + the plugins/core/scripts/ guards) gates every session; a quoting or word-split
+# (session hooks + the scripts/ guards) gates every session; a quoting or word-split
 # bug there silently breaks a gate (e.g. the op-wrap quote bug crash-looped 6 services —
 # memory/op-wrap-token-unquoted.md). Catch it at edit time, not at the next failed run.
 #

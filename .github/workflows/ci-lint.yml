@@ -8,4 +8,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: memory frontmatter provenance
-        run: bash plugins/core/scripts/check-memory-frontmatter.sh memory
+        run: bash scripts/check-memory-frontmatter.sh memory

@@ -5,10 +5,10 @@ pass=0; fail=0
 check(){ if [ "$1" = "$2" ]; then pass=$((pass+1)); else echo "FAIL: $3 (got '$1' want '$2')"; fail=$((fail+1)); fi; }
 
 tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT
-R="$tmp/plugins/core/rules/global/working-style.md"
+R="$tmp/rules/global/working-style.md"
 git -C "$tmp" init -q -b main
 git -C "$tmp" config user.email t@t; git -C "$tmp" config user.name t
-mkdir -p "$tmp/plugins/core/rules/global" "$tmp/memory" "$tmp/docs"
+mkdir -p "$tmp/rules/global" "$tmp/memory" "$tmp/docs"
 base_body='- existing rule one about being concise and clear in all communications always here.'
 write_rule(){ printf -- '---\nscope: global\nupdated: %s\n---\n# Working style\n\n%s\n' "$1" "$2" > "$R"; }
 write_rule 2026-06-01 "$base_body"
@@ -51,14 +51,14 @@ check "$(printf '%s' "$out" | grep -c 'duplicate content')" 1 "names duplication
 
 # 6. BYPASS: symlink (even named .md) -> HOLD
 reset
-ln -s "../../../../.github/workflows/freshness.yml" "$tmp/plugins/core/rules/global/evil.md"
+ln -s "../../.github/workflows/freshness.yml" "$tmp/rules/global/evil.md"
 git -C "$tmp" add -A; git -C "$tmp" commit -qm "se symlink"
 out="$(gate 2>&1)"; check "$?" 1 "symlink -> HOLD"
 check "$(printf '%s' "$out" | grep -c 'symlink not allowed')" 1 "names symlink"
 
 # 7. BYPASS: non-.md file inside an allowed dir -> HOLD
 reset
-printf '#!/bin/sh\necho hi\n' > "$tmp/plugins/core/rules/global/evil.sh"
+printf '#!/bin/sh\necho hi\n' > "$tmp/rules/global/evil.sh"
 git -C "$tmp" add -A; git -C "$tmp" commit -qm "se script"
 out="$(gate 2>&1)"; check "$?" 1 "non-.md in allowed dir -> HOLD"
 check "$(printf '%s' "$out" | grep -c 'non-.md')" 1 "names non-md"

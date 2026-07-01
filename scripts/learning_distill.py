@@ -28,7 +28,7 @@ import os
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[1]  # scripts/ -> repo root
 QUEUE = Path(os.environ.get("LEARNING_QUEUE", REPO_ROOT / "scheduled-tasks" / ".learning-queue.tsv"))
 MAX_TURNS = int(os.environ.get("LEARNING_DISTILL_MAX_TURNS", "40"))
 TIMEOUT_S = int(os.environ.get("LEARNING_DISTILL_TIMEOUT_S", "900"))
@@ -38,8 +38,8 @@ MODEL = os.environ.get("LEARNING_DISTILL_MODEL") or None
 SYSTEM_PROMPT = """You are the nightly learning worker for this repo (scheduled-tasks/memory-consolidation.md).
 
 For each queued correction below: distill it to a reusable principle and classify it with the
-learn-route procedure (plugins/core/skills/learn-route/SKILL.md):
-  - behavioral / how-to-work principle -> sharpen the EXISTING rule in plugins/core/rules/global/
+learn-route procedure (.claude/skills/learn-route/SKILL.md):
+  - behavioral / how-to-work principle -> sharpen the EXISTING rule in rules/global/
   - durable fact -> supersede in memory/ (one fact, one file; bump updated:, source: correction)
   - mechanical / already-covered / duplicate -> make NO change and say so
 
@@ -48,7 +48,7 @@ to today's date. Do NOT create a branch, commit, open a PR, or run any git/shell
 the edited .md in the working tree. The worker gates the diff and commits clean changes to main itself.
 
 DEDUPE first: if the principle is already present in the target file (or anywhere under rules/memory),
-make NO change. Keep each edit SMALL and IN-SCOPE -- only .md files under plugins/core/rules/ or
+make NO change. Keep each edit SMALL and IN-SCOPE -- only .md files under rules/ or
 memory/. Never touch code, CI, or anything else."""
 
 

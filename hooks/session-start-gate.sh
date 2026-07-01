@@ -61,18 +61,18 @@ fi
 
 # 3. Memory freshness scan (deterministic signals; reasoning stays the agent's per docs/memory-lane.md).
 #    The global memory lane lives in the vault (SchnappAPI/schnapp-vault), not schnapp-os; scan it there.
-#    Detection logic + its unit test live in plugins/core/scripts/check-supersede-orphans.sh so the
+#    Detection logic + its unit test live in scripts/check-supersede-orphans.sh so the
 #    column-0-vs-indented-frontmatter bug (which made this a silent no-op) cannot regress unnoticed.
 MEM="$HOME/code/schnapp-vault/memory"
 if [ -d "$MEM" ]; then
-  orphans="$(bash "$REPO/plugins/core/scripts/check-supersede-orphans.sh" "$MEM" 2>/dev/null)"
+  orphans="$(bash "$REPO/scripts/check-supersede-orphans.sh" "$MEM" 2>/dev/null)"
   if [ -n "$orphans" ]; then
     echo "[memory] SUPERSEDE-ORPHANS — replace/remove the old fact (supersede-not-append):"
     printf '%s\n' "$orphans" | sed 's/^/        - /'
   else
     echo "[memory] no supersede-orphans"
   fi
-  stale="$(bash "$REPO/plugins/core/scripts/check-stale-facts.sh" "$MEM" 2>/dev/null \
+  stale="$(bash "$REPO/scripts/check-stale-facts.sh" "$MEM" 2>/dev/null \
             | grep -v '^memory freshness OK')"
   if [ -n "$stale" ]; then
     echo "[memory] STALE FACTS — review/refresh (read-only flag; supersede-not-append):"

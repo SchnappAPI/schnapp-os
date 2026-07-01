@@ -7,7 +7,7 @@
 # here is "holds too much" (safe), never "merges junk".
 #
 # APPROVED only when ALL hold:
-#   1. SCOPE      — every changed file is a `.md` UNDER plugins/core/rules/ or memory/, and NOT a
+#   1. SCOPE      — every changed file is a `.md` UNDER rules/ or memory/, and NOT a
 #                   symlink (a symlink could alias an out-of-scope path such as a CI workflow).
 #   2. SIZE       — total added lines <= LEARNING_GATE_MAX_ADDED (default 40); no binary change
 #                   (binary can't be size-checked); big rewrites need eyes.
@@ -36,8 +36,8 @@ while IFS= read -r f; do
   mode="$(git ls-tree HEAD -- "$f" 2>/dev/null | awk '{print $1}')"
   if [ "$mode" = "120000" ]; then reasons+=("symlink not allowed: $f"); continue; fi
   case "$f" in
-    plugins/core/rules/*.md|memory/*.md) : ;;
-    *) reasons+=("out-of-scope or non-.md file: $f (only .md under plugins/core/rules/ or memory/ may auto-land)") ;;
+    rules/*.md|memory/*.md) : ;;
+    *) reasons+=("out-of-scope or non-.md file: $f (only .md under rules/ or memory/ may auto-land)") ;;
   esac
 done <<< "$files"
 
@@ -54,7 +54,7 @@ fi
 tmpA="$(mktemp)"; tmpB="$(mktemp)"; trap 'rm -f "$tmpA" "$tmpB"' EXIT
 while IFS= read -r f; do
   [ -n "$f" ] || continue
-  case "$f" in plugins/core/rules/*.md|memory/*.md) : ;; *) continue ;; esac
+  case "$f" in rules/*.md|memory/*.md) : ;; *) continue ;; esac
   git show "$BASE:$f" > "$tmpA" 2>/dev/null || : > "$tmpA"
   [ -s "$tmpA" ] || continue   # new file — no prior updated: to bump
   git show "HEAD:$f" > "$tmpB" 2>/dev/null || : > "$tmpB"
@@ -66,7 +66,7 @@ done <<< "$files"
 # 4. NO IN-FILE DUP — added content not already present in the base file.
 while IFS= read -r f; do
   [ -n "$f" ] || continue
-  case "$f" in plugins/core/rules/*.md|memory/*.md) : ;; *) continue ;; esac
+  case "$f" in rules/*.md|memory/*.md) : ;; *) continue ;; esac
   base_lc="$(git show "$BASE:$f" 2>/dev/null | tr 'A-Z' 'a-z' || true)"
   [ -n "$base_lc" ] || continue
   while IFS= read -r line; do

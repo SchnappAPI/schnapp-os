@@ -8,7 +8,7 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>__REPO__/plugins/core/scripts/check-infra-health.sh</string>
+        <string>__REPO__/scripts/check-infra-health.sh</string>
     </array>
 
     <!-- Run from the repo root (the probe reads no repo state, but keeps logs/relative paths sane). -->

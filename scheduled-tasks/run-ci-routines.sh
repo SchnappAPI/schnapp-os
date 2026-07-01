@@ -25,7 +25,7 @@ echo
 echo "## Doc-freshness sweep"
 echo
 echo '```'
-if bash plugins/core/scripts/check-freshness.sh 2>&1; then
+if bash scripts/check-freshness.sh 2>&1; then
   echo '```'
   echo
   echo "**Result: OK** — generated docs current."
@@ -33,9 +33,9 @@ else
   rc=1
   echo '```'
   echo
-  echo "**Result: DRIFT (gate failed)** — a source under \`plugins/core/\` changed without"
+  echo "**Result: DRIFT (gate failed)** — a component/source file changed without"
   echo "regenerating \`CATALOG.md\`, or a \`last-verified:\` doc is stale. Fix: re-run"
-  echo "\`plugins/core/scripts/gen-catalog.sh\`, commit, in an approved session."
+  echo "\`scripts/gen-catalog.sh\`, commit, in an approved session."
 fi
 echo
 
@@ -92,7 +92,7 @@ echo
 echo "## Memory freshness sweep"
 echo
 echo '```'
-bash plugins/core/scripts/check-stale-facts.sh memory 2>&1 || true
+bash scripts/check-stale-facts.sh memory 2>&1 || true
 echo '```'
 echo
 echo "_Read-only: flags facts crossing 7/30/90-day \`updated:\` thresholds. Refresh via supersede"
@@ -103,7 +103,7 @@ echo
 echo "## Learning-loop eval"
 echo
 echo '```'
-bash plugins/core/scripts/learning-eval.sh 2>&1 || true
+bash scripts/learning-eval.sh 2>&1 || true
 echo '```'
 echo
 echo "_Read-only: flags corrections that recurred after promotion (the rule may not have stuck) —"

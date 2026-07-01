@@ -28,7 +28,7 @@ set -uo pipefail
 DRY_RUN=false
 for arg in "$@"; do [ "$arg" = "--dry-run" ] && DRY_RUN=true; done
 
-REPO_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 Q="${LEARNING_QUEUE:-"$REPO_ROOT/scheduled-tasks/.learning-queue.tsv"}"
 A="${LEARNING_ARCHIVE:-"${Q%.tsv}.archive.tsv"}"
 
@@ -36,7 +36,7 @@ A="${LEARNING_ARCHIVE:-"${Q%.tsv}.archive.tsv"}"
 # ntfy). Detection stays in this caller; the alert layer must NEVER break the worker, hence `|| true`.
 # No-op under --dry-run. Closes the silent-swallow gap: a failed claude run used to exit non-zero with
 # no signal off the Mac.
-alert() { $DRY_RUN && return 0; "$REPO_ROOT/plugins/core/scripts/ops-alert.sh" "$@" >/dev/null 2>&1 || true; }
+alert() { $DRY_RUN && return 0; "$REPO_ROOT/scripts/ops-alert.sh" "$@" >/dev/null 2>&1 || true; }
 
 if [ ! -f "$Q" ] || [ ! -s "$Q" ]; then
   echo "learning-worker: queue empty — nothing to consolidate"
@@ -113,7 +113,7 @@ git reset -q --hard origin/main 2>/dev/null || true
 echo "learning-worker: processing $(wc -l < "$Q" | tr -d ' ') capture(s) via Agent SDK (learning_distill.py) ..."
 # Bounded, file-scoped Agent SDK distillation (no Bash/git/network). The worker gates+commits the diff.
 export LEARNING_QUEUE="$Q"
-DISTILL_PY="$REPO_ROOT/plugins/core/scripts/learning_distill.py"
+DISTILL_PY="$REPO_ROOT/scripts/learning_distill.py"
 DISTILL_PYTHON="${LEARNING_DISTILL_PYTHON:-$HOME/.venvs/learning-distill/bin/python}"
 [ -x "$DISTILL_PYTHON" ] || DISTILL_PYTHON="$(command -v python3)"
 if ! "$DISTILL_PYTHON" "$DISTILL_PY"; then
@@ -129,7 +129,7 @@ else
   git add -A
   git commit -q -m "self-edit: learning-loop promotion $(date -u +%F)"
   gate_out="$(mktemp)"
-  if bash "$REPO_ROOT/plugins/core/scripts/learning-gate.sh" origin/main > "$gate_out" 2>&1; then
+  if bash "$REPO_ROOT/scripts/learning-gate.sh" origin/main > "$gate_out" 2>&1; then
     if git push -q origin HEAD:main 2>/dev/null; then
       echo "learning-worker: PROMOTED a clean self-edit to main."
     else

@@ -11,7 +11,7 @@
 set -uo pipefail
 export LC_ALL=C
 
-REPO="${CLAUDE_KIT_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}"
+REPO="${CLAUDE_KIT_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 cd "$REPO" || { echo "FATAL: repo not found: $REPO" >&2; exit 2; }
 strict=0; [ "${1:-}" = "--strict" ] && strict=1
 map="credentials-map.md"

@@ -1,7 +1,7 @@
 name: freshness
 
 # Freshness + secrets gate. Fails the push/PR on any of:
-#  - a generated doc is out of date (a source under plugins/core/ changed but the generator was
+#  - a generated doc is out of date (a component/source file changed but the generator was
 #    not re-run), or a `last-verified:` doc points at a source that changed after its date;
 #  - a literal secret value appears in a tracked file (scan-secrets.sh — the leak guard);
 #  - the secret scanner regresses (its fixture self-test fails);
@@ -24,43 +24,43 @@ jobs:
           fetch-depth: 0   # full history so last-verified source-date checks can read git log
 
       - name: Documentation freshness gate
-        run: bash plugins/core/scripts/check-freshness.sh
+        run: bash scripts/check-freshness.sh
 
       - name: Secret scanner self-test
-        run: bash plugins/core/scripts/tests/test-scan-secrets.sh
+        run: bash scripts/tests/test-scan-secrets.sh
 
       - name: Supersede-orphan detector self-test
-        run: bash plugins/core/scripts/tests/test-supersede-orphans.sh
+        run: bash scripts/tests/test-supersede-orphans.sh
 
       - name: Frontmatter lib self-test
-        run: bash plugins/core/scripts/tests/test-lib-frontmatter.sh
+        run: bash scripts/tests/test-lib-frontmatter.sh
 
       - name: Memory frontmatter detector self-test
-        run: bash plugins/core/scripts/tests/test-memory-frontmatter.sh
+        run: bash scripts/tests/test-memory-frontmatter.sh
 
       - name: Stale-facts detector self-test
-        run: bash plugins/core/scripts/tests/test-stale-facts.sh
+        run: bash scripts/tests/test-stale-facts.sh
 
       - name: Capture-enqueue self-test
-        run: bash plugins/core/scripts/tests/test-capture-enqueue.sh
+        run: bash scripts/tests/test-capture-enqueue.sh
 
       - name: Learning-worker self-test
-        run: bash plugins/core/scripts/tests/test-learning-worker.sh
+        run: bash scripts/tests/test-learning-worker.sh
 
       - name: Learning-eval self-test
-        run: bash plugins/core/scripts/tests/test-learning-eval.sh
+        run: bash scripts/tests/test-learning-eval.sh
 
       - name: Learning-gate self-test
-        run: bash plugins/core/scripts/tests/test-learning-gate.sh
+        run: bash scripts/tests/test-learning-gate.sh
 
       - name: Infra-health probe self-test
-        run: bash plugins/core/scripts/tests/test-infra-health.sh
+        run: bash scripts/tests/test-infra-health.sh
 
       - name: LaunchAgent plists are valid
         run: python3 -c "import plistlib; [plistlib.load(open(p,'rb')) for p in ['scheduled-tasks/com.schnapp.memory-consolidation.plist','scheduled-tasks/com.schnapp.infra-health.plist']]; print('plists OK')"
 
       - name: Secret scan (no literal values in tracked files)
-        run: bash plugins/core/scripts/scan-secrets.sh --exclude 'plugins/core/scripts/tests/*'
+        run: bash scripts/scan-secrets.sh --exclude 'scripts/tests/*'
 
       - name: op:// reference check
-        run: bash plugins/core/scripts/check-op-refs.sh
+        run: bash scripts/check-op-refs.sh

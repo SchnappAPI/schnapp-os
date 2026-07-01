@@ -1,4 +1,0 @@
-{
-  "description": "No hooks are delivered via the plugin anymore. Per decision 0011 #2 (plainer repo, drop plugin-packaging reliance), all schnapp-os hooks are wired directly in this repo's .claude/settings.json against live ${CLAUDE_PROJECT_DIR} paths — SessionStart freshness gate (session-start-gate.sh), Stop push-gate (session-stop-push-gate.sh), and SessionEnd backup (session-end-backup.sh). Plugin snapshot delivery was unreliable: installed_plugins.json pinned old commits and referenced cleaned cache paths, so a stale claude-kit-era gate fired. Project-settings delivery reads the live file every session — no snapshot drift. The hook SCRIPTS still live here in plugins/core/hooks/ and are the canonical source; only the wiring moved. (This file is kept as a record; it intentionally declares no hooks.)",
-  "hooks": {}
-}

@@ -53,7 +53,7 @@ cat > "$ARCHIVE/README.md" <<EOF
 # claude-archive (generated — do not edit)
 
 OneDrive-synced, Obsidian-mirrored backup of the schnapp-os knowledge base.
-Refreshed by \`plugins/core/scripts/backup-archive.sh\`. The live source of truth
+Refreshed by \`scripts/backup-archive.sh\`. The live source of truth
 is the git repo; this is a browsable, cross-device copy.
 
 - \`repo/handoffs/\` — session handoffs

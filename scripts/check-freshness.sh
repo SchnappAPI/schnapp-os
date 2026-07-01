@@ -2,8 +2,8 @@
 # check-freshness.sh — documentation freshness gate (PLAN.md Part 9.3). Runs in CI
 # (.github/workflows/freshness.yml) and locally (pre-push). Two checks:
 #
-#   (1) Generated docs — regenerate and FAIL if the committed copy is stale (a source under
-#       plugins/core/ changed but the generator was not re-run). Today: plugins/core/CATALOG.md.
+#   (1) Generated docs — regenerate and FAIL if the committed copy is stale (a component file
+#       changed but the generator was not re-run). Today: CATALOG.md.
 #
 #   (2) last-verified docs — a doc opts in with frontmatter:
 #           last-verified: 2026-06-05
@@ -16,7 +16,7 @@
 set -uo pipefail
 export LC_ALL=C
 
-REPO="${CLAUDE_KIT_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}"
+REPO="${CLAUDE_KIT_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 cd "$REPO" || { echo "FATAL: repo not found: $REPO" >&2; exit 2; }
 fail=0
 
@@ -36,14 +36,14 @@ echo "== freshness check =="
 
 # (1) generated docs ----------------------------------------------------------
 tmp="$(mktemp)"
-if bash plugins/core/scripts/gen-catalog.sh "$tmp" >/dev/null 2>&1; then
-  if diff -q "$tmp" plugins/core/CATALOG.md >/dev/null 2>&1; then
-    echo "ok: plugins/core/CATALOG.md is current"
+if bash scripts/gen-catalog.sh "$tmp" >/dev/null 2>&1; then
+  if diff -q "$tmp" CATALOG.md >/dev/null 2>&1; then
+    echo "ok: CATALOG.md is current"
   else
-    echo "STALE generated doc: plugins/core/CATALOG.md" >&2
-    echo "  fix: bash plugins/core/scripts/gen-catalog.sh  (then commit plugins/core/CATALOG.md)" >&2
+    echo "STALE generated doc: CATALOG.md" >&2
+    echo "  fix: bash scripts/gen-catalog.sh  (then commit CATALOG.md)" >&2
     echo "  --- committed (<) vs regenerated (>): ---" >&2
-    diff plugins/core/CATALOG.md "$tmp" | sed 's/^/    /' >&2 || true
+    diff CATALOG.md "$tmp" | sed 's/^/    /' >&2 || true
     fail=1
   fi
 else

@@ -193,3 +193,6 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   green, obsidian-mcp + Brain Agent + memory-mcp all serve the vault, schnapp-os no longer owns
   `memory/`. Tracked follow-up: vault working-tree auto-commit (git truth lags Obsidian edits); prune
   the stale `~/code/obsidian-vault` clone. Next phase: 2 (flatten the plugin) or 4 (context discipline).
+- 2026-07-01 Phase 2 T1: flattened plugins/core → native .claude/{skills,commands,agents} + top-level
+  rules/scripts/hooks + root CATALOG.md; rewired settings.json hooks, gen-catalog, both CI workflows,
+  learning-loop scripts, hooks, tests, plists (commit <will fill>). CI green.
