@@ -80,7 +80,10 @@ credential tool once it is built — until then, [session-hygiene](../session-hy
    launchd session env; and update the Render service env + **redeploy** (owner — no Render API key on
    the Mac). [[credentials-state]]
 6. **Verify** on each surface: `op whoami` where the SA changed, `op read` the new ref, connector
-   `op_health`, the consuming app (HTTP 200 / job runs). Old value must now fail.
+   `op_health`, the consuming app (HTTP 200 / job runs). Old value must now fail. Also byte-check
+   the stored value: `bash scripts/check-secret-bytes.sh --ref op://... [--expect-prefix ...]
+   [--min-len ...]` — catches stray whitespace, a wrapping quote, or truncation
+   ([[malformed-stored-secret-401]]) before it 401s, without ever printing the value.
 7. **Record** in the map changelog (date · change · every location updated · done ✓) and flip any
    matching tracker box in the same commit ([anti-stale](../../../rules/global/anti-stale.md)).
 
