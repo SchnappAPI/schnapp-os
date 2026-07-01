@@ -102,3 +102,8 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   one-liners per the header spec; rotation policy recorded in `decisions/0022`; surfaced 2
   dangling open items (`#2` repo-flattening, `brain-capture` prune) the unreadable length had
   been hiding.
+- 2026-06-30 Scoped `#2` repo-flattening: confirmed via `claude-code-guide` that Claude Code
+  natively discovers `.claude/{skills,commands,agents}/` with no plugin needed, unblocking the
+  06-23 "riskier" deferral. Paused before executing at owner request — folded into a broader
+  streamline/simplify brainstorm instead of a standalone migration. Wrote handoffs/042 (full
+  scope + context) and a `spawn_task` chip for a fresh Opus 4.8 session.
