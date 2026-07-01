@@ -29,7 +29,10 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]  # scripts/ -> repo root
-QUEUE = Path(os.environ.get("LEARNING_QUEUE", REPO_ROOT / "scheduled-tasks" / ".learning-queue.tsv"))
+# Treat an empty LEARNING_QUEUE as unset (`or`, not a plain get default): an empty-but-SET var would
+# otherwise become Path("") -> "." -> not a file -> every capture silently skipped. Belt-and-suspenders
+# for the worker's mktemp-guarded filter (learning-worker.sh); a missing var still uses the default.
+QUEUE = Path(os.environ.get("LEARNING_QUEUE") or REPO_ROOT / "scheduled-tasks" / ".learning-queue.tsv")
 MAX_TURNS = int(os.environ.get("LEARNING_DISTILL_MAX_TURNS", "40"))
 TIMEOUT_S = int(os.environ.get("LEARNING_DISTILL_TIMEOUT_S", "900"))
 MODEL = os.environ.get("LEARNING_DISTILL_MODEL") or None

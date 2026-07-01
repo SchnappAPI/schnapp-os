@@ -50,6 +50,9 @@ jobs:
       - name: Learning-recurrence self-test
         run: bash scripts/tests/test-learning-recurrence.sh
 
+      - name: Learning-worker recurrence live-path self-test
+        run: bash scripts/tests/test-learning-worker-recurrence-live.sh
+
       - name: Learning-eval self-test
         run: bash scripts/tests/test-learning-eval.sh
 

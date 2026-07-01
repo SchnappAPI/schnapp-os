@@ -81,9 +81,13 @@ capture_is_drafted() { # $1 = capture text ; 0 if its class was drafted, 1 other
 }
 
 # Run the deterministic draft over archive+queue and write its block output to $1 (a temp file).
-# Populates DRAFTED_SIGS from the emitted blocks' SIG: lines. Pure/read-only (no gh, no git, no
-# marker write) — the caller decides what to do with the blocks. Best-effort: on any failure it
-# leaves DRAFTED_SIGS empty and returns 0 (recurrence must never break the worker).
+# Sets DRAFTED_SIGS to the CANDIDATE set — every emitted block's SIG: line (the classes that recurred
+# this run). Pure/read-only (no gh, no git, no marker write) — the caller decides what to do with the
+# blocks. In the LIVE path the candidate set is later NARROWED to only the classes whose `gh issue
+# create` actually SUCCEEDED (see below), because a class is marked drafted + held out of distillation
+# ONLY once its gate issue is truly filed. The DRY-RUN path (no gh) uses the candidate set as-is.
+# Best-effort: on any failure it leaves DRAFTED_SIGS empty and returns 0 (recurrence must never break
+# the worker).
 run_recurrence_draft() { # $1 = output file for the raw draft blocks
   : > "$1"
   bash "$RECURRENCE" draft "$Q" "$A" "$DRAFTED" > "$1" 2>/dev/null || true
@@ -110,7 +114,9 @@ if $DRY_RUN; then
   done < <(grep '^TITLE: ' "$draft_out" 2>/dev/null | sed 's/^TITLE: //')
   rm -f "$draft_out"
   # Per-capture routing: a drafted class shows "would draft gate" (instead of prose); else distill.
-  while IFS=$'\t' read -r _ _ text; do
+  # `|| [ -n "${text-}" ]` keeps the last line when the queue lacks a trailing newline (same idiom as
+  # learning-recurrence.sh emit() and the live filter loop) so a no-trailing-newline capture is shown.
+  while IFS=$'\t' read -r _ _ text || [ -n "${text-}" ]; do
     [ -n "${text-}" ] || continue
     if capture_is_drafted "$text"; then
       echo "would draft gate: $text"
@@ -169,54 +175,85 @@ git reset -q --hard origin/main 2>/dev/null || true
 # --- recurrence pre-step (BEFORE distillation): draft a GATE for any newly-recurring class ----------
 # Deterministic count over archive+queue → drafted-gate blocks. For each block: best-effort open a
 # GitHub issue (like alert(): a missing/failing gh prints a notice and CONTINUES — never fails the
-# worker, never loses a capture), append the SIG to the git-ignored marker (idempotency), and hold the
-# class's captures OUT of distillation. A drafted gate is ONLY an issue: NO working-tree edit, commit,
-# or push happens here. NOTE: this runs AFTER the clean-tree reset and BEFORE distillation, and writes
-# only to the git-ignored marker + temp files, so it does not dirty the tree the distill clean-check reads.
+# worker, never loses a capture). A class is marked drafted (idempotency marker) AND held OUT of
+# distillation ONLY once its `gh issue create` actually SUCCEEDED — so a class whose gh FAILED is not
+# marked (it re-drafts next run) and is not filtered (it still flows to prose distillation THIS run,
+# better than being orphaned into a gate that was never filed). A drafted gate is ONLY an issue: NO
+# working-tree edit, commit, or push happens here. NOTE: this runs AFTER the clean-tree reset and BEFORE
+# distillation, and writes only to the git-ignored marker + temp files, so it does not dirty the tree
+# the distill clean-check reads.
+# Single EXIT trap cleans up every live-path temp artifact (draft_out / blocks_dir / filtered), mirroring
+# learning-gate.sh's one-trap pattern — no leaked tmp per drafted-class run in this nightly script.
+draft_out=""; blocks_dir=""; filtered=""
+cleanup_recurrence() { rm -f "$draft_out" "$filtered" 2>/dev/null; [ -n "$blocks_dir" ] && rm -rf "$blocks_dir" 2>/dev/null; }
+trap cleanup_recurrence EXIT
 draft_out="$(mktemp)"
 run_recurrence_draft "$draft_out"
 if [ -n "$DRAFTED_SIGS" ]; then
-  # Split the draft output into per-block body files (title \t bodyfile), so a multi-line markdown
-  # body survives intact to `gh --body-file`. awk owns the block boundaries it emitted.
+  # Split the draft output into per-block records (SIG \t title \t bodyfile), so a multi-line markdown
+  # body survives intact to `gh --body-file` and each block's SIG rides along to the create loop. awk
+  # owns the block boundaries it emitted.
   blocks_dir="$(mktemp -d)"
   bidx=0
+  filed_sigs=""   # SIGs whose gate issue was ACTUALLY filed — only these get marked + filtered
+  nl=$'\n'        # real newline for accumulating one filed SIG per line ($'\n' does not expand inside ${:+})
   # shellcheck disable=SC2016  # awk program is single-quoted on purpose; $0/$1 are awk fields
   awk -v dir="$blocks_dir" '
-    /^<<<GATE-DRAFT>>>$/      { inblk=1; n++; title=""; body=""; havebody=0; next }
+    /^<<<GATE-DRAFT>>>$/      { inblk=1; n++; sig=""; title=""; body=""; havebody=0; next }
     /^<<<GATE-DRAFT-END>>>$/  { if (inblk) { bf=dir "/body." n; printf "%s", body > bf; close(bf);
-                                             print title "\t" bf } inblk=0; next }
+                                             print sig "\t" title "\t" bf } inblk=0; next }
+    inblk && /^SIG: /         { sig=substr($0,6);   next }
     inblk && /^TITLE: /       { title=substr($0,8); next }
     inblk && /^BODY:$/        { havebody=1; next }
     inblk && havebody         { body=body $0 "\n"; next }
   ' "$draft_out" > "$blocks_dir/index.tsv"
-  while IFS=$'\t' read -r title bodyfile; do
-    [ -n "$title" ] && [ -n "$bodyfile" ] || continue
+  while IFS=$'\t' read -r sig title bodyfile; do
+    [ -n "$sig" ] && [ -n "$title" ] && [ -n "$bodyfile" ] || continue
     bidx=$((bidx+1))
     if command -v gh >/dev/null 2>&1 && \
        gh issue create --title "$title" --body-file "$bodyfile" >/dev/null 2>&1; then
+      # Only a truly-filed class is recorded (marker) and later held out of distillation.
+      filed_sigs="${filed_sigs:+$filed_sigs$nl}$sig"
       echo "learning-worker: DRAFTED a gate proposal issue (owner approval required; nothing landed)."
     else
-      echo "learning-worker: recurrence — could not open gate-proposal issue (gh absent/failed); continuing." >&2
+      echo "learning-worker: recurrence — could not open gate-proposal issue (gh absent/failed); continuing (class not marked; will retry; its captures flow to distillation this run)." >&2
     fi
   done < "$blocks_dir/index.tsv"
-  # Idempotency: record every drafted SIG so the class never re-drafts. Marker is git-ignored.
-  printf '%s\n' "$DRAFTED_SIGS" >> "$DRAFTED"
-  echo "learning-worker: recurrence — drafted $bidx gate proposal(s); their captures are held out of distillation."
-  rm -rf "$blocks_dir"
+  # Narrow the held-out set to the FILED classes (a gh failure leaves that class unmarked + unfiltered).
+  DRAFTED_SIGS="$filed_sigs"
+  if [ -n "$filed_sigs" ]; then
+    # Idempotency: record only successfully-filed SIGs so a filed class never re-drafts. Marker git-ignored.
+    printf '%s\n' "$filed_sigs" >> "$DRAFTED"
+    filed_count="$(printf '%s\n' "$filed_sigs" | grep -c .)"
+    echo "learning-worker: recurrence — filed $filed_count of $bidx gate proposal(s); the filed classes' captures are held out of distillation."
+  else
+    echo "learning-worker: recurrence — $bidx gate proposal(s) drafted but none filed (gh absent/failed); no class marked, all captures flow to distillation." >&2
+  fi
+  rm -rf "$blocks_dir"; blocks_dir=""
 fi
-rm -f "$draft_out"
+rm -f "$draft_out"; draft_out=""
 
-# Distill input: the queue MINUS any capture whose class was drafted this run (so the loop does not
-# also write prose for an escalated class). If nothing was drafted, distillation sees the full queue.
+# Distill input: the queue MINUS any capture whose class was FILED as a gate this run (so the loop does
+# not also write prose for an escalated class). DRAFTED_SIGS now holds only the filed set; if nothing
+# was filed, distillation sees the full queue (a gh-failed class still gets a prose pass this run).
 DISTILL_QUEUE="$Q"
 if [ -n "$DRAFTED_SIGS" ]; then
-  filtered="$(mktemp)"
-  while IFS= read -r line || [ -n "$line" ]; do
-    text="${line#*$'\t'}"; text="${text#*$'\t'}"   # column 3 = after the second TAB
-    if [ -n "$text" ] && capture_is_drafted "$text"; then continue; fi
-    printf '%s\n' "$line" >> "$filtered"
-  done < "$Q"
-  DISTILL_QUEUE="$filtered"
+  # Guard the mktemp: under `set -uo pipefail` (no -e) a failed mktemp would leave filtered="" →
+  # export LEARNING_QUEUE="" → distill treats an empty-but-SET var as a path of "." and silently
+  # no-ops ALL captures. On mktemp failure, fall back to the full queue (distill everything) rather
+  # than skip — better a redundant prose pass for a filed class than dropping every capture.
+  if filtered="$(mktemp)"; then
+    while IFS= read -r line || [ -n "$line" ]; do
+      text="${line#*$'\t'}"; text="${text#*$'\t'}"   # column 3 = after the second TAB
+      if [ -n "$text" ] && capture_is_drafted "$text"; then continue; fi
+      printf '%s\n' "$line" >> "$filtered"
+    done < "$Q"
+    DISTILL_QUEUE="$filtered"
+  else
+    echo "learning-worker: recurrence — mktemp for the filtered queue failed; distilling the full queue." >&2
+    filtered=""
+    DISTILL_QUEUE="$Q"
+  fi
 fi
 
 echo "learning-worker: processing $(wc -l < "$DISTILL_QUEUE" | tr -d ' ') capture(s) via Agent SDK (learning_distill.py) ..."
