@@ -1,3 +1,9 @@
+---
+last-verified: 2026-07-01
+sources:
+  - connectors/github-mcp/server.py
+---
+
 # github-mcp
 
 Self-hosted MCP server exposing GitHub operations. Bearer-token auth

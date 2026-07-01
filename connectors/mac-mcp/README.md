@@ -1,3 +1,9 @@
+---
+last-verified: 2026-07-01
+sources:
+  - connectors/mac-mcp/server.py
+---
+
 # mac-mcp
 
 Self-hosted MCP server for Mac operations (shell_exec, op_run, file ops, SQL queries,

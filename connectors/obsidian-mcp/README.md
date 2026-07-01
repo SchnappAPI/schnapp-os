@@ -1,3 +1,9 @@
+---
+last-verified: 2026-07-01
+sources:
+  - connectors/obsidian-mcp/server.py
+---
+
 # obsidian-mcp — vault MCP (canonical source)
 
 This is the **source of truth** for the live Obsidian MCP. It is a Python FastMCP server that

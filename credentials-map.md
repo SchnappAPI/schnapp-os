@@ -1,3 +1,9 @@
+---
+last-verified: 2026-07-01
+sources:
+  - .env.template
+---
+
 # Credentials map — canonical inventory (`op://` references, never values)
 
 The single source of truth for what every credential is, where it resolves, and everywhere
