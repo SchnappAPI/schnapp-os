@@ -4,7 +4,7 @@ obsidian-mcp/server.py
 Remote MCP server for the Schnapp Obsidian vault.
 OAuth 2.1 + PKCE + Dynamic Client Registration via FastMCP native auth.
 
-Vault:   ~/Library/CloudStorage/OneDrive-Schnapp/Obsidian
+Vault:   ~/code/schnapp-vault
 Port:    8767
 """
 
@@ -33,7 +33,7 @@ from starlette.responses import HTMLResponse, RedirectResponse
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-VAULT = Path.home() / "Library/CloudStorage/OneDrive-Schnapp/Obsidian"
+VAULT = Path.home() / "code/schnapp-vault"
 INDEX = VAULT / "_brain/_index.json"
 STATE_FILE = Path(__file__).parent / "oauth_state.json"
 BASE_URL = "https://obsidian-mcp.schnapp.bet"
