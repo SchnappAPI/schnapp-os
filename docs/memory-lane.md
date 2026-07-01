@@ -1,4 +1,4 @@
-# Memory lane — procedures (schnapp-os system behavior)
+# Memory lane: procedures (schnapp-os system behavior)
 
 Canonical home for the memory SYSTEM PROCEDURES: the freshness gate, the
 end-of-session write, on-correction routing, and dual-altitude promotion. The hooks

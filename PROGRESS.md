@@ -184,3 +184,12 @@ Full build of the original 11-Part plan (repo/tracker/sync, global rules, connec
   LIVE `schnapp-os/memory`/`memory/README.md` refs (only append-only history + a log-path false positive
   remain). PENDING (owner, outside repo): USER-scope `~/.claude/settings.json` `autoMemoryDirectory` →
   `~/code/schnapp-vault/memory` on this + every machine. Next: task 10 (ADR + final trackers).
+- 2026-07-01 Phase 1 (task 10) DONE → **PHASE 1 COMPLETE.** Wrote
+  [decisions/0023](decisions/0023-two-repo-vault-split-flat-memory-schema.md) (two-repo split on the
+  atomicity line, git=one-truth, vault-out-of-OneDrive, Fork-A consolidation, one flat CI-enforced
+  memory schema). Set USER-scope `~/.claude/settings.json` `autoMemoryDirectory` → the vault on THIS
+  Mac (other machines still owed the one-liner). Deliverable met: `schnapp-vault` private = the
+  Obsidian vault at `~/code/schnapp-vault`, 12 facts on one flat schema, `vault-freshness.yml` CI
+  green, obsidian-mcp + Brain Agent + memory-mcp all serve the vault, schnapp-os no longer owns
+  `memory/`. Tracked follow-up: vault working-tree auto-commit (git truth lags Obsidian edits); prune
+  the stale `~/code/obsidian-vault` clone. Next phase: 2 (flatten the plugin) or 4 (context discipline).
