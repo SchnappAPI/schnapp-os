@@ -28,6 +28,7 @@ else
     com.schnapp.obsidian-mcp
     com.schnapp.brain-watcher
     com.schnapp.memory-consolidation
+    com.schnapp.vault-autocommit
     com.schnapp.syncrepos
     bet.schnapp.bacpac-backup
     bet.schnapp.flask

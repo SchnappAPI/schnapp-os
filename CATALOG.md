@@ -109,6 +109,7 @@ decision 0011 #2; the scripts in `hooks/` remain the canonical source.)
 - **session-start-gate.sh**: schnapp-os SessionStart freshness gate.
 - **session-stop-push-gate.sh**: schnapp-os Stop gate: never leave unpushed commits
 - **shellcheck-on-write.sh**: PostToolUse shell-lint gate.
+- **standing-rules.sh**: standing-rules.sh: UserPromptSubmit hook injecting the owner's standing reply rules into
 
 ## Agents
 

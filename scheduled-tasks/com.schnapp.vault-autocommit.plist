@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.schnapp.vault-autocommit</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>__REPO__/scripts/vault-autocommit.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>__REPO__</string>
+
+    <!-- launchd's default PATH misses homebrew git; the script also shells `op`-free
+         (git pushes with the Mac's credential helper), so PATH is the only env it needs. -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <!-- Every 5 minutes: cheap no-op on a clean tree; the script's own quiet-window debounce
+         (120s) keeps it from committing mid-edit. Interval, not WatchPaths: watching the whole
+         vault would fire per keystroke for no gain over the debounced sweep. -->
+    <key>StartInterval</key>
+    <integer>300</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>__HOME__/Library/Logs/schnapp-os/vault-autocommit.log</string>
+    <key>StandardErrorPath</key>
+    <string>__HOME__/Library/Logs/schnapp-os/vault-autocommit.log</string>
+</dict>
+</plist>

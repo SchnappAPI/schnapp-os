@@ -58,7 +58,7 @@ Recommended order: **1 → (2 ∥ 4) → 3 → 5.** Each phase ends shippable.
 **Done when:** vault CI green, all facts one-schema, MCPs serve the vault, schnapp-os no longer owns `memory/`. ✅ **ALL MET 2026-07-01 - PHASE 1 COMPLETE.**
 
 **Follow-ups (not Phase-1-blocking, tracked for later):**
-- Vault auto-commit/push: obsidian-mcp + Obsidian write the vault working tree but do not git-commit, so git truth lags Obsidian edits (gate-2 spec design note). The vault needs an auto-commit mechanism as memory-mcp has.
+- Vault auto-commit/push: ✅ done 2026-07-02 - `scripts/vault-autocommit.sh` + launchd `com.schnapp.vault-autocommit` (5-min sweep, 120s debounce, main-only, pre-commit schema gate honored; TDD 12/12, live E2E canary commits 6128714/858c55e). Install: scheduled-tasks/README.md.
 - USER-scope `~/.claude/settings.json` `autoMemoryDirectory` → `~/code/schnapp-vault/memory` on EVERY OTHER machine (done on this Mac).
 - `~/code/obsidian-vault` stale clone: left in place (2 uncommitted Inbox deletions blocked the spec's clean-only auto-remove); prune manually when convenient.
 

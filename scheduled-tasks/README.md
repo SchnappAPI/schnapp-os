@@ -119,3 +119,26 @@ straight to `main`; anything the gate holds is filed as a GitHub issue for revie
 main. See
 [memory-consolidation.md](memory-consolidation.md) for the asks-first consolidation policy and the
 agent instructions that govern the live `claude -p` run.
+
+---
+
+## LaunchAgent install - vault-autocommit
+
+`scripts/vault-autocommit.sh` sweeps the schnapp-vault working tree into git every 5 minutes
+(commit + rebase-pull + push, main-only, 120s quiet-window debounce so it never commits
+mid-edit; the vault's own pre-commit schema gate still applies and a rejected commit exits 2
+with the tree left dirty). Closes the Phase-1 follow-up: Obsidian / obsidian-mcp edits no
+longer wait for a human push. Plist: [com.schnapp.vault-autocommit.plist](com.schnapp.vault-autocommit.plist)
+(same `__REPO__`/`__HOME__` render + owner-confirmed `launchctl load` policy as above).
+
+```bash
+REPO=~/code/schnapp-os
+sed -e "s|__REPO__|$REPO|g" -e "s|__HOME__|$HOME|g" \
+  "$REPO/scheduled-tasks/com.schnapp.vault-autocommit.plist" \
+  > ~/Library/LaunchAgents/com.schnapp.vault-autocommit.plist
+launchctl load ~/Library/LaunchAgents/com.schnapp.vault-autocommit.plist
+launchctl list | grep com.schnapp.vault-autocommit   # verify
+```
+
+Health: `check-infra-health.sh` expects the label; failures show as launchd last-exit != 0 and
+in `~/Library/Logs/schnapp-os/vault-autocommit.log`.
