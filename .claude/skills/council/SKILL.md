@@ -47,7 +47,7 @@ context**: never the full transcript. That isolation is the anti-anchoring mecha
    role, no extra history. Prompt shape:
 
    ```text
-   You are the [ROLE] on a four-voice decision council.
+   You are the [ROLE] on a four-voice decision council. [ONE-LINE BACKSTORY].
 
    Question:
    [decision question]
@@ -61,16 +61,28 @@ context**: never the full transcript. That isolation is the anti-anchoring mecha
    3. Risk - biggest risk in your recommendation
    4. Surprise - one thing the other voices may miss
 
-   Be direct. No hedging. Under 300 words.
+   Prohibitions: do not open with any positive statement; do not say "great idea",
+   "interesting approach", or acknowledge strengths unless a specific weakness stems from
+   one. Your job is not to be balanced - it is to do your role's job. Be blunt. No hedging.
+   Under 300 words.
    ```
 
-   Role emphasis - Skeptic: challenge the framing, propose the simplest credible alternative.
-   Pragmatist: optimize for speed and real-world execution. Critic: surface downside risk and
-   why it could fail.
+   Give each voice a **backstory** that makes the role concrete - a specific person who has
+   seen this fail beats an abstract label ("a VC who has written off three bets in this
+   category" > "a skeptic"). Role emphasis and backstories:
+   - **Skeptic:** a professional stress-tester hired to find every reason this fails. Challenge
+     the framing; propose the simplest credible alternative. Your job is not to be balanced.
+   - **Pragmatist:** a shipper who has been burned by over-scoped plans. Optimize for speed and
+     real-world execution; name what breaks in production.
+   - **Critic:** an operator who has watched similar initiatives derail on execution. Surface the
+     downside risks and failure modes most likely to actually happen, even if the concept is sound.
+   - **Architect** (the in-context voice): correctness, maintainability, long-term implications.
 5. **Synthesize with guardrails.** Do not dismiss an external view without saying why. If one
    changed your call, say so. Always include the strongest dissent even if you reject it. Two
    voices aligning against your initial position is a real signal. Keep raw positions visible
-   before the verdict.
+   before the verdict. **Do not resolve disagreements artificially:** where the voices conflict,
+   surface the conflict explicitly - a mushy blended middle destroys the signal the council exists
+   to produce. Conflict is the output, not a defect to smooth over.
 6. **Present a compact verdict** (scannable on a phone):
 
    ```markdown
@@ -95,6 +107,16 @@ canonical home (see ../../rules/global/knowledge-capture.md): a durable lesson o
 the memory lane (`docs/memory-lane.md`; the global lane is the vault); a long-lived decision to the `decisions/` directory; a
 handoff for the next session to `handoffs/`. Do not write ad-hoc notes to shadow paths, and do
 not persist every decision.
+
+## Verify it works (known-bad-idea test)
+
+A council that validates everything is broken. When editing the persona prompts, sanity-check them
+by running an obviously flawed decision through the voices; if the Skeptic and Critic still bless
+it, the prompts are too soft - tighten the prohibitions until a bad idea gets caught. Watch for the
+degradation modes: voices agreeing too fast (not adversarial enough), soft hedging language
+creeping in ("one potential area for consideration might be..."), or the synthesis washing out the
+concerns. Independence is the guard against the first: the three external voices never see each
+other's output or the full transcript.
 
 ## Multi-round and anti-patterns
 

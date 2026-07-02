@@ -24,6 +24,23 @@ decisions one at a time.
 
 Stop when every live branch is resolved and the owner can act without re-deciding.
 
+## Critique modes (forcing functions against vagueness)
+
+When the ask is "tear this apart" rather than "interview me", drop the one-question cadence and run
+one of these framings - each presupposes problems exist, so it cannot dead-end at "looks good":
+
+- **Force-ranked list:** list the top 5 problems, ranked most- to least-serious; for each, why it
+  matters and the consequence of not fixing it.
+- **Score with justification:** rate 1-10 with a specific number and why; if above 7, name at least
+  three things stopping it from being a 9-10; if below 6, what it would take to raise it.
+- **Red team:** you are a competitor who wants this to fail - what do you exploit, where do you
+  attack, which assumption is wrong or dangerous?
+- **Pre-mortem:** it is 12 months later and this failed badly - what went wrong, what were the
+  ignored warning signs, which decisions led to the failure?
+
+Pick the mode that fits: red team / pre-mortem for plans and strategy, force-rank / score for a
+concrete artifact (a doc, a schema, a design). State the mode you are using.
+
 For grilling that also challenges the plan against documented terminology and decisions, and
 updates docs inline, use the grill-with-docs skill. To make a final go/no-go call across
 competing options, use the council skill.
