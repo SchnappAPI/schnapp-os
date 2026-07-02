@@ -60,7 +60,10 @@ if ! git -c user.name="vault-autocommit" -c user.email="vault-autocommit@schnapp
   log "commit rejected (pre-commit gate?) - tree left dirty for review"; exit 2
 fi
 
-if ! git pull --rebase --autostash -q; then
+# Rebase re-commits local work, so the pull needs the same host-independent ident as the
+# commit (CI runners have none - the 2026-07-01 commit-identity-skew lesson).
+if ! git -c user.name="vault-autocommit" -c user.email="vault-autocommit@schnapp.bet" \
+     pull --rebase --autostash -q; then
   log "pull --rebase failed - resolve manually"; exit 3
 fi
 if ! git push -q; then
