@@ -43,7 +43,11 @@ for p in $dirty_paths; do
   # Renames show as "old -> new"; the live path is the right-hand side.
   p="${p##* -> }"
   [ -e "$p" ] || continue
-  m="$(stat -f %m "$p" 2>/dev/null || stat -c %Y "$p" 2>/dev/null)" || continue
+  # GNU first: on Linux `stat -f %m` is a VALID filesystem query (prints a mount point, not
+  # an epoch) so BSD-first "succeeds" with garbage and the arithmetic below fatals the shell
+  # (word-expansion error exits non-interactive bash). On macOS `stat -c` errors, BSD -f runs.
+  m="$(stat -c %Y "$p" 2>/dev/null || stat -f %m "$p" 2>/dev/null)" || continue
+  case "$m" in ''|*[!0-9]*) continue ;; esac
   if [ $(( now - m )) -lt "$QUIET" ]; then
     log "recent edit (<${QUIET}s) on '$p' - waiting for quiet"; exit 0
   fi
