@@ -71,6 +71,10 @@ run unattended without quietly rotting or quietly dying.
   reviewable so a learning loop cannot land confident junk.
 - Standing authority: the agent acts without per-action confirmation and auto-merges green
   engineering work. The gate, not a human click, is the safety net.
+- **Rollback is defined before it is needed.** Because a rule/skill edit propagates machine-wide
+  (`@import` + SessionStart `git pull`), a bad one lands everywhere on the next pull. The recovery is
+  `git revert` the offending commit + push; the next pull re-propagates the good state. No branch, no
+  drama - but the path is written down so it is not improvised mid-incident.
 
 ### F. Automation and loops
 - **Loops before features.** Prove the recurring routine works before adding new capability on top.
@@ -89,7 +93,14 @@ run unattended without quietly rotting or quietly dying.
 
 ### H. Capability design
 - **Small, single-purpose, reusable skills**, never monoliths.
-- **Skill-ify repetition.** Anything done repeatedly becomes a skill.
+- **Skill-ify repetition, but subtract too.** Anything done repeatedly becomes a skill *only if* it
+  clears the bar (recurs, non-obvious, generalizable) and does not overlap an existing one. Removing
+  capability often beats adding it: every tool expands the decision space the agent navigates every
+  step. Run the `context-budget` subtraction pass before adding, and prune what fires only in
+  failures. Fewer, well-scoped components beat many broad ones.
+- **Pick the right primitive.** Prompt vs rule vs skill vs hook vs subagent vs MCP is a decision, not
+  a default - `rules/modules/activity/scaffolding-choice.md`. A CLI beats an MCP server wherever a
+  CLI exists.
 - **Parallelize.** Independent work fans out to subagents to cut wall-clock.
 - Build only capability that serves the actual platform; defer the rest.
 

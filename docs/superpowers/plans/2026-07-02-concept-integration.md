@@ -30,9 +30,9 @@ Existing: `working-style.md` no-sycophancy rule + `standing-rules.sh` every-mess
 - [x] T3. Extend `context-budget` skill: in-session rot signals (recall test, consistency check, token-spike) + the **subtraction pass** (three-questions rubric, appears-in-failures signal, recommend-removal) + an always-load token target. *(done; sections 5-6 + always-load target added)*
 
 ## Phase 3 - Skill-system discipline
-- [ ] T1. New `rules/modules/activity/scaffolding-choice.md`: prompt/skill/module/hook/MCP/agent decision tree, MCP-~35x-cost + CLI-first, one-sentence-or-too-big. Extend `/do` step 1 (decide the primitive before routing). Regenerate CATALOG.
-- [ ] T2. Reconcile framework §H "skill-ify repetition" with the **subtraction principle** (skill-ify only what clears the bar and does not overlap). Add "prompt is not a changelog" to `anti-stale.md`. Rollback-drill note in framework §E.
-- [ ] T3. New `session-to-skill` skill (mine a transcript for a reusable multi-step procedure; the gap between `learn-route` corrections and `rules-distill` principles). ADR. Autonomous nightly lane = TDD'd follow-up (not wired here).
+- [x] T1. New `rules/modules/activity/scaffolding-choice.md`: prompt/skill/module/hook/MCP/agent decision tree, MCP-~35x-cost + CLI-first, one-sentence-or-too-big. Extend `/do` step 1 (decide the primitive before routing). Regenerate CATALOG. *(done)*
+- [x] T2. Reconcile framework §H "skill-ify repetition" with the **subtraction principle** (skill-ify only what clears the bar and does not overlap). Add "prompt is not a changelog" to `anti-stale.md`. Rollback-drill note in framework §E. *(done; anti-stale updated: bumped)*
+- [x] T3. New `session-to-skill` skill (mine a transcript for a reusable multi-step procedure; the gap between `learn-route` corrections and `rules-distill` principles). ADR. Autonomous nightly lane = TDD'd follow-up (not wired here). *(done; ADR 0030; nightly lane flagged in the skill + ADR)*
 
 ## Phase 4 - Structural fixes (from the agentic-context reader)
 - [ ] T1. `scripts/assemble-context.sh`: given a path/task, print which rules/modules would load (consume the dead `paths:` frontmatter) + flag conflicts and the work/personal double-load. Wire into CI. TDD.

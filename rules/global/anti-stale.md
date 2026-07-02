@@ -1,6 +1,6 @@
 ---
 scope: global
-updated: 2026-06-27
+updated: 2026-07-02
 ---
 # Anti-staleness (single source of truth)
 
@@ -16,6 +16,9 @@ updated: 2026-06-27
   "generated, do not edit". The source is canonical; the doc is a projection.
 - Memory: supersede, do not append. When a fact changes, replace it; do not leave a
   contradicting copy. Every memory carries `source:` and `updated:`.
+- A rule is not a changelog. Do not fix a mistake by accreting a "remember not to X" line that
+  references the past incident; that bloats the always-load layer and drifts (lost-in-the-middle).
+  Sharpen the existing rule to its current-state form and fix the class, so the rule stays lean.
 - Tracker currency: every commit that changes state also flips the matching per-initiative
   plan-doc box (`docs/superpowers/plans/`) and appends a PROGRESS.md line in the SAME commit, and
   is **pushed immediately** so GitHub always mirrors local - never let the remote go stale. Partial

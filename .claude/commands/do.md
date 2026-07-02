@@ -15,7 +15,10 @@ exists (rules, skills, agents, the planner) - it does not reimplement any of the
 1. **Classify the task.** What kind of work is it - ETL/SQL, web tool, policy/procedure,
    Quickbase/AppFolio, research, a perf problem, a code review, repo/infra hygiene, or a
    general question? Name the class. If genuinely ambiguous, ask one clarifying question; do not
-   guess on a task that mutates data, money, or production.
+   guess on a task that mutates data, money, or production. If the task is a *recurring shape* with
+   no existing worker, first decide the right primitive (prompt / rule / skill / hook / subagent /
+   MCP) via [`rules/modules/activity/scaffolding-choice.md`](../../rules/modules/activity/scaffolding-choice.md)
+   - do not reflexively do it inline or mint a redundant skill.
 
 2. **Route to rules + worker + model.** Resolve all three, then state them before acting:
    - **Rules:** global rules always apply. Name any path-scoped modules the task needs directly
