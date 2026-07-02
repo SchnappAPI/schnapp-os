@@ -1,5 +1,11 @@
 # schnapp-os — Audit against the Agentic-OS Target Spec
 
+> **Point-in-time snapshot (2026-06-25), superseded and not maintained.** It scores a much earlier
+> tree (pre vault-split ADR 0023 and pre plugin-flatten ADR 0024) and describes structure that has
+> since changed. For current state read [PROGRESS.md](PROGRESS.md), [decisions/](decisions/), and the
+> live plans under [docs/superpowers/plans/](docs/superpowers/plans/). Kept as frozen history (like
+> `handoffs/`); do not read its scores as current.
+
 *Read-only audit. Scores the repo against `master-instructions-adapted.md` (target) and `master-rules.md` (checklist), weighted by the owner's priorities: **Fresh > Global > Consistent > Quick > Accurate**, with groups **A (portable substrate)** and **B (freshness)** outranking everything below them.*
 
 - **Date:** 2026-06-25

@@ -39,15 +39,16 @@ Existing: `working-style.md` no-sycophancy rule + `standing-rules.sh` every-mess
 - [x] T2. rules/ frontmatter `updated:` (audit confirmed all 9 rules + 17 modules already carry it - no gap) / index-first SessionStart pointer (added to session-start-gate.sh [memory] block) / capability-registry (added a generated `## MCP connectors` section to gen-catalog.sh - CATALOG now inventories the 5 connectors). *(done in Phase 5 triage 3/4)*
 
 ## Phase 5 - Full evaluation + triage
-- [ ] T1. Parallel read-only audits across dimensions (staleness/consistency, security/secrets, hooks/scripts correctness, docs/link integrity, skill/rule quality + overlap, automation/CI health). Rank findings by severity.
-- [ ] T2. Triage: fix-on-sight the safe ones in-pass; flag owner-only (destructive/creds) with exact commands; write the eval report.
-- [ ] T3. Finalize: regenerate CATALOG, ADRs for the forks decided, handoff, PROGRESS, push both repos, verify CI green.
+- [x] T1. Parallel read-only audits across dimensions (staleness/consistency, security/secrets, hooks/scripts correctness, docs/link integrity, skill/rule quality + overlap, automation/CI health). Rank findings by severity. *(done: 6 auditors; security CLEAN, 20/20 tests pass, verdict = mature/coherent/keep-by-default; defects were migration residue + my new-file nits)*
+- [x] T2. Triage: fix-on-sight the safe ones in-pass; flag owner-only (destructive/creds) with exact commands; write the eval report. *(done in 4 commit batches: doc/link fixes; hook MultiEdit gap + #41; link-gate + connector registry + index-first; AUDIT.md banner. Owner-only items surfaced in the closeout.)*
+- [~] T3. Finalize: regenerate CATALOG, ADRs for the forks decided, handoff, PROGRESS, push both repos, verify CI green.
 
 ## Decisions taken (recorded here, ADR'd in Phase 5)
 - **Keep manual `@import`; do NOT build path-triggered auto-injection** (contradicts locked ADR 0011). Instead make `paths:` honest via the assemble-context harness (report/test, not silent load).
 - **No skill-chaining envelope contract now** (most skills are advisory, not callable functions - building ahead of need).
 - **No RAG/vector layer, no per-folder manifest.json** (vault is under wiki-scale; duplicates generated projections).
 - **No standalone `/gsd` command** (overlaps superpowers writing/executing-plans); fold its two net-new rules (review-against-requirements; phase-boundary restart) into context-discipline.
+- **Do NOT relocate the frozen point-in-time snapshots** (AUDIT.md + the dated `docs/*-2026-*.md` reviews) to `docs/archive/`, despite the audit recommending it. Reason (overrides the rec): they are the same frozen-history class as `handoffs/`/`decisions/`, which the repo deliberately keeps in place (Phase-2 precedent); moving them one level deeper would break 17 internal `../` links across frozen docs for cosmetic tidiness; and they are already excluded from both live-doc gates (check-links + check-writing-style). Instead added a supersession banner to AUDIT.md so a reader cannot mistake it for current state.
 
 ## Done when
 All three themes integrated with zero duplication and zero locked-ADR violations; the eval report
