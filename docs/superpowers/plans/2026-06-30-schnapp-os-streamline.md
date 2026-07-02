@@ -141,7 +141,7 @@ Recommended order: **1 → (2 ∥ 4) → 3 → 5.** Each phase ends shippable.
 1. **Phase 1:** confirm repo creation, OneDrive exit, MCP repoint.
 2. **Phase 2:** per-machine `~/.claude/CLAUDE.md` `@import` edit; uninstall cached plugin.
 3. **Phase 5:** ✅ done 2026-07-01 - connector vault-access verified, memory-mcp probed, round-trip closed (handoffs 049/050/051).
-4. **Anytime:** ✅ closed 2026-07-01 - `brain-capture` already absent from the claude.ai connector list (inspected live: only Cloudflare Developer Platform, GitHub Integration, obsidian-mcp, Schnapp Portal, AppFolio Realm-X, Microsoft 365 remain; the standalone Schnapp Mac / Schnapp GitHub connectors are likewise gone per ADR 0020). Nothing left to prune.
+4. **Anytime:** ✅ closed 2026-07-01 as MOOT - there is no dead `brain-capture` connector. The `76d929ef` UUID recorded under that name IS the live obsidian-mcp connector (identical 7-tool set from `connectors/obsidian-mcp/server.py`; `get_index` probed live, serves the brain-agent index); handoff 042's "no repo source, no tool reaches it" was wrong. Its memory-capture role was superseded by memory-mcp; the note tools live on in obsidian-mcp, kept outside the portal per ADR 0020. Connector list inspected live (owner-confirmed): Cloudflare Developer Platform, GitHub Integration, obsidian-mcp, Schnapp Portal, AppFolio Realm-X, Microsoft 365; standalone Schnapp Mac / Schnapp GitHub gone. Nothing to prune.
 
 ## Self-review - spec coverage
 - Spec §3 (source of truth) → Phase 1. ✓

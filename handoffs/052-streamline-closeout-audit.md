@@ -4,11 +4,18 @@ Date: 2026-07-01. Surface: Claude Code (Mac). Prior: [051](051-phase-5-round-tri
 
 ## Leftovers driven to closure
 
-1. **brain-capture connector (plan owner-item #4): CLOSED, already absent.** Inspected the live
-   claude.ai connector list (owner signed in, list read on screen + owner-confirmed): only
-   Cloudflare Developer Platform, GitHub Integration, obsidian-mcp, Schnapp Portal,
-   AppFolio Realm-X, Microsoft 365. No brain-capture; the standalone Schnapp Mac / Schnapp GitHub
-   connectors are also gone (matches ADR 0020 retirement). Plan box flipped.
+1. **brain-capture connector (plan owner-item #4): CLOSED as MOOT** (corrected same session,
+   owner question "wasn't it integrated into the portal?"). There is no dead connector: the
+   `76d929ef` UUID recorded as "brain-capture" IS the live obsidian-mcp connector - identical
+   7-tool set (`read/write/append/search/list_notes`, `inbox_drop`, `get_index`) defined in
+   `connectors/obsidian-mcp/server.py`, and `get_index` probed live returned the brain-agent
+   index. Handoff 042's "bare connector, no repo source, no tool reaches it" was WRONG. It was
+   never portal-fronted: the portal fronts op/memory/mac/github only; obsidian-mcp stays a
+   separate native-OAuth connector (ADR 0020). Its memory-capture role was superseded by
+   memory-mcp; the note tools live on. Connector list inspected live (owner signed in +
+   confirmed): Cloudflare Developer Platform, GitHub Integration, obsidian-mcp, Schnapp Portal,
+   AppFolio Realm-X, Microsoft 365; standalone Schnapp Mac / Schnapp GitHub gone. Plan box
+   flipped; PROGRESS open-items entry closed.
 2. **Phase-3B client legs (credentials-state): CLOSED, superseded in place** (vault `6b61521`).
    Both server+portal legs live-verified from this session through the Schnapp Portal on the
    rotated bearers (mac-mcp `mac_info`, github-mcp `get_repo`). claude.ai leg: no per-client
