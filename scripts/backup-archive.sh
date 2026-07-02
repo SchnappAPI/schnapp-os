@@ -24,7 +24,7 @@ REPO="${CLAUDE_KIT_REPO:-$HOME/code/schnapp-os}"
 ARCHIVE="${CLAUDE_ARCHIVE_DIR:-$HOME/Library/CloudStorage/OneDrive-Schnapp/claude-archive}"
 
 # Claude Code stores transcripts under a slug derived from the project path.
-PROJECT_SLUG="$(echo "$REPO" | sed 's#/#-#g')"
+PROJECT_SLUG="${REPO//\//-}"
 TRANSCRIPTS="$HOME/.claude/projects/$PROJECT_SLUG"
 
 [ -d "$REPO" ]    || { echo "FATAL: repo not found: $REPO" >&2; exit 1; }
@@ -40,6 +40,13 @@ for sub in handoffs decisions; do  # memory lane lives in the vault repo now (se
     "$REPO/$sub/" "$ARCHIVE/repo/$sub/"
 done
 cp -f "$REPO/PLAN.md" "$REPO/PROGRESS.md" "$ARCHIVE/repo/" 2>/dev/null || true
+
+# Prune the abandoned memory/ mirror. The global memory lane moved to the vault's own memory/
+# (decisions/0023); this script stopped mirroring it (loop above), but earlier versions left a
+# copy in both destinations. Without this, that stale copy regenerates every run (the vault rsync
+# below re-copies it from $ARCHIVE) and permanently dirties the vault tree. Remove it at the source
+# so the vault rsync --delete then clears it downstream too.
+rm -rf "$ARCHIVE/repo/memory"
 
 # 2. Archive Claude Code session transcripts (raw .jsonl; additive, never deleted).
 if [ -d "$TRANSCRIPTS" ]; then
