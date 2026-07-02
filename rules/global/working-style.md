@@ -49,3 +49,10 @@ updated: 2026-07-02
   not ask permission to fix what is already known broken. The one exception is a fix that genuinely
   needs a tool or access you do not have: give the exact command for the owner to run, never a vague
   "clean this up later". Reserve questions for real forks the plan does not settle; everything else, fix.
+- Owner actions are copy-paste-ready. Anytime something genuinely needs the owner to run it (a command
+  needing a secret or access you lack, a per-machine step, a decision-gated deploy), present it as a
+  single self-contained fenced shell block they can copy in one click and paste into a terminal:
+  absolute paths, resolve secrets inline from 1Password (`op read 'op://...'`) rather than a literal or
+  a "your key here", mark any unavoidable placeholder as `<FILL:what>`, and end with a verify line that
+  proves it worked. One block per action. Never prose steps the owner must assemble, never "run the
+  appropriate command".
