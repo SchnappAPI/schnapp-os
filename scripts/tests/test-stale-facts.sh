@@ -34,4 +34,10 @@ bash "$SCRIPT" "$tmp" "$T" >/dev/null 2>&1; check "$?" 0 "always exits 0 (read-o
 e="$(mktemp -d)"; trap 'rm -rf "$tmp" "$e"' EXIT
 check "$(bash "$SCRIPT" "$e" "$T" | grep -c 'memory freshness OK')" 1 "clean dir prints OK line"
 
+# MISSING dir must say SKIP, never a false "OK" (the lane is absent on CI runners), and stay exit 0
+out="$(bash "$SCRIPT" "$e/nonexistent" "$T")"; rc=$?
+check "$rc" 0 "missing dir exits 0"
+check "$(printf '%s' "$out" | grep -c '^SKIP:')" 1 "missing dir prints SKIP"
+check "$(printf '%s' "$out" | grep -c 'memory freshness OK')" 0 "missing dir does NOT print OK"
+
 echo "pass=$pass fail=$fail"; [ "$fail" = 0 ]

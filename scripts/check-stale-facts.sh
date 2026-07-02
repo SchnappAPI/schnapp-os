@@ -13,6 +13,14 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DIR="${1:-memory}"
 TODAY="${2:-$(date -u +%F)}"
 
+# A surface without the lane checked out (CI runners; the lane moved to the vault, ADR 0023)
+# must say SKIP, not "OK": an unconditional green for a directory that was never read is the
+# silent-drift class this script exists to catch. Still read-only, still exit 0.
+if [ ! -d "$DIR" ]; then
+  echo "SKIP: memory dir '$DIR' not found on this surface; nothing swept (global lane lives in SchnappAPI/schnapp-vault, ADR 0023)."
+  exit 0
+fi
+
 # iso_to_days <YYYY-MM-DD> - days since the civil epoch (Hinnant days_from_civil).
 # Pure integer arithmetic → portable across BSD/GNU, deterministic, unit-testable.
 iso_to_days() {

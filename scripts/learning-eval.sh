@@ -16,6 +16,13 @@ set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ARCHIVE="${1:-"$HERE/../scheduled-tasks/.learning-queue.archive.tsv"}"
 
+# Absent vs empty are different truths: the archive is git-ignored, so on CI runners it is
+# ALWAYS absent while real history may exist on the Mac. Reporting "no learning history yet"
+# there was false on the system level; say SKIP for absent, keep "no history" for truly empty.
+if [ ! -f "$ARCHIVE" ]; then
+  echo "learning-eval: SKIP - archive not present on this surface ($ARCHIVE is git-ignored; history lives where the worker runs)."
+  exit 0
+fi
 if [ ! -s "$ARCHIVE" ]; then
   echo "learning-eval: no learning history yet (no processed captures)."
   exit 0
