@@ -59,7 +59,7 @@ if [ "${#excludes[@]}" -gt 0 ] && [ "${#files[@]}" -gt 0 ]; then
   for f in "${files[@]}"; do
     skip=0
     for g in "${excludes[@]}"; do
-      # shellcheck disable=SC2053
+      # shellcheck disable=SC2053,SC2254  # $g is an exclude GLOB; unquoted match is intentional
       case "$f" in $g) skip=1; break ;; esac
     done
     [ "$skip" -eq 0 ] && kept+=("$f")

@@ -41,7 +41,7 @@ Existing: `working-style.md` no-sycophancy rule + `standing-rules.sh` every-mess
 ## Phase 5 - Full evaluation + triage
 - [x] T1. Parallel read-only audits across dimensions (staleness/consistency, security/secrets, hooks/scripts correctness, docs/link integrity, skill/rule quality + overlap, automation/CI health). Rank findings by severity. *(done: 6 auditors; security CLEAN, 20/20 tests pass, verdict = mature/coherent/keep-by-default; defects were migration residue + my new-file nits)*
 - [x] T2. Triage: fix-on-sight the safe ones in-pass; flag owner-only (destructive/creds) with exact commands; write the eval report. *(done in 4 commit batches: doc/link fixes; hook MultiEdit gap + #41; link-gate + connector registry + index-first; AUDIT.md banner. Owner-only items surfaced in the closeout.)*
-- [~] T3. Finalize: regenerate CATALOG, ADRs for the forks decided, handoff, PROGRESS, push both repos, verify CI green.
+- [x] T3. Finalize: CATALOG regenerated (9 rules + connector registry), ADR 0030, handoff [053](../../../handoffs/053-concept-integration-and-full-eval.md), PROGRESS current, both repos clean+pushed, CI green on every push, full suite 21/21, shellcheck clean (SC2001 style excepted). *(done)*
 
 ## Decisions taken (recorded here, ADR'd in Phase 5)
 - **Keep manual `@import`; do NOT build path-triggered auto-injection** (contradicts locked ADR 0011). Instead make `paths:` honest via the assemble-context harness (report/test, not silent load).
@@ -53,4 +53,5 @@ Existing: `working-style.md` no-sycophancy rule + `standing-rules.sh` every-mess
 ## Done when
 All three themes integrated with zero duplication and zero locked-ADR violations; the eval report
 exists with every finding triaged (fixed or owner-flagged); CATALOG current; both repos clean +
-pushed; CI green.
+pushed; CI green. **ALL MET 2026-07-02 - PLAN CLOSED** (handoff 053; 21/21 tests, CI green, owner-only
+items surfaced: per-machine 9th-rule @import, vault process-inbox dead workflow, Desktop token rm).

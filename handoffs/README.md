@@ -8,7 +8,8 @@ or renames a handoff. Regenerate with `scripts/gen-handoff-index.sh` after addin
 CI ([`.github/workflows/freshness.yml`](../.github/workflows/freshness.yml)) fails a push
 if this file is out of date.
 
-- [`052`](052-streamline-closeout-audit.md) Handoff 052: Streamline leftovers closed + full plan audit green (resume point)
+- [`053`](053-concept-integration-and-full-eval.md) Handoff 053: NEW-folder concept integration + full repo eval/triage (resume point)
+- [`052`](052-streamline-closeout-audit.md) Handoff 052: Streamline leftovers closed + full plan audit green
 - [`051`](051-phase-5-round-trip-closed.md) Handoff 051: Phase-5 round-trip closed; streamline plan COMPLETE
 - [`050`](050-cowork-leg-round-trip.md) Handoff 050: Cowork leg of the Phase-5 round-trip
 - [`049`](049-phase-5-cowork-packet-repo-side.md) Handoff 049: Phase 5 repo-side complete (handoff packet live); resume = owner Cowork legs (round-trip)
