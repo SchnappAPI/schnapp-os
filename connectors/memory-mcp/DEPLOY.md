@@ -12,7 +12,8 @@ vs **🤖 / terminal** (runnable). Effects: a deployed Render service + a custom
 
 **GitHub token** (`GITHUB_TOKEN`) - least privilege beats reuse:
 - 🖐️ **Recommended:** github.com → Settings → Developer settings → **Fine-grained PAT** → repository
-  access = *Only* `SchnappAPI/schnapp-os` → Repository permissions → **Contents: Read and write** →
+  access = *Only* `SchnappAPI/schnapp-vault` (the memory lane the server writes, decisions/0023) →
+  Repository permissions → **Contents: Read and write** →
   Metadata stays Read. Generate. Store in 1Password as a new item named `SCHNAPP_OS_PAT`, ref
   `op://web-variables/SCHNAPP_OS_PAT/token`. (That is the credential's name; the Render env var that
   HOLDS it stays `GITHUB_TOKEN` - the name the server code reads.)
@@ -34,7 +35,7 @@ unset val   # ref: op://web-variables/MEMORY_MCP_BEARER/credential
 - Environment variables:
   - `GITHUB_TOKEN` = the PAT value from step 1 (paste the value; Render env is the value boundary).
   - `MEMORY_MCP_BEARER` = the bearer value from step 1.
-  - (optional) `MEMORY_REPO` / `MEMORY_BRANCH` / `MEMORY_DIR` - defaults `SchnappAPI/schnapp-os` / `main` / `memory`.
+  - (optional) `MEMORY_REPO` / `MEMORY_BRANCH` / `MEMORY_DIR` - defaults `SchnappAPI/schnapp-vault` / `main` / `memory`.
 - Deploy. Note the service URL, e.g. `https://memory-mcp.onrender.com`.
 
 ## 3. Verify

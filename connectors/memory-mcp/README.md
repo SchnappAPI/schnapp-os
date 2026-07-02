@@ -1,6 +1,13 @@
+---
+last-verified: 2026-07-02
+sources:
+  - connectors/memory-mcp/src
+---
+
 # memory-mcp
 
-Remote MCP server that fronts the git-tracked **memory lane** (`memory/` in this repo) via the
+Remote MCP server that fronts the git-tracked **memory lane** (`memory/` in the vault repo
+`SchnappAPI/schnapp-vault`, decisions/0023) via the
 GitHub Contents API. It is the cross-surface half of the freshness loop: the Code-on-Mac
 SessionStart gate reconciles memory through git + hooks, but **hookless surfaces** (claude.ai web,
 iPhone, Cowork) have no such path. This server gives them one - every read and write goes straight
@@ -30,7 +37,8 @@ the vault's `agents.md`, and the schnapp-os-side procedures are [`docs/memory-la
   refuses to start without it. `/health` is open and touches nothing.
 - **Secrets are host env vars, never baked into the image** and never in tracked files - only
   `op://` references appear here (`.env.template`). The GitHub token wants least privilege: a
-  fine-grained PAT scoped to *only this repo's contents*. See [DEPLOY.md](./DEPLOY.md).
+  fine-grained PAT scoped to *only the vault repo's (`SchnappAPI/schnapp-vault`) contents*, the
+  lane it writes. See [DEPLOY.md](./DEPLOY.md).
 - Stateless Streamable HTTP (new transport per request), same shape as the `op-mcp` connector.
 
 ## Run locally
