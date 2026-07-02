@@ -35,8 +35,8 @@ Existing: `working-style.md` no-sycophancy rule + `standing-rules.sh` every-mess
 - [x] T3. New `session-to-skill` skill (mine a transcript for a reusable multi-step procedure; the gap between `learn-route` corrections and `rules-distill` principles). ADR. Autonomous nightly lane = TDD'd follow-up (not wired here). *(done; ADR 0030; nightly lane flagged in the skill + ADR)*
 
 ## Phase 4 - Structural fixes (from the agentic-context reader)
-- [ ] T1. `scripts/assemble-context.sh`: given a path/task, print which rules/modules would load (consume the dead `paths:` frontmatter) + flag conflicts and the work/personal double-load. Wire into CI. TDD.
-- [ ] T2. rules/ frontmatter: `updated:` on every global rule; extend the length/staleness posture to `rules/`. Index-first pointer in the SessionStart injection. Capability-registry gap (CATALOG omits MCP connectors) - decide extend-vs-defer.
+- [x] T1. `scripts/assemble-context.sh`: given a path/task, print which rules/modules would load (consume the dead `paths:` frontmatter) + flag conflicts and the work/personal double-load. Wire into CI. TDD. *(done: glob->regex projection + --lint; 14/14 self-test wired into freshness.yml; shellcheck clean)*
+- [~] T2. rules/ frontmatter `updated:` / index-first SessionStart pointer / capability-registry (CATALOG omits MCP connectors) - **folded into Phase 5 eval** (assess against the live tree, then fix in the triage pass with full info).
 
 ## Phase 5 - Full evaluation + triage
 - [ ] T1. Parallel read-only audits across dimensions (staleness/consistency, security/secrets, hooks/scripts correctness, docs/link integrity, skill/rule quality + overlap, automation/CI health). Rank findings by severity.
