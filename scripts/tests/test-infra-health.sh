@@ -13,9 +13,14 @@ if [ "$(uname -s)" != "Darwin" ]; then
 fi
 
 # A guaranteed-missing LaunchAgent and an empty backup dir must both report RED and exit non-zero.
+# Alerting is fully isolated so a forced RED never touches prod state or files a real issue (#41
+# footgun): OPS_ALERT_DISABLE=1 short-circuits the alert; the state-dir/repo/env overrides are
+# belt-and-suspenders in case the guard ever regresses.
 tmp="$(mktemp -d)"
-out="$(INFRA_EXPECTED_AGENTS='definitely.not.loaded.zzz' BACKUP_DIR="$tmp" "$SCRIPT" 2>&1)"; rc=$?
-rmdir "$tmp" 2>/dev/null || true
+out="$(OPS_ALERT_DISABLE=1 OPS_STATE_DIR="$tmp/state" OPS_GH_REPO='schnapp-os-tests/none' \
+  OPS_ENV=/dev/null NTFY_URL='' INFRA_EXPECTED_AGENTS='definitely.not.loaded.zzz' \
+  BACKUP_DIR="$tmp" "$SCRIPT" 2>&1)"; rc=$?
+rm -rf "$tmp" 2>/dev/null || true
 
 printf '%s\n' "$out" | grep -q '🔴 definitely.not.loaded.zzz' || { echo "FAIL: missing agent not reported RED"; printf '%s\n' "$out"; exit 1; }
 printf '%s\n' "$out" | grep -q 'no schnapp-bet-.*\.bacpac found'  || { echo "FAIL: empty backup dir not reported RED"; exit 1; }

@@ -39,7 +39,7 @@ for sub in handoffs decisions; do  # memory lane lives in the vault repo now (se
     --include="*/" --include="*.md" --exclude="*" \
     "$REPO/$sub/" "$ARCHIVE/repo/$sub/"
 done
-cp -f "$REPO/PLAN.md" "$REPO/PROGRESS.md" "$ARCHIVE/repo/" 2>/dev/null || true
+cp -f "$REPO/PROGRESS.md" "$ARCHIVE/repo/" 2>/dev/null || true
 
 # Prune the abandoned memory/ mirror. The global memory lane moved to the vault's own memory/
 # (decisions/0023); this script stopped mirroring it (loop above), but earlier versions left a
@@ -65,7 +65,7 @@ is the git repo; this is a browsable, cross-device copy.
 
 - \`repo/handoffs/\` - session handoffs
 - \`repo/decisions/\` - decision log
-- \`repo/PLAN.md\`, \`repo/PROGRESS.md\` - live trackers
+- \`repo/PROGRESS.md\` - execution log (PLAN.md is a retired pointer, decisions/0025)
 - \`sessions/\` - raw Claude Code transcripts (.jsonl), $SESSION_COUNT archived
 
 The global memory lane is no longer in schnapp-os; it lives in the vault

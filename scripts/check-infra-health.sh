@@ -73,7 +73,7 @@ if [ "${#backups[@]}" -eq 0 ]; then
 else
   newest=""; newest_m=0
   for f in "${backups[@]}"; do
-    m="$(stat -f %m "$f" 2>/dev/null || echo 0)"
+    m="$(stat -c %Y "$f" 2>/dev/null || stat -f %m "$f" 2>/dev/null || echo 0)"
     [ "$m" -gt "$newest_m" ] && { newest_m="$m"; newest="$f"; }
   done
   age_days=$(( ( $(date +%s) - newest_m ) / 86400 ))
@@ -121,15 +121,20 @@ fi
 printf '\n'
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
+# Alerting is best-effort and side-effecting (opens/closes a real owner-assigned GitHub issue +
+# pings ntfy + writes the state file). OPS_ALERT_DISABLE=1 suppresses it so a forced-RED test or a
+# dry-run cannot touch prod state or file a false incident (the #41 footgun). ops-alert also honors
+# OPS_STATE_DIR / OPS_GH_REPO for further isolation.
+alert() { [ "${OPS_ALERT_DISABLE:-0}" = 1 ] && return 0; "$DIR/ops-alert.sh" "$@" >/dev/null 2>&1 || true; }
 if [ "$rc" -eq 0 ]; then
   printf '**infra-health: OK** - all checks green.\n'
   # Resolve any open incident (best-effort): closes the GitHub issue + clears state on recovery.
-  "$DIR/ops-alert.sh" green infra-health "schnapp infra-health" "" >/dev/null 2>&1 || true
+  alert green infra-health "schnapp infra-health" ""
 else
   printf '**infra-health: RED** - a watched signal failed (read-only; nothing was restarted).\n'
   # Native alert (best-effort): opens/updates an owner-assigned GitHub issue (email) for the incident,
   # plus a one-shot ntfy/macOS notification on the green->red transition. See ops-alert.sh.
-  "$DIR/ops-alert.sh" red infra-health "schnapp infra-health RED" \
-    "$(printf 'Host %s:\n%s' "$(hostname -s)" "$RED_SUMMARY")" >/dev/null 2>&1 || true
+  alert red infra-health "schnapp infra-health RED" \
+    "$(printf 'Host %s:\n%s' "$(hostname -s)" "$RED_SUMMARY")"
 fi
 exit "$rc"
