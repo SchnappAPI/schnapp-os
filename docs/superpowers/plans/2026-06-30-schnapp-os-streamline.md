@@ -141,7 +141,7 @@ Recommended order: **1 → (2 ∥ 4) → 3 → 5.** Each phase ends shippable.
 1. **Phase 1:** confirm repo creation, OneDrive exit, MCP repoint.
 2. **Phase 2:** per-machine `~/.claude/CLAUDE.md` `@import` edit; uninstall cached plugin.
 3. **Phase 5:** ✅ done 2026-07-01 - connector vault-access verified, memory-mcp probed, round-trip closed (handoffs 049/050/051).
-4. **Anytime:** prune the dead `brain-capture` claude.ai connector.
+4. **Anytime:** ✅ closed 2026-07-01 - `brain-capture` already absent from the claude.ai connector list (inspected live: only Cloudflare Developer Platform, GitHub Integration, obsidian-mcp, Schnapp Portal, AppFolio Realm-X, Microsoft 365 remain; the standalone Schnapp Mac / Schnapp GitHub connectors are likewise gone per ADR 0020). Nothing left to prune.
 
 ## Self-review - spec coverage
 - Spec §3 (source of truth) → Phase 1. ✓
