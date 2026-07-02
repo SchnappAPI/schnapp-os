@@ -128,6 +128,31 @@ surfaces (Cowork, claude.ai) = the GitHub connector, run by hand via
 [`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md), which owns the connector
 mechanics. Decision + rationale: [decisions/0027](../decisions/0027-cowork-handoff-packet-over-git.md).
 
+### Handoff contents (what a good handoff is)
+
+A handoff is a grounding primer for a fresh context, not a transcript. Dense beats long: 200 words
+of signal beats 2,000 of history. The skeleton is [`handoffs/TEMPLATE.md`](../handoffs/TEMPLATE.md);
+every handoff carries these six fields plus the copy-paste primer:
+
+1. **Goal** - the owner's original objective, in their terms.
+2. **Facts established** - constraints, values, preferences settled this session (not re-derivable).
+3. **Decisions + reasoning** - what was chosen and *why* (the reasoning, not just the choice).
+4. **Actions + outcomes** - what was done and what resulted (what worked, what failed and why).
+5. **Status + next steps** - where it stands, what the next session does first.
+6. **Open questions / edge cases** - unresolved forks, owner-only follow-ups, known risks.
+
+**Exclude** the exploratory back-and-forth, repetitions, digressions, and filler that added no
+forward value - carrying them forward reseeds the rot. The point of a handoff is that discarding the
+bloated thread loses nothing, because the six fields captured what mattered.
+
+### Handoff vs memory (which lane)
+
+They are complementary, not redundant. **Memory** (the vault lane) holds durable facts that must
+survive across many sessions - supersede in place. A **handoff** holds per-task resume state for one
+extended piece of work - append-only, numbered, the newest is the resume point. Rule: a fact you
+would want six sessions from now -> memory; state only the *next* session needs -> handoff. A
+finished task's handoff goes stale and that is fine; a memory fact should not.
+
 ## On-correction update (any surface)
 
 When the owner corrects a mistake, or a wrong assumption surfaces, capture the fix
