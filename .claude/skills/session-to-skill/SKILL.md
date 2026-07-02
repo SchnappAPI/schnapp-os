@@ -57,7 +57,7 @@ agent uncertain which to follow - resolve it, do not stack. This is the same bar
 
 Present the candidate (the six articulation fields + which sessions evidence it + the dedup result)
 and **write nothing until the owner approves.** On approval, author the skill with the
-[`skill-creator`](skill-creator) skill so it gets a proper `SKILL.md` + progressive disclosure, then
+`skill-creator` skill so it gets a proper `SKILL.md` + progressive disclosure, then
 regenerate `CATALOG.md`. Route the primitive choice through
 [`scaffolding-choice`](../../../rules/modules/activity/scaffolding-choice.md) first - sometimes the
 right home is a rule or a hook, not a skill.

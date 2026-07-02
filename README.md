@@ -50,7 +50,7 @@ Per-surface operating detail lives in [surfaces/](surfaces/) and is referenced h
    They are the global lane's delivery):
    - Create `~/.claude/CLAUDE.md` by copying the body of
      [templates/user-global-CLAUDE.md](templates/user-global-CLAUDE.md) (that file lives outside the repo,
-     so the template is its canonical copy). It `@import`s the 8 global rules from the repo.
+     so the template is its canonical copy). It `@import`s the global rules from the repo.
    - In `~/.claude/settings.json` set `"autoMemoryDirectory": "~/code/schnapp-vault/memory"` so the global
      **memory** lane (the vault `SchnappAPI/schnapp-vault`) loads in every repo. A plugin cannot deliver
      this key (only `agent`/`subagentStatusLine` are plugin-settable), and a project-scoped setting reaches

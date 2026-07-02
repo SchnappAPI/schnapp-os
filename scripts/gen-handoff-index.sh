@@ -41,6 +41,8 @@ trap 'rm -f "$TMP"' EXIT
   echo "if this file is out of date."
   echo
 
+  # [0-9]* deliberately indexes only numbered handoffs; TEMPLATE.md (the handoff skeleton) and
+  # README.md are intentionally excluded - do not broaden this glob.
   for f in "$REPO"/handoffs/[0-9]*.md; do
     [ -e "$f" ] || continue
     base="$(basename "$f")"

@@ -7,7 +7,8 @@
   OAuth → origins); it fronts the four static-bearer servers - **op-mcp** (secrets), **memory-mcp**,
   **mac-mcp** (shell/SQL/files), **github-mcp**: so one OAuth connector exposes all their tools.
   **obsidian-mcp** is a separate connector (its own native OAuth, not portal-fronted). Connector/auth
-  topology + health: [`memory/credentials-state.md`](../memory/credentials-state.md) (canonical). No
+  topology + health: [`credentials-map.md`](../credentials-map.md) (which points at the vault
+  `credentials-state` fact, canonical). No
   local filesystem, shell, or hooks. To USE a secret, call the Mac's `op_run`/`op_inject` (value
   scrubbed); use op-mcp `op_read` only when the Mac is off AND the portal is healthy (returns the raw
   value into chat).

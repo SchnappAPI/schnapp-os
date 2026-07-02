@@ -16,7 +16,7 @@ Never silently fail because the surface lacks a capability. State which path is 
 Secrets resolve through 1Password, referenced by `op://`, never stored as values. The
 bootstrap is a 1Password Service Account token (rotate per `decisions/0001` if it breaks).
 The hosted **op-mcp connector** resolves secrets off-Mac on every surface when healthy
-(current status: `memory/credentials-state.md`; runbook: `connectors/op-mcp/DEPLOY.md`). To *use* a
+(current status: [`credentials-map.md`](../credentials-map.md); runbook: `connectors/op-mcp/DEPLOY.md`). To *use* a
 secret in a command, prefer the Mac's `op_run`/`op_inject` (value stays out of the transcript);
 `op_read` only when the Mac is off and the hosted connector is healthy.
 
