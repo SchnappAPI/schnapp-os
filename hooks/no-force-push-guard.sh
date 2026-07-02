@@ -8,12 +8,18 @@
 # (the only reliable hard-policy gate; research doc §4). Replaces the removed, buggy schnapp-kit
 # no-commit-to-main hook (which wrongly forced feature branches and false-matched read-only git).
 #
-# Fast + deterministic: one python json parse, scoped regex (only the push command's own args, so a
+# Fast + deterministic: one JSON parse (python3, jq fallback), scoped regex (only the push command's own args, so a
 # trailing `&& rm -f x` does not false-trip). Allows every non-force push. Never blocks anything else.
 set -uo pipefail
 INPUT="$(cat)"
 
-verdict="$(printf '%s' "$INPUT" | python3 -c '
+# python3 primary (unchanged), jq fallback proven verdict-equivalent by
+# scripts/tests/test-no-force-push-guard.sh: before the fallback, this HARD gate silently
+# failed OPEN (allowed force-push) on any surface without python3. With neither parser the
+# gate still fails open (blocking every Bash call is an owner-level call) but now says so
+# loudly instead of silently.
+if command -v python3 >/dev/null 2>&1; then
+  verdict="$(printf '%s' "$INPUT" | python3 -c '
 import sys, json, re
 try:
     d = json.load(sys.stdin)
@@ -29,6 +35,18 @@ for m in re.finditer(r"git\s+[^;&|\n]*?\bpush\b([^;&|\n]*)", cmd):
         print("FORCE")
         break
 ' 2>/dev/null)"
+elif command -v jq >/dev/null 2>&1; then
+  verdict="$(printf '%s' "$INPUT" | jq -r '
+    if .tool_name != "Bash" then empty else
+      ((.tool_input.command // "") as $cmd
+       | [$cmd | match("git\\s+[^;&|\\n]*?\\bpush\\b([^;&|\\n]*)"; "g") | (.captures[0].string // "")]
+       | if any(.[]; test("--force\\b|--force-with-lease\\b|(^|\\s)-\\w*f\\w*|(^|\\s)\\+\\w"))
+         then "FORCE" else empty end)
+    end' 2>/dev/null)"
+else
+  echo "no-force-push-guard: neither python3 nor jq is available; force-push detection is OFF (fail-open). Install one of them." >&2
+  verdict=""
+fi
 
 if [ "$verdict" = "FORCE" ]; then
   echo "BLOCKED: force-push is disabled by the schnapp-os guard (decisions/0011 #9, main-only)." >&2

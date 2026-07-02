@@ -71,6 +71,12 @@ jobs:
       - name: Length-advisory self-test
         run: bash scripts/tests/test-length-advisory.sh
 
+      - name: Write-hook JSON-extraction self-test
+        run: bash scripts/tests/test-write-hook-json-extract.sh
+
+      - name: Force-push guard self-test
+        run: bash scripts/tests/test-no-force-push-guard.sh
+
       - name: Secret-bytes gate self-test
         run: bash scripts/tests/test-check-secret-bytes.sh
 

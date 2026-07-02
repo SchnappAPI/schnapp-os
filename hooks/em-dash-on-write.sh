@@ -11,7 +11,15 @@
 set -uo pipefail
 INPUT="$(cat)"
 
-FILE="$(printf '%s' "$INPUT" | python3 -c '
+# jq-first with python3 fallback (the dual path length-advisory.sh already uses) so the
+# guard survives a surface with only one JSON parser; a python3-only read meant this hook
+# silently no-opped wherever python3 was absent. Keep this block byte-identical across
+# secret-scan-on-write.sh / shellcheck-on-write.sh / em-dash-on-write.sh
+# (test-write-hook-json-extract.sh diffs the three).
+if command -v jq >/dev/null 2>&1; then
+  FILE="$(printf '%s' "$INPUT" | jq -r 'select(.tool_name == "Write" or .tool_name == "Edit" or .tool_name == "MultiEdit") | .tool_input.file_path // empty' 2>/dev/null)"
+else
+  FILE="$(printf '%s' "$INPUT" | python3 -c '
 import sys, json
 try:
     d = json.load(sys.stdin)
@@ -21,6 +29,7 @@ if d.get("tool_name") not in ("Write", "Edit", "MultiEdit"):
     sys.exit(0)
 print(d.get("tool_input", {}).get("file_path", "") or "")
 ' 2>/dev/null)"
+fi
 
 if [ -z "$FILE" ] || [ ! -f "$FILE" ]; then exit 0; fi
 
