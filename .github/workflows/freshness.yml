@@ -86,6 +86,12 @@ jobs:
       - name: Assemble-context self-test
         run: bash scripts/tests/test-assemble-context.sh
 
+      - name: Internal link check (live docs)
+        run: bash scripts/check-links.sh
+
+      - name: Link-check self-test
+        run: bash scripts/tests/test-check-links.sh
+
       - name: LaunchAgent plists are valid
         run: python3 -c "import plistlib; [plistlib.load(open(p,'rb')) for p in ['scheduled-tasks/com.schnapp.memory-consolidation.plist','scheduled-tasks/com.schnapp.infra-health.plist','scheduled-tasks/com.schnapp.vault-autocommit.plist']]; print('plists OK')"
 

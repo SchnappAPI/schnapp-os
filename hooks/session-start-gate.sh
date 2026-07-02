@@ -80,6 +80,7 @@ if [ -d "$MEM" ]; then
   else
     echo "[memory] no stale facts (<7d)"
   fi
+  [ -f "$MEM/MEMORY.md" ] && echo "[memory] orient: read $MEM/MEMORY.md (thin index) first, then load facts on demand - it is the read-first map of durable knowledge."
 else
   echo "[memory] no vault memory/ dir at $MEM (global lane is SchnappAPI/schnapp-vault)"
 fi

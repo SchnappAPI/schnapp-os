@@ -119,3 +119,16 @@ decision 0011 #2; the scripts in `hooks/` remain the canonical source.)
 - **performance-optimizer**
 - **secrets-leak-reviewer**
 - **sql-etl-reviewer**
+
+## MCP connectors
+
+Remote MCP servers in `connectors/`, referenced by `.mcp.json` (bearer ${ENV} refs) and, for
+the portal-fronted set, behind the Cloudflare portal (`op/memory/mac/github`; obsidian-mcp is a
+separate native-OAuth connector). This is the static inventory only; live health, auth state, and
+rotation status are the vault `credentials-state` fact (referenced, never restated here).
+
+- **github-mcp**: Self-hosted MCP server exposing GitHub operations. Bearer-token auth (backing: `connectors/github-mcp/server.py`)
+- **mac-mcp**: Self-hosted MCP server for Mac operations (shell_exec, op_run, file ops, SQL queries, (backing: `connectors/mac-mcp/server.py`)
+- **memory-mcp**: Remote MCP server that fronts the git-tracked **memory lane** (`memory/` in the vault repo (backing: `connectors/memory-mcp/src/`)
+- **obsidian-mcp**: This is the **source of truth** for the live Obsidian MCP. It is a Python FastMCP server that (backing: `connectors/obsidian-mcp/server.py`)
+- **op-mcp**: A small remote MCP server that resolves 1Password secrets through a **Service (backing: `connectors/op-mcp/src/`)

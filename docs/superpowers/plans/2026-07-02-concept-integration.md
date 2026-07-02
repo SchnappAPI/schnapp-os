@@ -36,7 +36,7 @@ Existing: `working-style.md` no-sycophancy rule + `standing-rules.sh` every-mess
 
 ## Phase 4 - Structural fixes (from the agentic-context reader)
 - [x] T1. `scripts/assemble-context.sh`: given a path/task, print which rules/modules would load (consume the dead `paths:` frontmatter) + flag conflicts and the work/personal double-load. Wire into CI. TDD. *(done: glob->regex projection + --lint; 14/14 self-test wired into freshness.yml; shellcheck clean)*
-- [~] T2. rules/ frontmatter `updated:` / index-first SessionStart pointer / capability-registry (CATALOG omits MCP connectors) - **folded into Phase 5 eval** (assess against the live tree, then fix in the triage pass with full info).
+- [x] T2. rules/ frontmatter `updated:` (audit confirmed all 9 rules + 17 modules already carry it - no gap) / index-first SessionStart pointer (added to session-start-gate.sh [memory] block) / capability-registry (added a generated `## MCP connectors` section to gen-catalog.sh - CATALOG now inventories the 5 connectors). *(done in Phase 5 triage 3/4)*
 
 ## Phase 5 - Full evaluation + triage
 - [ ] T1. Parallel read-only audits across dimensions (staleness/consistency, security/secrets, hooks/scripts correctness, docs/link integrity, skill/rule quality + overlap, automation/CI health). Rank findings by severity.

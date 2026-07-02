@@ -155,6 +155,29 @@ trap 'rm -f "$TMP"' EXIT
   else
     echo "None yet."
   fi
+  echo
+
+  # ---- MCP connectors (static registry; LIVE health/topology is the vault credentials-state fact) ----
+  echo "## MCP connectors"
+  echo
+  echo "Remote MCP servers in \`connectors/\`, referenced by \`.mcp.json\` (bearer \${ENV} refs) and, for"
+  echo "the portal-fronted set, behind the Cloudflare portal (\`op/memory/mac/github\`; obsidian-mcp is a"
+  echo "separate native-OAuth connector). This is the static inventory only; live health, auth state, and"
+  echo "rotation status are the vault \`credentials-state\` fact (referenced, never restated here)."
+  echo
+  if ls -d "$REPO"/connectors/*/ >/dev/null 2>&1; then
+    for d in "$REPO"/connectors/*/; do
+      nm="$(basename "$d")"
+      # one-liner = first prose line after the H1 (skips frontmatter + the H1 itself); fall back to H1
+      desc="$(awk '/^# / {f=1; next} f && NF {print; exit}' "$d/README.md" | trunc)"
+      [ -z "$desc" ] && desc="$(h1 "$d/README.md")"
+      [ -z "$desc" ] && desc="see connectors/$nm/README.md"
+      back="server.py"; [ -d "$d/src" ] && back="src/"
+      echo "- **$nm**: $desc (backing: \`connectors/$nm/$back\`)"
+    done
+  else
+    echo "None."
+  fi
 } > "$TMP"
 
 mv "$TMP" "$OUT"
