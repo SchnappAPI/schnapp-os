@@ -18,8 +18,10 @@ INPUT="$(cat)"
 
 if printf '%s' "$INPUT" | grep -qiE "you'?re wrong|that'?s wrong|that is wrong|incorrect|i told you|i already (told|said)|you should have|you should ?n'?t|you should not|why did you|why are you|i did ?n'?t ask|stop asking|that'?s not what|not what i (asked|wanted|said|meant)|do ?n'?t ask"; then
   # Enqueue the correction for the nightly learning worker (local, git-ignored queue).
+  # Absolute default so machine-wide firing always lands in the schnapp-os queue; LEARNING_QUEUE
+  # overrides it (tests redirect to a temp dir; a machine with schnapp-os cloned elsewhere points here).
   # Best-effort: a write failure must never break the hook.
-  q="$HOME/code/schnapp-os/scheduled-tasks/.learning-queue.tsv"
+  q="${LEARNING_QUEUE:-$HOME/code/schnapp-os/scheduled-tasks/.learning-queue.tsv}"
   ts="$(date -u +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || echo unknown)"
   line="$(printf '%s' "$INPUT" | tr '\n\t' '  ')"
   { printf '%s\tcorrection\t%s\n' "$ts" "$line" >> "$q"; } 2>/dev/null || true
