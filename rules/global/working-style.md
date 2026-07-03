@@ -1,6 +1,6 @@
 ---
 scope: global
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 # Working style
 
@@ -33,7 +33,9 @@ updated: 2026-07-02
 - Surface a better option if you see one; do not force a choice when a default is sensible.
 - Think in systems, not instances. Every change ripples: before finishing one, trace what else
   it touches (other docs, trackers, surfaces, dependents, the install path) and update all of
-  them in the same change. A fix that leaves a sibling inconsistent is not done.
+  them in the same change. A fix that leaves a sibling inconsistent is not done. A scope change
+  (project → machine/user, local → shared) also demands auditing the artifact's own content for
+  scope-specific references; the payload must match the new audience.
 - Work from the objective, not the literal ask. Hold the project's purpose in mind and let it
   drive the work: surface concerns, risks, and gaps you were not explicitly told about. Acting
   as an expert is catching what the instruction left out. Stay in scope; never wear blinders.
