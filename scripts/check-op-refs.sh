@@ -24,7 +24,9 @@ while IFS= read -r ref; do
   [ -n "$ref" ] || continue
   item="${ref#op://web-variables/}"; item="${item%%/*}"
   [ -n "$item" ] || continue
-  case "$item" in *'<'*|*'>'*|*'['*) continue ;; esac   # skip placeholders like <ITEM> and regex fragments (e.g. this script's own extraction pattern matching itself)
+  # skip placeholders (<ITEM>) and pattern artifacts (regex/glob/shell-var text like [^...],
+  # $VAR, {x}) - never real 1Password item titles, e.g. this script's own extraction regex.
+  case "$item" in *'<'*|*'>'*|*'['*|*']'*|*'{'*|*'}'*|*'$'*|*'*'*|*'?'*|*'|'*|*'\'*) continue ;; esac
   if ! grep -qF "$item" "$map"; then
     echo "STALE op:// ref: item '$item' is not in $map (renamed/typo?)" >&2
     miss=1
