@@ -121,6 +121,7 @@ decision 0011 #2; the scripts in `hooks/` remain the canonical source.)
 
 ## Agents
 
+- **betting-grading-reviewer**
 - **performance-optimizer**
 - **secrets-leak-reviewer**
 - **sql-etl-reviewer**
