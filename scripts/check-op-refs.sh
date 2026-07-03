@@ -24,7 +24,7 @@ while IFS= read -r ref; do
   [ -n "$ref" ] || continue
   item="${ref#op://web-variables/}"; item="${item%%/*}"
   [ -n "$item" ] || continue
-  case "$item" in *'<'*|*'>'*) continue ;; esac   # skip placeholder examples like <ITEM>
+  case "$item" in *'<'*|*'>'*|*'['*) continue ;; esac   # skip placeholders like <ITEM> and regex fragments (e.g. this script's own extraction pattern matching itself)
   if ! grep -qF "$item" "$map"; then
     echo "STALE op:// ref: item '$item' is not in $map (renamed/typo?)" >&2
     miss=1

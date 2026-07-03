@@ -63,7 +63,12 @@ fi
 #    The global memory lane lives in the vault (SchnappAPI/schnapp-vault), not schnapp-os; scan it there.
 #    Detection logic + its unit test live in scripts/check-supersede-orphans.sh so the
 #    column-0-vs-indented-frontmatter bug (which made this a silent no-op) cannot regress unnoticed.
-MEM="$HOME/code/schnapp-vault/memory"
+#    Resolve the vault checkout: VAULT_DIR env, the Mac-standard ~/code path, then a sibling
+#    checkout of this repo (the cloud env clones both repos side by side, and HOME has no ~/code
+#    there - without the sibling fallback the memory scan silently no-ops on that surface).
+VAULT="${VAULT_DIR:-$HOME/code/schnapp-vault}"
+[ -d "$VAULT" ] || VAULT="$(dirname "$REPO")/schnapp-vault"
+MEM="$VAULT/memory"
 if [ -d "$MEM" ]; then
   orphans="$(bash "$REPO/scripts/check-supersede-orphans.sh" "$MEM" 2>/dev/null)"
   if [ -n "$orphans" ]; then
@@ -102,7 +107,7 @@ fi
 
 # 4. Satellite repos (owner Mac): surface unpushed state so cross-repo work is not lost
 #    (decisions/0008). Existence-guarded, so this no-ops on machines that lack these checkouts.
-for sat in "$HOME/code/schnapp-bet" "$HOME/code/schnapp-vault"; do
+for sat in "$HOME/code/schnapp-bet" "$VAULT"; do
   [ -d "$sat/.git" ] || continue
   name="$(basename "$sat")"
   sa="$(git -C "$sat" rev-list --count '@{u}'..HEAD 2>/dev/null || echo 0)"
