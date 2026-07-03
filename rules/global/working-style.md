@@ -58,4 +58,6 @@ updated: 2026-07-03
   needing a secret or access you lack, a per-machine step, a decision-gated deploy), give one
   self-contained fenced shell block: absolute paths, secrets inline via `op read 'op://...'` (never a
   literal or "your key here"), any unavoidable placeholder as `<FILL:what>`, ending with a verify line.
-  One block per action; never prose steps the owner must assemble.
+  One block per action; never prose steps the owner must assemble. Verify the block itself before
+  delivering: every flag and referenced resource (op item, secret name, path) confirmed to exist -
+  an unverified block fails at the owner's terminal, the worst place.

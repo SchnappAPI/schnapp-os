@@ -54,18 +54,16 @@ Plan CLOSED, all boxes flipped. Nightly routine now re-surfaces open owner items
 now surfaces pending learning-loop proposals.
 
 ## Open questions / edge cases (owner-only)
-1. **Set `VAULT_READ_TOKEN`** so the nightly stale-facts sweep scans the vault lane on CI:
-   ```sh
-   op read 'op://web-variables/GITHUB_PAT_VAULT_READ/credential' | gh secret set VAULT_READ_TOKEN --repo SchnappAPI/schnapp-os --body-file - \
-     && gh workflow run scheduled-routines.yml --repo SchnappAPI/schnapp-os \
-     && sleep 60 && gh run list --repo SchnappAPI/schnapp-os --workflow scheduled-routines.yml --limit 1
-   ```
-   If no vault-read PAT item exists yet, mint a fine-grained PAT (SchnappAPI/schnapp-vault,
-   Contents: read) and store it at that reference first (`<FILL:op-item-name>` if you pick a
-   different name).
-2. **Other machines** still owe the one-time per-machine wires from 053/ADR 0031: the
+1. **Other machines** still owe the one-time per-machine wires from 053/ADR 0031: the
    `context-discipline.md` `@import` line in `~/.claude/CLAUDE.md` + the user-scope
    capture-nudge/standing-rules hooks in `~/.claude/settings.json`.
+
+RESOLVED same-day (was item 1): `VAULT_READ_TOKEN` set by the session after the owner block
+failed twice (invented `--body-file` flag - gh reads stdin; assumed op item name unverified -
+verify-before-asserting miss, recorded in PROGRESS). Backed by `SCHNAPP_OS_PAT/credential`
+(least-privilege fine-grained, contents on the two repos), NOT the all-repos `GITHUB_PAT` set
+first and immediately superseded. Verified: manual scheduled-routines run scanned the vault lane
+(real result, not SKIP). Consumer recorded in [credentials-map.md](../credentials-map.md).
 
 ## Copy-paste primer (new session)
 Agentic-OS optimize pass CLOSED 2026-07-03 (plan docs/superpowers/plans/2026-07-03-agentic-os-optimize.md):
