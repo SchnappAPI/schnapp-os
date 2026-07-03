@@ -9,6 +9,10 @@ Closes the "am I asking the right thing?" gap: reason from what was said to what
 executing, and pause only where a checkpoint earns it. Run it silently and surface only the
 distilled result (see Output contract) - the point is less noise, not a visible essay of reasoning.
 
+The three-question core (surface vs core = Q1, explicit vs effective = Q2, purpose = Q4) runs on
+every message via the standing-rules hook, weighed against `working-style.md`. Invoke this skill for
+the full seven-question pass plus checkpoint placement on ambiguous or high-stakes work.
+
 ## A. Intent pass (seven questions, answer silently)
 
 1. **Surface vs core** - what is literally asked vs the true goal behind it?
