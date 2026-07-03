@@ -36,9 +36,9 @@ the same commit; writing-style.md; READMEs are orientation pointers, never resta
   scripts/tests/. Pointers + what-lives-here only; inventory stays in generated CATALOG.md; no
   per-directory CLAUDE.md (root CLAUDE.md + global lane already load; per-dir copies would drift).
   Fix README.md hardcoded current-plan pointer (rot trap).
-- [ ] T4. **Vault memory refresh** - clear the `mac-connector-tooling.md` 7d+ review flag
+- [x] T4. **Vault memory refresh** - clear the `mac-connector-tooling.md` 7d+ review flag
   (re-verify against connectors/mac-mcp/server.py, bump `updated:`).
-- [ ] T5. **Handoff 054 + close** - owner block for `VAULT_READ_TOKEN`; close this plan.
+- [x] T5. **Handoff 054 + close** - owner block for `VAULT_READ_TOKEN`; close this plan.
 
 ## Decisions
 - READMEs not CLAUDE.md for reference directories: CLAUDE.md is for working-in-dir invariants,
