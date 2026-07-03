@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # run-ci-routines.sh - the SAFE, Mac-independent scheduled routines, as one bundle.
 #
-# Single source of truth for the safe, auto-class routines: four read-only
+# Single source of truth for the safe, auto-class routines: five read-only
 # passes - the doc-freshness sweep (hard gate), the sync/unmerged check, a memory-freshness
-# sweep (check-stale-facts.sh), and the learning-loop eval (learning-eval.sh). The cron workflow
+# sweep (check-stale-facts.sh), the learning-loop eval (learning-eval.sh), and the open
+# owner-items surfacing (check-open-questions.sh). The cron workflow
 # (.github/workflows/scheduled-routines.yml) calls this; nothing here is duplicated in YAML.
 # Read-only except for the freshness generator's temp file. Exit non-zero ONLY when a hard gate
 # (freshness) fails, so a real problem is a visible failure and informational drift is not.
@@ -92,7 +93,9 @@ echo
 echo "## Memory freshness sweep"
 echo
 echo '```'
-bash scripts/check-stale-facts.sh memory 2>&1 || true
+# VAULT_MEMORY_DIR: the workflow points this at a vault checkout (vault/memory) when the
+# VAULT_READ_TOKEN secret is configured; absent -> check-stale-facts says SKIP, not a false OK.
+bash scripts/check-stale-facts.sh "${VAULT_MEMORY_DIR:-memory}" 2>&1 || true
 echo '```'
 echo
 echo "_Read-only: flags facts crossing 7/30/90-day \`updated:\` thresholds. Refresh via supersede"
@@ -108,6 +111,17 @@ echo '```'
 echo
 echo "_Read-only: flags corrections that recurred after promotion (the rule may not have stuck) - "
 echo "the signal for revisiting a promoted rule. This routine never edits._"
+echo
+
+# --- Routine 5: open owner items in the live handoff (informational) ---
+echo "## Open owner items (live handoff)"
+echo
+echo '```'
+bash scripts/check-open-questions.sh handoffs 2>&1 || true
+echo '```'
+echo
+echo "_Read-only: re-surfaces the resume-point handoff's \"## Open ...\" items nightly so they"
+echo "cannot rot silently. Resolve or re-carry them in the next handoff - this routine never edits._"
 echo
 
 exit "$rc"

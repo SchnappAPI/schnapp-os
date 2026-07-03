@@ -85,6 +85,21 @@ else
   echo "[memory] no vault memory/ dir at $MEM (global lane is SchnappAPI/schnapp-vault)"
 fi
 
+# 3b. Learning-loop pending proposals (human-in-the-loop surface). Held self-edits and gate
+#     proposals wait as open GitHub issues titled 'learning-loop:'; nothing else re-surfaces
+#     them, so an unreviewed proposal is silent rot. Best-effort: offline / no-gh never blocks.
+if command -v gh >/dev/null 2>&1; then
+  pending="$(gh issue list --repo SchnappAPI/schnapp-os --state open \
+              --search 'learning-loop in:title' --json number,title \
+              --jq '.[] | "#\(.number) \(.title)"' 2>/dev/null | head -5)"
+  if [ -n "$pending" ]; then
+    echo "[learning] PENDING PROPOSALS - review/approve or close (the loop never auto-lands these):"
+    printf '%s\n' "$pending" | sed 's/^/        - /'
+  else
+    echo "[learning] no pending proposals"
+  fi
+fi
+
 # 4. Satellite repos (owner Mac): surface unpushed state so cross-repo work is not lost
 #    (decisions/0008). Existence-guarded, so this no-ops on machines that lack these checkouts.
 for sat in "$HOME/code/schnapp-bet" "$HOME/code/schnapp-vault"; do

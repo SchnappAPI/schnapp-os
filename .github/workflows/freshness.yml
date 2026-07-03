@@ -44,6 +44,9 @@ jobs:
       - name: Capture-enqueue self-test
         run: bash scripts/tests/test-capture-enqueue.sh
 
+      - name: Open-questions surfacing self-test
+        run: bash scripts/tests/test-open-questions.sh
+
       - name: Learning-worker self-test
         run: bash scripts/tests/test-learning-worker.sh
 

@@ -17,10 +17,26 @@ permissions:
 jobs:
   routines:
     runs-on: ubuntu-latest
+    env:
+      VAULT_READ_TOKEN: ${{ secrets.VAULT_READ_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0   # full history + branch refs for the sync/unmerged check
 
+      # Vault memory lane (SchnappAPI/schnapp-vault) is a separate private repo; the nightly
+      # stale-facts sweep can only scan it here with a read token. Without the secret this step
+      # skips and the sweep reports SKIP (never a false OK). Set it with:
+      #   gh secret set VAULT_READ_TOKEN --repo SchnappAPI/schnapp-os
+      - name: Checkout vault memory lane (needs VAULT_READ_TOKEN)
+        if: env.VAULT_READ_TOKEN != ''
+        uses: actions/checkout@v4
+        with:
+          repository: SchnappAPI/schnapp-vault
+          token: ${{ secrets.VAULT_READ_TOKEN }}
+          path: vault
+
       - name: Run safe scheduled routines
+        env:
+          VAULT_MEMORY_DIR: vault/memory
         run: bash scheduled-tasks/run-ci-routines.sh | tee -a "$GITHUB_STEP_SUMMARY"
