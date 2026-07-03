@@ -25,6 +25,11 @@ Status lives in one canonical place and is read there:
 | [templates/](templates/) | `project-CLAUDE.md` (manual project starter) + `user-global-CLAUDE.md` (the `~/.claude/CLAUDE.md` copy) |
 | [surfaces/](surfaces/) | One operating profile per surface (Code, Cowork, claude.ai, iPhone) |
 | [connectors/](connectors/) | Remote MCP connectors - `op-mcp` (1Password resolver), `memory-mcp` (cross-surface memory), `mac`/`github`/`obsidian-mcp` |
+| [hooks/](hooks/) | Claude Code lifecycle hooks (wiring documented in `hooks/README.md`) |
+| [scripts/](scripts/) | Checks, generators, learning loop, ops (`scripts/README.md`) |
+| [scheduled-tasks/](scheduled-tasks/) | Scheduled-routine specs: CI crons vs Mac LaunchAgents |
+| [docs/](docs/) | Durable docs vs frozen dated snapshots (`docs/README.md`) |
+| [.github/](.github/) | CI gates + Mac-independent crons (`.github/README.md`) |
 | [docs/memory-lane.md](docs/memory-lane.md) | Memory procedures (freshness gate, end-of-session write, on-correction routing). Global lane lives in the vault `SchnappAPI/schnapp-vault`, not here; schema in the vault's `agents.md` |
 | [credentials-map.md](credentials-map.md) | `op://` reference map (references only) |
 | [docs/environment-and-access.md](docs/environment-and-access.md) | Never-blocked config: required network allowlist, git-write path, per-surface delivery (ADR 0018) |

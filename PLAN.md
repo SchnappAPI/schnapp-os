@@ -6,8 +6,9 @@ is archived verbatim at [docs/archive/PLAN-archive-2026-07-01.md](docs/archive/P
 
 ## Where planning lives now
 - **Active plans**: per-initiative, under [docs/superpowers/plans/](docs/superpowers/plans/). Each
-  carries its own task checkboxes (the live tracker for that work). Current: the
-  [streamline plan](docs/superpowers/plans/2026-06-30-schnapp-os-streamline.md).
+  carries its own task checkboxes (the live tracker for that work); the newest dated file with
+  unflipped boxes is the live plan. No "current" link here: a hardcoded pointer to one plan goes
+  stale the day that plan closes.
 - **Decisions** (the why, append-only): [decisions/](decisions/).
 - **Status / execution log**: [PROGRESS.md](PROGRESS.md), newest at the bottom.
 - **Component inventory**: [CATALOG.md](CATALOG.md) (generated).

@@ -31,7 +31,7 @@ the same commit; writing-style.md; READMEs are orientation pointers, never resta
   unseen); new `scripts/check-open-questions.sh` (+test) re-surfaces the resume-point handoff's
   "## Open ..." items as nightly Routine 5; nightly stale-facts sweep can now scan the real vault
   lane on CI via a `VAULT_READ_TOKEN`-gated checkout (SKIP stays honest without it).
-- [ ] T3. **Navigation orientation files** - README.md for connectors/, decisions/, rules/,
+- [x] T3. **Navigation orientation files** - README.md for connectors/, decisions/, rules/,
   rules/modules/, docs/, docs/superpowers/, .claude/, scripts/, hooks/, .github/, templates/,
   scripts/tests/. Pointers + what-lives-here only; inventory stays in generated CATALOG.md; no
   per-directory CLAUDE.md (root CLAUDE.md + global lane already load; per-dir copies would drift).
