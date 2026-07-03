@@ -24,6 +24,8 @@ fails a push if this file is out of date. Do not hand-edit.
 | Module | Scope (paths) | Title |
 |---|---|---|
 | `activity/etl-pipeline` | all files (on-demand) | ETL pipeline work |
+| `activity/ideation-first` | all files (on-demand) | Ideation before execution (diverge, then converge) |
+| `activity/perspective-research` | all files (on-demand) | Perspective-diverse research (STORM) |
 | `activity/scaffolding-choice` | all files (on-demand) | Choosing the scaffolding primitive |
 
 ### coding
@@ -107,6 +109,7 @@ decision 0011 #2; the scripts in `hooks/` remain the canonical source.)
 - **em-dash-on-write.sh**: PostToolUse writing-style guard (no em dashes in live files).
 - **length-advisory.sh**: PostToolUse soft length nudge for the always-load layer.
 - **no-force-push-guard.sh**: PreToolUse HARD guard against force-push (decisions/0011 #9).
+- **post-compact-reinject.sh**: re-inject schnapp-os identity + invariants after a context compaction.
 - **secret-scan-on-write.sh**: PostToolUse shift-left leak guard.
 - **session-end-backup.sh**: schnapp-os end-of-session write, deterministic half.
 - **session-start-gate.sh**: schnapp-os SessionStart freshness gate.

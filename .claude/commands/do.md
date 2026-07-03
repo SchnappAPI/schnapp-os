@@ -28,15 +28,20 @@ exists (rules, skills, agents, the planner) - it does not reimplement any of the
    - **Skill/agent:** pick from [`../CATALOG.md`](../../CATALOG.md). Prefer an existing skill/agent over
      doing it inline. Examples: build/optimize an ETL load → `etl-pipeline-build` +
      `performance-optimizer`; SQL correctness → `sql-etl-reviewer`; "is X slow" →
-     `performance-optimizer`; deep question → `deep-research`; decision/interrogation → `council` /
-     `grill-me`; review a diff → `/code-review`; whole-system state → the `status` skill; what's
-     loaded here → `surface-check`.
+     `performance-optimizer`; deep question → `deep-research` (research needing multi-angle coverage
+     → also load [`perspective-research`](../../rules/modules/activity/perspective-research.md));
+     decision/interrogation → `council` / `grill-me`; review a diff → `/code-review`; whole-system
+     state → the `status` skill; what's loaded here → `surface-check`.
    - **Model tier:** match effort to the work - a small, well-specified edit or lookup → a fast
      tier (haiku); standard build/review → sonnet; deep reasoning, architecture, or a hard debug →
      opus. State the tier; if dispatching to an agent, that agent's own `model` frontmatter wins.
 
 3. **Plan if non-trivial.** For 3+ step or architecturally significant work, run the **Plan**
-   agent (or `superpowers` brainstorming) first and confirm the approach before executing.
+   agent (or `superpowers` brainstorming) first and confirm the approach before executing. For
+   open-ended or generative work with several credible directions (content, naming, strategy,
+   debugging hypotheses), diverge before converging: run an ideation pass
+   ([`rules/modules/activity/ideation-first.md`](../../rules/modules/activity/ideation-first.md))
+   to surface distinct options, then lock one direction and execute.
 
 4. **Safety gate (asks-first).** If the task mutates data, money, or production - a deploy, a
    schema change, a merge, a destructive or outward-facing action - state the plan and get explicit

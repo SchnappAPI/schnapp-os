@@ -40,6 +40,10 @@ structure every session, or adds surface area that makes the agent worse.
   subtraction pass before adding. This is [`docs/framework.md`](../../../docs/framework.md) §H, kept honest.
 - **No plugin packaging.** schnapp-os is one owner's OS, not a distributable - native `.claude/`
   discovery, `@import`, and `git pull` propagate it, not npm/marketplace (ADR 0011 #2, ADR 0024).
+- **Validate a shared-lane change before it propagates.** A rule or plugin-global skill here ripples
+  to every repo on the machine via `@import` + `git pull`, so a regression debugs across all of them,
+  not one. Dry-run [`scripts/assemble-context.sh --lint`](../../../scripts/assemble-context.sh) and let
+  the CI gates pass before pushing a change to `rules/global/` or a shared skill.
 
 ## When a session reveals a new capability
 Extract a reusable *procedure* from a finished session with the `session-to-skill` skill; route a

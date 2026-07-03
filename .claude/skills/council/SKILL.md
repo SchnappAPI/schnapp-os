@@ -19,6 +19,7 @@ feature flag vs full rollout; narrow scope vs keep strategic breadth.
 | Checking whether output is correct | the superpowers:verification-before-completion skill |
 | Reviewing code for bugs or security | the `/code-review` skill (or the caveman reviewer agent) |
 | Breaking a feature into steps, or designing architecture | the `Plan` agent |
+| Widening research coverage across perspectives (not deciding) | the `perspective-research` module (STORM) |
 | Straight factual questions, or obvious execution | just answer / just do it |
 
 ## Roles
@@ -36,7 +37,9 @@ context**: never the full transcript. That isolation is the anti-anchoring mecha
 ## Workflow
 
 1. **Extract the real question.** One explicit prompt: what are we deciding, what constraints
-   matter, what counts as success? If vague, ask one clarifying question first.
+   matter, what counts as success? If vague, ask one clarifying question first. **Neutralize your
+   own framing** before handing it over: strip leading or approving language from the question, or it
+   anchors the voices the same way conversational history would.
 2. **Gather only necessary context.** Codebase-specific: collect the few relevant
    files/snippets/metrics, keep it compact. Strategic: skip repo snippets unless they change
    the answer.
@@ -77,6 +80,10 @@ context**: never the full transcript. That isolation is the anti-anchoring mecha
    - **Critic:** an operator who has watched similar initiatives derail on execution. Surface the
      downside risks and failure modes most likely to actually happen, even if the concept is sound.
    - **Architect** (the in-context voice): correctness, maintainability, long-term implications.
+
+   Where it sharpens the contrast, give voices different **model tiers** (the Agent tool's `model`
+   override): a blunt fast tier for the Skeptic, a stronger tier for the Critic or a hard call.
+   Different models carry different training biases, so the disagreement runs deeper than the persona.
 5. **Synthesize with guardrails.** Do not dismiss an external view without saying why. If one
    changed your call, say so. Always include the strongest dissent even if you reject it. Two
    voices aligning against your initial position is a real signal. Keep raw positions visible
