@@ -25,7 +25,8 @@ the same commit; writing-style.md; READMEs are orientation pointers, never resta
   instead of the raw hook JSON envelope; re-check phrases against the text alone.
   `test-capture-enqueue.sh` 10->15 checks. Archive scrubbed to the 4 real corrections (6
   machine-generated entries removed so recurrence signatures stay honest).
-- [ ] T2. **Loop visibility + freshness surfacing** - session-start gate gains `[learning]`
+- [x] T2. **Loop visibility + freshness surfacing** (files landed in the T1 commit cb8afb3; box
+  flipped in the follow-up) - session-start gate gains `[learning]`
   pending-proposals section (open `learning-loop:` issues; the human-in-loop approvals could rot
   unseen); new `scripts/check-open-questions.sh` (+test) re-surfaces the resume-point handoff's
   "## Open ..." items as nightly Routine 5; nightly stale-facts sweep can now scan the real vault
