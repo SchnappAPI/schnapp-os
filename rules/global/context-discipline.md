@@ -21,6 +21,9 @@ noise is worse than a tight one of exactly what matters.
   and keep the raw file dumps out of the main context - carry back only the conclusion.
 - **Review against the original requirements, not the plan.** When checking generated work, re-anchor
   on the source ask; a plan-level misread is invisible if you only check against the plan.
+- **Review the whole artifact, end to end.** When asked to review or check something, read every
+  line and section, not just the head and tail; a skim that samples the edges misses the middle where
+  most defects hide. State the range you actually covered so a partial pass is never mistaken for a full one.
 - **Audit inputs before a multi-step task.** List what each step needs and where it comes from
   (static / retrieved / state-tracked); load only what the phase needs, discard the rest before the
   next step.
