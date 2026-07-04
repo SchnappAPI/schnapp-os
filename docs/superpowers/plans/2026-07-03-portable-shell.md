@@ -24,9 +24,10 @@ Link B (every session <-> vault, round-trip) verified from a NON-schnapp-os repo
   `templates/README.md` + template header, `docs/memory-lane.md` (global vault push), root
   README map + install steps all updated; CATALOG regenerated. Verify: check-freshness,
   check-links (375), check-writing-style green.
-- [ ] T5 Live-verify both links from a non-schnapp-os repo: SessionStart gate fires + pulls +
-  injects there; symlinked skill/agent resolves; skill-name collision behavior checked inside
-  schnapp-os (project + user same name); memory write lands in the vault and the SessionEnd
-  push reaches GitHub; a rule edit in schnapp-os is visible to the next foreign-repo session.
-  Web leg: setup script delivered + first-web-session verify steps written (owner runs; user
-  scope on web is the open question per ADR fact 5).
+- [~] T5 Live-verify both links from a non-schnapp-os repo. DONE on Mac: foreign-repo session
+  advanced both clones' FETCH_HEAD (gate fired + pulled); vault fact `portable-shell-live`
+  auto-committed AND pushed to GitHub by the foreign session's SessionEnd hook (round-trip
+  verified, origin == local); all 9 rule imports + 33 symlinks resolve into the live clone.
+  REMAINS (owner legs, handoff 055 §Open): web env-setup paste + first-web-session check of
+  user-scope honoring; one-look duplicate-skill check in the next interactive schnapp-os
+  session (project + user scope now both carry the same symlinked skills).

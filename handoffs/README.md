@@ -8,7 +8,8 @@ or renames a handoff. Regenerate with `scripts/gen-handoff-index.sh` after addin
 CI ([`.github/workflows/freshness.yml`](../.github/workflows/freshness.yml)) fails a push
 if this file is out of date.
 
-- [`054`](054-agentic-os-optimize-pass.md) Handoff 054: Agentic-OS optimize pass (navigability + loop hygiene) (resume point)
+- [`055`](055-portable-shell.md) Handoff 055: Portable shell built, installed, live-verified (ADR 0033) (resume point)
+- [`054`](054-agentic-os-optimize-pass.md) Handoff 054: Agentic-OS optimize pass (navigability + loop hygiene)
 - [`053`](053-concept-integration-and-full-eval.md) Handoff 053: NEW-folder concept integration + full repo eval/triage
 - [`052`](052-streamline-closeout-audit.md) Handoff 052: Streamline leftovers closed + full plan audit green
 - [`051`](051-phase-5-round-trip-closed.md) Handoff 051: Phase-5 round-trip closed; streamline plan COMPLETE
