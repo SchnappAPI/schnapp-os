@@ -26,7 +26,9 @@ convenience outweighs egress security - owner's call.
 | `dev.schnapp.bet`, `schnapp.bet` | production site / dev | |
 | `memory-mcp-rtad.onrender.com` | cross-surface memory MCP (Render) | actual Render origin; also fronted by the `mcp.schnapp.bet` portal |
 | `op-mcp.onrender.com` | op-mcp (Render) | superseded-by-Mac in some paths; keep if any client uses it |
-| `github.com`, `api.github.com` | git + GitHub API | |
+| `github.com`, `api.github.com` | git + GitHub API (incl. the `shell/web-setup.sh` clones of both repos) | |
+| `my.1password.com` | in-container `op` CLI (service-account API) | pairs with the `OP_SERVICE_ACCOUNT_TOKEN` env var |
+| `cache.agilebits.com` | `op` CLI download | `shell/web-setup.sh` op-install step |
 | `api.quickbase.com` | Quickbase integration | |
 | `graph.microsoft.com`, `login.microsoftonline.com` | M365 / OneDrive backup mirror | needed for the backup + M365 MCP |
 | `*.anthropic.com` | Claude API | already bypasses the proxy (noProxy) |

@@ -1,18 +1,40 @@
 #!/usr/bin/env bash
 # shell/web-setup.sh - the portable shell's WEB leg (ADR 0033). Canonical copy lives here;
-# the owner pastes it into each Claude Code web environment's setup script.
+# the owner pastes this WHOLE file into each Claude Code web environment's setup script
+# (it replaced the standalone op-CLI-only setup script - this is a superset).
 #
 # Runs at environment init (Anthropic container), NOT at session start, and its result is
-# cached ~7 days - so this only bootstraps the clones and wiring; per-session freshness is the
-# SessionStart global-session-gate.sh pull (fires if the container honors user-scope hooks).
-# Whether web honors user-scope wiring at all is ADR 0033's open question: the first web
-# session after this runs verifies it (the gate announces itself with a [shell] line; no line
-# means user scope is ignored there and the documented boundary applies - account-scope MCP +
-# the clones below are what a web session gets).
+# cached ~7 days - so this only bootstraps the op CLI, the clones, and the wiring; per-session
+# freshness is the SessionStart global-session-gate.sh pull (fires if the container honors
+# user-scope hooks). Whether web honors user-scope wiring at all is ADR 0033's open question:
+# the first web session after this runs verifies it (the gate announces itself with a [shell]
+# line; no line means user scope is ignored there and the documented boundary applies -
+# account-scope MCP + the clones below are what a web session gets).
+#
+# Requirements (docs/environment-and-access.md §1): env vars OP_SERVICE_ACCOUNT_TOKEN,
+# MAC_MCP_AUTH_TOKEN, OP_MCP_BEARER, MEMORY_MCP_BEARER; allowlist incl. my.1password.com,
+# cache.agilebits.com, github.com, api.github.com + the schnapp/Render MCP hosts.
 #
 # Never bricks environment init: always exits 0.
 set -uo pipefail
 
+# 1. op CLI: in-container op:// resolution via OP_SERVICE_ACCOUNT_TOKEN. Non-fatal: without
+#    it the op-mcp connector still resolves secrets remotely.
+install_op() (
+  if command -v op >/dev/null 2>&1; then echo "[web-setup] op present: $(op --version)"; return 0; fi
+  VER=2.33.1
+  URL="https://cache.agilebits.com/dist/1P/op2/pkg/v${VER}/op_linux_amd64_v${VER}.zip"
+  cd /tmp || return 1
+  if command -v curl >/dev/null 2>&1; then curl -sSfL "$URL" -o op.zip; else wget -q "$URL" -O op.zip; fi || return 1
+  if command -v unzip >/dev/null 2>&1; then unzip -o op.zip op -d /usr/local/bin/; \
+  else python3 -c "import zipfile;zipfile.ZipFile('op.zip').extract('op','/usr/local/bin')"; fi || return 1
+  chmod 755 /usr/local/bin/op
+  rm -f op.zip
+  op --version
+)
+install_op || echo "[web-setup] WARN: op CLI install failed - in-container op:// resolution unavailable (op-mcp connector unaffected)"
+
+# 2. The two live clones + the shell wiring.
 BASE="${SHELL_CLONE_BASE:-$HOME/code}"
 mkdir -p "$BASE"
 
