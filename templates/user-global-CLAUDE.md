@@ -1,7 +1,8 @@
 <!--
   CANONICAL COPY of what goes in each machine's ~/.claude/CLAUDE.md. That file lives OUTSIDE the
-  repo (it is per-machine), so this tracked template is its single source - to install or repair a
-  machine, copy this file's body (everything below the comment) to ~/.claude/CLAUDE.md.
+  repo (it is per-machine), so this tracked template is its single source - shell/install.sh
+  renders the body (everything below this comment, repo path resolved per machine) into
+  ~/.claude/CLAUDE.md; to install or repair a machine, run the installer (ADR 0033).
 
   Why @import and not a symlink: ~/.claude/CLAUDE.md @imports the global rules straight from the
   repo, so they load in every project and stay current via the SessionStart `git pull`.

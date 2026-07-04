@@ -22,7 +22,8 @@ Status lives in one canonical place and is read there:
 | [handoffs/](handoffs/) | Dated session handoffs; the newest, highest-numbered is the resume point |
 | [rules/](rules/) | Rules - `global/` (always-on) + `modules/` (path-scoped lang, tool, activity, context - a plain reference library) |
 | [CATALOG.md](CATALOG.md) | Generated inventory of rules/skills/commands/hooks (do not edit; `gen-catalog.sh`) |
-| [templates/](templates/) | `project-CLAUDE.md` (manual project starter) + `user-global-CLAUDE.md` (the `~/.claude/CLAUDE.md` copy) |
+| [templates/](templates/) | `project-CLAUDE.md` (manual project starter) + `user-global-CLAUDE.md` (the `~/.claude/CLAUDE.md` source, rendered by the shell installer) |
+| [shell/](shell/) | The portable shell: wiring-only installer linking every session to the two live repos (ADR [0033](decisions/0033-portable-shell-user-scope-wiring.md)) |
 | [surfaces/](surfaces/) | One operating profile per surface (Code, Cowork, claude.ai, iPhone) |
 | [connectors/](connectors/) | Remote MCP connectors - `op-mcp` (1Password resolver), `memory-mcp` (cross-surface memory), `mac`/`github`/`obsidian-mcp` |
 | [hooks/](hooks/) | Claude Code lifecycle hooks (wiring documented in `hooks/README.md`) |
@@ -49,18 +50,15 @@ One repo, used across surfaces. These are the install steps; the original build 
 complete, archived in [docs/archive/PLAN-archive-2026-07-01.md](docs/archive/PLAN-archive-2026-07-01.md).
 Per-surface operating detail lives in [surfaces/](surfaces/) and is referenced here, not repeated.
 
-### Code - primary Mac
-1. Clone to `~/code/schnapp-os` (the path the hooks, `~/.claude/CLAUDE.md`, and the backup all assume).
-2. **User-global setup in `~/.claude/`** (these load in *every* repo on the machine, not just this one.
-   They are the global lane's delivery):
-   - Create `~/.claude/CLAUDE.md` by copying the body of
-     [templates/user-global-CLAUDE.md](templates/user-global-CLAUDE.md) (that file lives outside the repo,
-     so the template is its canonical copy). It `@import`s the global rules from the repo.
-   - In `~/.claude/settings.json` set `"autoMemoryDirectory": "~/code/schnapp-vault/memory"` so the global
-     **memory** lane (the vault `SchnappAPI/schnapp-vault`) loads in every repo. A plugin cannot deliver
-     this key (only `agent`/`subagentStatusLine` are plugin-settable), and a project-scoped setting reaches
-     only that project - so user scope is the only global delivery. Requires the vault cloned to
-     `~/code/schnapp-vault`. Procedures: [docs/memory-lane.md](docs/memory-lane.md).
+### Code - any Mac / machine
+1. Clone both repos: `~/code/schnapp-os` + `~/code/schnapp-vault`.
+2. Run `bash ~/code/schnapp-os/shell/install.sh` (idempotent; `--dry-run` previews). It writes ALL
+   the user-global wiring - `~/.claude/CLAUDE.md` (`@import`s of the global rules),
+   `autoMemoryDirectory` -> the vault memory lane, the user-scope hooks (standing-rules,
+   capture-nudge, any-repo session gate, session-end vault push, the two guards), and the
+   skill/agent/command symlinks - so every repo on the machine gets the shell
+   (ADR [0033](decisions/0033-portable-shell-user-scope-wiring.md); procedures:
+   [docs/memory-lane.md](docs/memory-lane.md)).
 3. **Accept the workspace-trust dialog** on first open of the repo. Until accepted, the project hooks
    silently do nothing - this is the first thing to check if the SessionStart gate does not print. (The
    user-scope memory lane from step 2 loads regardless of trust; trust gates the *project* hooks/settings.)

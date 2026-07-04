@@ -17,11 +17,13 @@ Link B (every session <-> vault, round-trip) verified from a NON-schnapp-os repo
   skills/agents/commands, prunes dead links, prints verify summary), `shell/web-setup.sh`
   (clone both repos + run installer in container), `shell/README.md` (pointer-style).
   Verify: dry-run mode output correct; installer re-run is a no-op second time.
-- [ ] T4 Install on this Mac + sweep the ripple: run installer live; delete stale `schnapp-os`
-  marketplace registration + `~/.claude/plugins/cache/schnapp-os` remnants (0024 leftover);
-  update `.claude/settings.json` `$comment`, `templates/README.md`, `docs/memory-lane.md`
-  (global vault push), root README map (shell/ row); regen CATALOG + handoff index. Verify:
-  check-freshness, check-links, check-writing-style, full self-test suite green.
+- [x] T4 Install on this Mac + sweep the ripple: installer run live (5 hook events wired, 33
+  components linked, CLAUDE.md rendered w/ 9 imports); stale `schnapp-os` marketplace
+  registration + `~/.claude/plugins/cache/schnapp-os` remnants deleted (0024 leftover);
+  `.claude/settings.json` `$comment`, `hooks/README.md`, root `CLAUDE.md` hooks bullet,
+  `templates/README.md` + template header, `docs/memory-lane.md` (global vault push), root
+  README map + install steps all updated; CATALOG regenerated. Verify: check-freshness,
+  check-links (375), check-writing-style green.
 - [ ] T5 Live-verify both links from a non-schnapp-os repo: SessionStart gate fires + pulls +
   injects there; symlinked skill/agent resolves; skill-name collision behavior checked inside
   schnapp-os (project + user same name); memory write lands in the vault and the SessionEnd

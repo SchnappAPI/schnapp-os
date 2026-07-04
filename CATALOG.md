@@ -109,6 +109,10 @@ decision 0011 #2; the scripts in `hooks/` remain the canonical source.)
 
 - **capture-nudge.sh**: UserPromptSubmit, wired user-scope (machine-wide) in ~/.claude/settings.json
 - **em-dash-on-write.sh**: PostToolUse writing-style guard (no em dashes in live files).
+- **global-force-push-guard.sh**: user-scope (any-repo) delivery of the force-push hard guard
+- **global-secret-scan.sh**: user-scope (any-repo) delivery of the secret-scan leak guard
+- **global-session-gate.sh**: the portable shell's ANY-REPO SessionStart hook (ADR 0033, Link A).
+- **global-vault-push.sh**: the portable shell's ANY-REPO SessionEnd hook (ADR 0033, Link B).
 - **length-advisory.sh**: PostToolUse soft length nudge for the always-load layer.
 - **no-force-push-guard.sh**: PreToolUse HARD guard against force-push (decisions/0011 #9).
 - **post-compact-reinject.sh**: re-inject schnapp-os identity + invariants after a context compaction.

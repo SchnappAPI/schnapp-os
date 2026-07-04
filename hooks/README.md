@@ -8,8 +8,12 @@ nothing about when it fires):
   post-compact-reinject (SessionStart matcher `compact`), no-force-push-guard (PreToolUse),
   secret-scan-on-write + shellcheck-on-write + em-dash-on-write + length-advisory (PostToolUse
   write guards), session-stop-push-gate (Stop), session-end-backup (SessionEnd).
-- **User scope** `~/.claude/settings.json` (machine-wide, fires in EVERY repo): standing-rules.sh
-  (reply rules) and capture-nudge.sh (correction capture -> learning queue). Keep standing-rules
+- **User scope** `~/.claude/settings.json` (machine-wide, fires in EVERY repo; written by
+  [shell/install.sh](../shell/README.md), ADR 0033): standing-rules.sh (reply rules),
+  capture-nudge.sh (correction capture -> learning queue), global-session-gate.sh (pulls both
+  live clones + wiring drift check), global-vault-push.sh (SessionEnd vault commit+push), and
+  the guard wrappers global-secret-scan.sh + global-force-push-guard.sh (self-skip inside
+  schnapp-os; the project wiring stays for web parity). Keep standing-rules
   in sync with [rules/global/working-style.md](../rules/global/working-style.md).
 
 Conventions: deterministic, fast, non-blocking unless the hook IS a gate (exit 2 blocks);

@@ -102,7 +102,9 @@ On stop / session end, deterministically:
 
 Implemented on Code as the Stop/SessionEnd hooks
 ([`session-stop-push-gate.sh`](../hooks/session-stop-push-gate.sh),
-[`session-end-backup.sh`](../hooks/session-end-backup.sh)). The hook automates
+[`session-end-backup.sh`](../hooks/session-end-backup.sh) in schnapp-os sessions; in EVERY
+repo, the shell's user-scope [`global-vault-push.sh`](../hooks/global-vault-push.sh) commits +
+pushes the vault at session end, ADR 0033). The hook automates
 only the deterministic half; authoring memory/handoff prose stays the agent's procedure. On
 hookless surfaces, run it via `session-hygiene`.
 
