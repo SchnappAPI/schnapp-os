@@ -97,6 +97,7 @@ fails a push if this file is out of date. Do not hand-edit.
 
 ## Commands
 
+- **/critique-os**: Red-team the schnapp-os system (portable shell + loops + wiring) - critique, verify live, fix or subtract, ranked findings
 - **/do**: Dispatch a task - pick the rules, the skill or agent, and the model tier, then run it
 - **/update-codemaps**: Generate or refresh a token-lean architecture map (codemap) of a repo - entry points, modules, data flow, and the pipeline/table topology - written as a …
 - **/update-docs**: Regenerate a repo's derived docs (schema dumps, env-var lists, route/endpoint or pipeline catalogs) from their canonical sources, and flag any doc whose source …
