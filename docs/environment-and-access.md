@@ -36,6 +36,13 @@ convenience outweighs egress security - owner's call.
 Symptom when a host is missing: the agent proxy returns **403 on CONNECT**; check
 `curl "$HTTPS_PROXY/__agentproxy/status"` → `recentRelayFailures`. See [[mac-cloud-access]].
 
+**Env vars (per-environment, literal VALUES)**: `OP_SERVICE_ACCOUNT_TOKEN`,
+`MAC_MCP_AUTH_TOKEN`, `OP_MCP_BEARER`, `MEMORY_MCP_BEARER`. These are the one sanctioned
+exception to secrets-as-references: a bootstrap credential cannot resolve itself, so the web
+environment config holds the value directly (same class as the Mac's launchd plist env).
+Exposure = anyone with access to the claude.ai environment settings; rotation via the
+`rotate-secret` skill must include these fields (they are listed in `credentials-map.md`).
+
 ## 2. Git write path (cloud env is READ-ONLY for git)
 
 The cloud session's git remote is a **read-only relay** (`127.0.0.1:<port>/git/...`): `fetch` works,

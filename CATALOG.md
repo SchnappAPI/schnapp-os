@@ -104,9 +104,9 @@ fails a push if this file is out of date. Do not hand-edit.
 
 ## Hooks
 
-Scripts in `hooks/`, wired to events in the repo's `.claude/settings.json`
-against live project paths. (`hooks/hooks.json` intentionally delivers none -
-decision 0011 #2; the scripts in `hooks/` remain the canonical source.)
+Scripts in `hooks/`, wired in the repo's `.claude/settings.json` (project scope)
+and by `shell/install.sh` at user scope (the `global-*` set, ADR 0033); map in
+`hooks/README.md`.
 
 - **capture-nudge.sh**: UserPromptSubmit, wired user-scope (machine-wide) in ~/.claude/settings.json
 - **em-dash-on-write.sh**: PostToolUse writing-style guard (no em dashes in live files).

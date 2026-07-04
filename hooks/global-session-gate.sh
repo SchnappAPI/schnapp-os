@@ -58,10 +58,18 @@ if [ "$(cd "$PROJECT" 2>/dev/null && pwd -P)" = "$(cd "$OS_DIR" 2>/dev/null && p
   exit 0
 fi
 
-os_status="$(pull_repo "$OS_DIR" "schnapp-os")"
-vault_status="$(pull_repo "$VAULT" "vault")"
+# Both pulls in parallel: network RTT dominates and the two repos are independent, so the
+# gate costs max(pull) not sum(pull) (~2s vs ~4.5s measured sequential).
+os_tmp="$(mktemp)"; vault_tmp="$(mktemp)"
+pull_repo "$OS_DIR" "schnapp-os" > "$os_tmp" & os_pid=$!
+pull_repo "$VAULT" "vault" > "$vault_tmp" & vault_pid=$!
+wait "$os_pid" "$vault_pid"
+os_status="$(cat "$os_tmp")"; vault_status="$(cat "$vault_tmp")"
+rm -f "$os_tmp" "$vault_tmp"
 
-# Wiring drift: every live component should be symlinked into ~/.claude (shell/install.sh).
+# Wiring drift: every live component should be symlinked into ~/.claude. The installer is
+# idempotent, so drift is auto-healed here (owner rule: automate, do not instruct); new links
+# serve THIS session, new hooks load next session.
 missing=0
 for kind in skills agents commands; do
   src="$OS_DIR/.claude/$kind"
@@ -72,8 +80,26 @@ for kind in skills agents commands; do
     [ -e "$HOME/.claude/$kind/$name" ] || missing=$((missing+1))
   done
 done
-if [ "$missing" -eq 0 ]; then wiring="wiring intact"; else wiring="WIRING DRIFT: $missing component(s) unlinked - run $OS_DIR/shell/install.sh"; fi
+if [ "$missing" -eq 0 ]; then
+  wiring="wiring intact"
+elif inst_out="$(bash "$OS_DIR/shell/install.sh" 2>&1)"; then
+  wiring="wiring drift ($missing unlinked) -> installer auto-ran: $(printf '%s' "$inst_out" | grep -o 'components: [0-9].*' | head -1)"
+else
+  wiring="WIRING DRIFT: $missing component(s) unlinked, installer auto-run FAILED - run $OS_DIR/shell/install.sh manually"
+fi
 
 echo "[shell] $os_status | $vault_status | $wiring"
+
+# Surface a stuck memory lane. SessionEnd hook output is invisible (the session is already
+# over), so a vault pre-commit rejection or failed push is only ever seen HERE, at the next
+# session start, in whatever repo that happens to be. Local-only checks, no network.
+if [ -d "$VAULT/.git" ]; then
+  backlog=""
+  dirty="$(git -C "$VAULT" status --porcelain 2>/dev/null | wc -l | tr -d ' ')"
+  ahead="$(git -C "$VAULT" rev-list --count '@{upstream}..HEAD' 2>/dev/null || echo 0)"
+  [ "$dirty" -gt 0 ] && backlog="$dirty uncommitted path(s)"
+  [ "$ahead" -gt 0 ] && backlog="${backlog:+$backlog, }$ahead unpushed commit(s)"
+  [ -n "$backlog" ] && echo "[shell] vault BACKLOG: $backlog - the autocommit may be blocked (schema gate? push failure?); run bash $OS_DIR/scripts/vault-autocommit.sh to see why."
+fi
 [ -f "$VAULT/memory/MEMORY.md" ] && echo "[shell] memory: read $VAULT/memory/MEMORY.md (thin index) first, then load facts on demand; write-backs follow the vault agents.md schema (supersede, never append)."
 exit 0

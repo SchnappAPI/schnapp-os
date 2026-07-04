@@ -130,12 +130,12 @@ trap 'rm -f "$TMP"' EXIT
   done
   echo
 
-  # ---- Hooks (list the scripts; wiring is in hooks.json) ----
+  # ---- Hooks (list the scripts; wiring is in .claude/settings.json + the shell) ----
   echo "## Hooks"
   echo
-  echo "Scripts in \`hooks/\`, wired to events in the repo's \`.claude/settings.json\`"
-  echo "against live project paths. (\`hooks/hooks.json\` intentionally delivers none -"
-  echo "decision 0011 #2; the scripts in \`hooks/\` remain the canonical source.)"
+  echo "Scripts in \`hooks/\`, wired in the repo's \`.claude/settings.json\` (project scope)"
+  echo "and by \`shell/install.sh\` at user scope (the \`global-*\` set, ADR 0033); map in"
+  echo "\`hooks/README.md\`."
   echo
   for f in "$REPO"/hooks/*.sh; do
     [ -e "$f" ] || continue

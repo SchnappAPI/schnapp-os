@@ -27,11 +27,13 @@ set -uo pipefail
 export LC_ALL=C
 
 strict=0
+print_block_re=0
 excludes=()
 paths=()
 while [ $# -gt 0 ]; do
   case "$1" in
     --strict) strict=1; shift ;;
+    --block-re) print_block_re=1; shift ;;
     --exclude) excludes+=("$2"); shift 2 ;;
     --exclude=*) excludes+=("${1#--exclude=}"); shift ;;
     -h|--help) sed -n '2,30p' "$0"; exit 0 ;;
@@ -41,7 +43,9 @@ done
 
 # --- build the file list ------------------------------------------------------
 files=()
-if [ "${#paths[@]}" -eq 0 ]; then
+if [ "$print_block_re" -eq 1 ]; then
+  : # no file list needed; the registry itself is the output (printed below, after it is defined)
+elif [ "${#paths[@]}" -eq 0 ]; then
   while IFS= read -r f; do files+=("$f"); done < <(git ls-files 2>/dev/null)
 else
   for p in "${paths[@]}"; do
@@ -67,7 +71,7 @@ if [ "${#excludes[@]}" -gt 0 ] && [ "${#files[@]}" -gt 0 ]; then
   files=("${kept[@]}")
 fi
 
-if [ "${#files[@]}" -eq 0 ]; then echo "scan-secrets: no files to scan"; exit 0; fi
+if [ "$print_block_re" -eq 0 ] && [ "${#files[@]}" -eq 0 ]; then echo "scan-secrets: no files to scan"; exit 0; fi
 
 # --- pattern registry ---------------------------------------------------------
 # Each rule: SEV|LABEL|GREPFLAGS|ERE   (GREPFLAGS adds -i for case-insensitive heuristics).
@@ -90,6 +94,18 @@ rules=(
   "WARN|assignment-secret|-i|(password|passwd|secret|api[_-]?key|auth[_-]?token|bearer|client[_-]?secret)[\"' ]?[:=][ ]*[\"']?[^\\s\"'<>op][^\\s\"'<>]{7,}"
   "WARN|private-ip||(192\.168\.[0-9]{1,3}\.[0-9]{1,3}|10\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}|172\.(1[6-9]|2[0-9]|3[01])\.[0-9]{1,3}\.[0-9]{1,3})"
 )
+
+# --block-re: print each BLOCK regex, parenthesized, one per line, and exit. Consumers
+# (hooks/global-secret-scan.sh Bash-leg fast path joins them with '|'; the wrapper test
+# iterates them) always read THIS registry - no pattern copies anywhere (anti-stale).
+if [ "$print_block_re" -eq 1 ]; then
+  for rule in "${rules[@]}"; do
+    IFS='|' read -r sev _label _flags ere <<<"$rule"
+    [ "$sev" = "BLOCK" ] || continue
+    printf '(%s)\n' "$ere"
+  done
+  exit 0
+fi
 
 mask() { # $1=match -> prefix + char count, never the full value
   local m="$1" n=${#1}

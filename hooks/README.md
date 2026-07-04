@@ -10,10 +10,14 @@ nothing about when it fires):
   write guards), session-stop-push-gate (Stop), session-end-backup (SessionEnd).
 - **User scope** `~/.claude/settings.json` (machine-wide, fires in EVERY repo; written by
   [shell/install.sh](../shell/README.md), ADR 0033): standing-rules.sh (reply rules),
-  capture-nudge.sh (correction capture -> learning queue), global-session-gate.sh (pulls both
-  live clones + wiring drift check), global-vault-push.sh (SessionEnd vault commit+push), and
-  the guard wrappers global-secret-scan.sh + global-force-push-guard.sh (self-skip inside
-  schnapp-os; the project wiring stays for web parity). Keep standing-rules
+  capture-nudge.sh (correction capture -> learning queue), global-session-gate.sh
+  (startup|resume|clear: parallel pull of both live clones, drift auto-heal via the installer,
+  vault-backlog surfacing), global-vault-push.sh (SessionEnd vault commit+push), and the guard
+  wrappers global-force-push-guard.sh + global-secret-scan.sh. The secret-scan wrapper has two
+  legs: PostToolUse Write/Edit (delegates to the canonical scanner; self-skips inside
+  schnapp-os, where the project wiring covers it for web parity) and PreToolUse Bash (scans
+  the command TEXT so heredoc/echo-written secrets block BEFORE execution; never self-skips -
+  no project wiring anywhere covers Bash writes). Keep standing-rules
   in sync with [rules/global/working-style.md](../rules/global/working-style.md).
 
 Conventions: deterministic, fast, non-blocking unless the hook IS a gate (exit 2 blocks);

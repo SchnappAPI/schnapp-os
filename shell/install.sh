@@ -7,8 +7,9 @@
 #   1. Rules      ~/.claude/CLAUDE.md rendered from templates/user-global-CLAUDE.md (@imports).
 #   2. Settings   ~/.claude/settings.json merge: autoMemoryDirectory -> vault memory lane;
 #                 user-scope hooks (UserPromptSubmit standing-rules + capture-nudge,
-#                 SessionStart global-session-gate, SessionEnd global-vault-push,
-#                 PreToolUse global-force-push-guard, PostToolUse global-secret-scan).
+#                 SessionStart global-session-gate on startup|resume|clear, SessionEnd
+#                 global-vault-push, PreToolUse global-force-push-guard + global-secret-scan
+#                 (command-text leg), PostToolUse global-secret-scan (file leg)).
 #                 Everything else in the file (permissions, plugins, statusLine) is preserved.
 #   3. Components ~/.claude/{skills,agents,commands}/<name> symlinks into the live clone.
 #
@@ -35,6 +36,13 @@ command -v python3 >/dev/null 2>&1 || { log "FATAL: python3 required for the set
 command -v git >/dev/null 2>&1 || { log "FATAL: git required"; exit 1; }
 if [ ! -d "$VAULT/.git" ]; then
   log "WARN: no vault clone found (looked at VAULT_DIR, ~/code/schnapp-vault, sibling). Link B will be degraded until it is cloned."
+else
+  # The vault's schema/flatten/secret gate is its pre-commit git hook; a fresh clone has no
+  # core.hooksPath, so an uninstalled machine would commit to the memory lane UNGATED.
+  if [ "$(git -C "$VAULT" config core.hooksPath 2>/dev/null)" != "scripts/git-hooks" ]; then
+    doit git -C "$VAULT" config core.hooksPath scripts/git-hooks
+    log "vault: core.hooksPath -> scripts/git-hooks (pre-commit gate active)"
+  fi
 fi
 doit mkdir -p "$CLAUDE_DIR"
 
@@ -76,9 +84,14 @@ hooks = settings.setdefault("hooks", {})
 wanted = [
     ("UserPromptSubmit", None, "standing-rules.sh", None),
     ("UserPromptSubmit", None, "capture-nudge.sh", None),
-    ("SessionStart", "startup", "global-session-gate.sh", 30),
+    # resume + clear re-fire the gate: a resumed session can sit on days-stale clones, and a
+    # /clear wipes the orient line; both need freshness restored (matchers per hooks docs).
+    ("SessionStart", "startup|resume|clear", "global-session-gate.sh", 30),
     ("SessionEnd", "*", "global-vault-push.sh", 60),
     ("PreToolUse", "Bash", "global-force-push-guard.sh", 10),
+    # The same wrapper twice: PreToolUse Bash scans the command TEXT (heredoc/echo writes the
+    # file hooks never see); PostToolUse scans the Write/Edit'd file.
+    ("PreToolUse", "Bash", "global-secret-scan.sh", 15),
     ("PostToolUse", "Write|Edit|MultiEdit", "global-secret-scan.sh", 15),
 ]
 for event, matcher, script, timeout in wanted:
@@ -97,13 +110,30 @@ for event, matcher, script, timeout in wanted:
     group.setdefault("hooks", []).append(entry)
     changes.append(f"hook {event}/{matcher or '-'} += {script}")
 
+# Matcher migration: when the wanted matcher for an already-wired script changes (e.g.
+# SessionStart startup -> startup|resume|clear), update the group in place - but only a
+# group whose hooks are all schnapp-os's own (never rewrite foreign wiring).
+for event, matcher, script, timeout in wanted:
+    if matcher is None:
+        continue
+    for g in hooks.get(event, []):
+        if script not in json.dumps(g) or g.get("matcher") == matcher:
+            continue
+        if all("schnapp-os/hooks/" in h.get("command", "") for h in g.get("hooks", [])):
+            changes.append(f"hook {event}: matcher '{g.get('matcher')}' -> '{matcher}' ({script})")
+            g["matcher"] = matcher
+
 if json.dumps(settings, sort_keys=True) == before:
     print("settings.json: unchanged")
 else:
     if not dry:
-        with open(path, "w") as f:
+        # Atomic write: two sessions can auto-heal drift concurrently (the gate runs the
+        # installer); a torn settings.json would kill every hook on the machine.
+        tmp = path + ".tmp"
+        with open(tmp, "w") as f:
             json.dump(settings, f, indent=2)
             f.write("\n")
+        os.replace(tmp, path)
     for c in changes:
         print(("DRY: " if dry else "") + c)
 PYEOF

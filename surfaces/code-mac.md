@@ -10,8 +10,8 @@ Most capable. No work restrictions. Run the full automation here.
   context7, cloudflare. Hosts SQL Server (Docker/Colima), Next.js site, Flask runner,
   self-hosted Actions runner.
 - **Hooks:** run here, after the workspace-trust dialog is accepted (the same gate enables the
-  memory lane). This is where "must happen every time" happens - the Part-7 hooks in
-  [`hooks/`](../hooks/hooks.json) (SessionStart freshness/git gate, Stop
+  memory lane). This is where "must happen every time" happens - the hooks in
+  [`hooks/`](../hooks/README.md) (SessionStart freshness/git gate, Stop
   push-gate, SessionEnd backup). Procedures: [docs/memory-lane.md](../docs/memory-lane.md). Delivery:
   the repo's `.claude/settings.json` (post-flatten, [decisions/0024](../decisions/0024-flatten-plugin-native-claude.md);
   history: [decisions/0005](../decisions/0005-hook-delivery-split.md)).

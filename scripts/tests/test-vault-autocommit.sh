@@ -100,5 +100,29 @@ check_eq "remote-ahead: origin has both commits" "3" "$(git --git-dir="$T/c6/ori
 run_sut "$T/nope" >/dev/null; rc=$?
 check_rc "missing dir refuses" 1 "$rc"
 
+# 8. held index.lock (another git writer mid-flight): benign skip, rc 0, no false
+#    "pre-commit gate" diagnosis (the 056 red-team race finding)
+mk_repos "$T/c8"
+echo note > "$T/c8/vault/note.md"
+touch "$T/c8/vault/.git/index.lock"
+out="$(run_sut "$T/c8/vault")"; rc=$?
+check_rc "index.lock skip is benign" 0 "$rc"
+case "$out" in *"concurrent git writer"*) echo "ok   index.lock: reported as concurrent, not pre-commit"; pass=$((pass+1));;
+  *) echo "FAIL index.lock: wrong diagnosis: $out"; fail=$((fail+1));; esac
+rm -f "$T/c8/vault/.git/index.lock"
+
+# 9. two truly concurrent runs (two SessionEnd hooks): winner sweeps all, loser is a no-op,
+#    neither exits 2, tree ends clean and pushed
+mk_repos "$T/c9"
+echo one > "$T/c9/vault/f1.md"
+echo two > "$T/c9/vault/f2.md"
+run_sut "$T/c9/vault" >/dev/null 2>&1 & p1=$!
+run_sut "$T/c9/vault" >/dev/null 2>&1 & p2=$!
+wait "$p1"; rc1=$?; wait "$p2"; rc2=$?
+if [ "$rc1" != 2 ] && [ "$rc2" != 2 ]; then echo "ok   concurrent: no false failure (rc $rc1/$rc2)"; pass=$((pass+1));
+else echo "FAIL concurrent: a run exited 2 (rc $rc1/$rc2)"; fail=$((fail+1)); fi
+check_eq "concurrent: tree clean after race" "" "$(git -C "$T/c9/vault" status --porcelain)"
+check_eq "concurrent: origin got the sweep" "2" "$(git --git-dir="$T/c9/origin.git" log --oneline main | wc -l | tr -d ' ')"
+
 echo "pass=$pass fail=$fail"
 [ "$fail" = "0" ]

@@ -28,6 +28,23 @@ Link B (every session <-> vault, round-trip) verified from a NON-schnapp-os repo
   advanced both clones' FETCH_HEAD (gate fired + pulled); vault fact `portable-shell-live`
   auto-committed AND pushed to GitHub by the foreign session's SessionEnd hook (round-trip
   verified, origin == local); all 9 rule imports + 33 symlinks resolve into the live clone.
-  REMAINS (owner legs, handoff 055 §Open): web env-setup paste + first-web-session check of
-  user-scope honoring; one-look duplicate-skill check in the next interactive schnapp-os
-  session (project + user scope now both carry the same symlinked skills).
+  Duplicate-skill question RESOLVED (056 red-team session, an interactive schnapp-os session
+  with both scopes live): the harness dedupes same-name skills across project + user scope -
+  the skill list shows each schnapp-os skill exactly once. No action needed.
+  REMAINS (owner leg, handoff 056 §Open): web env-setup paste + first-web-session check of
+  user-scope honoring.
+- [x] T6 Red-team pass (/critique-os, handoff 056). Live-verified findings -> fixed same
+  session: gate pulls parallelized (4.4s -> 2.7s measured) + matcher widened to
+  startup|resume|clear (installer migrates old wiring in place); gate now surfaces a stuck
+  vault (dirty/unpushed backlog - SessionEnd failures were invisible) and AUTO-HEALS wiring
+  drift by running the idempotent installer; vault-autocommit concurrent-run race reclassified
+  as benign (index.lock loser was misreported as "pre-commit gate?", exit 2 -> now exit 0,
+  race-tested); NEW guard leg: secret-scan wrapper at PreToolUse Bash scans command TEXT
+  (heredoc/echo writes bypassed all Write/Edit hooks) with a --block-re fast path from the
+  canonical registry (no-hit cost ~0.1s); vault pre-commit now runs the secret scan on staged
+  files (the lane pushed to GitHub with ZERO value scanning) and the installer sets vault
+  core.hooksPath (fresh clones committed UNGATED); installer settings write made atomic;
+  subtracted: dead hooks/hooks.json tombstone, 2 orphan local worktrees + 2 empty remote
+  claude/* branches; docs: env-var values-not-references exception documented in
+  environment-and-access.md §1. Tests: +test-global-secret-scan (18), gate 14, autocommit 17,
+  install 27; full shell suite + shellcheck green; installer re-run live on this Mac.

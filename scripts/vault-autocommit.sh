@@ -54,11 +54,27 @@ for p in $dirty_paths; do
 done
 IFS="$old_ifs"
 
-git add -A
-if ! git -c user.name="vault-autocommit" -c user.email="vault-autocommit@schnapp.bet" \
-     commit -m "vault: auto-commit working-tree sweep (${dirty_count} path(s))"; then
-  log "commit rejected (pre-commit gate?) - tree left dirty for review"; exit 2
+# Concurrent runs are expected (two SessionEnd hooks, or SessionEnd + launchd): git's own
+# index.lock serializes them and the winner's `add -A` sweeps every dirty path, so the loser
+# is a no-op, not a failure (verified in the 2026-07-03 race test). Only a real pre-commit
+# rejection leaves the tree dirty and exits 2.
+add_out="$(git add -A 2>&1)" || {
+  case "$add_out" in
+    *index.lock*) log "concurrent git writer (index.lock) - skipping; the other run sweeps"; exit 0 ;;
+  esac
+  log "git add failed: $(printf '%s' "$add_out" | tail -1)"; exit 2
+}
+if ! commit_out="$(git -c user.name="vault-autocommit" -c user.email="vault-autocommit@schnapp.bet" \
+     commit -m "vault: auto-commit working-tree sweep (${dirty_count} path(s))" 2>&1)"; then
+  case "$commit_out" in
+    *index.lock*)          log "concurrent git writer (index.lock) - skipping; the other run sweeps"; exit 0 ;;
+    *"nothing to commit"*) log "nothing left to commit (another run swept it)"; exit 0 ;;
+  esac
+  log "commit rejected (pre-commit gate) - tree left dirty for review:"
+  printf '%s\n' "$commit_out" | tail -5
+  exit 2
 fi
+printf '%s\n' "$commit_out" | tail -1
 
 # Rebase re-commits local work, so the pull needs the same host-independent ident as the
 # commit (CI runners have none - the 2026-07-01 commit-identity-skew lesson).

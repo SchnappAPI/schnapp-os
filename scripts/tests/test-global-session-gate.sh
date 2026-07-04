@@ -18,6 +18,7 @@ mkrepo() { # $1=name -> bare origin + working clone at $tmp/$1
 mkrepo os
 mkrepo vault
 mkdir -p "$tmp/vault/memory" && echo idx > "$tmp/vault/memory/MEMORY.md"
+( cd "$tmp/vault" && git add memory && $GIT commit -qm memory-index && git push -q )   # tracked, like the real lane
 mkdir -p "$tmp/foreign" "$tmp/home/.claude"
 
 run_gate() { HOME="$tmp/home" SCHNAPP_OS_DIR="$tmp/os" VAULT_DIR="$tmp/vault" CLAUDE_PROJECT_DIR="${1:-$tmp/foreign}" bash "$GATE" 2>&1; }
@@ -51,6 +52,27 @@ checkgrep "$out" "wiring intact" "symlinked component clears the drift"
 out="$(HOME="$tmp/home" SCHNAPP_OS_DIR="$tmp/nope" VAULT_DIR="$tmp/nope2" CLAUDE_PROJECT_DIR="$tmp/foreign" bash "$GATE" 2>&1)"; rc=$?
 check "$rc" 0 "exit 0 with no clones"
 checkgrep "$out" "no clone at" "missing clone reported, not fatal"
+
+# 6. Drift auto-heal: with an installer present, the gate runs it instead of instructing
+mkdir -p "$tmp/os/.claude/skills/heal-skill" "$tmp/os/shell"
+cat > "$tmp/os/shell/install.sh" <<SH
+#!/usr/bin/env bash
+ln -s "$tmp/os/.claude/skills/heal-skill" "$tmp/home/.claude/skills/heal-skill"
+echo "[shell-install] components: 1 linked, 0 already live, 0 pruned, 0 skipped"
+SH
+out="$(run_gate)"
+checkgrep "$out" "installer auto-ran" "drift triggers installer auto-run"
+if [ -e "$tmp/home/.claude/skills/heal-skill" ]; then pass=$((pass+1)); else echo "FAIL: auto-heal did not create the symlink"; fail=$((fail+1)); fi
+
+# 7. Vault backlog surfaced: SessionEnd output is invisible, so a stuck lane must show at
+#    the next session start
+echo stray > "$tmp/vault/stray.md"
+out="$(run_gate)"
+checkgrep "$out" "vault BACKLOG: 1 uncommitted path(s)" "dirty vault surfaced in foreign repo"
+( cd "$tmp/vault" && git add stray.md && $GIT commit -qm stray )
+out="$(run_gate)"
+checkgrep "$out" "unpushed commit(s)" "unpushed vault commit surfaced"
+( cd "$tmp/vault" && git push -q )
 
 echo "test-global-session-gate: $pass passed, $fail failed"
 [ "$fail" -eq 0 ]

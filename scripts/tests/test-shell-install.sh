@@ -48,5 +48,26 @@ checkgrep "$out" "WARN: skills/status exists and is not our symlink" "non-symlin
 check "$([ -d "$tmp/claude/skills/status" ] && [ ! -L "$tmp/claude/skills/status" ] && echo kept)" "kept" "foreign dir kept"
 check "$(py 'print(d["statusLine"]["command"])')" "x" "unrelated settings keys preserved"
 
+# 5. New wirings of the 056 red-team pass: gate matcher covers resume/clear, the secret-scan
+#    wrapper is wired at BOTH PreToolUse Bash and PostToolUse Write, vault hooksPath set
+check "$(py 'print([g["matcher"] for g in d["hooks"]["SessionStart"] if "global-session-gate" in json.dumps(g)][0])')" "startup|resume|clear" "gate matcher includes resume+clear"
+check "$(py 'print(sum("global-secret-scan" in json.dumps(g) for g in d["hooks"]["PreToolUse"]))')" "1" "secret scan wired at PreToolUse Bash"
+check "$(py 'print(sum("global-secret-scan" in json.dumps(g) for g in d["hooks"]["PostToolUse"]))')" "1" "secret scan wired at PostToolUse"
+check "$(git -C "$tmp/vault" config core.hooksPath)" "scripts/git-hooks" "vault core.hooksPath set by installer"
+
+# 6. Matcher migration: an old-wiring settings file (gate at matcher 'startup') is upgraded
+#    in place, foreign groups untouched
+mkdir -p "$tmp/claude2"
+cat > "$tmp/claude2/settings.json" <<JSON
+{"hooks": {"SessionStart": [
+  {"matcher": "startup", "hooks": [{"type": "command", "command": "bash \"$OS_REAL/hooks/global-session-gate.sh\"", "timeout": 30}]},
+  {"matcher": "startup", "hooks": [{"type": "command", "command": "bash /somewhere/foreign-hook.sh"}]}
+]}}
+JSON
+out="$(CLAUDE_CONFIG_DIR="$tmp/claude2" VAULT_DIR="$tmp/vault" bash "$INSTALL" 2>&1)"
+py2() { python3 -c "import json;d=json.load(open('$tmp/claude2/settings.json'));$1"; }
+check "$(py2 'print([g["matcher"] for g in d["hooks"]["SessionStart"] if "global-session-gate" in json.dumps(g)][0])')" "startup|resume|clear" "old startup matcher migrated"
+check "$(py2 'print([g["matcher"] for g in d["hooks"]["SessionStart"] if "foreign-hook" in json.dumps(g)][0])')" "startup" "foreign group matcher untouched"
+
 echo "test-shell-install: $pass passed, $fail failed"
 [ "$fail" -eq 0 ]
