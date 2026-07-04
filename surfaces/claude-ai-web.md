@@ -27,9 +27,13 @@
    `surface-check`, `notes-lookup`. They do not auto-sync from the repo, so add the SKILL.md files here.
    Add domain skills on demand: `etl-pipeline-build`, `sql-server-patterns`, `quickbase`, `appfolio`,
    plus the available `data:*` / `pq-flat-map-type` / `sports-data-auditor` skills per the preset.
-3. **Always-loaded instructions:** paste [`always-loaded-instructions.md`](always-loaded-instructions.md)
-   into **Settings > Profile > Preferences** (account-wide / global - owner's choice 2026-06-16, so
-   it applies to every chat and to iPhone on the same account). Use a dedicated Project's
+3. **Always-loaded instructions:** paste the **CORE** section of
+   [`always-loaded-instructions.md`](always-loaded-instructions.md) into **Settings > Profile >
+   Preferences** (account-wide / global - owner's choice 2026-06-16, so it applies to every chat
+   and to iPhone on the same account). CORE is self-contained: it assumes NO connectors and NO
+   repo, so it works in a bare chat, and it carries the four standing rules (no sycophancy, terse,
+   no capitulation, read-for-intent) that a hook delivers on Code but nothing delivers here. Its
+   connector clauses self-activate if the Schnapp Portal is enabled. Use a dedicated Project's
    instructions instead only if you later want it scoped to schnapp-os work.
 4. **Verify:** run `surface-check`. Expect connectors present, global rules + session-hygiene loaded,
    no hooks (expected here), persist via GitHub connector or a generated Code prompt.

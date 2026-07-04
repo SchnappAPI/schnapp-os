@@ -27,6 +27,11 @@ secret in a command, prefer the Mac's `op_run`/`op_inject` (value stays out of t
 - `claude-ai-web.md`
 - `iphone.md`
 
-`always-loaded-instructions.md` is the canonical hookless always-loaded block (paste into claude.ai **Settings > Profile > Preferences** for account-wide/global coverage incl. iPhone - owner's choice 2026-06-16 - and into Cowork instructions separately).
+`always-loaded-instructions.md` is the canonical hookless always-loaded block, split into a
+self-contained **CORE** (behavior, no tools/repo assumed) + a **Cowork operating block** (agentic
+work rules). Paste **CORE** into claude.ai **Settings > Profile > Preferences** (account-wide,
+covers iPhone - owner's choice 2026-06-16); paste **CORE + the Cowork block** into Cowork
+instructions. CORE carries the four standing rules (no sycophancy, terse, no capitulation,
+read-for-intent) that a hook enforces on Code but nothing enforces on a hookless surface.
 
 The `surface-check` skill reports what is loaded vs missing on the current surface.

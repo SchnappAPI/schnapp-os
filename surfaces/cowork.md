@@ -24,8 +24,10 @@ git repos (`SchnappAPI/schnapp-os` + `SchnappAPI/schnapp-vault`) via the GitHub 
 
 ## Enablement
 1. **Connectors:** enable the **Schnapp Portal** (op + memory + mac + github) + **obsidian-mcp**.
-2. **Always-loaded instructions:** paste
-   [always-loaded-instructions.md](always-loaded-instructions.md) into Cowork instructions.
+2. **Always-loaded instructions:** paste the **CORE** section + the **Cowork operating block** of
+   [always-loaded-instructions.md](always-loaded-instructions.md) into Cowork instructions (CORE =
+   behavior; the block = agentic work rules: connector topology, session-hygiene, read-modify-write
+   repo writes, main-only + auto-push).
 3. **Vault access verify (streamline Phase 5 T1):** in a Cowork session, read a vault fact
    (fetch `memory/MEMORY.md` from `SchnappAPI/schnapp-vault` through the connector), then write
    one (a probe fact per the vault `agents.md` schema, plus its `MEMORY.md` index line). Both
