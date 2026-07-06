@@ -114,6 +114,7 @@ and by `shell/install.sh` at user scope (the `global-*` set, ADR 0033); map in
 - **global-secret-scan.sh**: user-scope (any-repo) delivery of the secret-scan leak guard
 - **global-session-gate.sh**: the portable shell's ANY-REPO SessionStart hook (ADR 0033, Link A).
 - **global-vault-push.sh**: the portable shell's ANY-REPO SessionEnd hook (ADR 0033, Link B).
+- **idea-sweep.sh**: SessionEnd (user-scope): sweep the just-ended transcript for tabled ideas / deferred
 - **length-advisory.sh**: PostToolUse soft length nudge for the always-load layer.
 - **no-force-push-guard.sh**: PreToolUse HARD guard against force-push (decisions/0011 #9).
 - **post-compact-reinject.sh**: re-inject schnapp-os identity + invariants after a context compaction.

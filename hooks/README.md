@@ -12,7 +12,9 @@ nothing about when it fires):
   [shell/install.sh](../shell/README.md), ADR 0033): standing-rules.sh (reply rules),
   capture-nudge.sh (correction capture -> learning queue), global-session-gate.sh
   (startup|resume|clear: parallel pull of both live clones, drift auto-heal via the installer,
-  vault-backlog surfacing), global-vault-push.sh (SessionEnd vault commit+push), and the guard
+  vault-backlog surfacing), global-vault-push.sh (SessionEnd vault commit+push),
+  idea-sweep.sh (SessionEnd: model-extracts tabled ideas from the ended transcript into the
+  schnapp-console idea inbox; backgrounded, no-op if the console is down), and the guard
   wrappers global-force-push-guard.sh + global-secret-scan.sh. The secret-scan wrapper has two
   legs: PostToolUse Write/Edit (delegates to the canonical scanner; self-skips inside
   schnapp-os, where the project wiring covers it for web parity) and PreToolUse Bash (scans
