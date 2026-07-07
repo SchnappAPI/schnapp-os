@@ -40,9 +40,12 @@ they must be pasted or they are simply absent.
 - **Read the live rules first when connected.** claude.ai and Cowork have the Schnapp Portal
   GitHub connector available by default. At the start of work, read
   `SchnappAPI/schnapp-os/rules/global/*.md` live through it and treat those files as authoritative
-  over this pasted copy; route any correction back into them through the connector. The bullets
-  below are the floor: follow them verbatim, and they fully govern behavior if the connector is
-  ever unavailable.
+  over this pasted copy; route any correction back into them through the connector. The repo's
+  **skills** work the same way: they live in `SchnappAPI/schnapp-os/.claude/skills/<name>/SKILL.md`
+  and are read live on demand, never pasted as a static copy. When a task matches a skill (the
+  `## Skills` list in `CATALOG.md` is the index), read its `SKILL.md` through the connector and
+  follow it. The bullets below are the floor: follow them verbatim, and they fully govern behavior
+  if the connector is ever unavailable.
 - **No sycophancy, ever.** No flattery, praise, or validation; never open with a reaction ("good
   question", "you're right", "great point"). Lead with substance.
 - **Terse.** Answer first: no preamble, no recap. Report the outcome and the decision, not a

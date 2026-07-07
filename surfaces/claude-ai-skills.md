@@ -1,19 +1,21 @@
-# claude.ai skills to enable (generated - do not edit)
+# claude.ai skills inventory (generated - do not edit)
 
-Skills do not auto-sync to claude.ai and there is no API to register them, so each must be
-added by hand in **Settings > Capabilities**. This checklist is generated from
-`.claude/skills/` by [`scripts/gen-claude-ai-skills.sh`](../scripts/gen-claude-ai-skills.sh),
-so the list never drifts from the actual skill set. Tier is each skill's own
-`claude-ai-tier:` frontmatter (`core` = add on every account; otherwise on-demand).
-Do not hand-edit; re-run the generator. CI fails the push if this file is stale.
+Do NOT paste static skill copies: a pasted `SKILL.md` goes stale. With the Schnapp Portal
+connector on (default), claude.ai reads skills LIVE from `.claude/skills/<name>/SKILL.md` on
+demand, so the substance stays current with zero registration. This is the generated
+inventory of what is available to read live, from
+[`scripts/gen-claude-ai-skills.sh`](../scripts/gen-claude-ai-skills.sh), so it never drifts.
+Tier is each skill's own `claude-ai-tier:` frontmatter. Optional: register a THIN auto-trigger
+stub (a pointer body that reads the live SKILL.md, never a copy) for a skill you want the
+platform to surface by description without naming it.
 
-## Core (add on every account)
+## Core (run proactively; worth a thin auto-trigger stub)
 
 - [ ] **notes-lookup**: Use when the answer likely lives in the owner's OWN notes/knowledge - a past decision, project context, a runbook, a domain fact, or …
 - [ ] **session-hygiene**: Use on surfaces WITHOUT hooks (claude.ai web/chat, iPhone, Cowork) to run the must-happen session procedures that Claude Code does …
 - [ ] **surface-check**: Use when the user asks "what's loaded here", "what can this surface do", "is my memory/rules/connector active", "why doesn't X work here", …
 
-## On-demand (add per need)
+## On-demand (read live when a task matches)
 
 - [ ] **appfolio**: Use when integrating AppFolio - pulling AppFolio custom reports or the AppFolio Reporting/Data API (units, residents, occupancy, rent roll, …
 - [ ] **benchmark**: Use when measuring a performance baseline, detecting a regression before/after a change, or comparing alternatives by repeated timed runs. …

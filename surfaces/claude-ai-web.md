@@ -23,10 +23,15 @@
    (`https://mcp.schnapp.bet/mcp` - fronts op-mcp + memory-mcp + mac-mcp + github-mcp) and
    **obsidian mcp** (native OAuth). The old standalone "Schnapp Mac" / "Schnapp GitHub" connectors
    are retired - the portal carries those tools now.
-2. **Skills** (Settings > Capabilities): skills do not auto-sync from the repo (no API), so add
-   the SKILL.md files by hand. The exact list is generated, never hand-maintained:
-   [`claude-ai-skills.md`](claude-ai-skills.md) (from [`scripts/gen-claude-ai-skills.sh`](../scripts/gen-claude-ai-skills.sh)).
-   Add the **Core** group on every account; add the **On-demand** group per need.
+2. **Skills:** do NOT paste static skill copies (a pasted `SKILL.md` goes stale, the same trap the
+   CORE live-read clause avoids). With the Portal connector on (default), claude.ai reads skills
+   LIVE from `.claude/skills/<name>/SKILL.md` on demand, so the substance stays current with zero
+   registration. [`claude-ai-skills.md`](claude-ai-skills.md) (from
+   [`scripts/gen-claude-ai-skills.sh`](../scripts/gen-claude-ai-skills.sh)) is the generated
+   inventory of what is available to read live. Optional: for a skill you want the platform to
+   auto-surface by description without naming it, register a THIN stub in Settings > Capabilities:
+   its frontmatter (name + description) for triggering plus a one-line body that says to read the
+   live `SKILL.md` and follow it. The stub is a pointer, not a copy, so it does not go stale.
 3. **Always-loaded instructions:** paste the **CORE** section of
    [`always-loaded-instructions.md`](always-loaded-instructions.md) into **Settings > Profile >
    Preferences** (account-wide / global - owner's choice 2026-06-16, so it applies to every chat

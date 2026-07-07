@@ -33,21 +33,23 @@ TMP="$(mktemp)"
 trap 'rm -f "$TMP"' EXIT
 
 {
-  echo "# claude.ai skills to enable (generated - do not edit)"
+  echo "# claude.ai skills inventory (generated - do not edit)"
   echo
-  echo "Skills do not auto-sync to claude.ai and there is no API to register them, so each must be"
-  echo "added by hand in **Settings > Capabilities**. This checklist is generated from"
-  echo "\`.claude/skills/\` by [\`scripts/gen-claude-ai-skills.sh\`](../scripts/gen-claude-ai-skills.sh),"
-  echo "so the list never drifts from the actual skill set. Tier is each skill's own"
-  echo "\`claude-ai-tier:\` frontmatter (\`core\` = add on every account; otherwise on-demand)."
-  echo "Do not hand-edit; re-run the generator. CI fails the push if this file is stale."
+  echo "Do NOT paste static skill copies: a pasted \`SKILL.md\` goes stale. With the Schnapp Portal"
+  echo "connector on (default), claude.ai reads skills LIVE from \`.claude/skills/<name>/SKILL.md\` on"
+  echo "demand, so the substance stays current with zero registration. This is the generated"
+  echo "inventory of what is available to read live, from"
+  echo "[\`scripts/gen-claude-ai-skills.sh\`](../scripts/gen-claude-ai-skills.sh), so it never drifts."
+  echo "Tier is each skill's own \`claude-ai-tier:\` frontmatter. Optional: register a THIN auto-trigger"
+  echo "stub (a pointer body that reads the live SKILL.md, never a copy) for a skill you want the"
+  echo "platform to surface by description without naming it."
   echo
 
   for tier in core on-demand; do
     if [ "$tier" = "core" ]; then
-      echo "## Core (add on every account)"
+      echo "## Core (run proactively; worth a thin auto-trigger stub)"
     else
-      echo "## On-demand (add per need)"
+      echo "## On-demand (read live when a task matches)"
     fi
     echo
     any=0
