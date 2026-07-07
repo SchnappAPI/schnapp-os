@@ -36,10 +36,10 @@ low-cost, in-context call just trains rubber-stamping (checkpoint fatigue). Conc
 
 ## Output contract
 
-Emit only: (1) a one-line restatement of the TRUE intent, (2) any genuine fork you cannot settle
-from the objective (ask just those), (3) if a step is irreversible or outward-facing, the checkpoint
-you are inserting and why. No seven-step dump. If nothing is ambiguous and nothing is irreversible,
-say so in one line and proceed.
+Emit only: (1) a one-line restatement of the TRUE intent, (2) any genuine fork you cannot
+settle from the objective (ask just those), (3) if a materially better framing/scope exists
+than the one asked, name it in one line and let the owner pick it or the literal ask, (4) if a
+step is irreversible or outward-facing, the checkpoint you are inserting and why.
 
 ## Companions
 
