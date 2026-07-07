@@ -8,8 +8,11 @@ so nothing snapshots and nothing goes stale.
 
 - [install.sh](install.sh) - install/repair a machine: renders `~/.claude/CLAUDE.md`, merges
   the user-scope settings keys + hooks, symlinks skills/agents/commands. Idempotent;
-  `--dry-run` previews. Per-machine install is: clone both repos, run this, accept the trust
-  dialog.
+  `--dry-run` previews. Assumes both repos are already cloned; the setup scripts below clone
+  then call it.
+- [mac-setup.sh](mac-setup.sh) - one-command new-Mac bootstrap: installs the op CLI (Homebrew
+  cask), clones both repos under `~/code`, runs install.sh. Prereq is GitHub auth on the Mac
+  (SSH key or `gh auth login`); then `git clone ...schnapp-os && bash shell/mac-setup.sh`.
 - [web-setup.sh](web-setup.sh) - canonical web-environment setup script (pasted into the web
   env config): clones both repos in the container, runs install.sh there. Web user-scope
   honoring is the ADR's open verify item.
