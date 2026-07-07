@@ -33,6 +33,7 @@ routine that wants to change state stops at the proposal and hands it to a human
 | Memory consolidation | asks-first | LaunchAgent → `claude -p` | no (repo only) | [memory-consolidation.md](memory-consolidation.md) |
 | Infra / pipeline health | safe (probe) | LaunchAgent → `check-infra-health.sh` (pure bash) | yes (launchctl/docker/ports) | [infra-health.md](infra-health.md) |
 | Mac liveness (dead-man's-switch) | safe (probe) | GitHub Actions cron | no (pings the Mac from the cloud) | [mac-liveness.md](mac-liveness.md) |
+| Caffeinate (hub availability) | safe (auto) | LaunchAgent → `caffeinate -s` | yes (holds the AC sleep assertion) | [caffeinate.md](caffeinate.md) |
 
 The **safe, Mac-independent** routines are wired now in
 [`.github/workflows/scheduled-routines.yml`](../.github/workflows/scheduled-routines.yml) via the

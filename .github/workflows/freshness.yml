@@ -96,7 +96,7 @@ jobs:
         run: bash scripts/tests/test-check-links.sh
 
       - name: LaunchAgent plists are valid
-        run: python3 -c "import plistlib; [plistlib.load(open(p,'rb')) for p in ['scheduled-tasks/com.schnapp.memory-consolidation.plist','scheduled-tasks/com.schnapp.infra-health.plist','scheduled-tasks/com.schnapp.vault-autocommit.plist']]; print('plists OK')"
+        run: python3 -c "import plistlib; [plistlib.load(open(p,'rb')) for p in ['scheduled-tasks/com.schnapp.memory-consolidation.plist','scheduled-tasks/com.schnapp.infra-health.plist','scheduled-tasks/com.schnapp.vault-autocommit.plist','scheduled-tasks/com.schnapp.caffeinate.plist']]; print('plists OK')"
 
       - name: Secret scan (no literal values in tracked files)
         run: bash scripts/scan-secrets.sh --exclude 'scripts/tests/*'
