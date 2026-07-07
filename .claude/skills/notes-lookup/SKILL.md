@@ -1,5 +1,6 @@
 ---
 name: notes-lookup
+claude-ai-tier: core
 description: Use when the answer likely lives in the owner's OWN notes/knowledge - a past decision, project context, a runbook, a domain fact, or anything captured in the Obsidian vault (which mirrors schnapp-os's memory/handoffs/decisions). Search the owner's knowledge before answering from memory or rebuilding context. For EXTERNAL library/framework/API docs use context7 instead.
 ---
 

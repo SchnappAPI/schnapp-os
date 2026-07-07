@@ -69,6 +69,23 @@ else
 fi
 rm -f "$tmp2"
 
+tmp3="$(mktemp)"
+if bash scripts/gen-claude-ai-skills.sh "$tmp3" >/dev/null 2>&1; then
+  if diff -q "$tmp3" surfaces/claude-ai-skills.md >/dev/null 2>&1; then
+    echo "ok: surfaces/claude-ai-skills.md is current"
+  else
+    echo "STALE generated doc: surfaces/claude-ai-skills.md" >&2
+    echo "  fix: bash scripts/gen-claude-ai-skills.sh  (then commit surfaces/claude-ai-skills.md)" >&2
+    echo "  --- committed (<) vs regenerated (>): ---" >&2
+    diff surfaces/claude-ai-skills.md "$tmp3" | sed 's/^/    /' >&2 || true
+    fail=1
+  fi
+else
+  echo "ERROR: gen-claude-ai-skills.sh failed to run" >&2
+  fail=1
+fi
+rm -f "$tmp3"
+
 # (2) last-verified docs ------------------------------------------------------
 found_lv=0
 while IFS= read -r doc; do

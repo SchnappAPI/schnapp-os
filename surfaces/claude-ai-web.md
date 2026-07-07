@@ -23,10 +23,10 @@
    (`https://mcp.schnapp.bet/mcp` - fronts op-mcp + memory-mcp + mac-mcp + github-mcp) and
    **obsidian mcp** (native OAuth). The old standalone "Schnapp Mac" / "Schnapp GitHub" connectors
    are retired - the portal carries those tools now.
-2. **Skills** (Settings > Capabilities): add the must-have core skills first: `session-hygiene`,
-   `surface-check`, `notes-lookup`. They do not auto-sync from the repo, so add the SKILL.md files here.
-   Add domain skills on demand: `etl-pipeline-build`, `sql-server-patterns`, `quickbase`, `appfolio`,
-   plus the available `data:*` / `pq-flat-map-type` / `sports-data-auditor` skills per the preset.
+2. **Skills** (Settings > Capabilities): skills do not auto-sync from the repo (no API), so add
+   the SKILL.md files by hand. The exact list is generated, never hand-maintained:
+   [`claude-ai-skills.md`](claude-ai-skills.md) (from [`scripts/gen-claude-ai-skills.sh`](../scripts/gen-claude-ai-skills.sh)).
+   Add the **Core** group on every account; add the **On-demand** group per need.
 3. **Always-loaded instructions:** paste the **CORE** section of
    [`always-loaded-instructions.md`](always-loaded-instructions.md) into **Settings > Profile >
    Preferences** (account-wide / global - owner's choice 2026-06-16, so it applies to every chat

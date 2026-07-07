@@ -1,5 +1,6 @@
 ---
 name: session-hygiene
+claude-ai-tier: core
 description: Use on surfaces WITHOUT hooks (claude.ai web/chat, iPhone, Cowork) to run the must-happen session procedures that Claude Code does automatically via hooks - at the START of work (freshness/git gate: catch up, surface unmerged/unpushed/stale state before new work), when WRAPPING UP (end-of-session write: persist fresh memory + handoff, commit/push, back up), and right AFTER the owner corrects a mistake (route the fix to a rule/memory/doc so it can't recur). Invoke when starting or ending work on a hookless surface, or whenever a correction lands.
 ---
 
