@@ -111,8 +111,9 @@ case "$out" in *"concurrent git writer"*) echo "ok   index.lock: reported as con
   *) echo "FAIL index.lock: wrong diagnosis: $out"; fail=$((fail+1));; esac
 rm -f "$T/c8/vault/.git/index.lock"
 
-# 9. two truly concurrent runs (two SessionEnd hooks): winner sweeps all, loser is a no-op,
-#    neither exits 2, tree ends clean and pushed
+# 9. two truly concurrent runs (two SessionEnd hooks): the mutex serializes them so the winner
+#    sweeps all and the loser is a deterministic no-op - neither can commit concurrently (which
+#    used to collide on HEAD.lock and misclassify as exit 2), tree ends clean and pushed.
 mk_repos "$T/c9"
 echo one > "$T/c9/vault/f1.md"
 echo two > "$T/c9/vault/f2.md"
@@ -123,6 +124,43 @@ if [ "$rc1" != 2 ] && [ "$rc2" != 2 ]; then echo "ok   concurrent: no false fail
 else echo "FAIL concurrent: a run exited 2 (rc $rc1/$rc2)"; fail=$((fail+1)); fi
 check_eq "concurrent: tree clean after race" "" "$(git -C "$T/c9/vault" status --porcelain)"
 check_eq "concurrent: origin got the sweep" "2" "$(git --git-dir="$T/c9/origin.git" log --oneline main | wc -l | tr -d ' ')"
+
+# 10. mutex held by another run: the loser path, exercised deterministically (no wall-clock
+#     overlap needed) by pre-creating the lock dir. Benign skip (rc 0), tree untouched - the
+#     lock holder is the one that sweeps it.
+mk_repos "$T/c10"
+echo note > "$T/c10/vault/held.md"
+mkdir "$T/c10/vault/.git/vault-autocommit.lock"
+out="$(run_sut "$T/c10/vault")"; rc=$?
+check_rc "mutex held: loser skips benign" 0 "$rc"
+case "$out" in *"holds the lock"*) echo "ok   mutex held: reported as lock-held, not pre-commit"; pass=$((pass+1));;
+  *) echo "FAIL mutex held: wrong diagnosis: $out"; fail=$((fail+1));; esac
+check_eq "mutex held: tree left for the holder to sweep" "?? held.md" "$(git -C "$T/c10/vault" status --porcelain)"
+rmdir "$T/c10/vault/.git/vault-autocommit.lock"
+
+# 11. stale mutex (holder crashed): a lock aged past the stale window is reclaimed, not honored
+#     forever - otherwise a crash would wedge the every-5-min launchd job.
+mk_repos "$T/c11"
+echo note > "$T/c11/vault/x.md"
+mkdir "$T/c11/vault/.git/vault-autocommit.lock"
+# Backdate the lock well past the 1s stale window we pass in; touch -t needs [[CC]YY]MMDDhhmm.
+touch -t 200001010000 "$T/c11/vault/.git/vault-autocommit.lock"
+out="$(VAULT_DIR="$T/c11/vault" AUTOCOMMIT_QUIET_SECONDS=0 AUTOCOMMIT_LOCK_STALE_SECONDS=1 bash "$SUT" 2>&1)"; rc=$?
+check_rc "stale mutex: reclaimed and commits" 0 "$rc"
+check_eq "stale mutex: pushed the sweep" "2" "$(git --git-dir="$T/c11/origin.git" log --oneline main | wc -l | tr -d ' ')"
+
+# 12. foreign writer holds git's HEAD.lock mid-commit (a non-vault-autocommit git, so our mutex
+#     does not cover it): the commit fails with "cannot lock ref 'HEAD'" - the exact message that
+#     used to leak to exit 2. Must classify benign (rc 0, NOT 2), tree left dirty.
+mk_repos "$T/c12"
+echo note > "$T/c12/vault/y.md"
+: > "$T/c12/vault/.git/HEAD.lock"
+out="$(run_sut "$T/c12/vault")"; rc=$?
+check_rc "foreign HEAD.lock: benign not gate-fail" 0 "$rc"
+if [ "$rc" = 2 ]; then echo "FAIL foreign HEAD.lock: ref-lock misread as pre-commit gate"; fail=$((fail+1)); fi
+# add -A ran before the commit failed, so y.md is staged (not committed): "A  y.md".
+check_eq "foreign HEAD.lock: tree left dirty" "A  y.md" "$(git -C "$T/c12/vault" status --porcelain)"
+rm -f "$T/c12/vault/.git/HEAD.lock"
 
 echo "pass=$pass fail=$fail"
 [ "$fail" = "0" ]
