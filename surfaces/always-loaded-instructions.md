@@ -13,6 +13,12 @@ re-paste when this file changes).
 - Each CORE clause that needs a connector states its own precondition, so the same CORE degrades
   gracefully whether or not the Schnapp Portal is enabled in a given chat.
 
+**Cowork seed auto-sync (no hand-copy):** Cowork also copies a per-session global `CLAUDE.md` from a
+local seed file. That seed is regenerated from this file's `## CORE`-to-end sections by
+[`scripts/sync-cowork-seed.sh`](../scripts/sync-cowork-seed.sh), run on every Claude Code SessionStart,
+so editing this file is the only step: the seed follows. The schnapp-console **Cowork** tab shows
+whether the live seed matches this source and serves the exact paste text for the settings boxes.
+
 Why pasted, not read live: a bare chat may not reach the repo, so the standing behavior cannot
 depend on reading a file. The full rules stay in [`rules/global/`](../rules/global/); this is the
 distilled, self-contained restatement (the one sanctioned exception to "reference, do not
@@ -66,17 +72,20 @@ claim a capability exists without probing it.
 ## Cowork operating block (paste AFTER the CORE into Cowork instructions)
 
 Cowork runs on the Claude Agent SDK: agentic and multi-step, but hookless and shell-less. It
-works over the two repos (`SchnappAPI/schnapp-os` + `SchnappAPI/schnapp-vault`) through the GitHub
-connector and the Mac through `mac-mcp`. CORE governs behavior; this governs the work.
+works over the repos (`SchnappAPI/schnapp-os`, `SchnappAPI/schnapp-vault`, `SchnappAPI/schnapp-bet`)
+through the GitHub connector and the Mac through `mac-mcp`. CORE governs behavior; this governs the
+work. When working in a repo, read its own `CLAUDE.md` live through the connector first: it carries
+that repo's project rules (schnapp-bet's grading/settlement invariants, its glossary), which the
+global CORE does not.
 
 - **Connectors are this surface's hands.** The **Schnapp Portal** is one OAuth connector fronting
   `op-mcp` (secrets), `memory-mcp` (vault memory read/write), `mac-mcp` (shell / SQL / files),
-  and `github-mcp` (both repos, all-repo PAT); `obsidian-mcp` is a separate connector. Prefer a
+  and `github-mcp` (all repos, all-repo PAT); `obsidian-mcp` is a separate connector. Prefer a
   **live read** of any skill, rule, or doc from `SchnappAPI/schnapp-os` via `github-mcp` over
   trusting a stale pasted copy: read fresh whatever you can read fresh.
 - **Must-happen procedures (no hooks): run the `session-hygiene` skill.** Start of work = the
-  freshness gate (surface unmerged / unpushed / stale state across schnapp-os + schnapp-vault
-  before new work). Wrapping up = the end-of-session write (memory + handoff + PROGRESS, committed
+  freshness gate (surface unmerged / unpushed / stale state across schnapp-os, schnapp-vault, and
+  schnapp-bet before new work). Wrapping up = the end-of-session write (memory + handoff + PROGRESS, committed
   through the connector). After the owner corrects something = route it (preference to a
   `rules/global/` file; durable fact to memory, supersede not append; stale doc fixed with its
   siblings). Confirm what is actually loaded with `surface-check` first.

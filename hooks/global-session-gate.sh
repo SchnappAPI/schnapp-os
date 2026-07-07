@@ -102,4 +102,7 @@ if [ -d "$VAULT/.git" ]; then
   [ -n "$backlog" ] && echo "[shell] vault BACKLOG: $backlog - the autocommit may be blocked (schema gate? push failure?); run bash $OS_DIR/scripts/vault-autocommit.sh to see why."
 fi
 [ -f "$VAULT/memory/MEMORY.md" ] && echo "[shell] memory: read $VAULT/memory/MEMORY.md (thin index) first, then load facts on demand; write-backs follow the vault agents.md schema (supersede, never append)."
+
+# Keep the Cowork seed in step with the hookless instructions (best-effort, only writes on change).
+[ -x "$OS_DIR/scripts/sync-cowork-seed.sh" ] && SCHNAPP_OS_DIR="$OS_DIR" bash "$OS_DIR/scripts/sync-cowork-seed.sh" >/dev/null 2>&1
 exit 0
