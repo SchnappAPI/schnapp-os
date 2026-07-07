@@ -30,10 +30,11 @@
 3. **Always-loaded instructions:** paste the **CORE** section of
    [`always-loaded-instructions.md`](always-loaded-instructions.md) into **Settings > Profile >
    Preferences** (account-wide / global - owner's choice 2026-06-16, so it applies to every chat
-   and to iPhone on the same account). CORE is self-contained: it assumes NO connectors and NO
-   repo, so it works in a bare chat, and it carries the four standing rules (no sycophancy, terse,
-   no capitulation, read-for-intent) that a hook delivers on Code but nothing delivers here. Its
-   connector clauses self-activate if the Schnapp Portal is enabled. Use a dedicated Project's
-   instructions instead only if you later want it scoped to schnapp-os work.
+   and to iPhone on the same account). CORE is a **bootstrap**: with the Schnapp Portal connector
+   (on by default here, probe-confirmed 2026-07-07 in bare chats and Projects) the surface reads
+   `rules/global/` live and treats it as authoritative; the pasted bullets are the floor it falls
+   back to if the connector is ever down, carrying the standing rules (no sycophancy, terse, no
+   capitulation, read-for-intent) that a hook delivers on Code but nothing delivers here. Use a
+   dedicated Project's instructions instead only if you later want it scoped to schnapp-os work.
 4. **Verify:** run `surface-check`. Expect connectors present, global rules + session-hygiene loaded,
    no hooks (expected here), persist via GitHub connector or a generated Code prompt.

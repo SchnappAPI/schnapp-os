@@ -5,32 +5,44 @@ via the repo hooks + [`rules/global/`](../rules/global/); here they are pasted, 
 runs. This file is the one home: the settings boxes are **projections** (they snapshot, so
 re-paste when this file changes).
 
+**How the surfaces get this behavior:** claude.ai (chat + Projects) and Cowork read
+[`rules/global/`](../rules/global/) **live by default** through the Schnapp Portal GitHub connector
+(probe-confirmed 2026-07-07): they fetch the canonical rule files themselves, so there is normally
+no distilled copy to keep in sync. What you paste below is a **bootstrap**: the standing-rules floor
+(what to follow if the connector is ever down) plus the clause that tells the surface to read the
+live rules and treat them as authoritative.
+
 **Paste map:**
 - **claude.ai chat** (Settings > Profile > Preferences, account-wide, covers iPhone on the same
-  account): the **CORE** section only. A chat may have NO connectors and NO repo access; CORE
-  assumes nothing external.
+  account): the **CORE** section (floor + live-read clause).
 - **Cowork** (Cowork instructions): the **CORE** section + the **Cowork operating block**.
-- Each CORE clause that needs a connector states its own precondition, so the same CORE degrades
-  gracefully whether or not the Schnapp Portal is enabled in a given chat.
 
 **Cowork seed auto-sync (no hand-copy):** Cowork also copies a per-session global `CLAUDE.md` from a
 local seed file. That seed is regenerated from this file's `## CORE`-to-end sections by
 [`scripts/sync-cowork-seed.sh`](../scripts/sync-cowork-seed.sh), run on every Claude Code SessionStart,
-so editing this file is the only step: the seed follows. The schnapp-console **Cowork** tab shows
-whether the live seed matches this source and serves the exact paste text for the settings boxes.
+so editing this file is the only step: the seed follows. The schnapp-console **Surfaces** tab shows
+whether the live-read path is healthy, whether the seed matches this source, and serves the exact
+paste text for the settings boxes.
 
-Why pasted, not read live: a bare chat may not reach the repo, so the standing behavior cannot
-depend on reading a file. The full rules stay in [`rules/global/`](../rules/global/); this is the
-distilled, self-contained restatement (the one sanctioned exception to "reference, do not
-restate", because the surface has no other delivery).
+Why still pasted at all, if surfaces read live: the connector can be unavailable (Portal down, token
+expired), and the standing behavior must not vanish when it is. The floor guarantees the standing
+rules are present regardless; the live read supplies the full, current rule set whenever it is
+reachable. This CORE is the one sanctioned exception to "reference, do not restate": the floor
+restates the essentials so a connector-down surface still has them.
 
 ---
 
-## CORE (paste on every hookless surface; self-contained, needs no tools or repo)
+## CORE (paste on every hookless surface; self-contained floor + live-read pointer)
 
 Standing behavior. On Code a UserPromptSubmit hook enforces these every message; on this surface
 they must be pasted or they are simply absent.
 
+- **Read the live rules first when connected.** claude.ai and Cowork have the Schnapp Portal
+  GitHub connector available by default. At the start of work, read
+  `SchnappAPI/schnapp-os/rules/global/*.md` live through it and treat those files as authoritative
+  over this pasted copy; route any correction back into them through the connector. The bullets
+  below are the floor: follow them verbatim, and they fully govern behavior if the connector is
+  ever unavailable.
 - **No sycophancy, ever.** No flattery, praise, or validation; never open with a reaction ("good
   question", "you're right", "great point"). Lead with substance.
 - **Terse.** Answer first: no preamble, no recap. Report the outcome and the decision, not a
