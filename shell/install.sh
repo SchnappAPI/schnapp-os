@@ -8,7 +8,7 @@
 #   2. Settings   ~/.claude/settings.json merge: autoMemoryDirectory -> vault memory lane;
 #                 user-scope hooks (UserPromptSubmit standing-rules + capture-nudge,
 #                 SessionStart global-session-gate on startup|resume|clear, SessionEnd
-#                 global-vault-push + idea-sweep, PreToolUse global-force-push-guard + global-secret-scan
+#                 global-vault-push + idea-sweep + session-digest, PreToolUse global-force-push-guard + global-secret-scan
 #                 (command-text leg), PostToolUse global-secret-scan (file leg)).
 #                 Everything else in the file (permissions, plugins, statusLine) is preserved.
 #   3. Components ~/.claude/{skills,agents,commands}/<name> symlinks into the live clone.
@@ -91,6 +91,9 @@ wanted = [
     # sweep the ended transcript for tabled ideas -> schnapp-console idea inbox (backgrounds
     # its own model call, returns instantly; no-op if the console is not running).
     ("SessionEnd", "*", "idea-sweep.sh", 15),
+    # append a structured, non-sensitive digest of the ended session to the vault sessions/
+    # index (no model call); the next vault push/sweep propagates it to every machine.
+    ("SessionEnd", "*", "session-digest.sh", 15),
     ("PreToolUse", "Bash", "global-force-push-guard.sh", 10),
     # The same wrapper twice: PreToolUse Bash scans the command TEXT (heredoc/echo writes the
     # file hooks never see); PostToolUse scans the Write/Edit'd file.

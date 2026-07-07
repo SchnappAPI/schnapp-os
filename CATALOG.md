@@ -119,6 +119,7 @@ and by `shell/install.sh` at user scope (the `global-*` set, ADR 0033); map in
 - **no-force-push-guard.sh**: PreToolUse HARD guard against force-push (decisions/0011 #9).
 - **post-compact-reinject.sh**: re-inject schnapp-os identity + invariants after a context compaction.
 - **secret-scan-on-write.sh**: PostToolUse shift-left leak guard.
+- **session-digest.sh**: SessionEnd (user-scope): append a one-line digest of the just-ended Claude Code session to
 - **session-end-backup.sh**: schnapp-os end-of-session write, deterministic half.
 - **session-start-gate.sh**: schnapp-os SessionStart freshness gate.
 - **session-stop-push-gate.sh**: schnapp-os Stop gate: never leave unpushed commits
