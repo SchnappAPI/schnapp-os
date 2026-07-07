@@ -4,6 +4,7 @@ Two kinds live here; do not confuse them.
 
 **Live (current-state, kept true):**
 - [framework.md](framework.md) - the durable "why" of the whole system.
+- [color-key.md](color-key.md) - documentation ink legend (8-pen color -> role map) plus Panobook transcription spec.
 - [memory-lane.md](memory-lane.md) - memory procedures (freshness gate, end-of-session write,
   on-correction routing). The lane itself lives in the vault repo.
 - [environment-and-access.md](environment-and-access.md) - network allowlist, git-write paths,
