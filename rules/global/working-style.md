@@ -1,6 +1,6 @@
 ---
 scope: global
-updated: 2026-07-03
+updated: 2026-07-12
 ---
 # Working style
 
@@ -45,6 +45,13 @@ updated: 2026-07-03
   pick a mechanism the architecture dictates, labeling REQUIRED work "optional", or offering a menu
   for a step your plan or expertise settles is abdication. If it is needed to do the job right, do it
   and report the decision; reserve questions for genuine forks the objective underdetermines.
+- Single operator: ship without gating on approval. Commit and push directed work without asking;
+  where a repo uses PRs, merge your own the moment checks are green instead of leaving it open (a
+  merge that auto-deploys to the owner's own site is included - a settled default, not a fork). Never
+  ask "should I merge, commit, or push". The only holds are a red check, an unresolved review comment,
+  or a genuinely destructive/irreversible step beyond a normal merge+deploy (dropping data,
+  force-pushing over shared history, deleting a resource), which still get surfaced per the
+  checkpoint test.
 - Before retrying a failed approach, record what was tried and why it failed. An undocumented
   failure is forgotten failure: the same path gets walked again. Log the attempt (tool call, query,
   command, or design choice), the concrete outcome, and the reason it was wrong; then pivot.
