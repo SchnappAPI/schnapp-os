@@ -82,7 +82,10 @@ if [ -n "$ref" ]; then
   # must be in one substitution, since a second, separate substitution would strip the real
   # value's trailing newline before the sentinel ever sees it - destroying the exact defect this
   # gate exists to catch).
-  raw="$(op read "$ref" 2>/dev/null; printf '%s%d' "$status_marker" "$?"; printf x)"
+  # -n: op read otherwise appends its own trailing newline, which the sentinel logic
+  # faithfully preserves - making EVERY ref-based check false-positive on the
+  # trailing-whitespace class (verified against a known-good production value 2026-07-11).
+  raw="$(op read -n "$ref" 2>/dev/null; printf '%s%d' "$status_marker" "$?"; printf x)"
   raw="${raw%x}"
   op_status="${raw##*"$status_marker"}"
   val="${raw%"$status_marker$op_status"}"
