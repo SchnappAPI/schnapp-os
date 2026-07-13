@@ -34,46 +34,92 @@ function todayUTC(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-/** Build a per-fact file body to the vault agents.md frontmatter convention. */
-function buildFact(opts: {
-  slug: string;
-  scope: string;
-  source: string;
-  updated: string;
-  supersedes: string;
-  body: string;
-}): string {
-  const fm = [
-    "---",
-    `name: ${opts.slug}`,
-    "metadata:",
-    "  node_type: memory",
-    `  scope: ${opts.scope}`,
-    `  source: ${JSON.stringify(opts.source)}`,
-    `  updated: ${opts.updated}`,
-    `  supersedes: ${JSON.stringify(opts.supersedes)}`,
-    "---",
-    "",
-  ].join("\n");
-  return `${fm}${opts.body.trimEnd()}\n`;
+/**
+ * Frontmatter handling. Contract (vault agents.md, ADR 0023/0029): the lane's schema is a FLAT
+ * top-level block with exactly these keys - name, description, type, area, source, created,
+ * updated, superseded. On a supersede-in-place the server must PRESERVE the existing block
+ * verbatim and change only what the write changes (updated, source, optionally description).
+ * The old builder here wrote a nested metadata: block and discarded every existing key, which
+ * corrupted created:/description:/type: on every write (found 2026-07-13, handoff 057).
+ */
+export function splitFrontmatter(text: string): { fmLines: string[]; body: string } | null {
+  if (!text.startsWith("---\n")) return null;
+  const end = text.indexOf("\n---", 4);
+  if (end < 0) return null;
+  const fmLines = text.slice(4, end).split("\n");
+  // A flat block has a top-level updated: key; a legacy nested block does not.
+  if (!fmLines.some((l) => l.startsWith("updated:"))) return null;
+  const body = text.slice(end + 4).replace(/^\n+/, "");
+  return { fmLines, body };
 }
 
-/** Replace the index line for a slug, or insert it under the "## Index" header. */
-function upsertIndexLine(indexText: string, slug: string, line: string): string {
-  const lines = indexText.split("\n");
-  const needle = `](${slug}.md)`;
-  const existing = lines.findIndex((l) => l.includes(needle));
-  if (existing >= 0) {
-    lines[existing] = line;
-    return lines.join("\n");
+/** Replace a top-level `key:` line in place, or insert it before the block ends. */
+export function setFmLine(fmLines: string[], key: string, rawValue: string): string[] {
+  const line = `${key}: ${rawValue}`;
+  const at = fmLines.findIndex((l) => l.startsWith(`${key}:`));
+  if (at >= 0) {
+    const out = fmLines.slice();
+    out[at] = line;
+    return out;
   }
-  const header = lines.findIndex((l) => l.trim().toLowerCase() === "## index");
+  return [...fmLines, line];
+}
+
+/** Flat 8-key frontmatter for a NEW fact (key order matches the vault schema). */
+export function buildNewFactFm(opts: {
+  slug: string;
+  description: string;
+  type: string;
+  area: string;
+  source: string;
+  today: string;
+  updated: string;
+}): string[] {
+  return [
+    `name: ${opts.slug}`,
+    `description: ${JSON.stringify(opts.description)}`,
+    `type: ${opts.type}`,
+    `area: ${opts.area}`,
+    `source: ${JSON.stringify(opts.source)}`,
+    `created: ${opts.today}`,
+    `updated: ${opts.updated}`,
+    "superseded: false",
+  ];
+}
+
+export function renderFact(fmLines: string[], body: string): string {
+  return `---\n${fmLines.join("\n")}\n---\n\n${body.trimEnd()}\n`;
+}
+
+/** Derive a description from the index line's hook text ('- [Title](slug.md) — hook'). */
+export function descriptionFromIndexLine(indexLine: string): string {
+  const m = indexLine.match(/\)\s*[-\u2014]+\s*(.+)$/);
+  return (m ? m[1] : indexLine.replace(/^-\s*/, "")).trim();
+}
+
+/**
+ * Replace the index line for a slug, or insert it under the "## Index" header.
+ * Removes EVERY existing line for the slug first, so a duplicate left by a mid-write
+ * failure (fact commit landed, stale index read on retry inserted twice) self-heals
+ * on the next write instead of persisting.
+ */
+export function upsertIndexLine(indexText: string, slug: string, line: string): string {
+  const needle = `](${slug}.md)`;
+  const lines = indexText.split("\n");
+  const firstAt = lines.findIndex((l) => l.includes(needle));
+  const kept = lines.filter((l) => !l.includes(needle));
+  if (firstAt >= 0) {
+    const insertAt = Math.min(firstAt, kept.length);
+    kept.splice(insertAt, 0, line);
+    return kept.join("\n");
+  }
+  const header = kept.findIndex((l) => l.trim().toLowerCase() === "## index");
   if (header >= 0) {
-    lines.splice(header + 1, 0, line);
-    return lines.join("\n");
+    kept.splice(header + 1, 0, line);
+    return kept.join("\n");
   }
   // No index header - append at end.
-  return `${indexText.trimEnd()}\n${line}\n`;
+  return `${kept.join("\n").trimEnd()}\n${line}\n`;
 }
 
 export function registerTools(server: McpServer): void {
@@ -234,8 +280,10 @@ Best for small/medium lanes; for the whole index just read memory_index.`,
         .regex(/^- \[.+\]\(.+\.md\)/, "Must be a MEMORY.md index bullet: '- [Title](slug.md) — hook'.")
         .describe("The one-line MEMORY.md index entry for this fact: '- [Title](<slug>.md) — short hook'."),
       source: z.string().min(1).describe("Where this came from: a session id, 'correction', a decision doc, etc."),
-      scope: z.enum(["global", "project"]).default("global").describe("Memory lane scope."),
-      supersedes: z.string().regex(SLUG).optional().describe("Slug of an earlier fact this replaces (sets frontmatter; delete the old one with memory_delete)."),
+      description: z.string().min(1).optional().describe("Frontmatter description. Omit on an existing fact to PRESERVE its current description; for a new fact the default derives from index_line's hook text."),
+      type: z.enum(["project", "reference", "feedback"]).optional().describe("Fact type (new facts only; an existing fact keeps its type). Default: project."),
+      scope: z.enum(["global", "project"]).default("global").describe("Memory lane scope (frontmatter area:)."),
+      supersedes: z.string().regex(SLUG).optional().describe("Slug of an earlier fact this replaces (recorded in source:; delete the old one with memory_delete)."),
       updated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().describe("ISO date; defaults to today (UTC)."),
     })
     .strict();
@@ -245,13 +293,17 @@ Best for small/medium lanes; for the whole index just read memory_index.`,
       title: "Write or supersede a memory fact",
       description: `Create or replace a fact file and update the MEMORY.md index - in two commits to ${REPO}@${BRANCH}.
 Enforces the vault agents.md discipline: ONE fact per file; SUPERSEDE, don't append (writing an existing
-slug REPLACES its body - never leave a contradicting copy); frontmatter carries source + updated.
+slug REPLACES its body - never leave a contradicting copy). The flat 8-key frontmatter is the server's
+job: an existing fact's block is PRESERVED verbatim except updated:, source:, and (only if provided)
+description:; a new fact gets the full flat block with created: = today.
 
 Args:
   - slug (string): kebab slug = filename. Writing an existing slug overwrites it (supersede).
-  - body (string): the fact (markdown, no frontmatter - the server adds it).
+  - body (string): the fact (markdown, no frontmatter - the server owns it).
   - index_line (string): the MEMORY.md bullet, '- [Title](<slug>.md) — hook'.
-  - source (string), scope ('global'|'project', default global), supersedes (slug, optional), updated (ISO, optional).
+  - source (string), description (optional; existing facts keep theirs when omitted),
+    type ('project'|'reference'|'feedback', new facts only), scope ('global'|'project', default global),
+    supersedes (slug, optional; recorded in source:), updated (ISO, optional).
 
 Returns: { "slug": string, "factCommit": string, "indexCommit": string|null, "path": string }
 On a cross-slug supersede, also call memory_delete on the old slug (supersede-not-append).
@@ -259,17 +311,32 @@ COLD START: first call after idle may take ~50s - retry once.`,
       inputSchema: WriteInput.shape,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ slug, body, index_line, source, scope, supersedes, updated }) => {
+    async ({ slug, body, index_line, source, description, type, scope, supersedes, updated }) => {
       try {
-        const content = buildFact({
-          slug,
-          scope,
-          source,
-          updated: updated ?? todayUTC(),
-          supersedes: supersedes ?? "",
-          body,
-        });
+        const today = todayUTC();
+        const stampUpdated = updated ?? today;
+        const stampSource = supersedes ? `${source} (supersedes ${supersedes})` : source;
         const existing = await tryReadFile(factPath(slug));
+        const parsed = existing ? splitFrontmatter(existing.text) : null;
+        let fmLines: string[];
+        if (parsed) {
+          // Supersede-in-place: preserve the existing flat block; touch only what changed.
+          fmLines = setFmLine(parsed.fmLines, "updated", stampUpdated);
+          fmLines = setFmLine(fmLines, "source", JSON.stringify(stampSource));
+          if (description) fmLines = setFmLine(fmLines, "description", JSON.stringify(description));
+        } else {
+          // New fact (or a legacy/unparseable block): write the full flat schema.
+          fmLines = buildNewFactFm({
+            slug,
+            description: description ?? descriptionFromIndexLine(index_line),
+            type: type ?? "project",
+            area: scope,
+            source: stampSource,
+            today,
+            updated: stampUpdated,
+          });
+        }
+        const content = renderFact(fmLines, body);
         const factCommit = await putFile(
           factPath(slug),
           content,
