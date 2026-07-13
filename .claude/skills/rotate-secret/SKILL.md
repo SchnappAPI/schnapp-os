@@ -105,12 +105,12 @@ credential tool once it is built - until then, [session-hygiene](../session-hygi
 - **Bootstrap secrets are not `op://`-resolvable** (the SA token, the bearers) - they ARE the keys;
   set them directly in each surface's env, and the map says so.
 
-## The leak remediation list (rotate-on-migrate)
+## Outstanding rotations (never listed here)
 
-Outstanding from [[credential-leak-2026-06-17]] - rotate each as it is migrated/split, fresh value:
-`MAC_MCP_AUTH_TOKEN`, `GITHUB_MCP_AUTH_TOKEN`, `OP_MCP_BEARER` (self-serve `openssl`); `GITHUB_PAT`,
-Anthropic key, Claude OAuth, DB `sa`, Web App secrets, Webshare, Cloudflare (owner consoles).
-(`OP_SERVICE_ACCOUNT_TOKEN` already rotated 2026-06-22 - [[credentials-state]].)
+Rotation status is mutable state this skill does not own. The authoritative list of what is
+rotated, outstanding, or due (including any rotate-on-migrate items from a leak) lives in
+[credentials-map.md](../../../credentials-map.md) (`consumed_by` column + append-only
+changelog) and the vault fact [[credentials-state]]. Read those; do not trust a remembered list.
 
 Related: [vault-resolve](../vault-resolve/SKILL.md) (read the new value) ·
 [cleanse-secrets](../cleanse-secrets/SKILL.md) (find what leaked) · the map's `consumed_by` + changelog.

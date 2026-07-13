@@ -110,7 +110,7 @@ context**: never the full transcript. That isolation is the anti-anchoring mecha
 ## After the council
 
 Persist only when the council changes something real. If it does, route the delta to its
-canonical home (see ../../rules/global/knowledge-capture.md): a durable lesson or decision to
+canonical home (see ../../../rules/global/knowledge-capture.md): a durable lesson or decision to
 the memory lane (`docs/memory-lane.md`; the global lane is the vault); a long-lived decision to the `decisions/` directory; a
 handoff for the next session to `handoffs/`. Do not write ad-hoc notes to shadow paths, and do
 not persist every decision.

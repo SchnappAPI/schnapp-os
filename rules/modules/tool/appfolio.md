@@ -11,4 +11,5 @@ subdomain, and endpoint specifics in the project lane. Secrets (API client id/se
 
 Integration patterns (Reporting/Data API, pulling custom reports, pagination, column-drift
 guarding, loading into SQL Server) live in the **appfolio** skill. Cell-by-cell reconciliation
-of an export against another dataset lives in the **fish-compare** skill - do not duplicate it.
+of an export against another dataset lives in the **fish-compare** skill, project-scoped in
+the 1st Lake work repo (not in schnapp-os) - do not duplicate it.

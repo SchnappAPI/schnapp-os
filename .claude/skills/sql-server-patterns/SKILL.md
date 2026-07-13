@@ -7,7 +7,7 @@ description: Use when writing or reviewing T-SQL for SQL Server 2022 - upserts/M
 
 T-SQL idioms for SQL Server 2022, the owner's database. Naming (plural snake_case tables,
 the LOCKED special-case rules) lives in [`lang/sql-server`](../../../rules/modules/lang/sql-server.md);
-performance principles in [`global/speed-by-default`](../../../rules/global/speed-by-default.md).
+performance principles in [`coding/speed-by-default`](../../../rules/modules/coding/speed-by-default.md).
 This skill is the dialect + pattern reference. For Python-side loading use the
 **etl-pipeline-build** skill.
 

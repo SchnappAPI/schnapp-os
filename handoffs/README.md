@@ -8,7 +8,8 @@ or renames a handoff. Regenerate with `scripts/gen-handoff-index.sh` after addin
 CI ([`.github/workflows/freshness.yml`](../.github/workflows/freshness.yml)) fails a push
 if this file is out of date.
 
-- [`056`](056-portable-shell-redteam.md) Handoff 056: Portable shell red-teamed - hardened, faster, two guard holes closed (resume point)
+- [`057`](057-setup-audit-and-fix-pass.md) Handoff 057: Full setup audit (5 subagents) + fix pass, and the 07-04..07-12 catch-up (resume point)
+- [`056`](056-portable-shell-redteam.md) Handoff 056: Portable shell red-teamed - hardened, faster, two guard holes closed
 - [`055`](055-portable-shell.md) Handoff 055: Portable shell built, installed, live-verified (ADR 0033)
 - [`054`](054-agentic-os-optimize-pass.md) Handoff 054: Agentic-OS optimize pass (navigability + loop hygiene)
 - [`053`](053-concept-integration-and-full-eval.md) Handoff 053: NEW-folder concept integration + full repo eval/triage
