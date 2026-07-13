@@ -17,7 +17,7 @@ git repos (`SchnappAPI/schnapp-os` + `SchnappAPI/schnapp-vault`) via the GitHub 
   reads project `.mcp.json` servers is UNVERIFIED (probe: enablement 4).
 - **Hooks:** none run here - RESOLVED by `surface-check` on two Cowork sessions (Mac + HP)
   2026-06-16. Run the must-happen procedures by hand via
-  [`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md); persist via the connector.
+  [`session-hygiene`](../skills/session-hygiene/SKILL.md); persist via the connector.
   The SessionEnd backup is Code/Mac-scoped and never fires from Cowork.
 - **Fallback:** anything Cowork cannot do natively: call the Mac over its remote MCP, or
   generate a ready-to-run prompt for a Code session. Never silently skip.

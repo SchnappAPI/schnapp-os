@@ -11,7 +11,7 @@
 #                 global-vault-push + idea-sweep + session-digest, PreToolUse global-force-push-guard + global-secret-scan
 #                 (command-text leg), PostToolUse global-secret-scan (file leg)).
 #                 Everything else in the file (permissions, plugins, statusLine) is preserved.
-#   3. Components ~/.claude/{skills,agents,commands}/<name> symlinks into the live clone.
+#   3. Components ~/.claude/{skills,agents,commands}/<name> symlinks into the live clone (canonical roots: skills/ agents/ commands/ at repo top level; .claude/ carries only wiring).
 #
 # Usage: bash shell/install.sh [--dry-run]
 # Env: VAULT_DIR (vault clone; default ~/code/schnapp-vault, then sibling of this repo),
@@ -149,7 +149,7 @@ printf '%s\n' "$merge_out" | sed 's/^/[shell-install] /'
 # 3. Component symlinks: live-by-construction delivery of skills/agents/commands.
 linked=0; kept=0; skipped=0; pruned=0
 for kind in skills agents commands; do
-  src="$OS_DIR/.claude/$kind"
+  src="$OS_DIR/$kind"
   [ -d "$src" ] || continue
   destdir="$CLAUDE_DIR/$kind"
   doit mkdir -p "$destdir"

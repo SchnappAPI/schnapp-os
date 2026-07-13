@@ -4,7 +4,7 @@
 #
 # claude.ai skills do NOT auto-sync from this repo and there is no API to register them (a
 # platform boundary, not a wiring gap): each must be added by hand in the account settings. This
-# checklist is the one thing we CAN keep honest - it is a PROJECTION of .claude/skills/, so the
+# checklist is the one thing we CAN keep honest - it is a PROJECTION of skills/, so the
 # list of what to add never drifts from the actual skill set. The click-through stays manual.
 #
 # Tier comes from each SKILL.md's own frontmatter: `claude-ai-tier: core` = add on every account;
@@ -18,7 +18,7 @@ export LC_ALL=C
 REPO="${CLAUDE_KIT_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 OUT="${1:-$REPO/surfaces/claude-ai-skills.md}"
 
-[ -d "$REPO/.claude/skills" ] || { echo "FATAL: .claude/skills not found under: $REPO" >&2; exit 1; }
+[ -d "$REPO/skills" ] || { echo "FATAL: skills not found under: $REPO" >&2; exit 1; }
 
 fm() { # file key -> single-line frontmatter value (empty if absent)
   awk -v k="$2" '
@@ -36,7 +36,7 @@ trap 'rm -f "$TMP"' EXIT
   echo "# claude.ai skills inventory (generated - do not edit)"
   echo
   echo "Do NOT paste static skill copies: a pasted \`SKILL.md\` goes stale. With the Schnapp Portal"
-  echo "connector on (default), claude.ai reads skills LIVE from \`.claude/skills/<name>/SKILL.md\` on"
+  echo "connector on (default), claude.ai reads skills LIVE from \`skills/<name>/SKILL.md\` on"
   echo "demand, so the substance stays current with zero registration. This is the generated"
   echo "inventory of what is available to read live, from"
   echo "[\`scripts/gen-claude-ai-skills.sh\`](../scripts/gen-claude-ai-skills.sh), so it never drifts."
@@ -53,7 +53,7 @@ trap 'rm -f "$TMP"' EXIT
     fi
     echo
     any=0
-    for d in "$REPO"/.claude/skills/*/; do
+    for d in "$REPO"/skills/*/; do
       [ -f "$d/SKILL.md" ] || continue
       nm="$(fm "$d/SKILL.md" name)"; [ -z "$nm" ] && nm="$(basename "$d")"
       t="$(fm "$d/SKILL.md" claude-ai-tier)"; [ "$t" = "core" ] || t="on-demand"

@@ -31,4 +31,4 @@ noise is worse than a tight one of exactly what matters.
 
 Grounding + resume are the memory lane's job ([docs/memory-lane.md](../../docs/memory-lane.md):
 handoff packet). Loaded-component cost and in-session diagnostics (recall test, token-spike, the
-subtraction pass) are the [context-budget](../../.claude/skills/context-budget/SKILL.md) skill's.
+subtraction pass) are the [context-budget](../../skills/context-budget/SKILL.md) skill's.

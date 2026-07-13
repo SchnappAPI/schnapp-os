@@ -3,7 +3,7 @@
 #
 # One pattern set, two consumers (anti-stale: never duplicate the patterns):
 #   (1) CI - .github/workflows/freshness.yml runs it over tracked files; any BLOCK = fail.
-#   (2) Skill - .claude/skills/cleanse-secrets wraps it for report + retro-scrub.
+#   (2) Skill - skills/cleanse-secrets wraps it for report + retro-scrub.
 #
 # Catches the exact value classes that leaked 2026-06-17 (vault memory/credential-leak-2026-06-17.md):
 # the 1Password SA token (ops_…), Anthropic api/oauth keys (sk-ant-…), GitHub PATs, the openssl

@@ -24,6 +24,6 @@ rushed prompt, so the model commits to the most probable path instead of the bes
   constraints upfront kill the spread.
 - **Small, high-stakes outputs benefit most** (a subject line, a name, a CTA), not least.
 - **This is the generative front half.** The convergent tools are
-  [`council`](../../../.claude/skills/council/SKILL.md) (decide under ambiguity) and
-  [`grill-me`](../../../.claude/skills/grill-me/SKILL.md) (stress-test one plan). Diverge here first,
+  [`council`](../../../skills/council/SKILL.md) (decide under ambiguity) and
+  [`grill-me`](../../../skills/grill-me/SKILL.md) (stress-test one plan). Diverge here first,
   then hand the chosen direction to them.

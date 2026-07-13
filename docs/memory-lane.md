@@ -3,7 +3,7 @@
 Canonical home for the memory SYSTEM PROCEDURES: the freshness gate, the
 end-of-session write, on-correction routing, and dual-altitude promotion. The hooks
 ([`hooks/`](../hooks/)) and the
-[`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md) skill reference this
+[`session-hygiene`](../skills/session-hygiene/SKILL.md) skill reference this
 file; do not restate its content elsewhere.
 
 This file owns the PROCEDURES only. The memory SCHEMA (frontmatter, supersede rule) is
@@ -90,7 +90,7 @@ Implemented on Code as the SessionStart hook
 [`session-start-gate.sh`](../hooks/session-start-gate.sh) (scans the vault's
 memory for supersede-orphans and stale facts via the dir-arg check scripts). This section
 is the authored procedure; the reasoning over memory stays the agent's job. On hookless
-surfaces, run it via [`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md).
+surfaces, run it via [`session-hygiene`](../skills/session-hygiene/SKILL.md).
 
 ## End-of-session write (Stop / SessionEnd)
 
@@ -127,7 +127,7 @@ section adds no new work, only the cross-surface contract:
 
 Transport differs; the packet does not. Code = local git + the hooks (automatic). Hookless
 surfaces (Cowork, claude.ai) = the GitHub connector, run by hand via
-[`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md), which owns the connector
+[`session-hygiene`](../skills/session-hygiene/SKILL.md), which owns the connector
 mechanics. Decision + rationale: [decisions/0027](../decisions/0027-cowork-handoff-packet-over-git.md).
 
 ### Handoff contents (what a good handoff is)
@@ -172,7 +172,7 @@ immediately so it is never repeated. Route by what kind of thing was corrected:
 
 Goal: the correction changes the always-loaded layer (rule) or the recall layer (memory) so
 the same mistake cannot recur on any surface. Classification + routing detail lives in the
-[`learn-route`](../.claude/skills/learn-route/SKILL.md) skill, which points back here.
+[`learn-route`](../skills/learn-route/SKILL.md) skill, which points back here.
 
 ## Verification
 - Cross-repo: a global-lane fact written to the vault appears in a fresh session on another

@@ -4,7 +4,7 @@ Writing-style skills registered on claude.ai (Settings > Capabilities) that live
 account, not in a plugin. Kept here as the versioned source of truth so they cannot be lost if the
 claude.ai copy is deleted.
 
-Deliberately NOT in `.claude/skills/` and NOT live-read: these are **manually invoked** (they apply
+Deliberately NOT in `skills/` and NOT live-read: these are **manually invoked** (they apply
 only when the user names the skill by its exact name) and **stable** (a fixed writing style). A
 registered static copy on claude.ai is the right delivery for that shape - naming the skill applies
 it instantly, there is no stale-shadow risk on a fixed style, and live-read would add a needless

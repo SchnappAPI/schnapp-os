@@ -2,7 +2,7 @@
 # gen-catalog.sh - generate CATALOG.md, an inventory of the repo's
 # rules, skills, commands, and hooks.
 #
-# The component files (.claude/{skills,commands,agents}, rules/, hooks/) are the single source of truth. This catalog is a
+# The component files (skills/ commands/ agents/, rules/, hooks/) are the single source of truth. This catalog is a
 # PROJECTION of them, so no doc has to hand-list "all modules" / "all skills" and go
 # stale when one is added. Re-run after adding/removing a rule, skill, command, or hook.
 # CI (.github/workflows/freshness.yml) regenerates and fails the push if the
@@ -21,7 +21,7 @@ export LC_ALL=C
 REPO="${CLAUDE_KIT_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 OUT="${1:-$REPO/CATALOG.md}"
 
-[ -d "$REPO/.claude/skills" ] || { echo "FATAL: component roots not found under: $REPO" >&2; exit 1; }
+[ -d "$REPO/skills" ] || { echo "FATAL: component roots not found under: $REPO" >&2; exit 1; }
 
 # --- portable frontmatter / heading helpers (BSD + GNU awk; no gawk extensions) ---
 h1() { grep -m1 '^# ' "$1" 2>/dev/null | sed 's/^# *//'; }
@@ -112,7 +112,7 @@ trap 'rm -f "$TMP"' EXIT
   # ---- Skills ----
   echo "## Skills"
   echo
-  for d in "$REPO"/.claude/skills/*/; do
+  for d in "$REPO"/skills/*/; do
     [ -f "$d/SKILL.md" ] || continue
     nm="$(fm "$d/SKILL.md" name)"; [ -z "$nm" ] && nm="$(basename "$d")"
     desc="$(fm "$d/SKILL.md" description | trunc)"
@@ -123,7 +123,7 @@ trap 'rm -f "$TMP"' EXIT
   # ---- Commands ----
   echo "## Commands"
   echo
-  for f in "$REPO"/.claude/commands/*.md; do
+  for f in "$REPO"/commands/*.md; do
     [ -e "$f" ] || continue
     desc="$(fm "$f" description | trunc)"
     echo "- **/$(basename "${f%.md}")**: $desc"
@@ -150,8 +150,8 @@ trap 'rm -f "$TMP"' EXIT
   # ---- Agents ----
   echo "## Agents"
   echo
-  if ls "$REPO"/.claude/agents/*.md >/dev/null 2>&1; then
-    for f in "$REPO"/.claude/agents/*.md; do echo "- **$(basename "${f%.md}")**"; done
+  if ls "$REPO"/agents/*.md >/dev/null 2>&1; then
+    for f in "$REPO"/agents/*.md; do echo "- **$(basename "${f%.md}")**"; done
   else
     echo "None yet."
   fi

@@ -41,7 +41,7 @@ they must be pasted or they are simply absent.
   GitHub connector available by default. At the start of work, read
   `SchnappAPI/schnapp-os/rules/global/*.md` live through it and treat those files as authoritative
   over this pasted copy; route any correction back into them through the connector. The repo's
-  **skills** work the same way: they live in `SchnappAPI/schnapp-os/.claude/skills/<name>/SKILL.md`
+  **skills** work the same way: they live in `SchnappAPI/schnapp-os/skills/<name>/SKILL.md`
   and are read live on demand, never pasted as a static copy. When a task matches a skill (the
   `## Skills` list in `CATALOG.md` is the index), read its `SKILL.md` through the connector and
   follow it. The bullets below are the floor: follow them verbatim, and they fully govern behavior

@@ -30,7 +30,7 @@ check "$(py 'print(d["autoMemoryDirectory"])')" "$tmp/vault/memory" "autoMemoryD
 for s in standing-rules capture-nudge global-session-gate global-vault-push global-force-push-guard global-secret-scan; do
   check "$(py "print('$s' in json.dumps(d['hooks']))")" "True" "hook $s wired"
 done
-check "$(readlink "$tmp/claude/skills/status")" "$OS_REAL/.claude/skills/status" "skill symlink points into the live clone"
+check "$(readlink "$tmp/claude/skills/status")" "$OS_REAL/skills/status" "skill symlink points into the live clone"
 check "$([ -L "$tmp/claude/agents/secrets-leak-reviewer.md" ] && echo yes)" "yes" "agent symlinked"
 check "$([ -L "$tmp/claude/commands/do.md" ] && echo yes)" "yes" "command symlinked"
 

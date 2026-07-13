@@ -43,5 +43,5 @@ place - return new instances from each step.
   both regex and LLM break.
 
 This is the extraction stage of the `etl-pipeline-build` skill
-(`.claude/skills/etl-pipeline-build/SKILL.md`); the load and SQL Server shape belong there
+(`skills/etl-pipeline-build/SKILL.md`); the load and SQL Server shape belong there
 and in the `sql-server-patterns` skill.

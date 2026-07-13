@@ -12,7 +12,7 @@
   local filesystem, shell, or hooks. To USE a secret, call the Mac's `op_run`/`op_inject` (value
   scrubbed); use op-mcp `op_read` only when the Mac is off AND the portal is healthy (returns the raw
   value into chat).
-- **"Must happen" behavior:** no hooks here - run the [`session-hygiene`](../.claude/skills/session-hygiene/SKILL.md)
+- **"Must happen" behavior:** no hooks here - run the [`session-hygiene`](../skills/session-hygiene/SKILL.md)
   skill (freshness gate at start, end-of-session write when wrapping up, on-correction update after a
   correction) plus always-loaded instructions. Persist writes via the GitHub connector or a generated Code prompt.
 - **Fallback:** for filesystem/shell/git actions, call the Mac via remote MCP, or generate a
@@ -25,7 +25,7 @@
    are retired - the portal carries those tools now.
 2. **Skills:** do NOT paste static skill copies (a pasted `SKILL.md` goes stale, the same trap the
    CORE live-read clause avoids). With the Portal connector on (default), claude.ai reads skills
-   LIVE from `.claude/skills/<name>/SKILL.md` on demand, so the substance stays current with zero
+   LIVE from `skills/<name>/SKILL.md` on demand, so the substance stays current with zero
    registration. [`claude-ai-skills.md`](claude-ai-skills.md) (from
    [`scripts/gen-claude-ai-skills.sh`](../scripts/gen-claude-ai-skills.sh)) is the generated
    inventory of what is available to read live. Optional: for a skill you want the platform to

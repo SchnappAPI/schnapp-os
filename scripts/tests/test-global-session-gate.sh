@@ -40,11 +40,11 @@ out="$(run_gate "$tmp/os")"
 check "$out" "" "quiet inside schnapp-os with fresh vault"
 
 # 4. Wiring drift: a live component without its ~/.claude symlink is counted
-mkdir -p "$tmp/os/.claude/skills/probe-skill"
+mkdir -p "$tmp/os/skills/probe-skill"
 out="$(run_gate)"
 checkgrep "$out" "WIRING DRIFT: 1" "unlinked component detected"
 mkdir -p "$tmp/home/.claude/skills"
-ln -s "$tmp/os/.claude/skills/probe-skill" "$tmp/home/.claude/skills/probe-skill"
+ln -s "$tmp/os/skills/probe-skill" "$tmp/home/.claude/skills/probe-skill"
 out="$(run_gate)"
 checkgrep "$out" "wiring intact" "symlinked component clears the drift"
 
@@ -54,10 +54,10 @@ check "$rc" 0 "exit 0 with no clones"
 checkgrep "$out" "no clone at" "missing clone reported, not fatal"
 
 # 6. Drift auto-heal: with an installer present, the gate runs it instead of instructing
-mkdir -p "$tmp/os/.claude/skills/heal-skill" "$tmp/os/shell"
+mkdir -p "$tmp/os/skills/heal-skill" "$tmp/os/shell"
 cat > "$tmp/os/shell/install.sh" <<SH
 #!/usr/bin/env bash
-ln -s "$tmp/os/.claude/skills/heal-skill" "$tmp/home/.claude/skills/heal-skill"
+ln -s "$tmp/os/skills/heal-skill" "$tmp/home/.claude/skills/heal-skill"
 echo "[shell-install] components: 1 linked, 0 already live, 0 pruned, 0 skipped"
 SH
 out="$(run_gate)"

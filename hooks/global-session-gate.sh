@@ -72,7 +72,7 @@ rm -f "$os_tmp" "$vault_tmp"
 # serve THIS session, new hooks load next session.
 missing=0
 for kind in skills agents commands; do
-  src="$OS_DIR/.claude/$kind"
+  src="$OS_DIR/$kind"
   [ -d "$src" ] || continue
   for item in "$src"/*; do
     name="$(basename "$item")"

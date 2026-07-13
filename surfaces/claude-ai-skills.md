@@ -1,7 +1,7 @@
 # claude.ai skills inventory (generated - do not edit)
 
 Do NOT paste static skill copies: a pasted `SKILL.md` goes stale. With the Schnapp Portal
-connector on (default), claude.ai reads skills LIVE from `.claude/skills/<name>/SKILL.md` on
+connector on (default), claude.ai reads skills LIVE from `skills/<name>/SKILL.md` on
 demand, so the substance stays current with zero registration. This is the generated
 inventory of what is available to read live, from
 [`scripts/gen-claude-ai-skills.sh`](../scripts/gen-claude-ai-skills.sh), so it never drifts.

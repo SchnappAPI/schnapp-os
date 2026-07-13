@@ -8,7 +8,7 @@ Load for knowledge-intensive research where a single framing misses angles: a to
 technical analysis, a decision memo, competitive or due-diligence work. STORM widens the *question*
 space before any retrieval, then synthesizes. It is the pre-writing discipline the `deep-research`
 skill's fan-out should run, and it is distinct from
-[`council`](../../../.claude/skills/council/SKILL.md): council is adversarial and converges on a
+[`council`](../../../skills/council/SKILL.md): council is adversarial and converges on a
 *decision*; STORM is perspective-diverse and converges on *coverage*.
 
 ## The method
@@ -26,7 +26,7 @@ skill's fan-out should run, and it is distinct from
 ## Rules of thumb
 - **Isolate question generation per persona.** One agent "playing five" anchors to a single framing
   and loses the benefit: use fresh subagents, the
-  [`council`](../../../.claude/skills/council/SKILL.md) anti-anchoring pattern.
+  [`council`](../../../skills/council/SKILL.md) anti-anchoring pattern.
 - **The outline step is load-bearing.** Skip it and this is just a multi-prompt; the intermediate
   synthesis is what separates STORM from a fancy fan-out.
 - **Perspective decomposition, not functional.** Use it where no single framing is "correct"; for a
