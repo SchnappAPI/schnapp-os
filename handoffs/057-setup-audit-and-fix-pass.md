@@ -98,6 +98,16 @@ HEAD.lock mutex fix (07-07), check-secret-bytes op-read fix + credentials-map AP
   (Obsidian bearer swap) are still greenlight-ready-never-executed (13+ days); either execute or
   write the ADR that kills them.
 
+## Defect found during the memory pass (fix next session, server-side)
+connectors/memory-mcp `memory_write` corrupts frontmatter on every write: resets `created:` to
+today, replaces `description:` with an auto-summary (sometimes with unquoted inner colons =
+invalid YAML), drifts `type:`, and appends non-schema `scope:`/`supersedes:` keys. Separately, a
+mid-write GitHub 502 left MEMORY.md with a duplicated index line that a same-slug re-write does
+not heal. All 22 facts were repaired this session by direct commits to the vault, but ANY future
+memory_write re-introduces the corruption until the server is fixed. Fix belongs in
+connectors/memory-mcp (write path: preserve existing frontmatter keys verbatim, only bump
+`updated:`; index update must be replace-by-slug and idempotent).
+
 ## Open questions / edge cases (owner-only)
 - Web env branch policy: apply the ADR 0017 knob (set this environment's working branch to main in
   the claude.ai env settings) OR amend 0017 to accept claude/* + merge-on-green. Until then every
