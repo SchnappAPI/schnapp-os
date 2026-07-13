@@ -7,6 +7,7 @@ fails a push if this file is out of date. Do not hand-edit.
 
 ## Global rules (always loaded, lean)
 
+- **Acting autonomously**: `rules/global/acting-autonomously.md`
 - **Anti-staleness (single source of truth)**: `rules/global/anti-stale.md`
 - **Context discipline (in-session)**: `rules/global/context-discipline.md`
 - **Knowledge capture**: `rules/global/knowledge-capture.md`
