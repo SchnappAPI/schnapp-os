@@ -34,6 +34,8 @@ Status lives in one canonical place and is read there:
 | [docs/memory-lane.md](docs/memory-lane.md) | Memory procedures (freshness gate, end-of-session write, on-correction routing). Global lane lives in the vault `SchnappAPI/schnapp-vault`, not here; schema in the vault's `agents.md` |
 | [credentials-map.md](credentials-map.md) | `op://` reference map (references only) |
 | [docs/environment-and-access.md](docs/environment-and-access.md) | Never-blocked config: required network allowlist, git-write path, per-surface delivery (ADR 0018) |
+| [AUDIT.md](AUDIT.md) | Frozen 2026-06-25 target-spec audit, superseded; kept at root because 17 frozen-doc links point here. Read PROGRESS.md/decisions for current state |
+| [render.yaml](render.yaml) | Render blueprint for the hosted connector services |
 
 ## Staying current (anti-stale)
 - Docs reference canonical sources for mutable facts; they never copy them. See the

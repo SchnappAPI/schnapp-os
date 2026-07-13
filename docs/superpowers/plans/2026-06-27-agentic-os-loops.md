@@ -1,5 +1,7 @@
 # Agentic-OS Loops Implementation Plan
 
+> **CLOSED 2026-07-13, retroactively.** The work in this plan shipped and is CI-tested (evidence: PROGRESS.md 2026-06-27 through 2026-07-03, handoffs 036-048); the checkboxes below were never flipped at the time and are NOT current state. Kept as frozen history; do not select this file as the live plan.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Close the two governing loops (freshness + learning) so schnapp-os self-corrects and accumulates knowledge instead of only detecting drift — the hard 80% that three prior rebuilds skipped.

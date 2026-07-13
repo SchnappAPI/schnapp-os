@@ -53,7 +53,7 @@ No local git, shell, filesystem, or `backup-archive.sh` here. Same intent, diffe
   (decisions/0027).
 - **Back up** (end-of-session write): `backup-archive.sh` needs a shell and cannot run here. The
   repo write above already lands in git (the source of truth); for the chat transcript itself use
-  export or the `live-session-cache` skill. Do not claim the OneDrive/Obsidian mirror ran - it runs
+  the surface's export. Do not claim the OneDrive/Obsidian mirror ran - it runs
   from a Code/Mac session (the SessionEnd hook), not from here.
 - **Route a correction** (on-correction update): classify and route per the
   [`learn-route`](../learn-route/SKILL.md) skill - preference → a [`rules/global/`](../../../rules/global/)

@@ -1,6 +1,6 @@
 ---
 name: appfolio
-description: Use when integrating AppFolio - pulling AppFolio custom reports or the AppFolio Reporting/Data API (units, residents, occupancy, rent roll, the "fish" export) and loading them into SQL Server. Owner work tool (1st Lake property data). For COMPARING an AppFolio export against another dataset cell-by-cell, use the fish-compare skill instead - do not reimplement reconciliation here.
+description: Use when integrating AppFolio - pulling AppFolio custom reports or the AppFolio Reporting/Data API (units, residents, occupancy, rent roll, the "fish" export) and loading them into SQL Server. Owner work tool (1st Lake property data). COMPARING an AppFolio export against another dataset cell-by-cell is reconciliation and lives in the work repo's project-scoped fish-compare skill - do not reimplement it here.
 ---
 
 # appfolio
@@ -16,7 +16,8 @@ Conventions: [`tool/appfolio`](../../../rules/modules/tool/appfolio.md),
 
 - **This skill** = getting AppFolio data OUT and INTO SQL Server reliably.
 - **Reconciliation** (diffing a Baseline "fish" export against a `units_/residents_/occupancy_`
-  Test file cell-by-cell) = the **fish-compare** skill. Point there; never duplicate that logic.
+  Test file cell-by-cell) = the **fish-compare** skill, project-scoped in the 1st Lake work
+  repo (not in schnapp-os). Point there; never duplicate that logic.
 
 ## API shape (Reporting / Data API)
 

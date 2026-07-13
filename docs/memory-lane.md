@@ -66,8 +66,8 @@ Anti-stale discipline that applies to both lanes:
 
 When a lesson has BOTH a general principle and a specific instance, write it in **both**
 lanes and link them. Never move:
-- The **general principle** goes to the matching global rule (e.g. perf →
-  [speed-by-default](../rules/global/speed-by-default.md), already seeded with:
+- The **general principle** goes to the matching rule (e.g. perf →
+  [speed-by-default](../rules/modules/coding/speed-by-default.md), already seeded with:
   read-once, module-level cache, ThreadPoolExecutor, set-based SQL/CTE, bulk insert,
   `fast_executemany=True`).
 - The **specific instance** (which table, which endpoint, which repo) goes to that project's

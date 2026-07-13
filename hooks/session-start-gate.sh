@@ -17,6 +17,7 @@
 # Stdout is injected into the session context by Claude Code. Budget ~1s. Never blocks; always
 # exits 0 (a SessionStart failure must not stop the session).
 set -uo pipefail
+export GIT_TERMINAL_PROMPT=0   # never let a credential prompt stall session start
 
 REPO="${CLAUDE_PROJECT_DIR:-$PWD}"
 cd "$REPO" 2>/dev/null || { echo "[schnapp-os gate] cannot cd to $REPO"; exit 0; }
@@ -59,13 +60,29 @@ else
   echo "[git] no upstream tracking branch set"
 fi
 
+# 2b. Tracker currency (keep-tracker-current): commits that changed state must carry PROGRESS +
+#     handoff updates. Deterministic drift signal only; whether state actually changed stays the
+#     agent's judgment. Born 2026-07-13: 24 commits landed with no handoff and PROGRESS frozen,
+#     and nothing surfaced it.
+ho_head="$(git log -1 --format=%H -- handoffs/ 2>/dev/null || true)"
+if [ -n "$ho_head" ]; then
+  ho_drift="$(git rev-list --count "$ho_head"..HEAD 2>/dev/null || echo 0)"
+  [ "${ho_drift:-0}" -gt 5 ] && echo "[tracker] $ho_drift commit(s) since handoffs/ last changed - write the catch-up handoff before new work (keep-tracker-current)."
+fi
+pg_head="$(git log -1 --format=%H -- PROGRESS.md 2>/dev/null || true)"
+if [ -n "$pg_head" ]; then
+  pg_drift="$(git rev-list --count "$pg_head"..HEAD 2>/dev/null || echo 0)"
+  [ "${pg_drift:-0}" -gt 3 ] && echo "[tracker] $pg_drift commit(s) since PROGRESS.md last changed - append the missing line(s) (state-changing commits carry a PROGRESS line in the SAME commit)."
+fi
+
 # 3. Memory freshness scan (deterministic signals; reasoning stays the agent's per docs/memory-lane.md).
 #    The global memory lane lives in the vault (SchnappAPI/schnapp-vault), not schnapp-os; scan it there.
 #    Detection logic + its unit test live in scripts/check-supersede-orphans.sh so the
 #    column-0-vs-indented-frontmatter bug (which made this a silent no-op) cannot regress unnoticed.
 #    Resolve the vault checkout: VAULT_DIR env, the Mac-standard ~/code path, then a sibling
-#    checkout of this repo (the cloud env clones both repos side by side, and HOME has no ~/code
-#    there - without the sibling fallback the memory scan silently no-ops on that surface).
+#    checkout of this repo (covers a cloud env that clones both repos side by side; if the env
+#    has no vault clone at all - e.g. vault repo not granted to the environment - the scan
+#    reports the miss loudly below instead of silently no-oping).
 VAULT="${VAULT_DIR:-$HOME/code/schnapp-vault}"
 [ -d "$VAULT" ] || VAULT="$(dirname "$REPO")/schnapp-vault"
 MEM="$VAULT/memory"

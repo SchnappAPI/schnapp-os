@@ -13,7 +13,7 @@ Composes: [`activity/etl-pipeline`](../../../rules/modules/activity/etl-pipeline
 [`lang/python`](../../../rules/modules/lang/python.md),
 [`lang/sql-server`](../../../rules/modules/lang/sql-server.md),
 [`lang/env-vars`](../../../rules/modules/lang/env-vars.md),
-[`global/speed-by-default`](../../../rules/global/speed-by-default.md),
+[`coding/speed-by-default`](../../../rules/modules/coding/speed-by-default.md),
 [`global/secrets-as-references`](../../../rules/global/secrets-as-references.md).
 For T-SQL specifics use the **sql-server-patterns** skill; for source-specific work use the
 **quickbase** / **appfolio** skills.

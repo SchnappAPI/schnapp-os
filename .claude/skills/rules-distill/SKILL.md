@@ -61,9 +61,9 @@ carries `source:` and `updated:`. Draft text names the source skill so the detai
 ```
 # | principle                                              | dest         | verdict     | target                  | conf
 1 | Validate LLM output before reuse (type, shape, escape) | rules/global | New section | (new) llm-output-trust  | high
-2 | Bound every retry/iteration loop with a stop condition | rules/global | Append      | speed-by-default.md     | med
-3 | SQL Server bulk loads need fast_executemany            | rules/module | Already cov | speed-by-default.md     | n/a
+2 | Bound every retry/iteration loop with a stop condition | rules/global | Append      | working-style.md        | med
+3 | SQL Server bulk loads need fast_executemany            | rules/module | Already cov | coding/speed-by-default | n/a
 ```
 
-Row 1: in `council` and `grill-with-docs`; failure mode = malformed model output
+Row 1: in `council` and `grill-me`; failure mode = malformed model output
 crashes the consumer. General → global lane, new file. Row 3 drops: already stated.

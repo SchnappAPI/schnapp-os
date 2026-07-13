@@ -84,4 +84,4 @@ removed capability, do not just delete it (edge case -> handoff; predictable fet
 `recommend-removal` line in the report for each. Sweet spot: 5-10 well-scoped over 20-30 broad.
 
 Run after adding any agent, skill, or MCP server to catch creep early. General speed
-principles: [speed-by-default](../../../rules/global/speed-by-default.md).
+principles: [speed-by-default](../../../rules/modules/coding/speed-by-default.md).

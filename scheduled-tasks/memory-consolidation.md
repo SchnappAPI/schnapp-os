@@ -1,8 +1,13 @@
-# Routine: nightly memory consolidation
+# Routine: nightly memory consolidation (SPEC - not yet scheduled)
+
+**No runner drives this spec today.** The LaunchAgent label `com.schnapp.memory-consolidation`
+runs `scripts/learning-worker.sh` (the correction-distill loop), NOT this review - see the
+[README routine table](README.md). To activate this spec, give it its own LaunchAgent or fold it
+into the weekly review when that lands.
 
 - **Class:** asks-first (queued) - proposes, does not rewrite memory on its own.
-- **Scheduler:** Mac LaunchAgent → headless `claude -p` session (repo-only; no Mac services needed,
-  but a Claude session is needed for the judgment).
+- **Scheduler (intended):** Mac LaunchAgent → headless `claude -p` session (repo-only; no Mac
+  services needed, but a Claude session is needed for the judgment).
 - **What it does:** reviews the global memory lane (the vault `~/code/schnapp-vault/memory`,
   `SchnappAPI/schnapp-vault`) for: duplicate facts across files, facts that contradict a newer one
   (should be **superseded**, not appended - see `docs/memory-lane.md`), stale `updated:` dates, and

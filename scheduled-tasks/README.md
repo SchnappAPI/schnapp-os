@@ -30,7 +30,8 @@ routine that wants to change state stops at the proposal and hands it to a human
 |---|---|---|---|---|
 | Doc-freshness sweep | safe | GitHub Actions cron | no | [doc-freshness-sweep.md](doc-freshness-sweep.md) |
 | Sync / unmerged check | safe | GitHub Actions cron | no | [sync-unmerged-check.md](sync-unmerged-check.md) |
-| Memory consolidation | asks-first | LaunchAgent → `claude -p` | no (repo only) | [memory-consolidation.md](memory-consolidation.md) |
+| Learning worker (correction distill) | asks-first (gated) | LaunchAgent `com.schnapp.memory-consolidation` → `learning-worker.sh` | no (repo only) | [install section below](#launchagent-install---learning-worker-phase-4) |
+| Memory consolidation | asks-first | SPEC ONLY - no runner yet | no (repo only) | [memory-consolidation.md](memory-consolidation.md) |
 | Infra / pipeline health | safe (probe) | LaunchAgent → `check-infra-health.sh` (pure bash) | yes (launchctl/docker/ports) | [infra-health.md](infra-health.md) |
 | Mac liveness (dead-man's-switch) | safe (probe) | GitHub Actions cron | no (pings the Mac from the cloud) | [mac-liveness.md](mac-liveness.md) |
 | Caffeinate (hub availability) | safe (auto) | LaunchAgent → `caffeinate -s` | yes (holds the AC sleep assertion) | [caffeinate.md](caffeinate.md) |

@@ -56,10 +56,12 @@ single obvious edit is *below*:
 
 - **Below the bar** - silent intent pass only. No spin-up, no offer.
 - **Above the bar + Q5 flags a plausibly-better approach** - auto-spin, do not ask:
-  1. Dispatch a subagent to run **`superpowers:brainstorming`** in generate mode - a subagent cannot
-     interview the owner, so it produces candidate approaches + tradeoffs, it does not run the
-     Socratic loop. Feed it the concrete request, constraints, and established facts inline, not a
-     pointer ([[handoffs-carry-facts-not-pointers]]), or it generates in a vacuum.
+  1. Dispatch a subagent to run **`superpowers:brainstorming`** in generate mode if the
+     superpowers plugin is present on this surface; otherwise run the same divergence step inline
+     (generate candidate approaches + tradeoffs yourself). Either way it produces candidates, it
+     does not run the Socratic loop (a subagent cannot interview the owner). Feed it the concrete
+     request, constraints, and established facts inline, not a pointer
+     ([[handoffs-carry-facts-not-pointers]]), or it generates in a vacuum.
   2. ONLY IF brainstorming returns a real contender to the ask, dispatch a second subagent to run
      the [council](../council/SKILL.md) skill to adjudicate the competing approaches adversarially.
      Sequenced, not parallel: council needs candidates to judge.
@@ -73,8 +75,8 @@ single obvious edit is *below*:
   the owner judge the override instead of blind-clicking. EXCEPTION: on an irreversible /
   outward-facing step the offer blocks - wait for the answer.
 
-This spin-up **satisfies** the `superpowers:using-superpowers` brainstorm-before-building gate; do
-not brainstorm twice.
+Where the superpowers plugin is loaded, this spin-up **satisfies** its
+brainstorm-before-building gate (`superpowers:using-superpowers`); do not brainstorm twice.
 
 ## Output contract
 
