@@ -21,6 +21,7 @@ NOT global - they live in `rules/modules/` as a plain reference library; a proje
 `@import`s only the ones it needs (no gallery/preset/composer - removed per decisions/0011 #4).
 
 @~/code/schnapp-os/rules/global/working-style.md
+@~/code/schnapp-os/rules/global/acting-autonomously.md
 @~/code/schnapp-os/rules/global/knowledge-capture.md
 @~/code/schnapp-os/rules/global/naming-discipline.md
 @~/code/schnapp-os/rules/global/secrets-as-references.md

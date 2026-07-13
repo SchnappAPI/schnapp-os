@@ -1,5 +1,5 @@
 ---
-last-verified: 2026-07-02
+last-verified: 2026-07-13
 sources:
   - connectors/memory-mcp/src
 ---
