@@ -12,9 +12,9 @@
 ## Rules in effect
 
 **Global rules**: always on in every project on this machine. They load via `~/.claude/CLAUDE.md`,
-which `@import`s schnapp-os's lean global lane (working-style, knowledge-capture, naming-discipline,
-secrets-as-references, verify-before-asserting, anti-stale, speed-by-default). Do **not** re-import
-them here - that double-loads. Canonical source: `~/code/schnapp-os/rules/global/`.
+which `@import`s schnapp-os's lean global lane (the current set is listed in
+`~/code/schnapp-os/CATALOG.md` - generated, never hand-list it here). Do **not** re-import
+them in this file - that double-loads. Canonical source: `~/code/schnapp-os/rules/global/`.
 
 **Path-scoped modules**: `@import` only the modules this project needs, directly, from the reference
 library `~/code/schnapp-os/rules/modules/`. They are plain rule files; pick by relevance.
@@ -41,7 +41,8 @@ to this project here.
 - **Data / schema:** <reference the schema file or migration, do not restate it>
 - **Key services / endpoints:** <...>
 - **Performance notes:** project-specific instances only; the general principles live in
-  `global/speed-by-default.md` - link the instance back to the principle (dual-altitude promotion).
+  `rules/modules/coding/speed-by-default.md` - link the instance back to the principle
+  (dual-altitude promotion).
 - **Gotchas:** <...>
 
 <!-- Secrets are `op://` references, never values (global/secrets-as-references.md). New env vars

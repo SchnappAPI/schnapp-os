@@ -70,9 +70,14 @@ if [ "$tool" = "Bash" ]; then
 fi
 
 # Write/Edit/MultiEdit leg: self-skip inside schnapp-os (project wiring covers it there).
+# Identity is the git remote, NOT the path: on the web surface the working checkout and the
+# shell clone are different paths for the same repo, and a path compare double-scanned there.
 proj="${CLAUDE_PROJECT_DIR:-}"
-if [ -n "$proj" ] && [ "$(cd "$proj" 2>/dev/null && pwd -P)" = "$OS_DIR" ]; then
-  exit 0
-fi
+proj_url="$(git -C "$proj" remote get-url origin 2>/dev/null || true)"
+case "$proj_url" in
+  *[/:][Ss]chnapp[Aa][Pp][Ii]/schnapp-os|*[/:][Ss]chnapp[Aa][Pp][Ii]/schnapp-os.git)
+    exit 0
+    ;;
+esac
 printf '%s' "$INPUT" | bash "$OS_DIR/hooks/secret-scan-on-write.sh"
 exit $?

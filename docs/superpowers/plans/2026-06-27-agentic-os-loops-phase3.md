@@ -1,5 +1,7 @@
 # Phase 3 — The eval / promote gate (FULL TDD plan)
 
+> **CLOSED 2026-07-13, retroactively.** The work in this plan shipped and is CI-tested (evidence: PROGRESS.md 2026-06-27 through 2026-07-03, handoffs 036-048); the checkboxes below were never flipped at the time and are NOT current state. Kept as frozen history; do not select this file as the live plan.
+
 > **For agentic workers:** Implement task-by-task (implementer → review → fix Important/Critical → commit).
 > Promoted from the scoped spec in `2026-06-27-agentic-os-loops.md` §"Phase 3". Steps use `- [ ]`.
 

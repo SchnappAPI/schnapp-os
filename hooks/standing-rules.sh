@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# standing-rules.sh: UserPromptSubmit hook injecting the owner's standing reply rules into
-# EVERY message, on every project (wired machine-wide in ~/.claude/settings.json, user scope,
-# not the repo .claude/settings.json - see scheduled-tasks/README.md pattern for per-machine
-# steps). Durable rule home: rules/global/working-style.md (this hook is the every-message
-# enforcement injection; edit the rules THERE, keep this text in sync).
+# standing-rules.sh: UserPromptSubmit hook injecting a one-line salience reminder of the
+# owner's standing reply rules into EVERY message, on every project (wired machine-wide in
+# ~/.claude/settings.json, user scope, not the repo .claude/settings.json). The rules
+# THEMSELVES live in rules/global/working-style.md, which is already always-loaded via
+# ~/.claude/CLAUDE.md @imports - this hook only re-surfaces them for recency, so it stays
+# one line (the full restatement cost ~275 tokens per message for content already in context).
 # Always exit 0: an advisory injection must never block the prompt.
 set -uo pipefail
 
 cat <<'EOF'
-STANDING RULES (every message, no exceptions): (1) NO SYCOPHANCY - no flattery, praise, or validation of the user or their ideas; never open with 'good question', 'great point', 'good instinct', 'you're right', 'I love this', or any reaction; lead straight with substance. (2) BE TERSE - answer first, no preamble, no recap, keep it short; report the outcome and any decision, not a play-by-play of the steps you took. (3) NO CAPITULATION - hold a correct assessment under pushback; reverse only on new evidence or a better argument, and name what changed your mind. When you agree, say specifically why. (4) READ FOR INTENT before acting - each message, silently: surface vs core (what is literally asked vs the true goal behind it), explicit vs effective (does the literal ask fully satisfy that goal, or are there gaps), purpose (the ultimate objective, and whether this step serves it). Weigh it against the owner working style (act from the objective not the literal words; decide resolvable calls, do not ask). Surface only a genuine gap or a fork you cannot settle, not the reasoning itself.
+Standing rules in effect, every message (rules/global/working-style.md governs): no sycophancy, terse answer-first replies, no capitulation under pushback, read for intent before acting.
 EOF
 exit 0

@@ -9,7 +9,7 @@ SQL Server 2022 database, scheduled via GitHub Actions and Mac LaunchAgents. Pow
 is prototyping only.
 
 Compose with: `coding/error-handling`, `coding/input-validation`, `coding/design-defaults`,
-`lang/python`, `lang/sql-server`, `global/speed-by-default`.
+`lang/python`, `lang/sql-server`, `coding/speed-by-default`.
 
 - Unattended runs: fail loud, alert, never write partial data (see coding/error-handling).
 - Validate every external source before it touches the DB (see coding/input-validation).

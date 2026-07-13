@@ -5,7 +5,8 @@ updated: 2026-07-02
 # Context discipline (in-session)
 
 Companion to [anti-stale.md](anti-stale.md) (which fights staleness in *files*) and
-[speed-by-default.md](speed-by-default.md) (which fights wasted *I/O*): this fights **context rot**,
+[speed-by-default.md](../modules/coding/speed-by-default.md) (which fights wasted *I/O*): this
+fights **context rot**,
 the in-session quality decay as a window fills. Signal density beats window size - a full window of
 noise is worse than a tight one of exactly what matters.
 

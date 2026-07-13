@@ -1,11 +1,12 @@
 ---
-scope: global
-updated: 2026-06-03
+module: coding/speed-by-default
+updated: 2026-07-13
 ---
 # Speed by default
 
-General performance principles. Project-specific instances (which table, which endpoint)
-live in the project lane and link back here.
+General performance principles for data/ETL work; Python/SQL-specific, so it loads on demand
+like the other coding modules. Project-specific instances (which table, which endpoint) live
+in the project lane and link back here.
 
 - Read once, pass the result. Do not re-read the same source twice in one run.
 - Cache expensive reads within a single run using a module-level dict, not repeated queries.
