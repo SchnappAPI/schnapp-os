@@ -44,9 +44,15 @@ restate mutable state.
 - **Status lives in the trackers, not in prose.** Never hardcode progress/counts into a doc; read
   [PROGRESS.md](PROGRESS.md) plus the live plan doc. ([PLAN.md](PLAN.md) is a retired pointer, not
   status.) The README and this file carry no status string.
-- **Main only.** No feature branches or PRs for directed work, on any surface including web
+- **Main only. Always merge; never leave a branch.** No feature branches or PRs for directed work
   ([decisions/0016](decisions/0016-no-branches-precommit-gate.md),
   [decisions/0017](decisions/0017-web-sessions-target-main.md)). Run a local review pass, then push.
+  A cloud session that ARRIVES pinned to a `claude/*` branch (the entry point's config sets this
+  before Claude runs; its git proxy blocks other branches) merges its PR to main the moment checks
+  are green - GitHub auto-deletes the head branch on merge - and never ends unmerged. Committing to
+  main via the GitHub API is the sanctioned bypass for owner-directed follow-ups from such a
+  session. Arriving on a branch means the launching config still carries a "Develop on branch"
+  directive: flag it so the owner fixes that config (the ADR 0017 owner action).
 - **Generated docs are regenerated, never hand-edited.** [CATALOG.md](CATALOG.md)
   comes from [scripts/gen-catalog.sh](scripts/gen-catalog.sh). A CI gate
   ([.github/workflows/freshness.yml](.github/workflows/freshness.yml)) fails the push if it is stale
