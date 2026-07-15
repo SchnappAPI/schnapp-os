@@ -1,5 +1,5 @@
 ---
-last-verified: 2026-07-01
+last-verified: 2026-07-15
 sources:
   - connectors/obsidian-mcp/server.py
 ---

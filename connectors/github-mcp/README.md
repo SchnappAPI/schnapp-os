@@ -1,5 +1,5 @@
 ---
-last-verified: 2026-07-01
+last-verified: 2026-07-15
 sources:
   - connectors/github-mcp/server.py
 ---

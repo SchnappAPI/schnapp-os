@@ -54,7 +54,7 @@ phases done, all boxes flipped. Repo clean+pushed, CI green. Next session starts
    empty `ANTHROPIC_API_KEY` + `brain_agent.py` hardcodes a pre-migration OneDrive path; 2 Inbox files
    unprocessed since 2026-05-28; no alarm watches a failed vault workflow. DECIDE: retire the workflow,
    or fix the `_brain` path to repo-relative + set `ANTHROPIC_API_KEY` (op:// ref) as a vault secret.
-3. **Desktop OAuth token** (from handoff 052, still open): `rm ~/Desktop/sk-ant-oat01-YXDBTx-54tK0yQc.textClipping`.
+3. **Desktop OAuth token** (from handoff 052, still open): `rm ~/Desktop/sk-ant-oat01-[REDACTED].textClipping`.
 4. Accepted-cosmetic: 2 SC2001 style nits in `session-start-gate.sh` (echo|sed indent); leave.
 
 ## Copy-paste primer (new session)
