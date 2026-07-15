@@ -1,6 +1,6 @@
 ---
 scope: global
-updated: 2026-07-02
+updated: 2026-07-15
 ---
 # Anti-staleness (single source of truth)
 
@@ -16,6 +16,11 @@ updated: 2026-07-02
   "generated, do not edit". The source is canonical; the doc is a projection.
 - Memory: supersede, do not append. When a fact changes, replace it; do not leave a
   contradicting copy. Every memory carries `source:` and `updated:`.
+- Credential-incident notes: an OPEN exposure is logged only in the vault ledger
+  (`schnapp-vault/memory/credentials-state.md`) and its entry is collapsed on resolution;
+  incident narrative belongs only in append-only history (`handoffs/`, `decisions/`, archives).
+  Any "exposed / leaked / needs rotation" line anywhere else is a defect: DELETE it on sight,
+  never annotate it "since rotated". CI: `scripts/scan-stale-notes.sh` (freshness gate).
 - A rule is not a changelog. Do not fix a mistake by accreting a "remember not to X" line that
   references the past incident; that bloats the always-load layer and drifts (lost-in-the-middle).
   Sharpen the existing rule to its current-state form and fix the class, so the rule stays lean.

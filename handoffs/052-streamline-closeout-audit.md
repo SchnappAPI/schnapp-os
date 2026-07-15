@@ -43,10 +43,10 @@ Date: 2026-07-01. Surface: Claude Code (Mac). Prior: [051](051-phase-5-round-tri
 
 ## ⚠️ Owner-only follow-up (agent-blocked, destructive-guard)
 
-Plaintext token on the Desktop: `~/Desktop/sk-ant-oat01-YXDBTx-54tK0yQc.textClipping`
+Plaintext token on the Desktop: `~/Desktop/sk-ant-oat01-[REDACTED].textClipping`
 (filename itself is a Claude OAuth token prefix; contents likely the full value). Not read, not
 echoed. Remove in a plain terminal:
-`rm ~/Desktop/sk-ant-oat01-YXDBTx-54tK0yQc.textClipping`
+`rm ~/Desktop/sk-ant-oat01-[REDACTED].textClipping`
 Claude-OAuth leak class is inside the owner-accepted envelope (credentials-state banner), so
 removal, not rotation, unless policy changes. Also left open: two Firefox/Chrome tabs at
 claude.ai (opened for the connector inspection), close at will.

@@ -29,6 +29,9 @@ jobs:
       - name: Secret scanner self-test
         run: bash scripts/tests/test-scan-secrets.sh
 
+      - name: Stale-note scanner self-test
+        run: bash scripts/tests/test-scan-stale-notes.sh
+
       - name: Supersede-orphan detector self-test
         run: bash scripts/tests/test-supersede-orphans.sh
 
@@ -100,6 +103,9 @@ jobs:
 
       - name: Secret scan (no literal values in tracked files)
         run: bash scripts/scan-secrets.sh --exclude 'scripts/tests/*'
+
+      - name: Stale-note scan (no incident notes outside the sanctioned homes)
+        run: bash scripts/scan-stale-notes.sh
 
       - name: op:// reference check
         run: bash scripts/check-op-refs.sh
