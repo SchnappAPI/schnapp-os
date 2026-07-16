@@ -11,6 +11,9 @@
 #             - relative/path/to/source
 #       FAIL if any listed source has a git commit dated NEWER than last-verified (the doc's
 #       claim about that source may be stale and needs re-checking). No-op until a doc adopts it.
+#       Scans git-TRACKED *.md only: `sources:` resolve relative to the repo root, so a nested
+#       checkout (.claude/worktrees/*, git-excluded) would have its OWN old docs compared against
+#       THIS tree's source dates - always false STALE, and noise that hides a real one.
 #
 # Exits non-zero on any staleness, naming exactly what to fix. Location-independent.
 set -uo pipefail
@@ -105,7 +108,7 @@ while IFS= read -r doc; do
       fail=1
     fi
   done < <(fm_list "$doc" sources)
-done < <(grep -rl '^last-verified:' --include='*.md' . 2>/dev/null | LC_ALL=C sort)
+done < <(git ls-files -z '*.md' 2>/dev/null | xargs -0 grep -l '^last-verified:' 2>/dev/null | LC_ALL=C sort)
 [ "$found_lv" = "0" ] && echo "ok: no last-verified docs yet (convention enforced once adopted)"
 
 if [ "$fail" -ne 0 ]; then echo "== freshness: FAIL =="; exit 1; fi
