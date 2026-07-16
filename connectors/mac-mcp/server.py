@@ -31,6 +31,12 @@ Tools:
   op_inject           -- Render an op:// template to a file on the Mac (content never returned).
   op_read             -- Resolve one op:// ref; always masked (length + last4), never raw.
 
+Responses are self-identifying: the tools returning opaque output (shell_exec, op_run,
+sql_query) echo the caller's own input alongside a server-generated call_id and UTC ts;
+read_file/write_file echo path + call_id/ts. The portal fronting this server (decision
+0020) was once seen delivering a response against the wrong request, so a caller must
+confirm the echo matches what it sent before trusting the payload. See decision 0034.
+
 Start: python server.py
 Managed by: launchd (com.schnapp.macmcp.plist)
 Transport: streamable-http on port 8765
@@ -41,7 +47,9 @@ import os
 import re
 import subprocess
 import platform
+import sys
 import time
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -107,6 +115,55 @@ mcp = FastMCP(
 def _check_token(token: str) -> bool:
     # Accept: request pre-authenticated via Bearer header, OR explicit token match.
     return _http_authed.get() or (bool(MCP_TOKEN) and token == MCP_TOKEN)
+
+
+# --- Response identity (decision 0034) --------------------------------------------
+# The Cloudflare portal fronting this server (decision 0020) was observed once
+# returning one call's stdout against a different call's request. The origin cannot
+# prevent that - every request already gets its own transport session and its own
+# subprocess - so every response instead states what produced it: a server-generated
+# call_id, a UTC timestamp, and an echo of the caller's own input. A caller whose echo
+# does not match what it sent has caught a misdelivery instead of acting on output
+# meant for someone else. _log_call writes the same call_id to mcp.err.log, so a suspect
+# response can be traced back to the command that really produced it.
+
+
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def _identity(**echo) -> dict:
+    """Base response fields naming the call that produced this response."""
+    return {"call_id": uuid.uuid4().hex[:12], "ts": _now_iso(), **echo}
+
+
+def _log_call(call_id: str, tool: str, detail: str = "") -> None:
+    """Ledger line pairing a call_id with its real input. Redacted: mcp.err.log is a
+    disk sink, and a caller is free to put a secret in a command string."""
+    print(
+        f"[{_now_iso()}] call_id={call_id} {tool} {_redact_secrets(detail)[:300]}",
+        file=sys.stderr,
+        flush=True,
+    )
+
+
+# Cloudflare's edge gives up on an origin response at ~100s (524). A command outliving
+# that produces a response nothing is still waiting for - the most plausible source of
+# the misdelivery above. Cap below it, so a long command fails as an attributable
+# timeout on this side instead of as an orphan the portal may hand to the next caller.
+MAX_COMMAND_TIMEOUT_SECONDS = 90
+
+
+def _clamp_timeout(requested: int) -> tuple[int, dict]:
+    """Cap a caller's timeout below the edge timeout.
+    Returns (effective_timeout, fields to merge into the response when clamped)."""
+    effective = min(requested, MAX_COMMAND_TIMEOUT_SECONDS)
+    if effective == requested:
+        return effective, {}
+    return effective, {
+        "timeout_clamped_from": requested,
+        "timeout_clamped_to": effective,
+    }
 
 
 def _flask_headers():
@@ -198,58 +255,76 @@ def shell_exec(command: str, token: str = "", timeout: int = 60) -> dict:
     """Run a shell command on the Mac as the logged-in user. Requires MAC_MCP_AUTH_TOKEN.
 
     The 1Password identity is stripped from this subprocess, so `op` cannot read
-    secrets here - route any credential-bearing command through op_run instead."""
+    secrets here - route any credential-bearing command through op_run instead.
+
+    The response echoes `command` and carries `call_id`/`ts`: confirm the echo is the
+    command you sent before trusting stdout (decision 0034). timeout is capped at
+    MAX_COMMAND_TIMEOUT_SECONDS; a clamp is reported as `timeout_clamped_from`."""
+    ident = _identity(command=command[:300])
     if not _check_token(token):
-        return {"error": "unauthorized"}
+        return {"error": "unauthorized", **ident}
+    effective_timeout, clamp = _clamp_timeout(timeout)
+    ident.update(clamp)
+    _log_call(ident["call_id"], "shell_exec", command)
     try:
         result = subprocess.run(
             ["/bin/bash", "-c", command],
             capture_output=True,
             text=True,
-            timeout=min(timeout, 600),
+            timeout=effective_timeout,
             env=_no_op_identity_env(),
         )
         return {
+            **ident,
             "returncode": result.returncode,
             "stdout": result.stdout[-20000:],
             "stderr": result.stderr[-5000:],
         }
     except subprocess.TimeoutExpired:
-        return {"error": "timeout", "timeout_seconds": timeout}
+        return {**ident, "error": "timeout", "timeout_seconds": effective_timeout}
     except Exception as e:
-        return {"error": str(e)}
+        return {**ident, "error": str(e)}
 
 
 @mcp.tool()
 def read_file(path: str, token: str = "") -> dict:
-    """Read a file from the Mac filesystem. Requires MAC_MCP_AUTH_TOKEN."""
+    """Read a file from the Mac filesystem. Requires MAC_MCP_AUTH_TOKEN.
+    Response echoes `path` and carries `call_id`/`ts` (decision 0034)."""
+    ident = _identity(path=path)
     if not _check_token(token):
-        return {"error": "unauthorized"}
+        return {"error": "unauthorized", **ident}
     try:
         p = Path(path).expanduser()
+        ident["path"] = str(p)
+        _log_call(ident["call_id"], "read_file", str(p))
         if not p.exists():
-            return {"error": f"not found: {path}"}
+            return {**ident, "error": f"not found: {path}"}
         if p.stat().st_size > 5_000_000:
             return {
-                "error": f"file too large ({p.stat().st_size} bytes); use shell_exec with head/tail"
+                **ident,
+                "error": f"file too large ({p.stat().st_size} bytes); use shell_exec with head/tail",
             }
-        return {"path": str(p), "content": p.read_text(errors="replace")}
+        return {**ident, "content": p.read_text(errors="replace")}
     except Exception as e:
-        return {"error": str(e)}
+        return {**ident, "error": str(e)}
 
 
 @mcp.tool()
 def write_file(path: str, content: str, token: str = "") -> dict:
-    """Write content to a file on the Mac, creating parent dirs. Requires MAC_MCP_AUTH_TOKEN."""
+    """Write content to a file on the Mac, creating parent dirs. Requires MAC_MCP_AUTH_TOKEN.
+    Response echoes `path` and carries `call_id`/`ts` (decision 0034)."""
+    ident = _identity(path=path)
     if not _check_token(token):
-        return {"error": "unauthorized"}
+        return {"error": "unauthorized", **ident}
     try:
         p = Path(path).expanduser()
+        ident["path"] = str(p)
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(content)
-        return {"path": str(p), "bytes_written": len(content.encode())}
+        _log_call(ident["call_id"], "write_file", str(p))
+        return {**ident, "bytes_written": len(content.encode())}
     except Exception as e:
-        return {"error": str(e)}
+        return {**ident, "error": str(e)}
 
 
 @mcp.tool()
@@ -521,13 +596,17 @@ def sql_query(query: str, token: str = "", timeout: int = 30) -> dict:
     """
     Run a SQL query against the local SQL Server container (schnapp-bet DB, sa user).
     Read-only queries only - SELECT, sp_help, sys.* views etc.
-    Requires MAC_MCP_AUTH_TOKEN. timeout defaults to 30s, max 120s.
+    Requires MAC_MCP_AUTH_TOKEN. timeout defaults to 30s, capped at
+    MAX_COMMAND_TIMEOUT_SECONDS (a clamp is reported as `timeout_clamped_from`).
+    The response echoes `query` and carries `call_id`/`ts`: confirm the echo is the query
+    you sent before trusting the rows (decision 0034).
     Examples: 'SELECT TOP 5 * FROM nba.player_props ORDER BY game_date DESC'
               'SELECT COUNT(*) FROM nba.player_props'
               'SELECT name FROM sys.tables ORDER BY name'
     """
+    ident = _identity(query=query[:300])
     if not _check_token(token):
-        return {"error": "unauthorized"}
+        return {"error": "unauthorized", **ident}
     # Block obviously destructive statements
     upper = query.strip().upper()
     for keyword in (
@@ -543,11 +622,13 @@ def sql_query(query: str, token: str = "", timeout: int = 30) -> dict:
     ):
         if upper.startswith(keyword) or f" {keyword} " in upper:
             return {
-                "error": f"Write operation '{keyword}' not permitted via sql_query. Use shell_exec if needed."
+                **ident,
+                "error": f"Write operation '{keyword}' not permitted via sql_query. Use shell_exec if needed.",
             }
-    timeout = min(timeout, 120)
-    result = _run_sqlcmd(query, timeout=timeout)
-    return result
+    effective_timeout, clamp = _clamp_timeout(timeout)
+    ident.update(clamp)
+    _log_call(ident["call_id"], "sql_query", query)
+    return {**ident, **_run_sqlcmd(query, timeout=effective_timeout)}
 
 
 @mcp.tool()
@@ -1067,7 +1148,7 @@ def op_run(
     command: str,
     env_refs: dict | None = None,
     env_file: str = "",
-    timeout: int = 120,
+    timeout: int = MAX_COMMAND_TIMEOUT_SECONDS,
     token: str = "",
 ) -> dict:
     """Run a shell command on the Mac with 1Password secrets injected into its environment,
@@ -1079,10 +1160,19 @@ def op_run(
 
     Prefer this over shell_exec for anything that needs credentials - raw secrets never
     enter the response, and the command cannot read any secret beyond what is injected.
-    Requires MAC_MCP_AUTH_TOKEN."""
+    Requires MAC_MCP_AUTH_TOKEN.
+
+    The response echoes `command` and carries `call_id`/`ts`: confirm the echo is the
+    command you sent before trusting stdout (decision 0034). The echo is the command as
+    supplied, so it reveals nothing the caller did not already send; resolved secret
+    VALUES are still scrubbed out of stdout/stderr. timeout is capped at
+    MAX_COMMAND_TIMEOUT_SECONDS; a clamp is reported as `timeout_clamped_from`."""
+    ident = _identity(command=command[:300])
     if not _check_token(token):
-        return {"error": "unauthorized"}
-    timeout = min(timeout, 600)
+        return {"error": "unauthorized", **ident}
+    effective_timeout, clamp = _clamp_timeout(timeout)
+    ident.update(clamp)
+    _log_call(ident["call_id"], "op_run", command)
     resolved: list[str] = []
     injected: list[str] = []
     extra: dict[str, str] = {}
@@ -1112,19 +1202,20 @@ def op_run(
             ["/bin/bash", "-c", command],
             capture_output=True,
             text=True,
-            timeout=timeout,
+            timeout=effective_timeout,
             env=_no_op_identity_env(extra),
         )
         return {
+            **ident,
             "returncode": r.returncode,
             "stdout": _scrub(r.stdout[-20000:], resolved),
             "stderr": _scrub(r.stderr[-5000:], resolved),
             "injected": sorted(injected),
         }
     except subprocess.TimeoutExpired:
-        return {"error": "timeout", "timeout_seconds": timeout}
+        return {**ident, "error": "timeout", "timeout_seconds": effective_timeout}
     except Exception as e:
-        return {"error": _scrub(str(e), resolved)}
+        return {**ident, "error": _scrub(str(e), resolved)}
 
 
 @mcp.tool()
