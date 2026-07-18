@@ -27,6 +27,7 @@ else
     com.schnapp.obsidian-mcp
     com.schnapp.memory-consolidation
     com.schnapp.vault-autocommit
+    com.schnapp.transcript-sync
     com.schnapp.syncrepos
     bet.schnapp.bacpac-backup
     bet.schnapp.flask

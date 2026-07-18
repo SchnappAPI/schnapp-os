@@ -104,6 +104,9 @@ jobs:
       - name: Auto-hook lane self-test
         run: bash scripts/tests/test-auto-hook-lane.sh
 
+      - name: Transcript-sync self-test
+        run: bash scripts/tests/test-transcript-sync.sh
+
       - name: Internal link check (live docs)
         run: bash scripts/check-links.sh
 
@@ -111,7 +114,7 @@ jobs:
         run: bash scripts/tests/test-check-links.sh
 
       - name: LaunchAgent plists are valid
-        run: python3 -c "import plistlib; [plistlib.load(open(p,'rb')) for p in ['scheduled-tasks/com.schnapp.memory-consolidation.plist','scheduled-tasks/com.schnapp.infra-health.plist','scheduled-tasks/com.schnapp.vault-autocommit.plist','scheduled-tasks/com.schnapp.caffeinate.plist']]; print('plists OK')"
+        run: python3 -c "import glob, plistlib; paths=sorted(glob.glob('scheduled-tasks/*.plist')); [plistlib.load(open(p,'rb')) for p in paths]; print(f'{len(paths)} plists OK')"
 
       - name: Secret scan (no literal values in tracked files)
         run: bash scripts/scan-secrets.sh --exclude 'scripts/tests/*'

@@ -35,6 +35,7 @@ routine that wants to change state stops at the proposal and hands it to a human
 | Infra / pipeline health | safe (probe) | LaunchAgent → `check-infra-health.sh` (pure bash) | yes (launchctl/docker/ports) | [infra-health.md](infra-health.md) |
 | Mac liveness (dead-man's-switch) | safe (probe) | GitHub Actions cron | no (pings the Mac from the cloud) | [mac-liveness.md](mac-liveness.md) |
 | Caffeinate (hub availability) | safe (auto) | LaunchAgent → `caffeinate -s` | yes (holds the AC sleep assertion) | [caffeinate.md](caffeinate.md) |
+| Transcript cloud-sync | safe (auto) | LaunchAgent → `transcript-sync.sh` | yes (reads `~/.claude/projects`) | [install section below](#launchagent-install---transcript-sync) |
 
 The **safe, Mac-independent** routines are wired now in
 [`.github/workflows/scheduled-routines.yml`](../.github/workflows/scheduled-routines.yml) via the
@@ -170,3 +171,30 @@ launchctl list | grep com.schnapp.vault-autocommit   # verify
 
 Health: `check-infra-health.sh` expects the label; failures show as launchd last-exit != 0 and
 in `~/Library/Logs/schnapp-os/vault-autocommit.log`.
+
+---
+
+## LaunchAgent install - transcript-sync
+
+`scripts/transcript-sync.sh` mirrors the local Claude Code transcripts
+(`~/.claude/projects/**/*.jsonl`) to the PRIVATE repo `SchnappAPI/claude-transcripts` every
+15 minutes, so no session is ever local-only (owner standing rule, ADR
+[0038](../decisions/0038-transcript-cloud-sync.md)). It extracts message TEXT only via
+`scripts/transcript-extract.py` (tool payloads and sidechains excluded, BLOCK-class secret
+values masked from the single-source `scan-secrets.sh` patterns), re-scans every changed
+output, and aborts before commit on any BLOCK finding (fail-closed + `ops-alert.sh`
+incident, key `transcript-sync`). Push uses the Mac's ssh key; no `op` needed.
+
+```bash
+REPO=~/code/schnapp-os
+sed -e "s|__REPO__|$REPO|g" -e "s|__HOME__|$HOME|g" \
+  "$REPO/scheduled-tasks/com.schnapp.transcript-sync.plist" \
+  > ~/Library/LaunchAgents/com.schnapp.transcript-sync.plist
+launchctl load ~/Library/LaunchAgents/com.schnapp.transcript-sync.plist
+launchctl list | grep com.schnapp.transcript-sync   # verify
+```
+
+Health: launchd last-exit != 0, `~/Library/Logs/schnapp-os/transcript-sync.log`, and
+red/green issues from `ops-alert.sh` (`transcript-sync` component). Read path off-Mac:
+the GitHub connector on any surface, repo `SchnappAPI/claude-transcripts`,
+`projects/<project-dir>/<session>.md`.
