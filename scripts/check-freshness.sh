@@ -3,7 +3,8 @@
 # (.github/workflows/freshness.yml) and locally (pre-push). Two checks:
 #
 #   (1) Generated docs - regenerate and FAIL if the committed copy is stale (a component file
-#       changed but the generator was not re-run). Today: CATALOG.md, handoffs/README.md.
+#       changed but the generator was not re-run). Today: CATALOG.md, handoffs/README.md,
+#       surfaces/claude-ai-skills.md.
 #
 #   (2) last-verified docs - a doc opts in with frontmatter:
 #           last-verified: 2026-06-05
