@@ -26,10 +26,10 @@ and [decisions/0017-web-sessions-target-main.md](../../decisions/0017-web-sessio
   local gates (below), then push. CI runs on the push.
 - Never ask "should I commit/push/merge". Committing and pushing directed work without asking is
   the rule (rules/global/working-style.md "Single operator").
-- Cloud sessions that ARRIVE pinned to a `claude/*` branch (the entry point's config forces it)
-  merge to main the moment checks are green and never end unmerged. Arriving on a branch means the
-  launching config still carries a "Develop on branch" directive: flag it for the owner (the ADR
-  0017 owner action).
+- Cloud sessions that ARRIVE pinned to a `claude/*` branch merge to main the moment checks are
+  green and never end unmerged. Per-session branches are the platform default (verified
+  2026-07-18: the environment config has no branch field); do not flag them as an owner
+  misconfiguration. Merge-on-green is the standing mitigation.
 - Incident behind it: the pre-0016 era used feature branches plus a `self-edit/*` branch+PR lane;
   by 2026-06-29 fourteen stray branches had accumulated from web sessions alone (all already merged
   or superseded, zero lost work, pure litter obscuring real state). ADR 0016 removed branches; ADR

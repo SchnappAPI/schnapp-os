@@ -81,10 +81,11 @@ state). Both are in [docs/framework.md](../../docs/framework.md) section E.
    token expires, claude.ai/iPhone/Cowork silently fall back to the pasted bootstrap floor, which
    snapshots and can lag the live rules. No shipped drift monitor exists (the schnapp-console
    Surfaces tab was planned, never recorded shipped).
-2. **Web session branches still emitted by the launching config.** Web user-scope wiring itself is
-   VERIFIED YES (2026-07-18: `[shell]` gate line observed live, closing ADR 0033's open question),
-   but the session's working clone still arrives pinned to a `claude/*` branch against ADR 0017;
-   the owner-side config fix is outstanding, merge-on-green is the standing mitigation.
+2. **Web sessions start on per-session `claude/*` branches by platform default.** Web user-scope
+   wiring itself is VERIFIED YES (2026-07-18: `[shell]` gate line observed live, closing ADR
+   0033's open question). The branch behavior was settled the same day as the platform's default
+   (the environment config exposes no branch field, so no owner knob exists); merge-on-green per
+   ADR 0017 is the permanent mitigation, not a pending fix.
 3. **mac-mcp misdelivery is detection-only.** The 2026-07-16 cross-delivery of another call's
    stdout originates in Cloudflare's layer, which cannot be patched from here. ADR 0034's
    self-identifying envelopes (echo + `call_id` + 90s clamp) make a mismatch visible; the CALLER

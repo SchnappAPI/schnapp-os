@@ -51,8 +51,10 @@ restate mutable state.
   before Claude runs; its git proxy blocks other branches) merges its PR to main the moment checks
   are green - GitHub auto-deletes the head branch on merge - and never ends unmerged. Committing to
   main via the GitHub API is the sanctioned bypass for owner-directed follow-ups from such a
-  session. Arriving on a branch means the launching config still carries a "Develop on branch"
-  directive: flag it so the owner fixes that config (the ADR 0017 owner action).
+  session. Per-session `claude/*` branches are the PLATFORM default (verified 2026-07-18: the
+  environment config exposes no branch field), not an owner misconfiguration - do not flag it;
+  merge-on-green is the standing mitigation. If the new-session dialog offers a branch choice,
+  the owner picks `main`.
 - **Generated docs are regenerated, never hand-edited.** [CATALOG.md](CATALOG.md)
   comes from [scripts/gen-catalog.sh](scripts/gen-catalog.sh). A CI gate
   ([.github/workflows/freshness.yml](.github/workflows/freshness.yml)) fails the push if it is stale

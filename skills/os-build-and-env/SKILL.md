@@ -156,9 +156,9 @@ user-scope `~/.claude` wiring. First session after the paste showed the `[shell]
 layout: web-setup clones land under the init user's `$HOME/code` (`/root/code`) while the session's
 working clone is `/home/user/<repo>`; the gate handles both. Re-run the probe (campaign Phase 2)
 after any claude.ai platform change.
-Related known defect, still live: the web env config carries a "Develop on branch" directive
-emitting `claude/*` branches against ADR 0017 (observed 2026-07-18); flag it for the owner until
-the launching config is fixed.
+Sessions still start on per-session `claude/*` branches: settled 2026-07-18 as the platform
+default (the environment config exposes no branch field, so there is no owner knob to fix);
+merge-on-green per ADR 0017 is the standing mitigation, nothing to flag.
 
 Git in the cloud env is a read-only relay (`push` 403s): write paths and workarounds are
 [docs/environment-and-access.md](../../docs/environment-and-access.md) §2.

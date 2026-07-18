@@ -89,7 +89,7 @@ command -v op && op --version
 - Clones missing: Phase 2 setup never ran or its ~7-day cache predates the paste. Branch: Phase 2.
 - `schnapp-vault` missing but `schnapp-os` present: the web environment's GitHub access does not cover the vault repo; memory lane is silently dead there. Owner grants the env access to `SchnappAPI/schnapp-vault`, then re-run setup.
 - MCP tools absent (mac-mcp etc.): almost always the network allowlist, not the connector; missing `mac-mcp.schnapp.bet` makes the proxy 403 CONNECT and tools silently vanish. Add the host per `docs/environment-and-access.md`. First call after Render idle can take ~50s: wait before declaring dead.
-- Session arrives on a `claude/*` branch: the environment still carries a "Develop on branch" directive; work per ADR 0017 (merge to main the moment checks are green) and flag the config to the owner.
+- Session arrives on a `claude/*` branch: platform default (verified 2026-07-18, no branch field in the environment config); work per ADR 0017 (merge to main the moment checks are green), nothing to flag.
 
 ### 1d. claude.ai chat + iPhone (hookless)
 
@@ -123,10 +123,10 @@ Status: VERIFIED YES 2026-07-18. First web session after the owner pasted the se
 `[shell] schnapp-os: fresh | vault: fresh | wiring intact` plus the memory-orient line: the web
 container honors `~/.claude` user-scope wiring; hooks, rules, and the memory gate are live on web.
 Observed detail: the shell clones land under `$HOME/code` for the INIT user (`/root/code`), while
-the session's working clone sits at `/home/user/<repo>`; the gate resolved wiring anyway. Residual
-open item: the session's working clone still arrived pinned to a `claude/*` branch (no upstream),
-so the ADR 0017 "Develop on branch" owner action stands. The procedure below is retained for
-re-verification after any platform change (the result is an observation, not a guarantee).
+the session's working clone sits at `/home/user/<repo>`; the gate resolved wiring anyway. The
+working clone arrived pinned to a `claude/*` branch: settled 2026-07-18 as the PLATFORM default
+(the environment config exposes no branch field), covered by merge-on-green. The procedure below
+is retained for re-verification after any platform change (an observation, not a guarantee).
 
 1. Owner pastes the WHOLE of `shell/web-setup.sh` into the web environment's setup script
    (canonical copy lives in the repo; the paste is a projection, re-paste when the file changes).
