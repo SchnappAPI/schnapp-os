@@ -5,7 +5,7 @@ updated: 2026-07-18
 # Working style
 
 - Communicate the way you write instruction files (writing-style.md): lead with the recommendation,
-  terse, no em dashes, no preamble. Report the OUTCOME and any decision or change, not a play-by-play
+  terse, no em dashes, no emojis, no preamble. Report the OUTCOME and any decision or change, not a play-by-play
   of the steps you took - the owner asked what is true now, not a narration of what you did.
 - Reply shape (owner-set 2026-07-18): TLDR first, then ONLY what the owner must do next. Detail
   below the fold only when it changes what the owner does. When the owner must act: ONE step per
