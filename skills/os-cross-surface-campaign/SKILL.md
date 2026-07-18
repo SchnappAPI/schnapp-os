@@ -202,7 +202,7 @@ are replaced, never duplicated (vault `agents.md` schema; `rules/global/anti-sta
 |---|---|---|---|
 | Code Mac | autoMemoryDirectory + vault-autocommit (5 min) + SessionEnd vault push | `[shell] memory:` line at start; `git -C /Users/schnapp/code/schnapp-vault status -sb` clean and pushed | BACKLOG line: run `scripts/vault-autocommit.sh`, read the schema-gate error |
 | Code web | Container vault clone + git push | `ls ~/code/schnapp-vault/memory/MEMORY.md` | Missing: Phase 1c vault-access branch |
-| claude.ai / iPhone / Cowork | memory-mcp via portal (write path fixed and live-verified 2026-07-13) | `memory_health`, then a round-trip: `memory_write` a scratch fact, `memory_read` it back, delete it | Tool absent: Phase 3a; write corrupts frontmatter: regression of the 2026-07-13 fix, treat as a bug not a config issue |
+| claude.ai / iPhone / Cowork | memory-mcp via portal (write path fixed 2026-07-13; full owner round-trip clean 2026-07-18: health, write, faithful read-back, delete incl. index line) | `memory_health`, then a round-trip: `memory_write` a scratch fact, `memory_read` it back, delete it | Tool absent: Phase 3a; write corrupts frontmatter: regression of the 2026-07-13 fix, treat as a bug not a config issue. Non-bug lookalike: the `supersedes` WRITE ARG (folded into `source:`) vs the `superseded:` frontmatter key are two different things; not a schema mismatch |
 | Any Mac writing byte-exact | Shell redirect only | n/a | Edit/Write into the vault memory dir gets re-serialized by the harness in ~2s (ADR 0029); the vault pre-commit flattener contains it, but byte-exact writes go via `cat >` |
 
 Supersede discipline is checked deterministically: `scripts/check-supersede-orphans.sh
