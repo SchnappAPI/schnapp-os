@@ -8,7 +8,8 @@ or renames a handoff. Regenerate with `scripts/gen-handoff-index.sh` after addin
 CI ([`.github/workflows/freshness.yml`](../.github/workflows/freshness.yml)) fails a push
 if this file is out of date.
 
-- [`060`](060-cross-surface-close-substrate-p2-p3.md) Handoff 060: cross-surface config closed; substrate P2+P3 executed (resume point)
+- [`061`](061-cross-repo-cohesion-audit.md) Handoff 061: cross-repo cohesion audit (all ~/code repos vs schnapp-os canon) (resume point)
+- [`060`](060-cross-surface-close-substrate-p2-p3.md) Handoff 060: cross-surface config closed; substrate P2+P3 executed
 - [`059`](059-os-skill-library.md) Handoff 059: os skill library (15 skills for cheaper sessions)
 - [`058`](058-single-registrar-component-move.md) Handoff 058: single-registrar component move (.claude/{skills,agents,commands} -> repo root)
 - [`057`](057-setup-audit-and-fix-pass.md) Handoff 057: Full setup audit (5 subagents) + fix pass, and the 07-04..07-12 catch-up
