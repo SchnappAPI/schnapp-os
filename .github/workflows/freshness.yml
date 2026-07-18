@@ -95,6 +95,9 @@ jobs:
       - name: Assemble-context self-test
         run: bash scripts/tests/test-assemble-context.sh
 
+      - name: Transcript-mine self-test
+        run: bash scripts/tests/test-transcript-mine.sh
+
       - name: Internal link check (live docs)
         run: bash scripts/check-links.sh
 
