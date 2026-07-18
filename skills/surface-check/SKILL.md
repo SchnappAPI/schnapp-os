@@ -1,7 +1,7 @@
 ---
 name: surface-check
 claude-ai-tier: core
-description: Use when the user asks "what's loaded here", "what can this surface do", "is my memory/rules/connector active", "why doesn't X work here", or when starting work on an unfamiliar surface (claude.ai web, iPhone, Cowork, a work machine) and you need to know what is present vs missing before relying on it. Reports loaded-vs-missing capabilities for the current surface and the fallback for each gap.
+description: Use when the user asks "what's loaded here", "what can this surface do", "is my memory/rules/connector active", "why doesn't X work here", or when starting work on an unfamiliar surface (claude.ai web, iPhone, Cowork, a work machine) and you need to know what is present vs missing before relying on it. Reports loaded-vs-missing capabilities for the current surface and the fallback for each gap. Whole-system health across ALL surfaces is status; enabling or repairing a surface end to end is os-cross-surface-campaign.
 ---
 
 # surface-check
@@ -45,3 +45,9 @@ hosted connector) → Generated prompt. Never leave a gap as a dead end - state 
 
 End with a one-line verdict: what works here, what to route elsewhere, and (Code) whether any
 git/memory state must be addressed before new work.
+
+## When NOT to use
+
+- Whole-system health across every surface: [status](../status/SKILL.md).
+- Enabling or repairing a surface end to end: the `os-cross-surface-campaign` skill.
+- A specific broken thing (401, missing tool, dead hook): the `os-debugging-playbook` skill.

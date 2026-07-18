@@ -62,3 +62,6 @@ why it is correct, what triggered it, and - for a fact supersede - what value it
 - [session-hygiene](../session-hygiene/SKILL.md) - on hookless surfaces, run this skill by hand as
   the "route the correction" step of the on-correction procedure. It points to `docs/memory-lane.md`
   for the canonical on-correction flow; `learn-route` adds the classification + the commit-to-main step.
+- [rules-distill](../rules-distill/SKILL.md) - lessons piled up across a corpus; this skill routes
+  ONE fresh correction.
+- [session-to-skill](../session-to-skill/SKILL.md) - a repeatable multi-step procedure, not a correction.

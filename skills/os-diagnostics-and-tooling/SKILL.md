@@ -1,6 +1,6 @@
 ---
 name: os-diagnostics-and-tooling
-description: Use when you need to MEASURE the state of schnapp-os instead of eyeballing it - "run all the checks", "is the repo clean enough to push", "which gate will CI fail", "is this doc stale", "did a secret leak into a file", "is this stored token malformed", "are the connectors/LaunchAgents actually up", "how do I test the alert path", "what does this check's FAIL output mean", "why is scan-secrets failing locally but CI is green", or before committing anything to schnapp-os. The inventory of every diagnostic script, its exact invocation, PASS/FAIL signatures, and known false positives.
+description: Use when you need the exact diagnostic COMMAND and what its output means - "run all the checks", "is the repo clean enough to push", "which gate will CI fail", "is this doc stale", "what does this check's FAIL output mean", "why is scan-secrets failing locally but CI is green", or before committing anything to schnapp-os. The inventory of every diagnostic script, its exact invocation, PASS/FAIL signatures, and known false positives. Siblings own the verdicts these scripts feed: whole-system health is status, connector/service liveness and restarts are os-run-and-operate, scrubbing a found leak is cleanse-secrets, proving a token malformed or injecting a test failure is os-proof-and-analysis-toolkit.
 ---
 
 # os-diagnostics-and-tooling

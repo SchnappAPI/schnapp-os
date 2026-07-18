@@ -94,3 +94,6 @@ jobs:
 - `DELETE` then `INSERT` without a transaction → a crash mid-run leaves the table empty.
 - `TRUNCATE`/full reload when an upsert would do → loses history, not re-runnable mid-day.
 - Secret literals in YAML or `.env` committed → use `op://` refs (secrets-as-references).
+
+T-SQL-level patterns inside the load (MERGE shape, idempotent DDL, set-based rewrites):
+[sql-server-patterns](../sql-server-patterns/SKILL.md).

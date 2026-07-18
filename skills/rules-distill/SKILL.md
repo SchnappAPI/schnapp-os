@@ -67,3 +67,8 @@ carries `source:` and `updated:`. Draft text names the source skill so the detai
 
 Row 1: in `council` and `grill-me`; failure mode = malformed model output
 crashes the consumer. General → global lane, new file. Row 3 drops: already stated.
+
+## When NOT to use
+
+- One fresh correction just landed: [learn-route](../learn-route/SKILL.md).
+- A repeatable procedure worked out in one session: [session-to-skill](../session-to-skill/SKILL.md).

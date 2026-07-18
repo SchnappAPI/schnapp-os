@@ -1,6 +1,6 @@
 ---
 name: council
-description: Use when a decision has multiple credible paths and no obvious winner, when the owner asks for second opinions, dissent, or multiple perspectives, when a go/no-go call would benefit from adversarial challenge, or when conversational anchoring is a real risk and tradeoffs need explicit surfacing.
+description: Use when a decision has multiple credible paths and no obvious winner, when the owner asks for second opinions, dissent, or multiple perspectives, when a go/no-go call would benefit from adversarial challenge, or when conversational anchoring is a real risk and tradeoffs need explicit surfacing. Stress-testing a SINGLE proposal or interviewing the owner is grill-me; reading a request's true intent before executing is intent-check.
 ---
 
 # council
@@ -20,6 +20,8 @@ feature flag vs full rollout; narrow scope vs keep strategic breadth.
 | Reviewing code for bugs or security | the `/code-review` skill (or the caveman reviewer agent) |
 | Breaking a feature into steps, or designing architecture | the `Plan` agent |
 | Widening research coverage across perspectives (not deciding) | the `perspective-research` module (STORM) |
+| Stress-testing one proposal / interviewing the owner | the [grill-me](../grill-me/SKILL.md) skill |
+| Reading a request's true intent before executing | the [intent-check](../intent-check/SKILL.md) skill |
 | Straight factual questions, or obvious execution | just answer / just do it |
 
 ## Roles

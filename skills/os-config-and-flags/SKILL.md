@@ -1,6 +1,6 @@
 ---
 name: os-config-and-flags
-description: Use when you need to find, inspect, or change ANY configuration in schnapp-os - "where is X configured", "what hooks are wired", "which env var controls Y", "how do I add a new env var / MCP server / LaunchAgent / permission", "why did this hook fire", "what does install.sh write to ~/.claude", "what are the workflow inputs", "what knobs does this script have", or before touching .claude/settings.json, .mcp.json, .env.template, render.yaml, a plist, or a workflow. The full catalog of config axes, their defaults, and which gate fires when you change each one.
+description: Use when you need to find, inspect, or change ANY configuration in schnapp-os - "where is X configured", "what hooks are wired", "which env var controls Y", "how do I add a new env var / MCP server / LaunchAgent / permission", "why did this hook fire", "what are the workflow inputs", "what knobs does this script have", or before touching .claude/settings.json, .mcp.json, .env.template, render.yaml, a plist, or a workflow. The full catalog of config axes, their defaults, and which gate fires when you change each one.
 ---
 
 # os-config-and-flags

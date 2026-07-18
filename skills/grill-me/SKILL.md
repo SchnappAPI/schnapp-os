@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Use when the owner wants a plan or design stress-tested before building it, asks to "grill me", to "poke holes", to be interviewed about a decision, or when a proposal has unresolved branches and assumptions that need surfacing before code is written. Docs mode adds domain discipline - challenge the plan against the project's own language and documented decisions, sharpen fuzzy or overloaded terms, and capture resolutions in the canonical docs (glossary, decisions) as choices crystallize.
+description: Use when the owner wants a plan or design stress-tested before building it, asks to "grill me", to "poke holes", to be interviewed about a decision, or when a proposal has unresolved branches and assumptions that need surfacing before code is written. Docs mode adds domain discipline - challenge the plan against the project's own language and documented decisions, sharpen fuzzy or overloaded terms, and capture resolutions in the canonical docs (glossary, decisions) as choices crystallize. Adjudicating between competing options is council; reading a request's true intent is intent-check.
 ---
 
 # grill-me

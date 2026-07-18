@@ -85,3 +85,8 @@ removed capability, do not just delete it (edge case -> handoff; predictable fet
 
 Run after adding any agent, skill, or MCP server to catch creep early. General speed
 principles: [speed-by-default](../../rules/modules/coding/speed-by-default.md).
+
+## When NOT to use
+
+- When-to-compact/hand-off rules (the behavior, not the measurement): [context-discipline](../../rules/global/context-discipline.md).
+- Runtime performance of code or queries: the `performance` skill.

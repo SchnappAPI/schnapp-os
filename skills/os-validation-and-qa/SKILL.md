@@ -1,6 +1,6 @@
 ---
 name: os-validation-and-qa
-description: Use when deciding whether schnapp-os work is actually DONE - "can I mark this [x]", "what counts as verified", "how do I run the self-test suite", "how do I add a test", "the tests pass locally but what does CI run", "how do I validate a new skill/hook/connector before calling it done", "a subagent audit found X, do I act on it", "the token looks right but 401s", "which docs carry last-verified stamps", or any acceptance call where the temptation is to claim success without a verify command having run. Evidence standards and acceptance discipline, not landing procedure.
+description: Use when deciding whether schnapp-os work is actually DONE - "can I mark this [x]", "what counts as verified", "how do I run the self-test suite", "how do I add a test", "the tests pass locally but what does CI run", "how do I validate a new skill/hook/connector before calling it done", "which docs carry last-verified stamps", or any acceptance call where the temptation is to claim success without a verify command having run. Evidence standards and acceptance discipline, not landing procedure. Adversarially verifying a subagent-audit claim is os-proof-and-analysis-toolkit; a live 401 or broken thing triages via os-debugging-playbook.
 ---
 
 # os-validation-and-qa

@@ -1,6 +1,6 @@
 ---
 name: os-research-methodology
-description: Use when a hunch, theory, or improvement idea for schnapp-os needs to become an accepted change or a documented rejection - "I think the root cause is X", "should we adopt/build Y", "is this hypothesis actually proven", "where do improvement ideas come from", "this lesson keeps recurring, should it become a gate", "how do I retire a rejected idea", "the audit/subagent claims Z", or when a session is about to act on an unverified mechanism. The discipline layer: evidence bar, predict-before-run, the hunch-to-ADR lifecycle, idea sources, and when a lesson earns enforcement. For the measurement recipes use os-proof-and-analysis-toolkit; for what to research next use os-research-frontier.
+description: Use when a hunch, theory, or improvement idea for schnapp-os needs to become an accepted change or a documented rejection - "I think the root cause is X", "should we adopt/build Y", "is this hypothesis actually proven", "where do improvement ideas come from", "this lesson keeps recurring, should it become a gate", "how do I retire a rejected idea", or when a session is about to act on an unverified mechanism. The discipline layer: evidence bar, predict-before-run, the hunch-to-ADR lifecycle, idea sources, and when a lesson earns enforcement. For the measurement recipes use os-proof-and-analysis-toolkit; for what to research next use os-research-frontier.
 ---
 
 # os-research-methodology

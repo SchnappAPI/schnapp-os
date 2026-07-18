@@ -87,3 +87,6 @@ END CATCH;
 - Implicit conversion (e.g. `VARCHAR` column vs `NVARCHAR` literal) → silent index scan; match types.
 - Building SQL by string concatenation with user input → injection; parameterize (`?` / `sp_executesql`).
 - `SELECT *` into production loads → breaks on schema drift; name columns.
+
+Pipeline structure around the SQL (extract, scheduling, secrets, bulk-load wiring):
+[etl-pipeline-build](../etl-pipeline-build/SKILL.md).

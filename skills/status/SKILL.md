@@ -1,6 +1,6 @@
 ---
 name: status
-description: Use when the user asks "what's the state of everything", "status", "is anything stale/unmerged/unpushed", "are the connectors/services up", "when was the last backup", or wants a whole-system health view across surfaces before planning work. The cross-surface control plane - aggregates git, doc-freshness, memory, backup, connector/service health, and per-surface enablement into one view. Where surface-check answers "what's loaded HERE", status answers "what's the state of the WHOLE system".
+description: Use when the user asks "what's the state of everything", "status", "is anything stale/unmerged/unpushed", "are the connectors/services up", "when was the last backup", or wants a whole-system health view across surfaces before planning work. The cross-surface control plane - aggregates git, doc-freshness, memory, backup, connector/service health, and per-surface enablement into one view. Where surface-check answers "what's loaded HERE", status answers "what's the state of the WHOLE system". Read-only report - restarting/fixing what it finds is os-run-and-operate, clearing open PRs is pr-sweep.
 ---
 
 # status
@@ -40,3 +40,9 @@ Rules:
   `surface-check`).
 - Cross-reference the scheduled routines: if the nightly `scheduled-routines` run is green, trust
   its freshness + sync findings instead of re-deriving them; if it has not run or is red, say so.
+
+## When NOT to use
+
+- What is loaded on THIS surface only: [surface-check](../surface-check/SKILL.md).
+- Acting on a finding: `os-run-and-operate` (restart/deploy), [pr-sweep](../pr-sweep/SKILL.md) (open PRs).
+- The exact check command and its FAIL signature: the `os-diagnostics-and-tooling` skill.
