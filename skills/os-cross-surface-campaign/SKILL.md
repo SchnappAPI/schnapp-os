@@ -189,9 +189,9 @@ If that commit is newer than the last known paste, the owner re-pastes: CORE int
 Settings > Profile > Preferences (account-wide, covers iPhone), CORE + Cowork block into Cowork
 instructions. Cowork's seed leg self-heals via `sync-cowork-seed.sh`; the claude.ai Preferences
 box has NO auto-sync and is the drift point. The trigger command above is the authority on the
-last change; whether the paste was refreshed after it is an open owner question (as of
-2026-07-17, the newest commit touching the file is 6f74078, 2026-07-13, which moved the CORE's
-live-read skills path to repo root `skills/`).
+last change. Last known paste: 2026-07-18, verified by quote-back of the live-read clause in a
+fresh chat (matched the 6f74078 text incl. the repo-root skills path); any commit to the file
+newer than that date means re-paste.
 
 ## Phase 4: memory continuity per surface
 
