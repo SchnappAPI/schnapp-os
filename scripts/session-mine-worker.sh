@@ -146,10 +146,13 @@ main() {
   git fetch -q origin main 2>/dev/null || true
   git reset -q --hard origin/main
 
-  # 2. Bounded SDK proposal.
+  # 2. Bounded SDK proposal. Same dedicated venv as learning_distill (the Agent SDK is not in
+  # the system python3, and launchd sees only the system one).
+  local mine_python="${LEARNING_DISTILL_PYTHON:-$HOME/.venvs/learning-distill/bin/python}"
+  [ -x "$mine_python" ] || mine_python="$(command -v python3)"
   rm -f "$EVIDENCE"
   MINING_TSV="$tsv" MINING_TRANSCRIPT_ROOT="$ROOT" \
-    python3 "$REPO_ROOT/scripts/session_mine.py" \
+    "$mine_python" "$REPO_ROOT/scripts/session_mine.py" \
     || { git reset -q --hard origin/main; git clean -qfd skills/
          alert red session-mine "Session mining failed" "session_mine.py failed - tree reset"
          exit 1; }
