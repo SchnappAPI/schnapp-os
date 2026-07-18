@@ -5,11 +5,10 @@
 #
 # Runs at environment init (Anthropic container), NOT at session start, and its result is
 # cached ~7 days - so this only bootstraps the op CLI, the clones, and the wiring; per-session
-# freshness is the SessionStart global-session-gate.sh pull (fires if the container honors
-# user-scope hooks). Whether web honors user-scope wiring at all is ADR 0033's open question:
-# the first web session after this runs verifies it (the gate announces itself with a [shell]
-# line; no line means user scope is ignored there and the documented boundary applies -
-# account-scope MCP + the clones below are what a web session gets).
+# freshness is the SessionStart global-session-gate.sh pull. Web honors user-scope wiring:
+# VERIFIED YES 2026-07-18 ([shell] gate line observed live, closing ADR 0033's open question).
+# If a future session shows no [shell] line, the platform changed: re-verify per
+# skills/os-cross-surface-campaign Phase 2 (fallback boundary = account-scope MCP + these clones).
 #
 # Requirements (docs/environment-and-access.md §1): env vars OP_SERVICE_ACCOUNT_TOKEN,
 # MAC_MCP_AUTH_TOKEN, OP_MCP_BEARER, MEMORY_MCP_BEARER; allowlist incl. my.1password.com,

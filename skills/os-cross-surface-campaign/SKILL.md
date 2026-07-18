@@ -119,9 +119,14 @@ Same portal probes as 1d, plus:
 
 ## Phase 2: web user-scope wiring verification (ADR 0033's open question)
 
-Status: OPEN as of 2026-07-17. Whether the web container honors `~/.claude` user-scope wiring is
-the one empirical question ADR 0033 left; only a pasted setup script plus a first-session
-observation answers it.
+Status: VERIFIED YES 2026-07-18. First web session after the owner pasted the setup script showed
+`[shell] schnapp-os: fresh | vault: fresh | wiring intact` plus the memory-orient line: the web
+container honors `~/.claude` user-scope wiring; hooks, rules, and the memory gate are live on web.
+Observed detail: the shell clones land under `$HOME/code` for the INIT user (`/root/code`), while
+the session's working clone sits at `/home/user/<repo>`; the gate resolved wiring anyway. Residual
+open item: the session's working clone still arrived pinned to a `claude/*` branch (no upstream),
+so the ADR 0017 "Develop on branch" owner action stands. The procedure below is retained for
+re-verification after any platform change (the result is an observation, not a guarantee).
 
 1. Owner pastes the WHOLE of `shell/web-setup.sh` into the web environment's setup script
    (canonical copy lives in the repo; the paste is a projection, re-paste when the file changes).
@@ -296,7 +301,7 @@ Drift-prone claims and their one-line re-verification (all verified 2026-07-17):
 | infra-health cadence + alert path | `plutil -p /Users/schnapp/code/schnapp-os/scheduled-tasks/com.schnapp.infra-health.plist \| grep -iE 'interval\|runatload'` and `grep -n 'ops-alert' /Users/schnapp/code/schnapp-os/scripts/check-infra-health.sh` |
 | Cowork seed sync behavior | `sed -n 1,16p /Users/schnapp/code/schnapp-os/scripts/sync-cowork-seed.sh` |
 | Supersede-orphan check is frontmatter-aware | `sed -n 1,18p /Users/schnapp/code/schnapp-os/scripts/check-supersede-orphans.sh` |
-| ADR 0033 open question still open | `grep -n 'open empirical question' /Users/schnapp/code/schnapp-os/decisions/0033-portable-shell-user-scope-wiring.md` and the newest handoff's open items (`bash /Users/schnapp/code/schnapp-os/scripts/check-open-questions.sh`) |
+| Phase 2 verdict (web user scope VERIFIED YES 2026-07-18) still current | re-run the Phase 2 probe after any claude.ai platform change; vault fact `web-user-scope-verified` |
 | memory-mcp write path fixed | vault memory fact `surfaces-live-read-default` + `git -C /Users/schnapp/code/schnapp-os log --oneline --grep=memory-mcp -5` |
 
 Unverified or open, labeled as such above: Phase 2's verdict (unexecuted); whether the CORE was

@@ -150,13 +150,15 @@ done from inside a session):
    `SchnappAPI/schnapp-vault`, or web-setup WARNs and the memory lane is silently dead there
    (an open owner knob per handoff 057/synthesis, as of 2026-07-17).
 
-**OPEN (ADR 0033's one empirical question, unresolved as of 2026-07-17):** whether the web
-container honors user-scope `~/.claude` wiring at all. The probe: after pasting web-setup.sh, the
-first web session either shows the `[shell]` gate line (user scope honored) or does not (the
-documented boundary applies: account-scope MCP + the container clones only, project-scope
-`.claude/settings.json` hooks still run). Do not assert either outcome; observe and record it.
-Related known defect: the web env config may still carry a "Develop on branch" directive emitting
-`claude/*` branches against ADR 0017; flag it for the owner if a session arrives on one.
+**VERIFIED YES (2026-07-18, closes ADR 0033's one empirical question):** the web container honors
+user-scope `~/.claude` wiring. First session after the paste showed the `[shell]` gate line
+(`schnapp-os: fresh | vault: fresh | wiring intact`) plus the memory-orient line. Note the split
+layout: web-setup clones land under the init user's `$HOME/code` (`/root/code`) while the session's
+working clone is `/home/user/<repo>`; the gate handles both. Re-run the probe (campaign Phase 2)
+after any claude.ai platform change.
+Related known defect, still live: the web env config carries a "Develop on branch" directive
+emitting `claude/*` branches against ADR 0017 (observed 2026-07-18); flag it for the owner until
+the launching config is fixed.
 
 Git in the cloud env is a read-only relay (`push` 403s): write paths and workarounds are
 [docs/environment-and-access.md](../../docs/environment-and-access.md) §2.
@@ -262,4 +264,4 @@ Every claim above was verified 2026-07-17 by reading the named file. Re-verify b
 - LaunchAgent install blocks: `grep -n launchctl /Users/schnapp/code/schnapp-os/scheduled-tasks/README.md`
 - Cowork seed sync: `cat /Users/schnapp/code/schnapp-os/scripts/sync-cowork-seed.sh`
 - Paste map + CORE text: `sed -n 1,40p /Users/schnapp/code/schnapp-os/surfaces/always-loaded-instructions.md`
-- ADR 0033 open question still open: `grep -n "open" /Users/schnapp/code/schnapp-os/decisions/0033-portable-shell-user-scope-wiring.md` and the newest handoff in `handoffs/`
+- Web user-scope verdict (VERIFIED YES 2026-07-18) still current: re-run the campaign Phase 2 probe after any claude.ai platform change; vault fact `web-user-scope-verified`
