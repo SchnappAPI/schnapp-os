@@ -4,8 +4,10 @@
   The same SKILL.md files from this repo are used; they do not auto-sync, so enable them here.
 - **Tools/credentials:** hosted MCP connectors only, enabled in Settings > Connectors. One
   **Schnapp Portal** connector is the Cloudflare MCP portal `https://mcp.schnapp.bet/mcp` (Managed
-  OAuth → origins); it fronts the four static-bearer servers - **op-mcp** (secrets), **memory-mcp**,
-  **mac-mcp** (shell/SQL/files), **github-mcp**: so one OAuth connector exposes all their tools.
+  OAuth → origins); it fronts **op-mcp** (secrets), **memory-mcp**, **mac-mcp** (shell/SQL/files)
+  as static-bearer origins, plus **github-mcp** = GitHub's official MCP server
+  (`api.githubcopilot.com/mcp/`, portal-side Authorization + `X-MCP-Toolsets` headers, Mac-independent):
+  so one OAuth connector exposes all their tools.
   **obsidian-mcp** is also static-bearer now (swapped from native OAuth 2026-07-18) and joins the
   portal-fronted set once the owner adds its portal slot (pending owner step). Connector/auth
   topology + health: [`credentials-map.md`](../credentials-map.md) (which points at the vault
@@ -21,7 +23,8 @@
 
 ## Enablement (apply once 10.1 is installed)
 1. **Connectors** (Settings > Connectors), confirm enabled: **Schnapp Portal**
-   (`https://mcp.schnapp.bet/mcp` - fronts op-mcp + memory-mcp + mac-mcp + github-mcp; the
+   (`https://mcp.schnapp.bet/mcp` - fronts op-mcp + memory-mcp + mac-mcp + github-mcp (GitHub
+   official); the
    obsidian-mcp slot added and live-verified 2026-07-18 (all 7 tools + get_index through the portal) - the old native-OAuth
    "obsidian mcp" standalone connector no longer authenticates). The old standalone "Schnapp Mac" /
    "Schnapp GitHub" connectors are retired - the portal carries those tools now.

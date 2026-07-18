@@ -74,7 +74,7 @@ credential tool once it is built - until then, [session-hygiene](../session-hygi
    deployed connector hosts.
 5. **Restart / redeploy what caches it** (the rotation gotcha - long-running services hold the old
    value in-process). The map's `consumed_by` says which apply; the known launchd labels are
-   `com.schnapp.macmcp`, `com.schnapp.githubmcp`, `com.schnapp.obsidian-mcp`,
+   `com.schnapp.macmcp`, `com.schnapp.obsidian-mcp`,
    `com.schnapp.brain-watcher`, `bet.schnapp.web-prod`, `bet.schnapp.flask`. For each affected one:
    `launchctl kickstart -k gui/$(id -u)/<label>`; then re-run `com.schnapp.environment` to refresh the
    launchd session env; and update the Render service env + **redeploy** (owner - no Render API key on
@@ -97,12 +97,13 @@ credential tool once it is built - until then, [session-hygiene](../session-hygi
   allows. [[credentials-state]]
 - **OAuth token ≠ API key**: never wire a `sk-ant-oat…` where an `sk-ant-api…` is expected (401s).
 - **Client-side connectors are rotation legs too.** A static bearer pasted into a CLIENT (claude.ai /
-  iPhone custom connector, Copilot's github-mcp config) does NOT auto-update when you rotate the
+  iPhone custom connector) does NOT auto-update when you rotate the
   server's bearer - the owner must re-paste it or that client 401s. Check the item's `consumed_by`
   for an `Owner (CLIENT)` leg. Connectors fronted by the Cloudflare OAuth portal
   (`op-mcp`, `memory-mcp`) need NO client update beyond the portal's Custom header; the raw
-  static-bearer ones (`mac-mcp`, `github-mcp`, `obsidian-mcp`) also need any direct-bearer
-  client re-pasted.
+  static-bearer ones (`mac-mcp`, `obsidian-mcp`) also need any direct-bearer
+  client re-pasted. Rotating `GITHUB_PAT` also means updating the portal's github-mcp
+  Authorization header (owner console).
 - **Bootstrap secrets are not `op://`-resolvable** (the SA token, the bearers) - they ARE the keys;
   set them directly in each surface's env, and the map says so.
 

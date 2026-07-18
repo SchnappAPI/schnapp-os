@@ -101,7 +101,7 @@ before its box flips to `[x]`.
 Docs that carry a `last-verified:` frontmatter stamp plus a `sources:` list opt into enforcement:
 [scripts/check-freshness.sh](../../scripts/check-freshness.sh) part (2) fails CI when any listed
 source has a git commit newer than the stamp. Scans git-tracked `*.md` only. Current set
-(as of 2026-07-17): `connectors/github-mcp/README.md`, `connectors/mac-mcp/README.md`,
+(as of 2026-07-18): `connectors/mac-mcp/README.md`,
 `connectors/memory-mcp/README.md`, `connectors/obsidian-mcp/README.md`, `credentials-map.md`.
 Bumping the stamp without re-verifying the doc's claims defeats the gate: re-check, then bump.
 Part (1) of the same script separately regenerates and diffs the generated docs (`CATALOG.md`,

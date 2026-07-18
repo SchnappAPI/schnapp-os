@@ -24,7 +24,7 @@ gitignored - they are not source.
 
 ## Auth (static bearer)
 
-Same pattern as mac-mcp/github-mcp: every request must carry the bearer, either
+Same pattern as mac-mcp: every request must carry the bearer, either
 `Authorization: Bearer <token>` or `?token=<token>`; anything else gets
 `401 {"error": "unauthorized"}`. The server reads the token from `OBSIDIAN_MCP_AUTH_TOKEN`
 (`op://web-variables/OBSIDIAN_MCP_AUTH_TOKEN/credential`, resolved by `op-wrap.sh` from

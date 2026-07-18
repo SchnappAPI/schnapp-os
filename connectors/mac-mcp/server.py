@@ -718,7 +718,7 @@ def service_restart(label: str, mode: str = "graceful", token: str = "") -> dict
     mode='graceful' (default): SIGTERM via `launchctl kill TERM` so the process shuts
       down cleanly (closes its listen socket) and KeepAlive relaunches it - avoids the
       SIGKILL bind race (decision 0010). Use for the MCP socket servers
-      (com.schnapp.macmcp/githubmcp/obsidian-mcp) and any KeepAlive agent. If the agent
+      (com.schnapp.macmcp/obsidian-mcp) and any KeepAlive agent. If the agent
       is NOT KeepAlive and does not return within ~4s, this falls back to a kickstart so
       it is left running.
     mode='hard': `launchctl kickstart -k` - immediate kill+restart; use only if graceful

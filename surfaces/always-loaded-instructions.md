@@ -95,7 +95,9 @@ global CORE does not.
 
 - **Connectors are this surface's hands.** The **Schnapp Portal** is one OAuth connector fronting
   `op-mcp` (secrets), `memory-mcp` (vault memory read/write), `mac-mcp` (shell / SQL / files),
-  and `github-mcp` (all repos, all-repo PAT); `obsidian-mcp` (static-bearer since 2026-07-18)
+  and `github-mcp` (GitHub's official MCP server, all repos via the all-repo PAT; official tool
+  names, e.g. `get_file_contents`, `create_or_update_file`, `push_files`, `issue_read`/`issue_write`,
+  `pull_request_read`, `actions_list`); `obsidian-mcp` (static-bearer since 2026-07-18)
   joins the portal once the owner adds its slot. Prefer a
   **live read** of any skill, rule, or doc from `SchnappAPI/schnapp-os` via `github-mcp` over
   trusting a stale pasted copy: read fresh whatever you can read fresh.

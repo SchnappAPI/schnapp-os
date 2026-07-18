@@ -48,8 +48,11 @@ gh pr view <n> --repo SchnappAPI/<repo> --json number,title,isDraft,mergeable,me
 ## Cross-surface fallback
 
 - **Code:** `gh` as above.
-- **web / iPhone / Cowork:** no `gh`. Use the **GitHub connector** (github-mcp, fronted by the Schnapp
-  Portal - [ADR 0020](../../decisions/0020-portal-front-mac-github-mcp.md)): list PRs, close/merge
+- **web / iPhone / Cowork:** no `gh`. Use the **GitHub connector** (github-mcp = GitHub's official
+  MCP server, fronted by the Schnapp Portal - ADRs
+  [0020](../../decisions/0020-portal-front-mac-github-mcp.md),
+  [0036](../../decisions/0036-github-mcp-official-swap.md); official tool names, e.g.
+  `pull_request_read` and its write counterpart): list PRs, close/merge
   through it. If the connector is absent, **generate a ready-to-run `gh` prompt** for a Code session and
   hand it over (always-complete: never silently skip).
 

@@ -4,7 +4,7 @@ Most limited. Use for capture, quick questions, and triggering remote work.
 
 - **Tools/credentials:** hosted MCP connectors only. No local anything. The **Schnapp Portal**
   connector (Cloudflare portal `https://mcp.schnapp.bet/mcp`, same as claude.ai web) fronts op-mcp +
-  memory-mcp + mac-mcp + github-mcp; it resolves `op://` secrets off-Mac when op-mcp is healthy
+  memory-mcp + mac-mcp + github-mcp (GitHub's official server, Mac-independent); it resolves `op://` secrets off-Mac when op-mcp is healthy
   (status: [`credentials-map.md`](../credentials-map.md)); to *use* a secret prefer
   the Mac's `op_run`/`op_inject` via the portal's mac-mcp tools when the Mac is on.
 - **Skills:** whatever is enabled on the account.

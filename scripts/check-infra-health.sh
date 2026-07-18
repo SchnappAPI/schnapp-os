@@ -24,7 +24,6 @@ else
   # platform changes - a label missing here is exactly how the bacpac backup silently lapsed.
   EXPECTED_AGENTS=(
     com.schnapp.macmcp
-    com.schnapp.githubmcp
     com.schnapp.obsidian-mcp
     com.schnapp.memory-consolidation
     com.schnapp.vault-autocommit
@@ -38,7 +37,7 @@ else
 fi
 
 # "port:label" for the local MCP servers that should be LISTENing.
-PORT_CHECKS=( "8765:mac-mcp" "8766:github-mcp" "8767:obsidian-mcp" )
+PORT_CHECKS=( "8765:mac-mcp" "8767:obsidian-mcp" )
 
 rc=0
 RED_SUMMARY=""

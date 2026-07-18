@@ -24,7 +24,7 @@ Paths below are this machine's clones: `/Users/schnapp/code/schnapp-os` and
 | **Hook** | A shell script fired by the Claude Code harness at a lifecycle event. Scripts in `hooks/`, wiring in settings files. |
 | **Harness** | The Claude Code program itself: the thing that runs hooks, loads settings, and executes tools. |
 | **MCP** | Model Context Protocol: how Claude reaches external tools (a server exposes tools; the client discovers and calls them). |
-| **Connector** | An MCP server this system owns, under `connectors/` (mac-mcp, op-mcp, memory-mcp, github-mcp, obsidian-mcp). |
+| **Connector** | An MCP server this system owns, under `connectors/` (mac-mcp, op-mcp, memory-mcp, obsidian-mcp); the github leg is GitHub's official hosted server, not owned code. |
 | **Memory lane** | The cross-surface fact store: one file per fact in `~/code/schnapp-vault/memory/`, indexed by `MEMORY.md`. |
 | **Learning loop** | Capture corrections -> nightly distiller proposes edits -> deterministic gate auto-lands or holds them. |
 | **Context rot** | In-session quality decay as the window fills with noise. Why always-loaded content is kept minimal. |
@@ -122,8 +122,10 @@ This system's topology (canonical detail: `connectors/README.md`, `.mcp.json` `$
 
 - **Mac-independent pair on Render**: op-mcp (1Password resolver) and memory-mcp (vault
   read/write over the GitHub Contents API). Alive when the Mac is asleep.
-- **Mac-hosted trio behind cloudflared**: mac-mcp (:8765), github-mcp (:8766), obsidian-mcp
-  (:8767) at `*.schnapp.bet`, run by launchd via `op-wrap.sh`.
+- **Mac-hosted duo behind cloudflared**: mac-mcp (:8765) and obsidian-mcp (:8767) at
+  `*.schnapp.bet`, run by launchd via `op-wrap.sh`. The github leg is GitHub's official MCP
+  server (`api.githubcopilot.com/mcp/`) reached via the portal's github-mcp slot with
+  portal-side headers - no Mac service (ADR 0036).
 - **Auth, two styles by surface**:
   - Claude Code / Cowork read `.mcp.json`: static bearer headers written as
     `${ENV_VAR}` references, expanded at connect time. Never literal values

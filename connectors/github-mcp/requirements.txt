@@ -1,7 +1,0 @@
-# Runtime deps for server.py. PINNED to the versions running in production as of
-# 2026-06-16 (do NOT bump without re-smoke-testing). See decisions/0009 for why
-# unpinned MCP deps are dangerous. requirements.lock.txt = exact frozen env.
-mcp==1.27.0
-uvicorn==0.46.0
-starlette==1.0.0
-pydantic==2.13.3

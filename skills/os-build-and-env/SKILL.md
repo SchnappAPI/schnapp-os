@@ -21,7 +21,8 @@ Definitions used once here:
 - **Hookless surface**: claude.ai web/chat, iPhone, Cowork. No `~/.claude`, no hooks; behavior
   arrives via a pasted bootstrap plus live reads through the Schnapp Portal connector.
 - **Schnapp Portal**: one Cloudflare OAuth MCP connector (`https://mcp.schnapp.bet/mcp`) fronting
-  op-mcp (secrets), memory-mcp (vault), mac-mcp (Mac shell/SQL/files), github-mcp (repos).
+  op-mcp (secrets), memory-mcp (vault), mac-mcp (Mac shell/SQL/files), and github-mcp
+  (GitHub's official MCP server, portal-side headers - no Mac service).
 - **SA token**: the 1Password service-account token (`OP_SERVICE_ACCOUNT_TOKEN`), the single
   bootstrap secret that resolves every other `op://` reference.
 
@@ -110,7 +111,7 @@ blocks. Verify:
 launchctl list | grep com.schnapp   # expect the loaded labels with exit status 0 or -
 ```
 
-The mac-mcp/github-mcp/obsidian-mcp service plists are Mac-local state (not repo-tracked, run via
+The mac-mcp/obsidian-mcp service plists are Mac-local state (not repo-tracked, run via
 op-wrap.sh); their setup is per [connectors/mac-mcp/README.md](../../connectors/mac-mcp/README.md)
 and siblings, out of scope here.
 

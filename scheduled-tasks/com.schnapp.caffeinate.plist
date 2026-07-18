@@ -5,7 +5,7 @@
     <key>Label</key>
     <string>com.schnapp.caffeinate</string>
 
-    <!-- Hold a power assertion so the hub Mac stays reachable (mac-mcp / github-mcp / console
+    <!-- Hold a power assertion so the hub Mac stays reachable (mac-mcp / obsidian-mcp / console
          tunnels) whenever it has power. `-s` = prevent system sleep, valid ONLY on AC power, so
          a MacBook on battery still sleeps normally (no battery-drain risk). This is a belt over
          `pmset -c sleep 0`: it survives a pmset change and covers clamshell-on-AC. It does NOT

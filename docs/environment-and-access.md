@@ -20,8 +20,8 @@ convenience outweighs egress security - owner's call.
 |---|---|---|
 | `mac-mcp.schnapp.bet` | Mac MCP (shell, SQL, services, backups) | the `.mcp.json` `Schnapp_Mac` server |
 | `obsidian-mcp.schnapp.bet` | Obsidian MCP (notes, off-Mac) | Mac-hosted |
-| `mcp.schnapp.bet` | **Schnapp Portal**: OAuth front for op-mcp + memory-mcp + mac-mcp + github-mcp | Cloudflare Managed OAuth → the four origins (the claude.ai/iPhone path) |
-| `github-mcp.schnapp.bet` | self-hosted GitHub MCP | |
+| `mcp.schnapp.bet` | **Schnapp Portal**: OAuth front for op-mcp + memory-mcp + mac-mcp + github-mcp (GitHub official) | Cloudflare Managed OAuth → the origins (the claude.ai/iPhone path). The github-mcp slot points at GitHub's official server (`api.githubcopilot.com/mcp/`, portal-side headers); that hop is server-to-server from Cloudflare, NOT through the env proxy, so `api.githubcopilot.com` does NOT belong on this allowlist |
+| `github-mcp.schnapp.bet` | RETIRED 2026-07-18 (hand-rolled server decommissioned, ADR 0036) | removable from every allowlist; tunnel ingress + DNS record deletion = owner leg |
 | `mac-flask.schnapp.bet` | Flask live-data runner | |
 | `dev.schnapp.bet`, `schnapp.bet` | production site / dev | |
 | `memory-mcp-rtad.onrender.com` | cross-surface memory MCP (Render) | actual Render origin; also fronted by the `mcp.schnapp.bet` portal |

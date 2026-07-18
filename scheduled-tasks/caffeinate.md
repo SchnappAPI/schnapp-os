@@ -2,7 +2,7 @@
 
 **Class:** safe (auto). Read-only power assertion, no data/money/production mutation, instantly reversible.
 
-**Why:** the Mac is the hub other devices reach over cloudflared tunnels (`mac-mcp`, `github-mcp`,
+**Why:** the Mac is the hub other devices reach over cloudflared tunnels (`mac-mcp`, `obsidian-mcp`,
 `console`). If it sleeps, every off-Mac surface loses shell, SQL, console, and live data. On AC the
 Mac already resists idle sleep (`pmset -c sleep 0`), but that is one setting that can drift, and it
 does not cover a clamshell-on-AC edge (an external display dropping). This agent runs

@@ -14,8 +14,9 @@ git repos (`SchnappAPI/schnapp-os` + `SchnappAPI/schnapp-vault`) via the GitHub 
   mac + github + obsidian legs; obsidian slot live-verified through the portal 2026-07-18 after
   the bearer swap, and the old native-OAuth standalone connector no longer authenticates). No
   local shell.
-  The github leg (github-mcp)
-  authenticates GitHub with `GITHUB_PAT` (all-repos, [credentials-map](../credentials-map.md)),
+  The github leg (github-mcp) is GitHub's official MCP server
+  (`api.githubcopilot.com/mcp/`, portal-side Authorization = `GITHUB_PAT` + `X-MCP-Toolsets`
+  headers, Mac-independent; all-repos PAT, [credentials-map](../credentials-map.md)),
   so both repos including the vault are in scope; verify per enablement 3. Whether Cowork also
   reads project `.mcp.json` servers is UNVERIFIED (probe: enablement 4).
 - **Hooks:** none run here - RESOLVED by `surface-check` on two Cowork sessions (Mac + HP)

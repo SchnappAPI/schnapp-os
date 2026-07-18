@@ -170,7 +170,7 @@ From the surface itself: the Phase 1d live-read probe. Discriminate:
 | Symptom | Likely cause | Branch |
 |---|---|---|
 | Health URLs 200 but portal tools absent in claude.ai | Connector disabled or OAuth expired at the Cloudflare portal layer | Re-enable / re-auth Schnapp Portal in Settings > Connectors |
-| github-mcp reads fail while other portal tools work | The all-repo PAT behind github-mcp expired or was revoked | `rotate-secret` for that PAT; update the Mac service env |
+| github-mcp reads fail while other portal tools work | The all-repo PAT in the portal's github-mcp Authorization header expired or was revoked | `rotate-secret` for that PAT; update the portal header (owner console) |
 | memory-mcp tools fail | Its Render `GITHUB_TOKEN` PAT, or Render itself | `curl` its /health; then `connectors/memory-mcp/DEPLOY.md` |
 | Health URLs non-200 | Render service down | `render-health` workflow already pages via GitHub issue; check the Render dashboard |
 | First call hangs ~50s then works | Render free-tier cold start | Not a failure; the 30-min render-health cron doubles as keep-warm |
@@ -231,7 +231,7 @@ NOT monitored: candidates only, all OPEN, none built. Take each through Phase 6 
 - The portal layer itself (`mcp.schnapp.bet`): render-health probes the Render origins directly, so a Cloudflare-portal or OAuth failure is invisible until a surface probe fails.
 - claude.ai Preferences CORE currency: no monitor compares the pasted box to the source file (the schnapp-console Surfaces tab was planned for this; never recorded shipped).
 - Web environment wiring freshness: the ~7-day setup cache can outlive a `web-setup.sh` change with no signal.
-- PAT expiry horizons: memory-mcp's Render `GITHUB_TOKEN`, github-mcp's all-repo PAT, and the ~2027-05 learning-worker OAuth re-mint have no dated alert beyond notes in `credentials-map.md`.
+- PAT expiry horizons: memory-mcp's Render `GITHUB_TOKEN`, the portal github-mcp header's all-repo PAT, and the ~2027-05 learning-worker OAuth re-mint have no dated alert beyond notes in `credentials-map.md`.
 - `VAULT_READ_TOKEN` on the schnapp-os repo: possibly unset; the nightly sweep SKIPs its leg silently.
 - Cowork seed drift on a machine where no Code session runs for days (the SessionStart sync never fires).
 - obsidian-mcp's external endpoint: infra-health checks local port 8767 only; no off-Mac probe hits `obsidian-mcp.schnapp.bet`.
