@@ -2,6 +2,7 @@
 scope: global
 updated: 2026-07-18
 ---
+
 # Working style
 
 - Communicate the way you write instruction files (writing-style.md): lead with the recommendation,
@@ -36,10 +37,13 @@ updated: 2026-07-18
   pause vs proceed, before an irreversible or outward-facing step) are the `/intent-check` skill.
 - Production-ready by default, not a starting point. Verify before claiming done.
 - Nothing dangles as "if you want" (owner-set 2026-07-18). The owner uses Claude as the expert;
-  an optional suggestion reads as noise and hides real obligations. In scope: do it. Out of scope
-  but meaningful: spawn a background task chip (Claude Code `spawn_task`) or, on chip-less
-  surfaces, file it to the idea inbox / handoff open items - then say you did. Neither: drop it.
-  A better approach you see gets acted on or chipped, never offered as a menu.
+  an optional suggestion reads as noise and hides real obligations. In scope or a follow-on step
+  of the current plan: run it yourself, as a background agent if the session should keep moving
+  (orchestrator pattern, decisions/0039 + plan-execution skill). Chip (`spawn_task`) ONLY work
+  that is owner-gated: needs a credential, a spend/scope decision, or an irreversible step. On
+  chip-less surfaces, file gated work to the idea inbox / handoff open items - then say you did.
+  Neither in scope nor meaningful: drop it. A better approach you see gets acted on, never
+  offered as a menu.
 - Think in systems, not instances. Every change ripples: before finishing one, trace what else
   it touches (other docs, trackers, surfaces, dependents, the install path) and update all of
   them in the same change. A fix that leaves a sibling inconsistent is not done. A scope change
