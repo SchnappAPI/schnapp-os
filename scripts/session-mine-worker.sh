@@ -66,20 +66,27 @@ PYEOF
 }
 
 # check_collision <skill-name>: no quoted "..." trigger phrase in the new/changed description may
-# appear verbatim in any OTHER skill's description (the taxonomy no-overlap invariant). Exit 0/1.
+# appear verbatim in any OTHER skill's DESCRIPTION (the taxonomy no-overlap invariant). Routing
+# happens on descriptions, so bodies are out of scope - grepping whole files false-positived on
+# generic section headings like a quoted "When NOT to use" (first live run, 2026-07-18). Exit 0/1.
 check_collision() {
-  local name="$1" desc phrase rc=0
+  local name="$1" desc phrase rc=0 others f
   desc="$(awk '/^description:/{sub(/^description: /,""); print; exit}' \
     "$REPO_ROOT/skills/$name/SKILL.md")"
   [ -n "$desc" ] || { echo "collision: no description in skills/$name/SKILL.md"; return 1; }
+  others="$(mktemp)"
+  for f in "$REPO_ROOT"/skills/*/SKILL.md; do
+    case "$f" in */skills/"$name"/SKILL.md) continue ;; esac
+    awk '/^description:/{sub(/^description: /,""); print; exit}' "$f" >> "$others"
+  done
   while IFS= read -r phrase; do
     [ "${#phrase}" -ge 12 ] || continue
-    if grep -lF "$phrase" "$REPO_ROOT"/skills/*/SKILL.md 2>/dev/null \
-        | grep -v "/skills/$name/" | grep -q .; then
-      echo "collision: trigger phrase \"$phrase\" already claimed by another skill"
+    if grep -qF "$phrase" "$others"; then
+      echo "collision: trigger phrase \"$phrase\" already claimed by another skill's description"
       rc=1
     fi
   done < <(printf '%s\n' "$desc" | grep -oE '"[^"]+"' | tr -d '"')
+  rm -f "$others"
   return $rc
 }
 
