@@ -90,21 +90,25 @@ jobs:
             return 1
           }
 
-          # Self-heal: restart a DOWN service via the Render API (no-op without RENDER_API_KEY).
-          # Service id resolved by name at runtime so nothing is hardcoded. Best-effort: a failed
-          # restart never hides the alarm - the issue below still opens either way.
+          # Self-heal: REDEPLOY a DOWN service via the Render API (no-op without RENDER_API_KEY).
+          # Redeploy, not restart: in the 2026-07-18 incident a plain restart left memory-mcp dead
+          # (restart event logged, no new boot) while a same-commit redeploy brought it live in ~2
+          # min. Service id resolved by name at runtime so nothing is hardcoded. Best-effort: a
+          # failed redeploy never hides the alarm - the issue below still opens either way.
           restart_service() {
             local name="$1" sid
-            [ -n "${RENDER_API_KEY:-}" ] || { echo "no RENDER_API_KEY - skipping auto-restart of $name"; return 1; }
+            [ -n "${RENDER_API_KEY:-}" ] || { echo "no RENDER_API_KEY - skipping auto-redeploy of $name"; return 1; }
             sid="$(curl -s -m 25 -H "Authorization: Bearer $RENDER_API_KEY" \
               "https://api.render.com/v1/services?name=$name&limit=5" \
               | jq -r ".[] | .service | select(.name==\"$name\") | .id" | head -1)"
             [ -n "$sid" ] || { echo "could not resolve Render service id for $name"; return 1; }
-            if curl -s -m 25 -X POST -H "Authorization: Bearer $RENDER_API_KEY" -o /dev/null -w '%{http_code}' \
-                "https://api.render.com/v1/services/$sid/restart" | grep -qE '^2'; then
-              echo "auto-restarted $name ($sid)"; return 0
+            if curl -s -m 25 -X POST -H "Authorization: Bearer $RENDER_API_KEY" \
+                -H "Content-Type: application/json" -d '{"clearCache":"do_not_clear"}' \
+                -o /dev/null -w '%{http_code}' \
+                "https://api.render.com/v1/services/$sid/deploys" | grep -qE '^2'; then
+              echo "auto-redeploy triggered for $name ($sid)"; return 0
             fi
-            echo "auto-restart of $name ($sid) FAILED"; return 1
+            echo "auto-redeploy of $name ($sid) FAILED"; return 1
           }
 
           DOWN=0; DETAIL=""
@@ -122,9 +126,9 @@ jobs:
               else
                 DOWN=1; DETAIL="${DETAIL}${name} ($url) did not return 200 after retries. "
                 if restart_service "$name"; then
-                  DETAIL="${DETAIL}Auto-restart issued via the Render API - recheck next run. "
+                  DETAIL="${DETAIL}Auto-redeploy triggered via the Render API (~2 min to live) - recheck next run. "
                 else
-                  DETAIL="${DETAIL}Auto-restart unavailable/failed - restart from the Render dashboard. "
+                  DETAIL="${DETAIL}Auto-redeploy unavailable/failed - redeploy from the Render dashboard. "
                 fi
               fi
             done
