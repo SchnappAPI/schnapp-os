@@ -12,6 +12,7 @@
 #                 (command-text leg), PostToolUse global-secret-scan (file leg)).
 #                 Everything else in the file (permissions, plugins, statusLine) is preserved.
 #   3. Components ~/.claude/{skills,agents,commands}/<name> symlinks into the live clone (canonical roots: skills/ agents/ commands/ at repo top level; .claude/ carries only wiring).
+#   4. Plugins   shell/sync-plugins.sh converges installed plugins to shell/plugins-manifest.txt.
 #
 # Usage: bash shell/install.sh [--dry-run]
 # Env: VAULT_DIR (vault clone; default ~/code/schnapp-vault, then sibling of this repo),
@@ -179,6 +180,13 @@ for kind in skills agents commands; do
   fi
 done
 log "components: $linked linked, $kept already live, $pruned pruned, $skipped skipped"
+
+# 4. Plugins: converge this surface's plugin set to the committed manifest (never fatal).
+if [ "$DRY" -eq 0 ]; then
+  bash "$SELF/sync-plugins.sh" || log "WARN: plugin sync failed (see sync-plugins output)"
+else
+  log "dry-run: skipping plugin sync"
+fi
 
 log "done. Wiring targets: OS=$OS_DIR VAULT=$VAULT CONFIG=$CLAUDE_DIR"
 log "next: restart the Claude Code session (hooks load at session start); on a fresh machine accept the workspace-trust dialog first (decisions/0005 prerequisite)."
