@@ -39,5 +39,7 @@ PROGRESS.md is the log; this is the live tracker.
       live data; the mint itself is the lane's job, not a manual step)
 
 ## Validation
-- [~] lane dry-runs verified (session-mine worker + escalator fixtures); first LIVE nightly run
-      2026-07-19 03:40 is the end-to-end check - its ops-alert issue is the evidence
+- [x] LIVE end to end (2026-07-18, on-demand runs): run 1 flushed the venv-python defect, run 2
+      flushed the collision-scope defect (both fixed same-day), run 3 LANDED the first
+      autonomous mint - `skills/handoff-resume/` (evidence: 2 sessions, grep-verified; gate
+      APPROVE at 59 added lines; commit 0f5cf6c; CI green). Nightly cadence continues at 03:40.
