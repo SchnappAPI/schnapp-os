@@ -14,6 +14,7 @@ its value is set. **References only**: no secret value ever lands here
 - **History:** [docs/credentials-archaeology-2026-06-17.md](docs/credentials-archaeology-2026-06-17.md)
 - **Target design + conventions:** [docs/superpowers/specs/2026-06-17-credential-system-design.md](docs/superpowers/specs/2026-06-17-credential-system-design.md)
 - **Connector runbook:** [connectors/op-mcp/DEPLOY.md](connectors/op-mcp/DEPLOY.md) · decisions `0001`, `0002`, `0004`
+- **Expiry horizons (machine-readable):** [scripts/credential-horizons.tsv](scripts/credential-horizons.tsv), checked nightly by `scripts/check-credential-horizons.sh`
 
 ## Resolution by surface
 | Surface | How secrets resolve |

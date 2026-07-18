@@ -188,10 +188,11 @@ git -C /Users/schnapp/code/schnapp-os log -1 --format='%h %ci' -- surfaces/alway
 If that commit is newer than the last known paste, the owner re-pastes: CORE into claude.ai
 Settings > Profile > Preferences (account-wide, covers iPhone), CORE + Cowork block into Cowork
 instructions. Cowork's seed leg self-heals via `sync-cowork-seed.sh`; the claude.ai Preferences
-box has NO auto-sync and is the drift point. The trigger command above is the authority on the
-last change. Last known paste: 2026-07-18, verified by quote-back of the live-read clause in a
-fresh chat (matched the 6f74078 text incl. the repo-root skills path); any commit to the file
-newer than that date means re-paste.
+box has NO auto-sync and is the drift point. The machine-readable home of the last-paste date
+is `surfaces/core-paste-watermark` (single ISO date line; the owner or a session updates it
+whenever the CORE is re-pasted and verified by quote-back). `scripts/check-core-paste.sh`
+compares it to the source's last commit date and WARNs in the nightly Step Summary when a
+re-paste is owed; the trigger command above is the same comparison run by hand.
 
 ## Phase 4: memory continuity per surface
 
@@ -215,26 +216,26 @@ Supersede discipline is checked deterministically: `scripts/check-supersede-orph
 What already alerts before the owner notices, and what does not. Wire nothing new without
 Phase 6.
 
-Monitored today (as of 2026-07-17):
+Monitored today (as of 2026-07-18):
 
 | Probe | Cadence | Alert path |
 |---|---|---|
 | `mac-liveness.yml` (Mac platform reachable, Mac-independent) | 30 min cron | GitHub issue assigned to owner, auto-closes on recovery; test with `workflow_dispatch simulate=down` |
-| `render-health.yml` (op-mcp + memory-mcp /health, doubles as keep-warm) | 30 min cron | Same issue mechanism |
+| `mac-liveness.yml` obsidian leg (`obsidian-mcp.schnapp.bet/mcp` external route; healthy = exactly 401; gated on the Mac being up) | 30 min cron | Same mechanism, distinct `[mac-liveness] obsidian` issue; test with `simulate=obsidian-down` |
+| `render-health.yml` (op-mcp + memory-mcp /health, doubles as keep-warm) | 30 min cron | Same issue mechanism; test with `simulate=down` |
+| `render-health.yml` portal leg (`mcp.schnapp.bet/mcp` unauthenticated; healthy = exactly 401 OAuth challenge) | 30 min cron | Same mechanism, distinct `[render-health] portal` issue; test with `simulate=portal-down` |
 | `com.schnapp.infra-health` (LaunchAgents, ports, backup age; pure bash by design) | Every 30 min + at load (StartInterval 1800) | GitHub issue via `scripts/ops-alert.sh` + ntfy (best-effort) |
 | `scheduled-routines.yml` -> `scheduled-tasks/run-ci-routines.sh` (freshness hard gate, sync/unmerged, stale facts, learning eval, open owner items) | Nightly 08:17 UTC | Red workflow on hard-gate failure; Step Summary otherwise |
+| `run-ci-routines.sh` vault leg loud-skip (missing vault checkout = `VAULT_READ_TOKEN` gone) | Nightly 08:17 UTC | Loud WARNING block in the Step Summary (informational: the token being unset may be an owner choice) |
+| `scripts/check-credential-horizons.sh` + `scripts/credential-horizons.tsv` (dated expiry horizons; UNKNOWN rows report INFO) | Nightly 08:17 UTC | Red `scheduled-routines` workflow (GitHub email) on a within-horizon WARN; Step Summary otherwise |
+| `scripts/check-core-paste.sh` vs `surfaces/core-paste-watermark` (claude.ai Preferences CORE currency) | Nightly 08:17 UTC | Step Summary WARN until the owner re-pastes and moves the watermark (soft: re-paste is manual) |
 | `freshness.yml` + `ci-lint.yml` | Every push/PR | Red CI |
 | `sync-cowork-seed.sh` | Every Mac Code SessionStart | Self-heals silently |
 
-NOT monitored: candidates only, all OPEN, none built. Take each through Phase 6 before wiring:
+NOT monitored - dispositions (re-openable via Phase 6):
 
-- The portal layer itself (`mcp.schnapp.bet`): render-health probes the Render origins directly, so a Cloudflare-portal or OAuth failure is invisible until a surface probe fails.
-- claude.ai Preferences CORE currency: no monitor compares the pasted box to the source file (the schnapp-console Surfaces tab was planned for this; never recorded shipped).
-- Web environment wiring freshness: the ~7-day setup cache can outlive a `web-setup.sh` change with no signal.
-- PAT expiry horizons: memory-mcp's Render `GITHUB_TOKEN`, the portal github-mcp header's all-repo PAT, and the ~2027-05 learning-worker OAuth re-mint have no dated alert beyond notes in `credentials-map.md`.
-- `VAULT_READ_TOKEN` on the schnapp-os repo: possibly unset; the nightly sweep SKIPs its leg silently.
-- Cowork seed drift on a machine where no Code session runs for days (the SessionStart sync never fires).
-- obsidian-mcp's external endpoint: infra-health checks local port 8767 only; no off-Mac probe hits `obsidian-mcp.schnapp.bet`.
+- Web environment setup-cache freshness: NOT MONITORED, accepted (no observable signal from the repo side; the `[shell]` gate self-heals per-session).
+- Cowork seed idle-machine drift: NOT MONITORED, accepted (sync fires on every Mac Code SessionStart; multi-day all-surface idleness is out of scope).
 
 ## Phase 6: validation and promotion
 
@@ -304,7 +305,7 @@ Drift-prone claims and their one-line re-verification (all verified 2026-07-17):
 | Phase 2 verdict (web user scope VERIFIED YES 2026-07-18) still current | re-run the Phase 2 probe after any claude.ai platform change; vault fact `web-user-scope-verified` |
 | memory-mcp write path fixed | vault memory fact `surfaces-live-read-default` + `git -C /Users/schnapp/code/schnapp-os log --oneline --grep=memory-mcp -5` |
 
-Unverified or open, labeled as such above: Phase 2's verdict (unexecuted); whether the CORE was
-re-pasted after its last change; `VAULT_READ_TOKEN` set or not; memory-mcp's PAT scope; every Phase 5
-candidate. When Phase 2 executes, update Phase 2 and the Phase 6 table here in the same commit
-that records the verdict.
+Unverified or open, labeled as such above: whether the CORE was re-pasted after its last change
+(the nightly `check-core-paste.sh` WARN is the signal); memory-mcp's PAT scope; the two accepted
+NOT-MONITORED dispositions in Phase 5. When any of these change, update the matching Phase table
+here in the same commit that records the change.

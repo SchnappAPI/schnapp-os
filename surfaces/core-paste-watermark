@@ -1,0 +1,5 @@
+# Machine-readable date of the last claude.ai Preferences CORE paste (campaign Phase 3b).
+# Update this single date line whenever the CORE block from always-loaded-instructions.md is
+# re-pasted into claude.ai Settings > Profile > Preferences (verified by quote-back).
+# scripts/check-core-paste.sh WARNs when the source file has a commit newer than this date.
+2026-07-18

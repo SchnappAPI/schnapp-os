@@ -6,6 +6,17 @@ name: mac-liveness
 # thing infra-health cannot catch about itself. On DOWN it opens a GitHub issue assigned to the owner
 # (a NATIVE email alert - no app to install) and auto-closes it on recovery. Free, no secrets: uses
 # the built-in GITHUB_TOKEN. Closes infra-health residual #1. See scheduled-tasks/mac-liveness.md.
+#
+# Second leg: obsidian-mcp's EXTERNAL endpoint (obsidian-mcp.schnapp.bet/mcp). It lives here, not
+# in render-health, because it is a Mac-hosted service behind the same tunnel (render-health is
+# scoped to Render origins). infra-health checks local port 8767 only, so a tunnel-route or
+# hostname failure is invisible from the Mac while off-Mac clients get nothing. Drift caught:
+# external obsidian endpoint dead while the Mac looks healthy. Alert path: same issue mechanism,
+# distinct "[mac-liveness] obsidian" title; gated on the Mac being up so a Mac outage opens ONE
+# issue, not two. Own failure mode: healthy is an EXACT signature (unauthenticated 401, static
+# bearer since 2026-07-18), so the probe cannot false-green; any probe error is a non-401, which
+# reds the run and opens the issue. (mac-mcp's external signature is 406 on bare curl - if a
+# mac-mcp leg is ever added, match on 406, not 401.) Verify: workflow_dispatch simulate=obsidian-down.
 
 on:
   schedule:
@@ -13,7 +24,7 @@ on:
   workflow_dispatch:
     inputs:
       simulate:
-        description: 'Set to "down" to force the alarm path (tests the issue/email without a real outage)'
+        description: 'Set to "down" to force the Mac alarm path, or "obsidian-down" to force the obsidian alarm path (tests the issue/email without a real outage)'
         required: false
         default: ''
 
@@ -38,7 +49,9 @@ jobs:
           set -uo pipefail
           PRIMARY="https://schnapp.bet"
           SECONDARY="https://mac-flask.schnapp.bet"
+          OBSIDIAN_URL="https://obsidian-mcp.schnapp.bet/mcp"
           TITLE="[mac-liveness] schnapp Mac platform unreachable"
+          OBSIDIAN_TITLE="[mac-liveness] obsidian-mcp external endpoint unhealthy"
           ASSIGNEE="SchnappAPI"
           now="$(date -u '+%Y-%m-%d %H:%M:%SZ')"
 
@@ -55,9 +68,26 @@ jobs:
             return 1
           }
 
+          # obsidian external healthy = unauthenticated GET returns EXACTLY 401 (observed live
+          # 2026-07-18, post static-bearer swap). Anything else is drift on the external route.
+          obsidian_healthy() {
+            local code
+            for _ in 1 2 3; do
+              code="$(curl -s -o /dev/null -m 12 -w '%{http_code}' "$OBSIDIAN_URL" 2>/dev/null)"
+              if [ "${code:-000}" = "401" ]; then return 0; fi
+              sleep 8
+            done
+            echo "obsidian drift: $OBSIDIAN_URL last=$code (healthy signature is 401)" >&2
+            OBSIDIAN_LAST="${code:-000}"
+            return 1
+          }
+
           DOWN=0; DETAIL=""
+          OBSIDIAN_DOWN=0; OBSIDIAN_DETAIL=""; OBSIDIAN_LAST=""
           if [ "${SIMULATE:-}" = "down" ]; then
             DOWN=1; DETAIL="SIMULATED via workflow_dispatch (simulate=down). Not a real outage - this is an alert-path test."
+          elif [ "${SIMULATE:-}" = "obsidian-down" ]; then
+            OBSIDIAN_DOWN=1; OBSIDIAN_DETAIL="SIMULATED via workflow_dispatch (simulate=obsidian-down). Not a real outage - this is an alert-path test."
           elif is_up "$PRIMARY"; then
             echo "primary up: $PRIMARY"
           elif is_up "$SECONDARY"; then
@@ -66,8 +96,19 @@ jobs:
             DOWN=1; DETAIL="Neither $PRIMARY nor $SECONDARY responded. The Mac is likely off, asleep, or its Cloudflare tunnel is down, so infra-health is not running either."
           fi
 
+          # Probe obsidian only when the Mac is up (a Mac outage already pages; one issue, not two).
+          if [ "$DOWN" -eq 0 ] && [ "${SIMULATE:-}" != "obsidian-down" ]; then
+            if obsidian_healthy; then
+              echo "obsidian external healthy: $OBSIDIAN_URL returned 401 (the unauthenticated bearer signature)"
+            else
+              OBSIDIAN_DOWN=1; OBSIDIAN_DETAIL="Unauthenticated GET $OBSIDIAN_URL returned ${OBSIDIAN_LAST} after retries; the healthy signature is exactly 401. The Mac itself is up, so this is the obsidian-mcp service or its tunnel route."
+            fi
+          fi
+
           existing="$(gh issue list --repo "$REPO" --state open --json number,title \
-            --jq '.[] | select(.title|startswith("[mac-liveness]")) | .number' | head -1)"
+            --jq '.[] | select(.title|startswith("[mac-liveness] schnapp Mac")) | .number' | head -1)"
+          obsidian_existing="$(gh issue list --repo "$REPO" --state open --json number,title \
+            --jq '.[] | select(.title|startswith("[mac-liveness] obsidian")) | .number' | head -1)"
 
           if [ "$DOWN" -eq 1 ]; then
             {
@@ -88,12 +129,42 @@ jobs:
               gh issue comment "$existing" --repo "$REPO" --body "Still failing at ${now}. ${DETAIL}"
               echo "::notice::updated existing alarm issue #${existing}"
             fi
-            exit 1
           else
-            if [ -n "$existing" ]; then
+            # Close only on a REAL probe pass: a simulate dispatch skips the other track, and a
+            # skipped track must never fake a recovery.
+            if [ -n "$existing" ] && [ -z "${SIMULATE:-}" ]; then
               gh issue comment "$existing" --repo "$REPO" --body "Recovered: the Mac responded at ${now}. Auto-closing."
               gh issue close "$existing" --repo "$REPO" --reason completed
               echo "::notice::recovered, closed issue #${existing}"
             fi
             echo "Mac liveness OK at ${now}"
           fi
+
+          if [ "$OBSIDIAN_DOWN" -eq 1 ]; then
+            {
+              echo "**obsidian-mcp external endpoint check FAILED** at ${now}."
+              echo
+              echo "${OBSIDIAN_DETAIL}"
+              echo
+              echo "infra-health only watches local port 8767, so this external-route failure is invisible from the Mac. Off-Mac clients (claude.ai via the portal, once the obsidian slot is added) get nothing until it recovers."
+              echo
+              echo "Check: on the Mac, launchctl print gui/\$(id -u)/com.schnapp.obsidian-mcp and curl -s -o /dev/null -w '%{http_code}' localhost:8767/mcp (expect 401); then the cloudflared tunnel route for obsidian-mcp.schnapp.bet. This issue auto-closes when a later check sees the 401 signature again."
+            } > /tmp/obsidian-body.md
+            if [ -z "$obsidian_existing" ]; then
+              gh issue create --repo "$REPO" --title "$OBSIDIAN_TITLE" --body-file /tmp/obsidian-body.md --assignee "$ASSIGNEE"
+              echo "::notice::opened obsidian alarm issue"
+            else
+              gh issue comment "$obsidian_existing" --repo "$REPO" --body "Still failing at ${now}. ${OBSIDIAN_DETAIL}"
+              echo "::notice::updated existing obsidian alarm issue #${obsidian_existing}"
+            fi
+          else
+            # Close a stale obsidian issue only when this run actually probed it healthy
+            # (Mac up, and not a simulate dispatch that skipped the probe).
+            if [ -n "$obsidian_existing" ] && [ "$DOWN" -eq 0 ] && [ -z "${SIMULATE:-}" ]; then
+              gh issue comment "$obsidian_existing" --repo "$REPO" --body "Recovered: obsidian-mcp.schnapp.bet returned the healthy 401 signature at ${now}. Auto-closing."
+              gh issue close "$obsidian_existing" --repo "$REPO" --reason completed
+              echo "::notice::obsidian recovered, closed issue #${obsidian_existing}"
+            fi
+          fi
+
+          [ "$DOWN" -eq 0 ] && [ "$OBSIDIAN_DOWN" -eq 0 ] || exit 1

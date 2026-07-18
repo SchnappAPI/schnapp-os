@@ -86,6 +86,9 @@ jobs:
       - name: Secret-bytes gate self-test
         run: bash scripts/tests/test-check-secret-bytes.sh
 
+      - name: Credential-horizons check self-test
+        run: bash scripts/tests/test-check-credential-horizons.sh
+
       - name: Vault-autocommit self-test
         run: bash scripts/tests/test-vault-autocommit.sh
 

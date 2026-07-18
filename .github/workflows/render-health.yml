@@ -9,6 +9,15 @@ name: render-health
 # (NATIVE email, no app to install) and auto-closes on recovery, deduped by the "[render-health]" title
 # prefix. Distinct from mac-liveness (which watches the Mac platform): a down Render service is NOT a Mac
 # outage, so it gets its own issue title. See scheduled-tasks/render-health.md.
+#
+# Third leg: the Cloudflare portal itself (mcp.schnapp.bet). The origin probes above cannot see a
+# portal-layer failure (Cloudflare config, OAuth wrapper, DNS): the origins stay 200 while every
+# hookless surface silently loses its tools. Drift caught: portal-layer outage invisible to origin
+# probes. Alert path: same issue mechanism, distinct "[render-health] portal" title. Own failure
+# mode: the healthy state is an EXACT signature (unauthenticated 401), so a broken probe cannot
+# false-green; a probe error is a non-401 which makes the run red and opens the issue - it cannot
+# die silently while the workflow runs (workflow liveness itself is covered by the repo's daily
+# push cadence keeping schedules enabled). Verify: workflow_dispatch with simulate=portal-down.
 
 on:
   schedule:
@@ -16,7 +25,7 @@ on:
   workflow_dispatch:
     inputs:
       simulate:
-        description: 'Set to "down" to force the alarm path (tests the issue/email without a real outage)'
+        description: 'Set to "down" to force the origin alarm path, or "portal-down" to force the portal alarm path (tests the issue/email without a real outage)'
         required: false
         default: ''
 
@@ -43,6 +52,8 @@ jobs:
           # Each /health returns 200 {"status":"ok",...} when the service is up.
           TARGETS="op-mcp|https://op-mcp.onrender.com/health memory-mcp|https://memory-mcp-rtad.onrender.com/health"
           TITLE="[render-health] schnapp Render MCP connector(s) unhealthy"
+          PORTAL_URL="https://mcp.schnapp.bet/mcp"
+          PORTAL_TITLE="[render-health] portal (mcp.schnapp.bet) unhealthy"
           ASSIGNEE="SchnappAPI"
           now="$(date -u '+%Y-%m-%d %H:%M:%SZ')"
 
@@ -59,9 +70,28 @@ jobs:
             return 1
           }
 
+          # portal healthy = unauthenticated GET returns EXACTLY 401 (observed live 2026-07-18:
+          # HTTP 401 + www-authenticate: Bearer realm="OAuth"). Anything else (5xx, 403, 000,
+          # timeout, an unexpected 200) is portal drift. Exact-match on the observed signature so
+          # the probe cannot false-green.
+          portal_healthy() {
+            local code
+            for _ in 1 2 3; do
+              code="$(curl -s -o /dev/null -m 25 -w '%{http_code}' "$PORTAL_URL" 2>/dev/null)"
+              if [ "${code:-000}" = "401" ]; then return 0; fi
+              sleep 10
+            done
+            echo "portal drift: $PORTAL_URL last=$code (healthy signature is 401)" >&2
+            PORTAL_LAST="${code:-000}"
+            return 1
+          }
+
           DOWN=0; DETAIL=""
+          PORTAL_DOWN=0; PORTAL_DETAIL=""; PORTAL_LAST=""
           if [ "${SIMULATE:-}" = "down" ]; then
             DOWN=1; DETAIL="SIMULATED via workflow_dispatch (simulate=down). Not a real outage - this is an alert-path test."
+          elif [ "${SIMULATE:-}" = "portal-down" ]; then
+            PORTAL_DOWN=1; PORTAL_DETAIL="SIMULATED via workflow_dispatch (simulate=portal-down). Not a real outage - this is an alert-path test."
           else
             # shellcheck disable=SC2086  # TARGETS is intentionally word-split into name|url pairs
             for pair in $TARGETS; do
@@ -72,10 +102,17 @@ jobs:
                 DOWN=1; DETAIL="${DETAIL}${name} ($url) did not return 200 after retries. "
               fi
             done
+            if portal_healthy; then
+              echo "portal healthy: $PORTAL_URL returned 401 (the unauthenticated OAuth signature)"
+            else
+              PORTAL_DOWN=1; PORTAL_DETAIL="Unauthenticated GET $PORTAL_URL returned ${PORTAL_LAST} after retries; the healthy signature is exactly 401 (OAuth challenge)."
+            fi
           fi
 
           existing="$(gh issue list --repo "$REPO" --state open --json number,title \
-            --jq '.[] | select(.title|startswith("[render-health]")) | .number' | head -1)"
+            --jq '.[] | select(.title|startswith("[render-health] schnapp Render")) | .number' | head -1)"
+          portal_existing="$(gh issue list --repo "$REPO" --state open --json number,title \
+            --jq '.[] | select(.title|startswith("[render-health] portal")) | .number' | head -1)"
 
           if [ "$DOWN" -eq 1 ]; then
             {
@@ -94,12 +131,41 @@ jobs:
               gh issue comment "$existing" --repo "$REPO" --body "Still failing at ${now}. ${DETAIL}"
               echo "::notice::updated existing alarm issue #${existing}"
             fi
-            exit 1
           else
-            if [ -n "$existing" ]; then
+            # Close only on a REAL probe pass: a simulate dispatch skips the other track, and a
+            # skipped track must never fake a recovery.
+            if [ -n "$existing" ] && [ -z "${SIMULATE:-}" ]; then
               gh issue comment "$existing" --repo "$REPO" --body "Recovered: both Render connectors returned 200 at ${now}. Auto-closing."
               gh issue close "$existing" --repo "$REPO" --reason completed
               echo "::notice::recovered, closed issue #${existing}"
             fi
             echo "Render connectors OK at ${now}"
           fi
+
+          if [ "$PORTAL_DOWN" -eq 1 ]; then
+            {
+              echo "**Portal health check FAILED** at ${now}."
+              echo
+              echo "${PORTAL_DETAIL}"
+              echo
+              echo "The Schnapp Portal (Cloudflare MCP portal at mcp.schnapp.bet) fronts op-mcp, memory-mcp, mac-mcp, and github-mcp for claude.ai / iPhone / Cowork. The Render origins can be healthy while the portal layer (Cloudflare config, OAuth wrapper, DNS) is broken - this probe is the only monitor that sees that. Every hookless surface silently loses its tools until it recovers."
+              echo
+              echo "Check: curl -sI https://mcp.schnapp.bet/mcp (expect 401 + www-authenticate Bearer), the Cloudflare dashboard portal config, then a live-read probe from claude.ai. This issue auto-closes when a later check sees the 401 signature again."
+            } > /tmp/portal-body.md
+            if [ -z "$portal_existing" ]; then
+              gh issue create --repo "$REPO" --title "$PORTAL_TITLE" --body-file /tmp/portal-body.md --assignee "$ASSIGNEE"
+              echo "::notice::opened portal alarm issue"
+            else
+              gh issue comment "$portal_existing" --repo "$REPO" --body "Still failing at ${now}. ${PORTAL_DETAIL}"
+              echo "::notice::updated existing portal alarm issue #${portal_existing}"
+            fi
+          else
+            if [ -n "$portal_existing" ] && [ -z "${SIMULATE:-}" ]; then
+              gh issue comment "$portal_existing" --repo "$REPO" --body "Recovered: the portal returned the healthy 401 signature at ${now}. Auto-closing."
+              gh issue close "$portal_existing" --repo "$REPO" --reason completed
+              echo "::notice::portal recovered, closed issue #${portal_existing}"
+            fi
+            echo "Portal OK at ${now}"
+          fi
+
+          [ "$DOWN" -eq 0 ] && [ "$PORTAL_DOWN" -eq 0 ] || exit 1

@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 # run-ci-routines.sh - the SAFE, Mac-independent scheduled routines, as one bundle.
 #
-# Single source of truth for the safe, auto-class routines: five read-only
+# Single source of truth for the safe, auto-class routines: seven read-only
 # passes - the doc-freshness sweep (hard gate), the sync/unmerged check, a memory-freshness
-# sweep (check-stale-facts.sh), the learning-loop eval (learning-eval.sh), and the open
-# owner-items surfacing (check-open-questions.sh). The cron workflow
+# sweep (check-stale-facts.sh), the learning-loop eval (learning-eval.sh), the open
+# owner-items surfacing (check-open-questions.sh), the credential-horizons check
+# (check-credential-horizons.sh, hard on an actual within-horizon WARN), and the CORE-paste
+# currency check (check-core-paste.sh, informational). The cron workflow
 # (.github/workflows/scheduled-routines.yml) calls this; nothing here is duplicated in YAML.
 # Read-only except for the freshness generator's temp file. Exit non-zero ONLY when a hard gate
-# (freshness) fails, so a real problem is a visible failure and informational drift is not.
+# (freshness, or a credential inside its warn window) fails, so a real problem is a visible
+# failure and informational drift is not.
 #
 # Output is markdown on stdout (the workflow appends it to the job Step Summary). Config:
 # CLAUDE_KIT_REPO (default: derived from this script's location, so it runs anywhere).
@@ -92,10 +95,27 @@ echo
 # --- Routine 3: memory freshness sweep (informational) ---
 echo "## Memory freshness sweep"
 echo
-echo '```'
 # VAULT_MEMORY_DIR: the workflow points this at a vault checkout (vault/memory) when the
-# VAULT_READ_TOKEN secret is configured; absent -> check-stale-facts says SKIP, not a false OK.
-bash scripts/check-stale-facts.sh "${VAULT_MEMORY_DIR:-memory}" 2>&1 || true
+# VAULT_READ_TOKEN secret is configured. A missing dir means the vault leg never ran - a LOUD
+# warning, never a silent skip (the sin is silence, not absence: the token being unset may be
+# an owner choice, so this stays informational, not a hard failure). Step Summary is the right
+# channel: this bundle is deliberately dependency-free and opens no issues (the probe workflows
+# own the issue mechanism); its only channels are the Step Summary and the exit code.
+vault_dir="${VAULT_MEMORY_DIR:-memory}"
+if [ ! -d "$vault_dir" ]; then
+  echo "### ⚠️ WARNING: vault memory lane NOT swept"
+  echo
+  echo "No vault checkout at \`$vault_dir\`, so the stale-facts sweep is BLIND to the memory"
+  echo "lane. On CI this means the \`VAULT_READ_TOKEN\` Actions secret is unset, expired, or"
+  echo "lost its vault repo grant (locally: point VAULT_MEMORY_DIR at the vault clone's"
+  echo "memory dir). If intentional, no action; otherwise restore the secret with:"
+  echo '```'
+  echo "gh secret set VAULT_READ_TOKEN --repo SchnappAPI/schnapp-os  # value: op://web-variables/SCHNAPP_OS_PAT/credential"
+  echo '```'
+  echo
+fi
+echo '```'
+bash scripts/check-stale-facts.sh "$vault_dir" 2>&1 || true
 echo '```'
 echo
 echo "_Read-only: flags facts crossing 7/30/90-day \`updated:\` thresholds. Refresh via supersede"
@@ -122,6 +142,41 @@ echo '```'
 echo
 echo "_Read-only: re-surfaces the resume-point handoff's \"## Open ...\" items nightly so they"
 echo "cannot rot silently. Resolve or re-carry them in the next handoff - this routine never edits._"
+echo
+
+# --- Routine 6: credential horizons (hard on an actual within-horizon WARN) ---
+# Hard like the freshness gate, not informational like routines 2-5: a green nightly's Step
+# Summary is never read, and this bundle's only push channel is the red workflow (GitHub emails
+# the owner). The script exits 1 ONLY on a real within-horizon row or a blind/malformed data
+# file, so a red here is always actionable.
+echo "## Credential horizons"
+echo
+echo '```'
+if ! bash scripts/check-credential-horizons.sh 2>&1; then
+  rc=1
+  horizons_failed=1
+fi
+echo '```'
+echo
+if [ "${horizons_failed:-0}" -eq 1 ]; then
+  echo "**Result: WARN (gate failed)** - a credential is inside its warn window (or the data"
+  echo "file is broken). Rotate/re-mint per the row's note (\`rotate-secret\` skill), then move"
+  echo "its expiry date in \`scripts/credential-horizons.tsv\`."
+else
+  echo "**Result: OK** - no credential inside its warn window."
+fi
+echo
+
+# --- Routine 7: claude.ai CORE paste currency (informational) ---
+echo "## CORE paste currency (claude.ai Preferences)"
+echo
+echo '```'
+bash scripts/check-core-paste.sh 2>&1 || true
+echo '```'
+echo
+echo "_Read-only: compares surfaces/core-paste-watermark to the last commit touching"
+echo "surfaces/always-loaded-instructions.md. Soft by design: the re-paste is a manual owner"
+echo "step, so it warns nightly until the watermark moves - it never reds the run._"
 echo
 
 exit "$rc"
