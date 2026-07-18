@@ -8,7 +8,8 @@ or renames a handoff. Regenerate with `scripts/gen-handoff-index.sh` after addin
 CI ([`.github/workflows/freshness.yml`](../.github/workflows/freshness.yml)) fails a push
 if this file is out of date.
 
-- [`064`](064-transcript-cloud-sync.md) Handoff 064: Transcript cloud-sync live (sessions never local-only) (resume point)
+- [`065`](065-adaptive-display-modes.md) 065 - Adaptive display management for the headless MacBook (2026-07-18) (resume point)
+- [`064`](064-transcript-cloud-sync.md) Handoff 064: Transcript cloud-sync live (sessions never local-only)
 - [`063`](063-skills-taxonomy-and-auto-improvement-lane.md) 063 - skills taxonomy cleanup + auto-improvement lane (ADR 0037)
 - [`062`](062-ref-vault-consolidation.md) 062 - ref-vault consolidation (final handoff-029 leg)
 - [`061`](061-cross-repo-cohesion-audit.md) Handoff 061: cross-repo cohesion audit (all ~/code repos vs schnapp-os canon)
