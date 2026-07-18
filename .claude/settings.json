@@ -37,6 +37,11 @@
             "type": "command",
             "command": "bash \"${CLAUDE_PROJECT_DIR}/hooks/length-advisory.sh\"",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/hooks/auto-dispatch.sh\"",
+            "timeout": 15
           }
         ]
       }

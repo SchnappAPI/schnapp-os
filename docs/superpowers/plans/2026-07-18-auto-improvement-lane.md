@@ -27,10 +27,17 @@ PROGRESS.md is the log; this is the live tracker.
       collision hit/miss, dry-run e2e) wired into freshness.yml
 
 ## Phase 4 - hook observe lane (tier 3)
-- [ ] observe-mode wrapper template (log would-block, exit 0) + escalation ledger
-- [ ] self-escalation: >= 7 clean days -> flip wrapper to blocking, same-commit self-test
-- [ ] tests: observe never blocks; escalation flips only on clean ledger
+- [x] lane mechanics: `hooks/auto/` drop-in dir + `hooks/auto-dispatch.sh` (one settings.json
+      entry, PostToolUse Write|Edit) + `hooks/auto-hook-lib.sh` (observe = ledger line + exit 0,
+      enforce = exit 2); contract + FP-brake procedure in `hooks/auto/README.md`
+- [x] self-escalation: `scripts/auto-hook-escalate.sh` (>= 7 days old, no open `auto-hook-fp`
+      issue -> flip to enforce, commit+push; gh unreadable = fail-closed hold), run nightly by
+      the session-mine worker on the clean tree
+- [x] tests: `scripts/tests/test-auto-hook-lane.sh` (observe never blocks + ledger written,
+      enforce blocks via dispatcher, erroring hook ignored, escalator age gate) in freshness.yml
+- [ ] first real auto-hook minted through the lane (needs a >= 2-occurrence mistake class from
+      live data; the mint itself is the lane's job, not a manual step)
 
 ## Validation
-- [ ] end-to-end dry-run: seeded fixture transcripts -> minted skill lands on a throwaway
-      clone's main with catalog regenerated and gates green
+- [~] lane dry-runs verified (session-mine worker + escalator fixtures); first LIVE nightly run
+      2026-07-19 03:40 is the end-to-end check - its ops-alert issue is the evidence

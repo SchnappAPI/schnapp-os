@@ -139,6 +139,13 @@ main() {
   fi
   git checkout -q main && git reset -q --hard origin/main
 
+  # Staged-rollout escalator for the autonomous hook lane (ADR 0037 tier 3). Runs on the CLEAN
+  # tree so its tiny observe->enforce commit (it pushes itself) never mixes with the skill
+  # proposal below; after it, re-sync so our later diff base is current. Best-effort.
+  bash "$REPO_ROOT/scripts/auto-hook-escalate.sh" || true
+  git fetch -q origin main 2>/dev/null || true
+  git reset -q --hard origin/main
+
   # 2. Bounded SDK proposal.
   rm -f "$EVIDENCE"
   MINING_TSV="$tsv" MINING_TRANSCRIPT_ROOT="$ROOT" \

@@ -7,7 +7,9 @@ nothing about when it fires):
   each): session-start-gate (SessionStart: sync/freshness/memory/learning gate),
   post-compact-reinject (SessionStart matcher `compact`), no-force-push-guard (PreToolUse),
   secret-scan-on-write + shellcheck-on-write + em-dash-on-write + length-advisory (PostToolUse
-  write guards), session-stop-push-gate (Stop), session-end-backup (SessionEnd).
+  write guards), auto-dispatch (PostToolUse: runs every [auto/](auto/) autonomous hook - the
+  ADR 0037 tier-3 lane, contract in [auto/README.md](auto/README.md)), session-stop-push-gate
+  (Stop), session-end-backup (SessionEnd).
 - **User scope** `~/.claude/settings.json` (machine-wide, fires in EVERY repo; written by
   [shell/install.sh](../shell/README.md), ADR 0033): standing-rules.sh (reply rules),
   capture-nudge.sh (correction capture -> learning queue), global-session-gate.sh

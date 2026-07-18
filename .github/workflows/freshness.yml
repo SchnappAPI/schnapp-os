@@ -101,6 +101,9 @@ jobs:
       - name: Session-mine worker self-test
         run: bash scripts/tests/test-session-mine-worker.sh
 
+      - name: Auto-hook lane self-test
+        run: bash scripts/tests/test-auto-hook-lane.sh
+
       - name: Internal link check (live docs)
         run: bash scripts/check-links.sh
 
