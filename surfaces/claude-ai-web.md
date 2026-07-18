@@ -22,7 +22,7 @@
 ## Enablement (apply once 10.1 is installed)
 1. **Connectors** (Settings > Connectors), confirm enabled: **Schnapp Portal**
    (`https://mcp.schnapp.bet/mcp` - fronts op-mcp + memory-mcp + mac-mcp + github-mcp; the
-   obsidian-mcp slot is a pending owner add since the 2026-07-18 bearer swap - the old native-OAuth
+   obsidian-mcp slot added and live-verified 2026-07-18 (all 7 tools + get_index through the portal) - the old native-OAuth
    "obsidian mcp" standalone connector no longer authenticates). The old standalone "Schnapp Mac" /
    "Schnapp GitHub" connectors are retired - the portal carries those tools now.
 2. **Skills:** do NOT paste static skill copies (a pasted `SKILL.md` goes stale, the same trap the

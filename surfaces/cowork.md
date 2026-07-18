@@ -11,8 +11,9 @@ git repos (`SchnappAPI/schnapp-os` + `SchnappAPI/schnapp-vault`) via the GitHub 
   ([always-loaded-instructions.md](always-loaded-instructions.md)); read any skill or rule
   file from the repo through the connector on demand.
 - **Tools/credentials:** hosted MCP connectors only - the **Schnapp Portal** (op + memory +
-  mac + github legs; the obsidian-mcp leg is a pending owner add since the 2026-07-18 bearer
-  swap - the old native-OAuth standalone connector no longer authenticates). No local shell.
+  mac + github + obsidian legs; obsidian slot live-verified through the portal 2026-07-18 after
+  the bearer swap, and the old native-OAuth standalone connector no longer authenticates). No
+  local shell.
   The github leg (github-mcp)
   authenticates GitHub with `GITHUB_PAT` (all-repos, [credentials-map](../credentials-map.md)),
   so both repos including the vault are in scope; verify per enablement 3. Whether Cowork also
