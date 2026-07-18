@@ -121,6 +121,8 @@ Scripts in `hooks/`, wired in the repo's `.claude/settings.json` (project scope)
 and by `shell/install.sh` at user scope (the `global-*` set, ADR 0033); map in
 `hooks/README.md`.
 
+- **auto-dispatch.sh**: PostToolUse dispatcher for autonomous hooks (ADR 0037 tier 3).
+- **auto-hook-lib.sh**: shared verdict helper for autonomous hooks (ADR 0037 tier 3).
 - **capture-nudge.sh**: UserPromptSubmit, wired user-scope (machine-wide) in ~/.claude/settings.json
 - **em-dash-on-write.sh**: PostToolUse writing-style guard (no em dashes in live files).
 - **global-force-push-guard.sh**: user-scope (any-repo) delivery of the force-push hard guard
