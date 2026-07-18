@@ -36,3 +36,5 @@ scheduled-tasks/.learning-queue.archive.tsv
 # drafts at most once. MUST stay ignored - an untracked marker would show in `git status --porcelain`
 # and corrupt the worker's post-distill clean-check (learning-worker.sh).
 scheduled-tasks/.learning-queue.gate-drafted.tsv
+scheduled-tasks/.mining-history/
+scheduled-tasks/.mining-evidence.json

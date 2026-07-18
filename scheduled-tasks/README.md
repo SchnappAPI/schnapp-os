@@ -124,6 +124,32 @@ agent instructions that govern the live `claude -p` run.
 
 ---
 
+## LaunchAgent install - session-mine (auto-improvement lane, ADR 0037)
+
+`scripts/session-mine-worker.sh` runs nightly at 03:40: deterministic fire-rate mining over the
+Claude Code transcripts (`scripts/transcript-mine.py`), a bounded Agent SDK proposal step
+(`scripts/session_mine.py` - at most one skill mint/sharpen with grep-verifiable evidence from
+>= 2 sessions), evidence + trigger-collision verification, catalog regeneration, then
+`learning-gate.sh` with a skills scope; clean proposals and zero-fire prunes land straight on
+`main`, anything held is discarded and filed as an issue. Same headless-auth model and
+`__REPO__`/`__HOME__`/`__CLAUDE_TOKEN_REF__` render as memory-consolidation above.
+
+```bash
+REPO=~/code/schnapp-os
+TOKEN_REF="op://web-variables/CLAUDE_CODE_OAUTH_TOKEN/credential"
+sed -e "s|__REPO__|$REPO|g" -e "s|__HOME__|$HOME|g" -e "s|__CLAUDE_TOKEN_REF__|$TOKEN_REF|g" \
+  "$REPO/scheduled-tasks/com.schnapp.session-mine.plist" \
+  > ~/Library/LaunchAgents/com.schnapp.session-mine.plist
+mkdir -p ~/Library/Logs/schnapp-os
+launchctl load ~/Library/LaunchAgents/com.schnapp.session-mine.plist
+launchctl list | grep com.schnapp.session-mine   # verify
+```
+
+Health: last-exit != 0 in `launchctl list` and `~/Library/Logs/schnapp-os/session-mine.log`;
+the worker also raises `ops-alert.sh` red/green issues (`session-mine` component).
+
+---
+
 ## LaunchAgent install - vault-autocommit
 
 `scripts/vault-autocommit.sh` sweeps the schnapp-vault working tree into git every 5 minutes

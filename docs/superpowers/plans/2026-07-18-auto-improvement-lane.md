@@ -11,16 +11,20 @@ PROGRESS.md is the log; this is the live tracker.
 - [x] ADR 0037 recorded
 
 ## Phase 2 - mining agent pass
-- [ ] extend `scripts/learning_distill.py` (or sibling `session_mine.py`): read miner TSV +
-      low-signal transcript remainder, emit skill/rule/memory candidates with >= 2-session
-      evidence attached (same bounded Agent SDK harness: no Bash, bounded turns)
-- [ ] wire into `learning-worker.sh` nightly after the recurrence pre-step
+- [x] `scripts/session_mine.py`: bounded Agent SDK proposal (miner TSV + transcript corpus in,
+      at most one skill mint/sharpen + evidence JSON out; no Bash, bounded turns/timeout)
+- [x] own nightly lane `scripts/session-mine-worker.sh` + `com.schnapp.session-mine.plist`
+      (03:40; separate from the correction-queue worker, same auth + clean-tree discipline)
 
 ## Phase 3 - gate extension (tier 2 auto-mint)
-- [ ] `learning-gate.sh`: admit `skills/*/SKILL.md` create/sharpen when evidence file present,
-      size cap, no trigger-phrase collision vs catalog, projections regenerated same commit
-- [ ] auto-prune: zero fires across two consecutive windows -> remove skill + regen (same gate)
-- [ ] tests for both paths in `scripts/tests/`
+- [x] gate reuse: `learning-gate.sh` called with scope `skills/*/SKILL.md|CATALOG.md|surfaces/
+      claude-ai-skills.md` + `LEARNING_GATE_MAX_ADDED=150` (no gate edit needed); worker adds
+      the two skill-specific checks first: every evidence quote greps verbatim in its named
+      transcript (>= 2 distinct sessions), quoted trigger phrases collide with no other skill
+- [x] auto-prune: zero fires across two consecutive snapshots + dir predates the older one ->
+      `git rm` + regen in the same gated commit
+- [x] tests: `scripts/tests/test-session-mine-worker.sh` (evidence good/fabricated/single,
+      collision hit/miss, dry-run e2e) wired into freshness.yml
 
 ## Phase 4 - hook observe lane (tier 3)
 - [ ] observe-mode wrapper template (log would-block, exit 0) + escalation ledger
