@@ -27,15 +27,16 @@ Jargon, once:
 | memory-mcp (vault memory lane) | Render | Render web service | `https://memory-mcp-rtad.onrender.com` (`/mcp`, `/health`) | Render dashboard logs |
 | mac-mcp (Mac shell/SQL/files/services) | Mac | launchd `com.schnapp.macmcp`, port 8765 | `https://mac-mcp.schnapp.bet/mcp` | `~/mac-mcp/mcp.log`, `~/mac-mcp/mcp.err.log` |
 | github-mcp (GitHub org ops) | Mac | launchd `com.schnapp.githubmcp`, port 8766 | `https://github-mcp.schnapp.bet/mcp` | `~/github-mcp/mcp.log`, `~/github-mcp/mcp.err.log` |
-| obsidian-mcp (Obsidian vault notes) | Mac | launchd `com.schnapp.obsidian-mcp`, port 8767 | (native-OAuth connector; port 8767 via tunnel) | `~/obsidian-mcp/obsidian-mcp.log` |
+| obsidian-mcp (Obsidian vault notes) | Mac | launchd `com.schnapp.obsidian-mcp`, port 8767 | `https://obsidian-mcp.schnapp.bet/mcp` | `~/obsidian-mcp/obsidian-mcp.log` |
 
 Note the label inconsistency: `com.schnapp.macmcp` and `com.schnapp.githubmcp` have no hyphen;
 `com.schnapp.obsidian-mcp` does. Copy exactly.
 
 How clients reach them:
-- **claude.ai web + iPhone**: the portal `https://mcp.schnapp.bet/mcp` fronts the four
+- **claude.ai web + iPhone**: the portal `https://mcp.schnapp.bet/mcp` fronts the
   static-bearer servers (op-mcp, memory-mcp, mac-mcp, github-mcp) behind one OAuth connector
-  (decisions/0020). obsidian-mcp is a SEPARATE connector with its own native OAuth.
+  (decisions/0020). obsidian-mcp is static-bearer too since 2026-07-18 (`OBSIDIAN_MCP_AUTH_TOKEN`);
+  its portal slot is a pending owner add.
 - **Claude Code / Cowork**: direct origin URLs with bearer headers from env vars, per the
   repo-root `.mcp.json` (server names `Schnapp_Mac`, `Schnapp_Secrets`, `Schnapp_Memory`).
 - Source of truth for each Mac server is this repo: `~/<svc>/server.py` is a symlink to

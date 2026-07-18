@@ -161,8 +161,8 @@ trap 'rm -f "$TMP"' EXIT
   echo "## MCP connectors"
   echo
   echo "Remote MCP servers in \`connectors/\`, referenced by \`.mcp.json\` (bearer \${ENV} refs) and, for"
-  echo "the portal-fronted set, behind the Cloudflare portal (\`op/memory/mac/github\`; obsidian-mcp is a"
-  echo "separate native-OAuth connector). This is the static inventory only; live health, auth state, and"
+  echo "the portal-fronted set, behind the Cloudflare portal (\`op/memory/mac/github\`; obsidian-mcp's"
+  echo "portal slot is a pending owner add). This is the static inventory only; live health, auth state, and"
   echo "rotation status are the vault \`credentials-state\` fact (referenced, never restated here)."
   echo
   if ls -d "$REPO"/connectors/*/ >/dev/null 2>&1; then

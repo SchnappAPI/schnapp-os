@@ -6,7 +6,8 @@
   **Schnapp Portal** connector is the Cloudflare MCP portal `https://mcp.schnapp.bet/mcp` (Managed
   OAuth → origins); it fronts the four static-bearer servers - **op-mcp** (secrets), **memory-mcp**,
   **mac-mcp** (shell/SQL/files), **github-mcp**: so one OAuth connector exposes all their tools.
-  **obsidian-mcp** is a separate connector (its own native OAuth, not portal-fronted). Connector/auth
+  **obsidian-mcp** is also static-bearer now (swapped from native OAuth 2026-07-18) and joins the
+  portal-fronted set once the owner adds its portal slot (pending owner step). Connector/auth
   topology + health: [`credentials-map.md`](../credentials-map.md) (which points at the vault
   `credentials-state` fact, canonical). No
   local filesystem, shell, or hooks. To USE a secret, call the Mac's `op_run`/`op_inject` (value
@@ -20,9 +21,10 @@
 
 ## Enablement (apply once 10.1 is installed)
 1. **Connectors** (Settings > Connectors), confirm enabled: **Schnapp Portal**
-   (`https://mcp.schnapp.bet/mcp` - fronts op-mcp + memory-mcp + mac-mcp + github-mcp) and
-   **obsidian mcp** (native OAuth). The old standalone "Schnapp Mac" / "Schnapp GitHub" connectors
-   are retired - the portal carries those tools now.
+   (`https://mcp.schnapp.bet/mcp` - fronts op-mcp + memory-mcp + mac-mcp + github-mcp; the
+   obsidian-mcp slot is a pending owner add since the 2026-07-18 bearer swap - the old native-OAuth
+   "obsidian mcp" standalone connector no longer authenticates). The old standalone "Schnapp Mac" /
+   "Schnapp GitHub" connectors are retired - the portal carries those tools now.
 2. **Skills:** do NOT paste static skill copies (a pasted `SKILL.md` goes stale, the same trap the
    CORE live-read clause avoids). With the Portal connector on (default), claude.ai reads skills
    LIVE from `skills/<name>/SKILL.md` on demand, so the substance stays current with zero

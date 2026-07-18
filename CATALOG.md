@@ -149,8 +149,8 @@ and by `shell/install.sh` at user scope (the `global-*` set, ADR 0033); map in
 ## MCP connectors
 
 Remote MCP servers in `connectors/`, referenced by `.mcp.json` (bearer ${ENV} refs) and, for
-the portal-fronted set, behind the Cloudflare portal (`op/memory/mac/github`; obsidian-mcp is a
-separate native-OAuth connector). This is the static inventory only; live health, auth state, and
+the portal-fronted set, behind the Cloudflare portal (`op/memory/mac/github`; obsidian-mcp's
+portal slot is a pending owner add). This is the static inventory only; live health, auth state, and
 rotation status are the vault `credentials-state` fact (referenced, never restated here).
 
 - **github-mcp**: Self-hosted MCP server exposing GitHub operations. Bearer-token auth (backing: `connectors/github-mcp/server.py`)

@@ -136,6 +136,8 @@ mcp.schnapp.bet fronting the Mac connectors.
   `mcp._custom_routes` attribute were silently ignored by mcp 1.27.2 (it reads
   `_custom_starlette_routes` via the `custom_route()` decorator only): token exchange 404'd
   forever. Lesson: framework-supported APIs only, private attributes are not an interface.
+  The whole OAuth machinery was removed 2026-07-18 (P3 bearer swap): obsidian-mcp now uses the
+  fleet's static-bearer pattern, so this failure class no longer has a surface.
 - **1Password SDK on Cloudflare Workers**: SETTLED (ADR 0004). `@1password/sdk` is Node-only;
   a plain Worker cannot run it. That is why op-mcp lives on Render.
 - **mac-mcp portal misdelivery**: STILL-OPEN, detection-only (ADR 0034). One 2026-07-16
@@ -209,7 +211,7 @@ STILL-OPEN items with an evidence trail. Do not restart these from zero; do not 
 | Thread | State | Trail |
 |---|---|---|
 | Web user-scope wiring honored? | ADR 0033's one open empirical question: owner pastes `shell/web-setup.sh`, first web session verifies | `decisions/0033`, handoff 057 open questions (branch knob, vault access) |
-| Substrate P2/P3 (GitHub official-MCP swap, Obsidian bearer swap) | Greenlight-ready, unexecuted since ~2026-07-03: execute or write the killing ADR | handoff 057 next steps |
+| Substrate P2 (GitHub official-MCP swap) | Greenlight-ready, unexecuted since ~2026-07-03: execute or write the killing ADR. P3 (Obsidian bearer swap) EXECUTED 2026-07-18 - only the portal-slot owner add remains | handoff 057 next steps |
 | Meta-freeze object-work week | The 057 audit's single highest-payoff change, owner-level, unexecuted | handoff 057 decisions |
 | Portal misdelivery root cause | Detection-only; unpatchable layer | ADR 0034 |
 | Orphan worktrees + merged local `claude/*` branches | Deliberately unpruned | PROGRESS.md 2026-07-16; vault `memory/session-worktree-orphan-cleanup.md` |

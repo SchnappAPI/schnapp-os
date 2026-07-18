@@ -171,7 +171,8 @@ write-on-stop = memory facts + newest handoff + PROGRESS line + plan box, both r
 read-on-start = the freshness gate. Same packet as Code, different transport). Setup, per
 [surfaces/cowork.md](../../surfaces/cowork.md):
 
-1. Enable the **Schnapp Portal** connector + **obsidian-mcp**.
+1. Enable the **Schnapp Portal** connector (obsidian-mcp rides it too once the owner adds
+   its portal slot - pending since the 2026-07-18 bearer swap).
 2. Paste the **CORE** section AND the **Cowork operating block** of
    [surfaces/always-loaded-instructions.md](../../surfaces/always-loaded-instructions.md) into
    Cowork's instructions.
@@ -196,8 +197,9 @@ No install in any real sense; two account-level toggles, per
 [surfaces/claude-ai-web.md](../../surfaces/claude-ai-web.md) and
 [surfaces/iphone.md](../../surfaces/iphone.md):
 
-1. **Connectors** (Settings > Connectors): **Schnapp Portal** (`https://mcp.schnapp.bet/mcp`) +
-   **obsidian mcp**. The portal is how these surfaces read `rules/global/` and any `SKILL.md`
+1. **Connectors** (Settings > Connectors): **Schnapp Portal** (`https://mcp.schnapp.bet/mcp`;
+   obsidian-mcp joins it once the owner adds its portal slot - pending since the 2026-07-18
+   bearer swap). The portal is how these surfaces read `rules/global/` and any `SKILL.md`
    LIVE from the repo (probe-confirmed 2026-07-07); that live read is the default behavior
    channel, not the paste.
 2. **Bootstrap floor**: paste the **CORE** section of

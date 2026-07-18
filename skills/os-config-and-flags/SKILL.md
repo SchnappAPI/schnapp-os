@@ -136,8 +136,8 @@ copies only the lines it needs. Rules (all stated in the file header):
 
 Per-connector `connectors/*/.env.template` files carry only that service's refs, resolved by
 `op-wrap.sh` at launchd startup (Mac trio) or set as host secrets (Render pair).
-`connectors/obsidian-mcp/.env.template` is intentionally empty of refs: it authenticates via
-OAuth 2.1, no static bearer.
+All three Mac connectors are static-bearer: obsidian-mcp reads `OBSIDIAN_MCP_AUTH_TOKEN`
+from its template (swapped from OAuth 2.1 on 2026-07-18).
 
 Adding a new env var, full checklist:
 1. Create/extend the 1Password item in vault `web-variables`.

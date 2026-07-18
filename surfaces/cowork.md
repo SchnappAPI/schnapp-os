@@ -11,7 +11,9 @@ git repos (`SchnappAPI/schnapp-os` + `SchnappAPI/schnapp-vault`) via the GitHub 
   ([always-loaded-instructions.md](always-loaded-instructions.md)); read any skill or rule
   file from the repo through the connector on demand.
 - **Tools/credentials:** hosted MCP connectors only - the **Schnapp Portal** (op + memory +
-  mac + github legs) and **obsidian-mcp**. No local shell. The github leg (github-mcp)
+  mac + github legs; the obsidian-mcp leg is a pending owner add since the 2026-07-18 bearer
+  swap - the old native-OAuth standalone connector no longer authenticates). No local shell.
+  The github leg (github-mcp)
   authenticates GitHub with `GITHUB_PAT` (all-repos, [credentials-map](../credentials-map.md)),
   so both repos including the vault are in scope; verify per enablement 3. Whether Cowork also
   reads project `.mcp.json` servers is UNVERIFIED (probe: enablement 4).
@@ -23,7 +25,8 @@ git repos (`SchnappAPI/schnapp-os` + `SchnappAPI/schnapp-vault`) via the GitHub 
   generate a ready-to-run prompt for a Code session. Never silently skip.
 
 ## Enablement
-1. **Connectors:** enable the **Schnapp Portal** (op + memory + mac + github) + **obsidian-mcp**.
+1. **Connectors:** enable the **Schnapp Portal** (op + memory + mac + github; + obsidian once
+   the owner adds its portal slot - pending since the 2026-07-18 bearer swap).
 2. **Always-loaded instructions:** paste the **CORE** section + the **Cowork operating block** of
    [always-loaded-instructions.md](always-loaded-instructions.md) into Cowork instructions (CORE =
    behavior; the block = agentic work rules: connector topology, session-hygiene, read-modify-write

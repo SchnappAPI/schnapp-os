@@ -99,9 +99,10 @@ credential tool once it is built - until then, [session-hygiene](../session-hygi
 - **Client-side connectors are rotation legs too.** A static bearer pasted into a CLIENT (claude.ai /
   iPhone custom connector, Copilot's github-mcp config) does NOT auto-update when you rotate the
   server's bearer - the owner must re-paste it or that client 401s. Check the item's `consumed_by`
-  for an `Owner (CLIENT)` leg. Connectors fronted by the Cloudflare OAuth portal or native OAuth
-  (`op-mcp`, `memory-mcp`, `obsidian-mcp`) need NO client update; only the raw static-bearer ones
-  (`mac-mcp`, `github-mcp`) do.
+  for an `Owner (CLIENT)` leg. Connectors fronted by the Cloudflare OAuth portal
+  (`op-mcp`, `memory-mcp`) need NO client update beyond the portal's Custom header; the raw
+  static-bearer ones (`mac-mcp`, `github-mcp`, `obsidian-mcp`) also need any direct-bearer
+  client re-pasted.
 - **Bootstrap secrets are not `op://`-resolvable** (the SA token, the bearers) - they ARE the keys;
   set them directly in each surface's env, and the map says so.
 
