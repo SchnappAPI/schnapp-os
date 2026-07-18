@@ -1,5 +1,5 @@
 ---
-last-verified: 2026-07-16
+last-verified: 2026-07-18
 sources:
   - connectors/mac-mcp/server.py
 ---
