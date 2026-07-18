@@ -21,7 +21,7 @@ name: render-health
 
 on:
   schedule:
-    - cron: '*/30 * * * *'      # every 30 minutes (GitHub may delay scheduled runs under load)
+    - cron: '*/15 * * * *'      # every 15 minutes: keep-warm + liveness (GitHub may delay under load)
   workflow_dispatch:
     inputs:
       simulate:
@@ -46,6 +46,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           SIMULATE: ${{ github.event.inputs.simulate }}
+          # Optional self-heal (2026-07-18, after op-mcp hung 1.5h needing a manual dashboard
+          # restart): a Render API key lets a DOWN service be restarted automatically. Absent
+          # secret -> the restart leg self-skips and behavior is report-only as before.
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
           set -uo pipefail
           # "name|url" pairs (no internal spaces - word-split on the space between pairs is intentional).
@@ -86,6 +90,23 @@ jobs:
             return 1
           }
 
+          # Self-heal: restart a DOWN service via the Render API (no-op without RENDER_API_KEY).
+          # Service id resolved by name at runtime so nothing is hardcoded. Best-effort: a failed
+          # restart never hides the alarm - the issue below still opens either way.
+          restart_service() {
+            local name="$1" sid
+            [ -n "${RENDER_API_KEY:-}" ] || { echo "no RENDER_API_KEY - skipping auto-restart of $name"; return 1; }
+            sid="$(curl -s -m 25 -H "Authorization: Bearer $RENDER_API_KEY" \
+              "https://api.render.com/v1/services?name=$name&limit=5" \
+              | jq -r ".[] | .service | select(.name==\"$name\") | .id" | head -1)"
+            [ -n "$sid" ] || { echo "could not resolve Render service id for $name"; return 1; }
+            if curl -s -m 25 -X POST -H "Authorization: Bearer $RENDER_API_KEY" -o /dev/null -w '%{http_code}' \
+                "https://api.render.com/v1/services/$sid/restart" | grep -qE '^2'; then
+              echo "auto-restarted $name ($sid)"; return 0
+            fi
+            echo "auto-restart of $name ($sid) FAILED"; return 1
+          }
+
           DOWN=0; DETAIL=""
           PORTAL_DOWN=0; PORTAL_DETAIL=""; PORTAL_LAST=""
           if [ "${SIMULATE:-}" = "down" ]; then
@@ -100,6 +121,11 @@ jobs:
                 echo "$name up: $url"
               else
                 DOWN=1; DETAIL="${DETAIL}${name} ($url) did not return 200 after retries. "
+                if restart_service "$name"; then
+                  DETAIL="${DETAIL}Auto-restart issued via the Render API - recheck next run. "
+                else
+                  DETAIL="${DETAIL}Auto-restart unavailable/failed - restart from the Render dashboard. "
+                fi
               fi
             done
             if portal_healthy; then
